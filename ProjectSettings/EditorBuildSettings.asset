@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/1.Scene/Test/Login.unity
     guid: 22e7b05076378954199cb2129953afce
+  - enabled: 1
+    path: Assets/1.Scene/Test/MatchRoom.unity
+    guid: fbe91206dc66c3b4f905312a1074836a
   m_configObjects: {}
