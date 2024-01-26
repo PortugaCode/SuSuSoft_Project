@@ -259,6 +259,8 @@ public class MatchSystem
             if(args.ErrInfo == ErrorCode.Success)
             {
                 Debug.Log(args.RoomInfo.m_enableSandbox);
+                Debug.Log(args.RoomInfo.m_inGameRoomToken);
+                Debug.Log(args.RoomInfo.m_inGameServerEndPoint);
             }
         };
     }
