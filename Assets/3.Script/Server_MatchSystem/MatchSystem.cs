@@ -7,6 +7,7 @@ using UnityEngine;
 public class MatchSystem
 {
 
+    //매칭 서버 리스트 인덱스 접근
     public MatchCard GetMatchList(int index)
     {
         var callback = Backend.Match.GetMatchList();
@@ -110,6 +111,7 @@ public class MatchSystem
     }
 
 
+    //우리 매칭 서버 리스트 조회
     public void GetMatchList()
     {
         var callback = Backend.Match.GetMatchList();
@@ -218,6 +220,7 @@ public class MatchSystem
     }
 
 
+    //매칭 조인이 가능한지  체크
     public void JoinMatchMakingCheck()
     {
         ErrorInfo errorInfo;
@@ -225,6 +228,7 @@ public class MatchSystem
         Debug.Log(errorInfo);
     }
 
+    //매치 메이킹 서버에 연결신청
     public void JoinMatchMaking()
     {
         ErrorInfo errorInfo;
@@ -241,6 +245,7 @@ public class MatchSystem
         };
     }
 
+    //매칭 서버에 연결됐을 시 호출할 대기방 생성 메서드
     private void CreateMatchRoom()
     {
         Backend.Match.CreateMatchRoom();
@@ -250,6 +255,7 @@ public class MatchSystem
         };
     }
 
+    //해당 인덱스의 매칭 서버를 통해 매칭 신청
     public void RequestMatchMaking(int index)
     {
         Backend.Match.RequestMatchMaking(GetMatchList(index).matchTypeEnum, GetMatchList(index).matchModeTypeEnum, GetMatchList(index).inDate);
@@ -258,10 +264,31 @@ public class MatchSystem
             Debug.Log(args.ErrInfo);
             if(args.ErrInfo == ErrorCode.Success)
             {
-                Debug.Log(args.RoomInfo.m_enableSandbox);
-                Debug.Log(args.RoomInfo.m_inGameRoomToken);
-                Debug.Log(args.RoomInfo.m_inGameServerEndPoint);
+                //연결 됐다면 JoinGameServer 호출
+                string severAddress = args.RoomInfo.m_inGameServerEndPoint.m_address;
+                ushort serverPort = args.RoomInfo.m_inGameServerEndPoint.m_port;
+                JoinInGameServer(severAddress, serverPort);
             }
         };
+    }
+
+    private void JoinInGameServer(string serverAddress, ushort serverPort)
+    {
+        bool isReconnect = false;
+        ErrorInfo errorInfo = null;
+
+        if(Backend.Match.JoinGameServer(serverAddress, serverPort, isReconnect, out errorInfo) == false)
+        {
+            //에러 확인
+            Debug.LogError(errorInfo);
+            return;
+        }
+        else if(Backend.Match.JoinGameServer(serverAddress, serverPort, isReconnect, out errorInfo))
+        {
+            Backend.Match.OnSessionJoinInServer += (args) =>
+            {
+                Debug.Log(errorInfo);
+            };
+        }
     }
 }
