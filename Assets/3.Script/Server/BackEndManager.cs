@@ -3,12 +3,34 @@ using BackEnd;    // 뒤끝 SDK
 
 public class BackEndManager : MonoBehaviour
 {
+    public static BackEndManager Instance;
+
+    [SerializeField] private MatchSystem matchSystem;
+
+
+    public MatchSystem GetMatchSystem()
+    {
+        return matchSystem;
+    }
+
     private void Awake()
     {
-        // Update에 Backend.AsyncPoll() 호출을 위해 해당 오브젝트는 Destroy가 되면 안된다.
-        DontDestroyOnLoad(gameObject);
+        #region [싱글톤]
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        else
+        {
+            Instance = this;
+            // Update에 Backend.AsyncPoll() 호출을 위해 해당 오브젝트는 Destroy가 되면 안된다.
+            DontDestroyOnLoad(gameObject);
+        }
+        #endregion
 
-        
+
+        matchSystem = new MatchSystem();
 
         //뒤끝 서버 초기화
         BackEndSetUp();
@@ -21,6 +43,7 @@ public class BackEndManager : MonoBehaviour
         {
             Debug.Log("비동기 메서드 중");
             Backend.AsyncPoll();
+            Backend.Match.Poll(); //매치 서버 비동기 메서드 호출을 위해 작성
         }
     }
 

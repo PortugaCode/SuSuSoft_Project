@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using BackEnd;
+using BackEnd.Tcp;
 
 public class Login : LoginBase
 {
@@ -54,6 +55,8 @@ public class Login : LoginBase
             if (callback.IsSuccess())
             {
                 SetMessage($"{inputFieldID.text}님 환영합니다");
+                BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
+                
             }
             //로그인 실패
             else
