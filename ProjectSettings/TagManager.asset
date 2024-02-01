@@ -11,6 +11,9 @@ TagManager:
   - 
   - Water
   - UI
+  - Player
+  - Obstacles
+  - Item
   - 
   - 
   - 
@@ -30,13 +33,10 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Junggeun
+  - Jinwon
+  - Donggil
+  - Sujin
   m_SortingLayers:
   - name: Default
     uniqueID: 0
