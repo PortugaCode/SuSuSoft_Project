@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/1.Scene/Test/Loading.unity
+    path: Assets/1.Scene/OhJungGeun/Test_Oh/Loading.unity
     guid: dad54578e81d75b45867c0c9b175e85f
   - enabled: 1
-    path: Assets/1.Scene/Test/Login.unity
+    path: Assets/1.Scene/OhJungGeun/Test_Oh/Login.unity
     guid: 22e7b05076378954199cb2129953afce
   - enabled: 1
-    path: Assets/1.Scene/Test/MatchRoom.unity
+    path: Assets/1.Scene/OhJungGeun/Test_Oh/MatchRoom.unity
     guid: fbe91206dc66c3b4f905312a1074836a
   m_configObjects: {}

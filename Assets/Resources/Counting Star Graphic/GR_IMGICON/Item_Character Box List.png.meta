@@ -1,0 +1,422 @@
+fileFormatVersion: 2
+guid: a8bfe81a526e4cb4cb6ad168e540d670
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3719112181920603490
+    second: Item_Character Box_Yellow
+  - first:
+      213: -7486871554934593987
+    second: Item_Character Box_Blue
+  - first:
+      213: 4901841217164921588
+    second: Item_Character Box_Red
+  - first:
+      213: 6100730264218428462
+    second: Item_Character Box_Green
+  - first:
+      213: 758712161061204740
+    second: Item_Character Box_Purple
+  - first:
+      213: 4054721011247471989
+    second: Item_Character Box_All
+  - first:
+      213: 651374603575524541
+    second: Item_Pet Box_Yello
+  - first:
+      213: -1449507820887824960
+    second: Item_Pet Box_Blue
+  - first:
+      213: -6511808646896375042
+    second: Item_Pet Box_Red
+  - first:
+      213: 4919000112037100868
+    second: Item_Pet Box_Green
+  - first:
+      213: 3165487574917610549
+    second: Item_Pet Box_Purple
+  - first:
+      213: -5928985593101662588
+    second: Item_Pet Box_All
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Item_Character Box_Yellow
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 154
+        width: 225
+        height: 159
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26d943323d0fc9330800000000000000
+      internalID: 3719112181920603490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Item_Character Box_Blue
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 154
+        width: 226
+        height: 159
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d36a529ecf9491890800000000000000
+      internalID: -7486871554934593987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Item_Character Box_Red
+      rect:
+        serializedVersion: 2
+        x: 462
+        y: 153
+        width: 225
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4facb7ead96d60440800000000000000
+      internalID: 4901841217164921588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Item_Character Box_Green
+      rect:
+        serializedVersion: 2
+        x: 692
+        y: 153
+        width: 226
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e24e63d2ad52aa450800000000000000
+      internalID: 6100730264218428462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Item_Character Box_Purple
+      rect:
+        serializedVersion: 2
+        x: 922
+        y: 153
+        width: 225
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40372dec0bc778a00800000000000000
+      internalID: 758712161061204740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Item_Character Box_All
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 152
+        width: 225
+        height: 159
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 57dd7b2e643454830800000000000000
+      internalID: 4054721011247471989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Item_Pet Box_Yello
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 11
+        width: 173
+        height: 138
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbc74d530c52a0900800000000000000
+      internalID: 651374603575524541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Item_Pet Box_Blue
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 12
+        width: 174
+        height: 136
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c5a4d4115052ebe0800000000000000
+      internalID: -1449507820887824960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Item_Pet Box_Red
+      rect:
+        serializedVersion: 2
+        x: 475
+        y: 9
+        width: 173
+        height: 137
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: efaac64698861a5a0800000000000000
+      internalID: -6511808646896375042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Item_Pet Box_Green
+      rect:
+        serializedVersion: 2
+        x: 718
+        y: 9
+        width: 174
+        height: 137
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44df3183a8cc34440800000000000000
+      internalID: 4919000112037100868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Item_Pet Box_Purple
+      rect:
+        serializedVersion: 2
+        x: 948
+        y: 9
+        width: 173
+        height: 137
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53c70eb8d221eeb20800000000000000
+      internalID: 3165487574917610549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Item_Pet Box_All
+      rect:
+        serializedVersion: 2
+        x: 1178
+        y: 10
+        width: 173
+        height: 136
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48644c4240308bda0800000000000000
+      internalID: -5928985593101662588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Item_Character Box_All: 4054721011247471989
+      Item_Character Box_Blue: -7486871554934593987
+      Item_Character Box_Green: 6100730264218428462
+      Item_Pet Box_Blue: -1449507820887824960
+      Item_Pet Box_All: -5928985593101662588
+      Item_Pet Box_Green: 4919000112037100868
+      Item_Character Box_Yellow: 3719112181920603490
+      Item_Pet Box_Purple: 3165487574917610549
+      Item_Pet Box_Yello: 651374603575524541
+      Item_Pet Box_Red: -6511808646896375042
+      Item_Character Box_Purple: 758712161061204740
+      Item_Character Box_Red: 4901841217164921588
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

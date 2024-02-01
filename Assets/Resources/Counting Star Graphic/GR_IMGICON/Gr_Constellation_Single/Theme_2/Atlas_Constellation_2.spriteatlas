@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Atlas_Constellation_2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 4096
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 1
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 3936a69367fed5f4bbdfebdd08eb9eb3, type: 3}
+    - {fileID: 2800000, guid: 1b1f19e9caf25d94fb0b41cd4f039d11, type: 3}
+    - {fileID: 2800000, guid: 74e1bb4a82cb80642a08044039b9345d, type: 3}
+    - {fileID: 2800000, guid: 28884a2008c2710428e7f7f5b9d09ddf, type: 3}
+    - {fileID: 2800000, guid: 0348658a512f4774da7e9509f97de619, type: 3}
+    - {fileID: 2800000, guid: a66fded84ea807043b599637536f701d, type: 3}
+    - {fileID: 2800000, guid: b64c53c5d662ad44daf5112d2c9f7d2b, type: 3}
+    - {fileID: 2800000, guid: c8def1ce7f3cb094a9fc19d8227c8cf8, type: 3}
+    - {fileID: 2800000, guid: 66f9f26c7c8598f47860e8f1c086bc81, type: 3}
+    - {fileID: 2800000, guid: b523c49ec3528244795046af718c58e1, type: 3}
+    - {fileID: 2800000, guid: 893cb2cde33a38449b7fe8545172ee0b, type: 3}
+    - {fileID: 2800000, guid: a3e91537ec9393341b92ba942a7f3e9c, type: 3}
+    - {fileID: 2800000, guid: cbd4b7897b9ec6b4794d72ccf94d83c3, type: 3}
+    - {fileID: 2800000, guid: 964ef42a123cd384c8003b05c44184e8, type: 3}
+    - {fileID: 2800000, guid: bc969486d4b47954ab15d225d84f0539, type: 3}
+    - {fileID: 2800000, guid: d0f8272d2847da64eb611a36f3386aa9, type: 3}
+    - {fileID: 2800000, guid: 20695e65715b5564083db132e7c825db, type: 3}
+    - {fileID: 2800000, guid: 8aaf5855157ccac4992a64a74db0a0d2, type: 3}
+    - {fileID: 2800000, guid: fb9e135c5e6241e40a81813c3c1a259b, type: 3}
+    - {fileID: 2800000, guid: 8c7e50988ace80b41b4e7203af303cc5, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 28884a2008c2710428e7f7f5b9d09ddf, type: 3}
+  - {fileID: 21300000, guid: 3936a69367fed5f4bbdfebdd08eb9eb3, type: 3}
+  - {fileID: 21300000, guid: 8aaf5855157ccac4992a64a74db0a0d2, type: 3}
+  - {fileID: 21300000, guid: 20695e65715b5564083db132e7c825db, type: 3}
+  - {fileID: 21300000, guid: b64c53c5d662ad44daf5112d2c9f7d2b, type: 3}
+  - {fileID: 21300000, guid: bc969486d4b47954ab15d225d84f0539, type: 3}
+  - {fileID: 21300000, guid: a3e91537ec9393341b92ba942a7f3e9c, type: 3}
+  - {fileID: 21300000, guid: 8c7e50988ace80b41b4e7203af303cc5, type: 3}
+  - {fileID: 21300000, guid: a66fded84ea807043b599637536f701d, type: 3}
+  - {fileID: 21300000, guid: cbd4b7897b9ec6b4794d72ccf94d83c3, type: 3}
+  - {fileID: 21300000, guid: 1b1f19e9caf25d94fb0b41cd4f039d11, type: 3}
+  - {fileID: 21300000, guid: 964ef42a123cd384c8003b05c44184e8, type: 3}
+  - {fileID: 21300000, guid: 74e1bb4a82cb80642a08044039b9345d, type: 3}
+  - {fileID: 21300000, guid: 0348658a512f4774da7e9509f97de619, type: 3}
+  - {fileID: 21300000, guid: fb9e135c5e6241e40a81813c3c1a259b, type: 3}
+  - {fileID: 21300000, guid: 66f9f26c7c8598f47860e8f1c086bc81, type: 3}
+  - {fileID: 21300000, guid: d0f8272d2847da64eb611a36f3386aa9, type: 3}
+  - {fileID: 21300000, guid: 893cb2cde33a38449b7fe8545172ee0b, type: 3}
+  - {fileID: 21300000, guid: b523c49ec3528244795046af718c58e1, type: 3}
+  - {fileID: 21300000, guid: c8def1ce7f3cb094a9fc19d8227c8cf8, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - UI_IMG_constellation_02_03
+  - UI_IMG_constellation_02_00
+  - UI_IMG_constellation_02_17
+  - UI_IMG_constellation_02_16
+  - UI_IMG_constellation_02_06
+  - UI_IMG_constellation_02_14
+  - UI_IMG_constellation_02_11
+  - UI_IMG_constellation_02_19
+  - UI_IMG_constellation_02_05
+  - UI_IMG_constellation_02_12
+  - UI_IMG_constellation_02_01
+  - UI_IMG_constellation_02_13
+  - UI_IMG_constellation_02_02
+  - UI_IMG_constellation_02_04
+  - UI_IMG_constellation_02_18
+  - UI_IMG_constellation_02_08
+  - UI_IMG_constellation_02_15
+  - UI_IMG_constellation_02_10
+  - UI_IMG_constellation_02_09
+  - UI_IMG_constellation_02_07
+  m_RenderDataMap: {}
+  m_Tag: Atlas_Constellation_2
+  m_IsVariant: 0
