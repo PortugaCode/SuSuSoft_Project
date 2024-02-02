@@ -90,8 +90,6 @@ public class DBManager : MonoBehaviour
 
     private void LoadData() // DB에서 데이터 불러오기
     {
-        Debug.Log("LoadData");
-
         // 1. 자신의 데이터만 조회 (select절의 유무와 상관없이 처리하는 데이터양은 동일)
         // public BackendReturnObject GetMyData(string tableName, Where where, string[] select, int limit, string firstKey, TableSortOrder sortOrder);
 
@@ -140,6 +138,8 @@ public class DBManager : MonoBehaviour
             Debug.Log("검색 조건에 해당하는 데이터가 존재하지 않음");
             return;
         }
+
+        Debug.Log("데이터 불러오기 성공");
 
         // 0 번째 인덱스 데이터의 해당 컬럼 접근
         // string 형식 접근 : bro.FlattenRows()[0]["이름"].ToString(); (0번째 인덱스 데이터의 "이름" 컬럼)
