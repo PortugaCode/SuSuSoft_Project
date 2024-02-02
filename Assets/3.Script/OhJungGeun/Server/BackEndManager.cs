@@ -53,6 +53,7 @@ public class BackEndManager : MonoBehaviour
             Backend.AsyncPoll();
             Backend.Match.Poll(); //매치 서버 비동기 메서드 호출을 위해 작성
             Backend.Chat.Poll();
+            chatManager.ReceiveChat();
         }
     }
 
