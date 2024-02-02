@@ -18,8 +18,10 @@ public class ChatInputControl : MonoBehaviour
 
     public void Send()
     {
-        if (textInput.text == string.Empty)
+        if (textInput.text.Length <= 1)
         {
+            textInput.text = "";
+            textInput.ActivateInputField();
             return;
         }
         else

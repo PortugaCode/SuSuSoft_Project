@@ -11,7 +11,8 @@ public class ChatListManager : MonoBehaviour
 
     public GameObject myChatListPrefab;
     public GameObject localChatListPrefab;
-    public GameObject whisperChatListPrefab;
+    public GameObject whisperChatListPrefab_My;
+    public GameObject whisperChatListPrefab_Local;
     public GameObject joinUIPrefab;
 
 
@@ -45,4 +46,21 @@ public class ChatListManager : MonoBehaviour
         localChatList.SetLocalChatList(username, chat);
         localChatListClone.transform.SetParent(contents);
     }
+
+    public void SpawnMyChatList_Whisper(string username, string chat)
+    {
+        GameObject myChatListClone = GameObject.Instantiate(whisperChatListPrefab_My, whisperChatListPrefab_My.transform.position, Quaternion.identity);
+        MyChatList myChatList = myChatListClone.GetComponent<MyChatList>();
+        myChatList.SetMyChatList(username, chat);
+        myChatListClone.transform.SetParent(contents);
+    }
+
+    public void SpawnLocalChatList_Whisper(string username, string chat)
+    {
+        GameObject localChatListClone = GameObject.Instantiate(whisperChatListPrefab_Local, whisperChatListPrefab_Local.transform.position, Quaternion.identity);
+        LocalChatList localChatList = localChatListClone.GetComponent<LocalChatList>();
+        localChatList.SetLocalChatList(username, chat);
+        localChatListClone.transform.SetParent(contents);
+    }
+
 }
