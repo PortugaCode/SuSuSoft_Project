@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/1.Scene/OhJungGeun/Test_Oh/MatchRoom.unity
     guid: fbe91206dc66c3b4f905312a1074836a
+  - enabled: 1
+    path: Assets/1.Scene/OhJungGeun/Chat/Chatting.unity
+    guid: 7bb162086d25c46498236d276e0a81b4
   m_configObjects: {}

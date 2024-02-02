@@ -1,0 +1,151 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using BackEnd;
+
+public class DBManager : MonoBehaviour
+{
+    private void Start()
+    {
+        InitializeServer();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            SaveData();
+        }
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            LoadData();
+        }
+    }
+
+    private void InitializeServer() // 뒤끝 서버 접속
+    {
+        var bro = Backend.Initialize(true);
+
+        if (bro.IsSuccess())
+        {
+            Debug.Log($"서버 접속 성공 : {bro}");
+
+            Login_Temp();
+        }
+        else
+        {
+            Debug.LogError($"서버 접속 실패 : {bro}");
+        }
+    }
+
+    private void Login_Temp() // 테스트용 자동 로그인 메서드
+    {
+        var bro = Backend.BMember.CustomLogin("test123", "1234");
+
+        if (bro.IsSuccess())
+        {
+            Debug.Log($"로그인 성공");
+        }
+        else
+        {
+            Debug.LogError($"로그인 실패");
+        }
+    }
+
+    private void SaveData() // DB에 데이터 저장하기
+    {
+        Debug.Log("SaveData");
+
+        Param param = new Param(); // DB에 저장할 데이터들
+
+        Dictionary<string, int> testDictionary = new Dictionary<string, int>
+        {
+            { "num1", 1 },
+            { "num2", 2 },
+            { "num3", 3 }
+        };
+
+        string[] testList = { "string1", "string2" };
+
+        Param doubleParam = new Param();
+        doubleParam.Add("내부1", 1234);
+        doubleParam.Add("내부2", "abcd");
+        doubleParam.Add("내부3", "내부 매개변수 테스트입니다.");
+
+
+        param.Add("이름", "테스트2");
+        param.Add("dictionary", testDictionary);
+        param.Add("list", testList);
+        param.Add("param", doubleParam);
+
+        // [ 동기 ]
+        Backend.GameData.Insert("dbTest", param); // '테이블명'에 삽입
+
+        // [ 비동기 ]
+        /*Backend.GameData.Insert("tableName", param, (callback) => {
+            // 콜백
+        });*/
+    }
+
+    private void LoadData() // DB에서 데이터 불러오기
+    {
+        // 1. 자신의 데이터만 조회 (select절의 유무와 상관없이 처리하는 데이터양은 동일)
+        // public BackendReturnObject GetMyData(string tableName, Where where, string[] select, int limit, string firstKey, TableSortOrder sortOrder);
+
+        // tableName : 테이블명
+        // where : 검색할 Where 절
+        // select : (Optional) row 내 존재하는 컬럼 중 포함 시키고자 하는 컬럼 (default = 모든 컬럼)
+        // limit : (Optional) 불러올 게임 정보 row 수. 최소 1, 최대 100. (default = 10)
+        // firstKey : (Optional) 데이터를 조회하기 위한 시작점 (default = 제일 마지막에 insert 된 데이터)
+        // sortOrder : (Optional) TableSortOrder.DESC(내림차순) or TableSortOrder.ASC(오름차순) (default = TableSortOrder.DESC(내림차순))
+        // * 조건 없이 데이터 조회 시 Where절을 new Where() 로 초기화 후 조회.
+
+        // 2. 전체 유저 데이터 조회
+        // public BackendReturnObject Get(string tableName, Where where, string[] select, int limit, string firstKey, TableSortOrder tableSortOrder);
+
+        // where.Equal("owner_inDate", "유저의 gamerInDate"); 로 특정 유저의 데이터 조회
+        // gamerIndate는 GetUserInfoByNickName 함수를 통해 확인하거나, 친구, 길드원 조회 등의 함수에서 리턴되는 유저의 정보에서 확인할 수 있습니다.
+
+        // -----------------------------------------------------------------------------------------------------------------
+
+        //데이터 추출 방법 1 : 검색한 데이터 중 첫번째 데이터의 name 컬럼 출력
+        //string name = bro.Rows()[0]["name"]["S"].ToString();
+        //int level = int.Parse(bro.Rows()[0]["level"]["N"].ToString());
+
+        //데이터 추출 방법 2(언마샬) : 검색한 데이터 중 첫번째 데이터의 name 컬럼 출력
+        //string name = bro.FlattenRows()[0]["name"].ToString();
+        //int level = int.Parse(bro.FlattenRows()[0]["level"].ToString());
+
+        // Where 메서드 목록 : https://docs.thebackend.io/sdk-docs/backend/base/game-information/clause-where/basic
+
+        Where where = new Where();
+        where.Equal("이름", "테스트2");
+
+        var bro = Backend.GameData.GetMyData("dbTest", where);
+
+        if (bro.IsSuccess() == false)
+        {
+            // 요청 실패 처리
+            Debug.LogError("데이터 불러오기 실패");
+            return;
+        }
+
+        if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+        {
+            // 요청이 성공해도 where 조건에 부합하는 데이터가 없을 수 있기 때문에 데이터가 존재하는지 확인
+            // 위와 같은 new Where() 조건의 경우 테이블에 row가 하나도 없으면 Count가 0 이하 일 수 있다.  
+            Debug.Log("검색 조건에 해당하는 데이터가 존재하지 않음");
+            return;
+        }
+
+        Debug.Log("데이터 불러오기 성공");
+
+        // 0 번째 인덱스 데이터의 해당 컬럼 접근
+        // string 형식 접근 : bro.FlattenRows()[0]["이름"].ToString(); (0번째 인덱스 데이터의 "이름" 컬럼)
+        // list 형식 접근 : bro.FlattenRows()[0]["list"][0].ToString(); (0번째 인덱스 데이터의 "list" 컬럼의 0번째 인덱스 데이터)
+        // dictionary 형식 접근 : bro.FlattenRows()[0]["dictionary"]["num1"].ToString(); (0번째 인덱스 데이터의 "dictionary" 컬럼의 "num1" 키의 밸류값)
+        // param 형식 접근 : bro.FlattenRows()[0]["param"]["내부1"].ToString(); (0번째 인덱스 데이터의 "param" 컬럼의 "내부1" 파라미터의 값)
+
+    }
+}

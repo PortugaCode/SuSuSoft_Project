@@ -8,83 +8,85 @@ using BackEnd.Tcp;
 
 public class Login : LoginBase
 {
-    [SerializeField] private Image imageID;                  // ID ÇÊµå »ö»ó º¯°æ
-    [SerializeField] private TMP_InputField inputFieldID;    // ID ÇÊµå ÅØ½ºÆ®
+    [SerializeField] private Image imageID;                  // ID ï¿½Êµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private TMP_InputField inputFieldID;    // ID ï¿½Êµï¿½ ï¿½Ø½ï¿½Æ®
 
-    [SerializeField] private Image imagePW;                  // PW ÇÊµå »ö»ó º¯°æ
-    [SerializeField] private TMP_InputField inputFieldPW;    // PW ÇÊµå ÅØ½ºÆ®
+    [SerializeField] private Image imagePW;                  // PW ï¿½Êµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private TMP_InputField inputFieldPW;    // PW ï¿½Êµï¿½ ï¿½Ø½ï¿½Æ®
 
     [SerializeField] private Button btnLogin;
 
     /// <summary>
-    /// "·Î±×ÀÎ" ¹öÆ°À» ´­·¶À» ¶§ È£Ãâ
+    /// "ï¿½Î±ï¿½ï¿½ï¿½" ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½
     /// </summary>
     public void OnClickLogin()
     {
-        //¸Å°³º¯¼ö·Î ÀÔ·ÂÇÑ InputField UIÀÇ »ö»ó°ú Message ³»¿ë ÃÊ±âÈ­
+        //ï¿½Å°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ InputField UIï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Message ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         ResetUI(imageID, imagePW);
 
-        //ÇÊµå °ªÀÌ ºñ¾îÀÖ´ÂÁö Ã¼Å©
-        if (IsFieldDataEmpty(imageID, inputFieldID.text, "¾ÆÀÌµð")) return;
-        if (IsFieldDataEmpty(imagePW, inputFieldPW.text, "ºñ¹Ð¹øÈ£")) return;
+        //ï¿½Êµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ Ã¼Å©
+        if (IsFieldDataEmpty(imageID, inputFieldID.text, "ï¿½ï¿½ï¿½Ìµï¿½")) return;
+        if (IsFieldDataEmpty(imagePW, inputFieldPW.text, "ï¿½ï¿½Ð¹ï¿½È£")) return;
 
-        //·Î±×ÀÎ ¹öÆ°À» ¿¬Å¸ÇÏÁö ¸øÇÏµµ·Ï »óÈ£ÀÛ¿ë ºñÈ°¼ºÈ­
+        //ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
         btnLogin.interactable = false;
 
-        //¼­¹ö¿¡ ·Î±×ÀÎÀ» ¿äÃ»ÇÏ´Â µ¿¾È È­¸é¿¡ Ãâ·ÂÇÏ´Â ³»¿ë ¾÷µ¥ÀÌÆ®
-        //ex) ·Î±×ÀÎ °ü·Ã ÅØ½ºÆ® Ãâ·Â, Åé´Ï¹ÙÄû ¾ÆÀÌÄÜ È¸Àü µî
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ È­ï¿½é¿¡ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+        //ex) ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½, ï¿½ï¿½Ï¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½
         StartCoroutine(nameof(LoginProcess));
 
-        //µÚ³¡ ¼­¹ö ·Î±×ÀÎ ½Ãµµ
+        //ï¿½Ú³ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ ï¿½Ãµï¿½
         ResponseToLogin(inputFieldID.text, inputFieldPW.text);
     }
 
 
     /// <summary>
-    /// ·Î±×ÀÎ ½Ãµµ ÈÄ ¼­¹ö·ÎºÎÅÍ Àü´Þ¹ÞÀº message¸¦ ±â¹ÝÀ¸·Î ·ÎÁ÷ Ã³¸®
+    /// ï¿½Î±ï¿½ï¿½ï¿½ ï¿½Ãµï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Þ¹ï¿½ï¿½ï¿½ messageï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
     /// </summary>
     private void ResponseToLogin(string Id, string Pw)
     {
-        //¼­¹ö¿¡ ·Î±×ÀÎ ¿äÃ»
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»
         Backend.BMember.CustomLogin(Id, Pw, callback =>
         {
             StopCoroutine(nameof(LoginProcess));
 
 
-            //·Î±×ÀÎ ¼º°ø
+            //ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (callback.IsSuccess())
             {
-                SetMessage($"{inputFieldID.text}´Ô È¯¿µÇÕ´Ï´Ù");
-                BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
-                
+
+                SetMessage($"{inputFieldID.text}ï¿½ï¿½ È¯ï¿½ï¿½ï¿½Õ´Ï´ï¿½");
+                //BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
+                BackEndManager.Instance.GetChatManager().GetChatStatus();
+
             }
-            //·Î±×ÀÎ ½ÇÆÐ
+            //ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             else
             {
-                //·Î±×ÀÎ ½ÇÆÐÇßÀ» ¶§´Â ´Ù½Ã ·Î±×ÀÎÀ» ÇØ¾ßÇÏ±â ¶§¹®¿¡ ·Î±×ÀÎ ¹öÆ° È°¼ºÈ­
+                //ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø¾ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° È°ï¿½ï¿½È­
                 btnLogin.interactable = true;
 
                 string message = string.Empty;
 
                 switch(int.Parse(callback.GetStatusCode()))
                 { 
-                    case 401: //Á¸ÀçÇÏÁö ¾Ê´Â ¾ÆÀÌµð, Àß¸øµÈ ºñ¹Ð¹øÈ£
-                        message = callback.GetMessage().Contains("customId") ? "Á¸ÀçÇÏÁö ¾Ê´Â ¾ÆÀÌµðÀÔ´Ï´Ù." : "Àß¸øµÈ ºñ¹Ð¹øÈ£ÀÔ´Ï´Ù.";
+                    case 401: //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½Ìµï¿½, ï¿½ß¸ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£
+                        message = callback.GetMessage().Contains("customId") ? "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ï¿½Ô´Ï´ï¿½." : "ï¿½ß¸ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ï¿½Ô´Ï´ï¿½.";
                         break;
 
-                    case 403: // À¯Àú or µð¹ÙÀÌ½º Â÷´Ü
-                        message = callback.GetMessage().Contains("user") ? "Â÷´Ü´çÇÑ À¯ÀúÀÔ´Ï´Ù." : "Â÷´Ü´çÇÑ µð¹ÙÀÌ½ºÀÔ´Ï´Ù";
+                    case 403: // ï¿½ï¿½ï¿½ï¿½ or ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                        message = callback.GetMessage().Contains("user") ? "ï¿½ï¿½ï¿½Ü´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½." : "ï¿½ï¿½ï¿½Ü´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½Ô´Ï´ï¿½";
                         break;
-                    case 410: // Å»Åð ÁøÇàÁß
-                        message = "Å»Åð°¡ ÁøÇàÁßÀÎ À¯ÀúÀÔ´Ï´Ù.";
+                    case 410: // Å»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+                        message = "Å»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.";
                         break;
                     default:
                         message = callback.GetMessage();
                         break;
                 }
 
-                // StatusCode 401¿¡¼­ "Àß¸øµÈ ºñ¹Ð¹øÈ£ ÀÔ´Ï´Ù." ÀÏ ¶§
-                if(message.Contains("ºñ¹Ð¹øÈ£"))
+                // StatusCode 401ï¿½ï¿½ï¿½ï¿½ "ï¿½ß¸ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½Ô´Ï´ï¿½." ï¿½ï¿½ ï¿½ï¿½
+                if(message.Contains("ï¿½ï¿½Ð¹ï¿½È£"))
                 {
                     GuideForIncorrectlyEnteredData(imagePW, message);
                 }
@@ -104,7 +106,7 @@ public class Login : LoginBase
         {
             timer += Time.deltaTime;
 
-            SetMessage($"·Î±×ÀÎ ÁßÀÔ´Ï´Ù... {timer:F1}");
+            SetMessage($"ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ô´Ï´ï¿½... {timer:F1}");
             yield return null;
         }
     }
