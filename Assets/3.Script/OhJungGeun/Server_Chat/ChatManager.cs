@@ -138,7 +138,6 @@ public class ChatManager
     public void ChatToChannel(string chat)
     {
         Backend.Chat.ChatToChannel(ChannelType.Public, chat);
-        ReceiveChat();
     }
 
     public void ReceiveChat()
@@ -159,6 +158,7 @@ public class ChatManager
                 else
                 {
                     chatListManager.SpawnLocalChatList(args.From.NickName, args.Message);
+                    Debug.Log($"{args.From.NickName}이 {args.Message}를 입력했습니다.");
                 }
             }
             else if (args.ErrInfo.Category == ErrorCode.BannedChat)

@@ -40,7 +40,7 @@ public class ChatListManager : MonoBehaviour
 
     public void SpawnLocalChatList(string username, string chat)
     {
-        GameObject localChatListClone = GameObject.Instantiate(myChatListPrefab, myChatListPrefab.transform.position, Quaternion.identity);
+        GameObject localChatListClone = GameObject.Instantiate(localChatListPrefab, localChatListPrefab.transform.position, Quaternion.identity);
         LocalChatList localChatList = localChatListClone.GetComponent<LocalChatList>();
         localChatList.SetLocalChatList(username, chat);
         localChatListClone.transform.SetParent(contents);
