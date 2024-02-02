@@ -6,11 +6,18 @@ public class BackEndManager : MonoBehaviour
     public static BackEndManager Instance;
 
     [SerializeField] private MatchSystem matchSystem;
+    [SerializeField] private ChatManager chatManager;
+
 
 
     public MatchSystem GetMatchSystem()
     {
         return matchSystem;
+    }
+
+    public ChatManager GetChatManager()
+    {
+        return chatManager;
     }
 
     private void Awake()
@@ -29,8 +36,9 @@ public class BackEndManager : MonoBehaviour
         }
         #endregion
 
-
+        
         matchSystem = new MatchSystem();
+        chatManager = new ChatManager();
 
         //�ڳ� ���� �ʱ�ȭ
         BackEndSetUp();
@@ -43,7 +51,11 @@ public class BackEndManager : MonoBehaviour
         {
             Debug.Log("�񵿱� �޼��� ��");
             Backend.AsyncPoll();
+
             Backend.Match.Poll(); //��ġ ���� �񵿱� �޼��� ȣ���� ���� �ۼ�
+            Backend.Chat.Poll();
+            chatManager.ReceiveChat();
+
         }
     }
 

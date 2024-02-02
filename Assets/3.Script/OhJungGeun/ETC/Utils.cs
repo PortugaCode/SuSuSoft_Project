@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 public enum SceneNames
 {
     Loading,
-    Login
+    Login,
+    Chatting
 }
 
 public class Utils : MonoBehaviour

@@ -54,9 +54,11 @@ public class Login : LoginBase
             //�α��� ����
             if (callback.IsSuccess())
             {
+
                 SetMessage($"{inputFieldID.text}�� ȯ���մϴ�");
-                BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
-                
+                //BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
+                BackEndManager.Instance.GetChatManager().GetChatStatus();
+
             }
             //�α��� ����
             else
