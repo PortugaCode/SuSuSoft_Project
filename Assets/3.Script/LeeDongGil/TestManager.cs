@@ -6,8 +6,8 @@ public class TestManager : MonoBehaviour
 {
     private static TestManager instance = null;
 
-    public GameObject testPrefabs;
-    public GameObject testPrefabs1;
+    public ItemData testData;
+    public ItemData testData1;
     public InventorySystem invenSys;
 
     private void Awake()
@@ -28,11 +28,11 @@ public class TestManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Alpha1))
         {
-            //invenSys.GetItem(testPrefabs, 10);
+            invenSys.GetItem(testData, 10);
         }
         else if(Input.GetKeyDown(KeyCode.Alpha2))
         {
-            //invenSys.GetItem(testPrefabs1, 5);
+            invenSys.GetItem(testData1, 5);
         }
     }
 }
