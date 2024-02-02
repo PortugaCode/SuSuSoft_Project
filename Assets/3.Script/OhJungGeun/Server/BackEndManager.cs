@@ -1,5 +1,5 @@
 using UnityEngine;
-using BackEnd;    // µÚ³¡ SDK
+using BackEnd;    // ï¿½Ú³ï¿½ SDK
 
 public class BackEndManager : MonoBehaviour
 {
@@ -22,7 +22,7 @@ public class BackEndManager : MonoBehaviour
 
     private void Awake()
     {
-        #region [½Ì±ÛÅæ]
+        #region [ï¿½Ì±ï¿½ï¿½ï¿½]
         if (Instance != null)
         {
             Destroy(gameObject);
@@ -31,7 +31,7 @@ public class BackEndManager : MonoBehaviour
         else
         {
             Instance = this;
-            // Update¿¡ Backend.AsyncPoll() È£ÃâÀ» À§ÇØ ÇØ´ç ¿ÀºêÁ§Æ®´Â Destroy°¡ µÇ¸é ¾ÈµÈ´Ù.
+            // Updateï¿½ï¿½ Backend.AsyncPoll() È£ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Destroyï¿½ï¿½ ï¿½Ç¸ï¿½ ï¿½ÈµÈ´ï¿½.
             DontDestroyOnLoad(gameObject);
         }
         #endregion
@@ -40,39 +40,41 @@ public class BackEndManager : MonoBehaviour
         matchSystem = new MatchSystem();
         chatManager = new ChatManager();
 
-        //µÚ³¡ ¼­¹ö ÃÊ±âÈ­
+        //ï¿½Ú³ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         BackEndSetUp();
     }
 
     private void Update()
     {
-        //¼­¹öÀÇ ºñµ¿±â ¸Þ¼­µå È£Ãâ (ÄÝ¹é ÇÔ¼ö Æú¸µ)À» À§ÇØ ÀÛ¼º
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ñµ¿±ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ È£ï¿½ï¿½ (ï¿½Ý¹ï¿½ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½
         if(Backend.IsInitialized)
         {
-            Debug.Log("ºñµ¿±â ¸Þ¼­µå Áß");
+            Debug.Log("ï¿½ñµ¿±ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ï¿½");
             Backend.AsyncPoll();
-            Backend.Match.Poll(); //¸ÅÄ¡ ¼­¹ö ºñµ¿±â ¸Þ¼­µå È£ÃâÀ» À§ÇØ ÀÛ¼º
+
+            Backend.Match.Poll(); //ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ñµ¿±ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ È£ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½
             Backend.Chat.Poll();
             chatManager.ReceiveChat();
+
         }
     }
 
 
     private void BackEndSetUp()
     {
-        //µÚ³¡ ÃÊ±âÈ­
+        //ï¿½Ú³ï¿½ ï¿½Ê±ï¿½È­
         var bro = Backend.Initialize(true);
 
-        //µÚ³¡ ÃÊ±âÈ­¿¡ µû¸¥ ÀÀ´ä°ª
+        //ï¿½Ú³ï¿½ ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ä°ª
         if(bro.IsSuccess())
         {
-            //ÃÊ±âÈ­ ¼º°ø ½Ã statusCode 204 Success
-            Debug.Log($"ÃÊ±âÈ­ ¼º°ø : {bro}");
+            //ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ statusCode 204 Success
+            Debug.Log($"ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½ : {bro}");
         }
         else
         {
-            //ÃÊ±âÈ­ ½ÇÆÐ ½Ã statusCode 400´ë ¿¡·¯ ¹ß»ý
-            Debug.LogError($"ÃÊ±âÈ­ ½ÇÆÐ : {bro}");
+            //ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ statusCode 400ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½
+            Debug.LogError($"ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½ : {bro}");
         }
     }
 }
