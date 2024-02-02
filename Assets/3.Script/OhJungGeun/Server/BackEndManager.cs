@@ -6,11 +6,17 @@ public class BackEndManager : MonoBehaviour
     public static BackEndManager Instance;
 
     [SerializeField] private MatchSystem matchSystem;
+    [SerializeField] private ChatManager chatManager;
 
 
     public MatchSystem GetMatchSystem()
     {
         return matchSystem;
+    }
+
+    public ChatManager GetChatManager()
+    {
+        return chatManager;
     }
 
     private void Awake()
@@ -29,8 +35,9 @@ public class BackEndManager : MonoBehaviour
         }
         #endregion
 
-
+        
         matchSystem = new MatchSystem();
+        chatManager = new ChatManager();
 
         //뒤끝 서버 초기화
         BackEndSetUp();
@@ -44,6 +51,7 @@ public class BackEndManager : MonoBehaviour
             Debug.Log("비동기 메서드 중");
             Backend.AsyncPoll();
             Backend.Match.Poll(); //매치 서버 비동기 메서드 호출을 위해 작성
+            Backend.Chat.Poll();
         }
     }
 
