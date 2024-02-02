@@ -28,6 +28,7 @@ public class ChatListManager : MonoBehaviour
         JoinUI joinUI = joinUIClone.GetComponent<JoinUI>();
         joinUI.SetJoinUserName(name);
         joinUIClone.transform.SetParent(contents);
+        joinUIClone.SetActive(true);
     }
 
 
@@ -37,6 +38,7 @@ public class ChatListManager : MonoBehaviour
         MyChatList myChatList = myChatListClone.GetComponent<MyChatList>();
         myChatList.SetMyChatList(username, chat);
         myChatListClone.transform.SetParent(contents);
+        myChatListClone.SetActive(true);
     }
 
     public void SpawnLocalChatList(string username, string chat)
@@ -45,6 +47,7 @@ public class ChatListManager : MonoBehaviour
         LocalChatList localChatList = localChatListClone.GetComponent<LocalChatList>();
         localChatList.SetLocalChatList(username, chat);
         localChatListClone.transform.SetParent(contents);
+        localChatListClone.SetActive(true);
     }
 
     public void SpawnMyChatList_Whisper(string username, string chat)
@@ -53,6 +56,7 @@ public class ChatListManager : MonoBehaviour
         MyChatList myChatList = myChatListClone.GetComponent<MyChatList>();
         myChatList.SetMyChatList(username, chat);
         myChatListClone.transform.SetParent(contents);
+        myChatListClone.SetActive(true);
     }
 
     public void SpawnLocalChatList_Whisper(string username, string chat)
@@ -61,6 +65,7 @@ public class ChatListManager : MonoBehaviour
         LocalChatList localChatList = localChatListClone.GetComponent<LocalChatList>();
         localChatList.SetLocalChatList(username, chat);
         localChatListClone.transform.SetParent(contents);
+        localChatListClone.SetActive(true);
     }
 
 }
