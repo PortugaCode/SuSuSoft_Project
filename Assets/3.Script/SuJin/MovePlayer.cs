@@ -4,63 +4,52 @@ using UnityEngine;
 
 public class MovePlayer : MonoBehaviour
 {
-    [SerializeField]private float moveSpeed;
-    private float deltaX, deltaY;
+
+    private Vector3 touchPosition;
     private Rigidbody2D rigidbody2D;
+    private Vector3 direction;
+    [SerializeField]private float speed;
+    private bool gameStart = false;
 
     private void Start()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
+        Invoke("GameStart", 3f);
     }
+
     private void Update()
     {
-        PlayerMove();
+        if(gameStart)
+        {
+            PlayerMove();
+        }
     }
-
     private void PlayerMove()
     {
-        if(Input.touchCount>0)
+        if(Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            Vector2 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
 
-            switch(touch.phase)
+            touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+            touchPosition.z = 0;
+            touchPosition.y = transform.position .y - 1;
+            direction = (touchPosition - transform.position).normalized;
+
+            // + 부분 부터 빼면 안올라감
+            rigidbody2D.velocity = new Vector2(direction.x, 0) * speed * Time.deltaTime + Vector2.up * (speed / 4) * Time.deltaTime;
+
+            if (touch.phase == TouchPhase.Ended)     //터치가 끝난 상태
             {
-                case TouchPhase.Began:
-                    deltaX = touchPos.x - transform.position.x;
-                    break;
-
-                case TouchPhase.Moved:
-                    rigidbody2D.MovePosition(new Vector2(touchPos.x - deltaX, -3f));
-                    break;
-
-                case TouchPhase.Ended:
-                    rigidbody2D.velocity = Vector2.zero;
-                    break;
+                rigidbody2D.velocity = Vector2.zero;
+                rigidbody2D.velocity = Vector2.up * (speed / 6) * Time.deltaTime;
             }
+
         }
     }
+ 
 
-    //Player Position limit
-
-    /* [단순이동]
-    
-     private void TouchMove()
+    private void GameStart()
     {
-        if(Input.GetMouseButton(0))
-        {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-            if (mousePos.x > 1)
-            {
-                transform.Translate(moveSpeed * Time.deltaTime, 0, 0);
-            }
-            else if (mousePos.x < -1)
-            {
-                transform.Translate(-moveSpeed * Time.deltaTime, 0, 0);
-            }
-        }
+        gameStart = true;
     }
-     */
-
 }
