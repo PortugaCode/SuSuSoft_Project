@@ -5,6 +5,9 @@ using BackEnd;
 
 public class ChatListManager : MonoBehaviour
 {
+    [SerializeField] private ChatLineControl chatLineControl;
+
+
     //이 곳의 자식으로 말풍선 생성
     public Transform contents;
 
@@ -14,6 +17,7 @@ public class ChatListManager : MonoBehaviour
     public GameObject whisperChatListPrefab_My;
     public GameObject whisperChatListPrefab_Local;
     public GameObject joinUIPrefab;
+    public GameObject errorUIPrefab;
 
 
     private void Start()
@@ -29,6 +33,17 @@ public class ChatListManager : MonoBehaviour
         joinUI.SetJoinUserName(name);
         joinUIClone.transform.SetParent(contents);
         joinUIClone.SetActive(true);
+        //chatLineControl.SetChatLine(joinUIClone);
+    }
+
+    public void SpawnErrorUI(string msg)
+    {
+        GameObject errorUIClone = GameObject.Instantiate(errorUIPrefab, errorUIPrefab.transform.position, Quaternion.identity);
+        JoinUI errorUI = errorUIClone.GetComponent<JoinUI>();
+        errorUI.SetErrorMessage(msg);
+        errorUIClone.transform.SetParent(contents);
+        errorUIClone.SetActive(true);
+        //chatLineControl.SetChatLine(errorUIClone);
     }
 
 
@@ -39,6 +54,7 @@ public class ChatListManager : MonoBehaviour
         myChatList.SetMyChatList(username, chat);
         myChatListClone.transform.SetParent(contents);
         myChatListClone.SetActive(true);
+        chatLineControl.SetChatLine(myChatListClone);
     }
 
     public void SpawnLocalChatList(string username, string chat)
@@ -48,6 +64,7 @@ public class ChatListManager : MonoBehaviour
         localChatList.SetLocalChatList(username, chat);
         localChatListClone.transform.SetParent(contents);
         localChatListClone.SetActive(true);
+        chatLineControl.SetChatLine(localChatListClone);
     }
 
     public void SpawnMyChatList_Whisper(string username, string chat)
@@ -57,6 +74,7 @@ public class ChatListManager : MonoBehaviour
         myChatList.SetMyChatList(username, chat);
         myChatListClone.transform.SetParent(contents);
         myChatListClone.SetActive(true);
+        chatLineControl.SetChatLine(myChatListClone);
     }
 
     public void SpawnLocalChatList_Whisper(string username, string chat)
@@ -66,6 +84,7 @@ public class ChatListManager : MonoBehaviour
         localChatList.SetLocalChatList(username, chat);
         localChatListClone.transform.SetParent(contents);
         localChatListClone.SetActive(true);
+        chatLineControl.SetChatLine(localChatListClone);
     }
 
 }

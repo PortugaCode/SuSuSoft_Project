@@ -22,7 +22,7 @@ public class BackEndManager : MonoBehaviour
 
     private void Awake()
     {
-        #region [�̱���]
+        #region [싱글톤]
         if (Instance != null)
         {
             Destroy(gameObject);
@@ -40,21 +40,20 @@ public class BackEndManager : MonoBehaviour
         matchSystem = new MatchSystem();
         chatManager = new ChatManager();
 
-        //�ڳ� ���� �ʱ�ȭ
         BackEndSetUp();
     }
 
     private void Update()
     {
-        //������ �񵿱� �޼��� ȣ�� (�ݹ� �Լ� ����)�� ���� �ۼ�
         if(Backend.IsInitialized)
         {
-            Debug.Log("�񵿱� �޼��� ��");
+            Debug.Log("AsyncPoll On");
             Backend.AsyncPoll();
 
-            Backend.Match.Poll(); //��ġ ���� �񵿱� �޼��� ȣ���� ���� �ۼ�
+            Backend.Match.Poll();
             Backend.Chat.Poll();
             chatManager.ReceiveChat();
+            chatManager.ReceiveWhisperChat();
 
         }
     }
@@ -62,19 +61,15 @@ public class BackEndManager : MonoBehaviour
 
     private void BackEndSetUp()
     {
-        //�ڳ� �ʱ�ȭ
         var bro = Backend.Initialize(true);
 
-        //�ڳ� �ʱ�ȭ�� ���� ���䰪
         if(bro.IsSuccess())
         {
-            //�ʱ�ȭ ���� �� statusCode 204 Success
-            Debug.Log($"�ʱ�ȭ ���� : {bro}");
+            Debug.Log($"BackEnd Server : {bro}");
         }
         else
         {
-            //�ʱ�ȭ ���� �� statusCode 400�� ���� �߻�
-            Debug.LogError($"�ʱ�ȭ ���� : {bro}");
+            Debug.LogError($"BackEnd Server : {bro}");
         }
     }
 }

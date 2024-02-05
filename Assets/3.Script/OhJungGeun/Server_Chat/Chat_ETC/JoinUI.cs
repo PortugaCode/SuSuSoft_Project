@@ -11,4 +11,9 @@ public class JoinUI : MonoBehaviour
     {
         userName.text = $"{username}¥‘¿Ã ¡¢º”«œºÃΩ¿¥œ¥Ÿ.";
     }
+
+    public void SetErrorMessage(string msg)
+    {
+        userName.text = msg;
+    }
 }
