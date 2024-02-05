@@ -3,6 +3,98 @@ using System.Collections.Generic;
 using UnityEngine;
 using BackEnd;
 
+public struct Friend
+{
+    int index; // 인덱스
+    string id; // 아이디
+    string name; // 이름
+}
+
+public struct Character
+{
+    int index; // 인덱스
+    int imageIndex; // 이미지 인덱스
+    int lookImageIndex; // 표정 이미지 인덱스
+    string name; // 이름
+    string color; // 색상
+    int level; // 레벨
+    float levelIncreaseRate; // 레벨 당 증가량
+    float maxHealth; // 최대 체력
+    float maxSpeed; // 최대 속도
+    float minSpeed; // 최소 속도
+    float maxSightRange; // 최대 시야 범위
+    float minSightRange; // 최소 시야 범위
+    float hitboxRange; // 히트박스 범위
+    float magnetRange; // 자성 범위
+    float damageReductionRate; // 피해 감소율
+    float recoveryRate; // 회복량
+    float naturalRecoveryRate; // 자연 회복량
+    float itemAttackPower; // 아이템 공격력
+    float goldAddtionalRate; // 골드 추가 획득률
+    float starAddtionalRate; // 별 추가 획득률
+    List<Skill> skill; // 보유한 스킬 리스트
+}
+
+public struct HousingObject
+{
+    int index; // 인덱스(아이디)
+    string name; // 이름
+    string type; // 타입
+    string setType; // 세트효과 타입
+    string interactType; // 상호작용 타입
+    int reinforceLevel; // 강화 단계
+    int maxReinforceLevel; // 최대 강화 단계
+    float statIncreaseRate; // 능력치 상승량
+    int layer; // 레이어
+
+    // + 세트효과 상승 능력치 추가 필요
+}
+
+public struct GuestBook
+{
+    int index; // 인덱스
+    string id; // 작성자 아이디
+    string name; // 작성자 이름
+    string content; // 내용
+}
+
+public struct Mail
+{
+    int index; // 인덱스
+    string id; // 작성자 아이디
+    string name; // 작성자 이름
+    string content; // 내용
+}
+
+public struct Skill
+{
+    int index; // 인덱스
+    int iconImageIndex; // 아이콘 이미지 인덱스
+    string name; // 이름
+    bool isActiveSkill; // 액티브 스킬 여부
+    float cooldown; // 쿨타임
+    float count; // 횟수
+    float increaseRate; // 증가량
+    float percent; // 확률
+    float duration; // 지속 시간
+    float activation; // 발동 시간
+}
+
+public class User
+{
+    public string userID { get; set; } // 유저 아이디
+    public string password { get; set; } // 유저 비밀번호
+    public string name { get; set; } // 유저 이름
+    public List<Character> character { get; set; } // 보유한 캐릭터 리스트
+    public Dictionary<string, int> goods { get; set; } // 보유한 재화의 종류와 수량
+    public List<HousingObject> housingObject { get; set; } // 보유한 하우징 오브젝트 리스트
+    public List<Friend> friend { get; set; } // 친구 리스트
+    public List<GuestBook> guestBook { get; set; } // 방명록 리스트
+    public List<Mail> mail { get; set; } // 우편 리스트
+
+    // + 스테이지 클리어 정보 추가 필요
+}
+
 public class DBManager : MonoBehaviour
 {
     private void Start()
@@ -31,7 +123,7 @@ public class DBManager : MonoBehaviour
         {
             Debug.Log($"서버 접속 성공 : {bro}");
 
-            Login_Temp();
+            //Login_Temp();
         }
         else
         {
@@ -146,6 +238,5 @@ public class DBManager : MonoBehaviour
         // list 형식 접근 : bro.FlattenRows()[0]["list"][0].ToString(); (0번째 인덱스 데이터의 "list" 컬럼의 0번째 인덱스 데이터)
         // dictionary 형식 접근 : bro.FlattenRows()[0]["dictionary"]["num1"].ToString(); (0번째 인덱스 데이터의 "dictionary" 컬럼의 "num1" 키의 밸류값)
         // param 형식 접근 : bro.FlattenRows()[0]["param"]["내부1"].ToString(); (0번째 인덱스 데이터의 "param" 컬럼의 "내부1" 파라미터의 값)
-
     }
 }
