@@ -118,7 +118,6 @@ public class ChatManager
                 if (!args.Session.IsRemote)
                 {
                     Utils.Instance.LoadScene(SceneNames.Chatting);
-
                 }
                 //다른 유저가 접속한 경우
                 else
@@ -259,6 +258,37 @@ public class ChatManager
             return true;
         }
 
+    }
+
+    //채팅 최근 내역 불러오기
+    public void GetRecentChat()
+    {
+        //채팅 채널 리스트 가져오기
+        BackendReturnObject bro = Backend.Chat.GetGroupChannelList(normalChatList);
+
+        //채팅 채널 uuid 받아오기
+        string channelIndate = bro.GetReturnValuetoJSON()["rows"][0]["inDate"].ToString();
+
+        //uuid를 이용하여 해당 일반 채널의 최근 채팅 내역 가져오기(25개만)
+        BackendReturnObject result = Backend.Chat.GetRecentChat(ChannelType.Public, channelIndate, 20);
+
+
+        for (int i = 0; i < result.Rows().Count; i++)
+        {
+            string nickname = result.Rows()[i]["nickname"].ToString();
+            string message = result.Rows()[i]["message"].ToString();
+
+            if (nickname.Equals(Backend.UserNickName))
+            {
+                Debug.Log("최근 채팅 내역 불러오기");
+                chatListManager.SpawnMyChatList(nickname, message);
+            }
+            else
+            {
+                Debug.Log("최근 채팅 내역 불러오기");
+                chatListManager.SpawnLocalChatList(nickname, message);
+            }
+        }
     }
 
 }

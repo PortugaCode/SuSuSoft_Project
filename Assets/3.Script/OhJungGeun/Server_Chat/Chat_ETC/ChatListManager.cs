@@ -23,8 +23,18 @@ public class ChatListManager : MonoBehaviour
     private void Start()
     {
         BackEndManager.Instance.GetChatManager().chatListManager = this;
+        BackEndManager.Instance.GetChatManager().GetRecentChat();
         SpawnJoinUI(Backend.UserNickName);
     }
+
+    private void ChatDestroyer()
+    {
+        if(contents.childCount >= 25)
+        {
+            Destroy(contents.GetChild(0).gameObject);
+        }
+    }
+
 
     public void SpawnJoinUI(string name)
     {
@@ -33,6 +43,7 @@ public class ChatListManager : MonoBehaviour
         joinUI.SetJoinUserName(name);
         joinUIClone.transform.SetParent(contents);
         joinUIClone.SetActive(true);
+        ChatDestroyer();
         //chatLineControl.SetChatLine(joinUIClone);
     }
 
@@ -43,6 +54,7 @@ public class ChatListManager : MonoBehaviour
         errorUI.SetErrorMessage(msg);
         errorUIClone.transform.SetParent(contents);
         errorUIClone.SetActive(true);
+        ChatDestroyer();
         //chatLineControl.SetChatLine(errorUIClone);
     }
 
@@ -55,6 +67,7 @@ public class ChatListManager : MonoBehaviour
         myChatListClone.transform.SetParent(contents);
         myChatListClone.SetActive(true);
         chatLineControl.SetChatLine(myChatListClone);
+        ChatDestroyer();
     }
 
     public void SpawnLocalChatList(string username, string chat)
@@ -65,6 +78,7 @@ public class ChatListManager : MonoBehaviour
         localChatListClone.transform.SetParent(contents);
         localChatListClone.SetActive(true);
         chatLineControl.SetChatLine(localChatListClone);
+        ChatDestroyer();
     }
 
     public void SpawnMyChatList_Whisper(string username, string chat)
@@ -75,6 +89,7 @@ public class ChatListManager : MonoBehaviour
         myChatListClone.transform.SetParent(contents);
         myChatListClone.SetActive(true);
         chatLineControl.SetChatLine(myChatListClone);
+        ChatDestroyer();
     }
 
     public void SpawnLocalChatList_Whisper(string username, string chat)
@@ -85,6 +100,7 @@ public class ChatListManager : MonoBehaviour
         localChatListClone.transform.SetParent(contents);
         localChatListClone.SetActive(true);
         chatLineControl.SetChatLine(localChatListClone);
+        ChatDestroyer();
     }
 
 }
