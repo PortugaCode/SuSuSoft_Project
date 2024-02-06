@@ -92,7 +92,7 @@ public class User
     public List<int> guestBook { get; set; } // 방명록 리스트
     public List<int> mail { get; set; } // 우편 리스트
 
-    public User() // 생성자
+    public User() // 생성자에서 초기화
     {
         userID = "";
         password = "";
@@ -267,11 +267,11 @@ public class DBManager : MonoBehaviour
 
             Backend.GameData.Insert("User", param); // User 테이블에 데이터 삽입
 
-            Debug.Log("새로운 유저 데이터 삽입 완료");
+            Debug.Log("새로운 유저 데이터 초기값 설정 완료");
         }
         else // 기존 유저인 경우
         {
-            // 저장된 데이터 불러와 user 클래스에 할당
+            // 저장된 데이터를 불러와 user 클래스에 할당
 
             // [보유한 캐릭터]
             for (int i = 0; i < bro.FlattenRows()[0]["Character"].Count; i++)
@@ -315,7 +315,7 @@ public class DBManager : MonoBehaviour
                 user.mail[i] = int.Parse(bro.FlattenRows()[0]["Mail"][i].ToString());
             }
 
-            Debug.Log("기존 데이터 불러오기 완료");
+            Debug.Log("기존 유저 데이터 불러오기 완료");
         }
     }
 }

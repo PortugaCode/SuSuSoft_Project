@@ -43,11 +43,12 @@ public class LoginManager : MonoBehaviour
         string idText = inputFieldID.text;
         string pwText = inputFieldPW.text;
 
-        if (idText.Trim().Equals("") || pwText.Trim().Equals("")) // ID 또는 PW 비워진 상태
+        if (idText.Trim().Equals("") || pwText.Trim().Equals(""))
         {
+            // InputField가 비워져 있을 때
             inputFieldID.text = "";
             inputFieldPW.text = "";
-            logInErrorText.text = $"InputField가 비워져있습니다.";
+            logInErrorText.text = $"정보를 입력해주세요.";
             logInErrorText.gameObject.SetActive(true);
             btnLogin.interactable = true;
             return;
@@ -100,19 +101,21 @@ public class LoginManager : MonoBehaviour
         string pwText_2 = inputFieldSignUpPW_2.text;
         string userNameText = inputFieldSignUpUserName.text;
 
-        if (idText.Trim().Equals("") || pwText_1.Trim().Equals("") || pwText_2.Trim().Equals("") || userNameText.Trim().Equals("")) // InputField가 비워진 상태
+        if (idText.Trim().Equals("") || pwText_1.Trim().Equals("") || pwText_2.Trim().Equals("") || userNameText.Trim().Equals(""))
         {
+            // InputField가 비워져있을 때
             inputFieldSignUpID.text = "";
             inputFieldSignUpPW_1.text = "";
             inputFieldSignUpPW_2.text = "";
             inputFieldSignUpUserName.text = "";
-            signUpErrorText.text = "InputField가 비워져있습니다.";
+            signUpErrorText.text = "정보를 입력해주세요.";
             signUpErrorText.gameObject.SetActive(true);
             btnSignUp.interactable = true;
             return;
         }
-        else if (pwText_1 != pwText_2) // 패스워드 확인과 다른 상태
+        else if (pwText_1 != pwText_2)
         {
+            // 패스워드가 일치하지 않을 때
             inputFieldSignUpID.text = "";
             inputFieldSignUpPW_1.text = "";
             inputFieldSignUpPW_2.text = "";
@@ -124,6 +127,7 @@ public class LoginManager : MonoBehaviour
         }
         else if (idText.Any(x => char.IsWhiteSpace(x) == true) || pwText_1.Any(x => char.IsWhiteSpace(x) == true) || pwText_2.Any(x => char.IsWhiteSpace(x) == true) || userNameText.Any(x => char.IsWhiteSpace(x) == true))
         {
+            // 공백이 포함되어 있을 때
             inputFieldSignUpID.text = "";
             inputFieldSignUpPW_1.text = "";
             inputFieldSignUpPW_2.text = "";
