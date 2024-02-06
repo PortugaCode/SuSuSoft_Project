@@ -4,12 +4,30 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using BackEnd;
+using System.Linq;
 
 public class LoginManager : MonoBehaviour
 {
+    [Header("Menu")]
+    [SerializeField] private GameObject popUp_Menu;
+
+    [Header("LogIn")]
+    [SerializeField] private GameObject popUp_LogIn;
     [SerializeField] private TMP_InputField inputFieldID;
     [SerializeField] private TMP_InputField inputFieldPW;
     [SerializeField] private Button btnLogin;
+    [SerializeField] private Button btnGoToSignUp;
+    [SerializeField] private TMP_Text logInErrorText;
+
+    [Header("SignUp")]
+    [SerializeField] private GameObject popUp_SignUp;
+    [SerializeField] private TMP_InputField inputFieldSignUpID;
+    [SerializeField] private TMP_InputField inputFieldSignUpPW_1;
+    [SerializeField] private TMP_InputField inputFieldSignUpPW_2;
+    [SerializeField] private TMP_InputField inputFieldSignUpUserName;
+    [SerializeField] private Button btnSignUp;
+    [SerializeField] private Button btnGoToLogIn;
+    [SerializeField] private TMP_Text signUpErrorText;
 
     private void Update()
     {
@@ -27,6 +45,11 @@ public class LoginManager : MonoBehaviour
 
         if (idText.Trim().Equals("") || pwText.Trim().Equals("")) // ID 또는 PW 비워진 상태
         {
+            inputFieldID.text = "";
+            inputFieldPW.text = "";
+            logInErrorText.text = $"InputField가 비워져있습니다.";
+            logInErrorText.gameObject.SetActive(true);
+            btnLogin.interactable = true;
             return;
         }
 
@@ -37,6 +60,7 @@ public class LoginManager : MonoBehaviour
             if (callback.IsSuccess())
             {
                 Debug.Log($"로그인 성공");
+                DBManager.instance.DB_Init(idText, pwText);
             }
             else
             {
@@ -61,9 +85,119 @@ public class LoginManager : MonoBehaviour
                         message = callback.GetMessage();
                         break;
                 }
-                Debug.Log($"{message}");
+
+                logInErrorText.text = $"{message}";
+                logInErrorText.gameObject.SetActive(true);
             }
         });
+    }
 
+    public void SignUp()
+    {
+        // 캐싱
+        string idText = inputFieldSignUpID.text;
+        string pwText_1 = inputFieldSignUpPW_1.text;
+        string pwText_2 = inputFieldSignUpPW_2.text;
+        string userNameText = inputFieldSignUpUserName.text;
+
+        if (idText.Trim().Equals("") || pwText_1.Trim().Equals("") || pwText_2.Trim().Equals("") || userNameText.Trim().Equals("")) // InputField가 비워진 상태
+        {
+            inputFieldSignUpID.text = "";
+            inputFieldSignUpPW_1.text = "";
+            inputFieldSignUpPW_2.text = "";
+            inputFieldSignUpUserName.text = "";
+            signUpErrorText.text = "InputField가 비워져있습니다.";
+            signUpErrorText.gameObject.SetActive(true);
+            btnSignUp.interactable = true;
+            return;
+        }
+        else if (pwText_1 != pwText_2) // 패스워드 확인과 다른 상태
+        {
+            inputFieldSignUpID.text = "";
+            inputFieldSignUpPW_1.text = "";
+            inputFieldSignUpPW_2.text = "";
+            inputFieldSignUpUserName.text = "";
+            signUpErrorText.text = "비밀번호가 일치하지 않습니다.";
+            signUpErrorText.gameObject.SetActive(true);
+            btnSignUp.interactable = true;
+            return;
+        }
+        else if (idText.Any(x => char.IsWhiteSpace(x) == true) || pwText_1.Any(x => char.IsWhiteSpace(x) == true) || pwText_2.Any(x => char.IsWhiteSpace(x) == true) || userNameText.Any(x => char.IsWhiteSpace(x) == true))
+        {
+            inputFieldSignUpID.text = "";
+            inputFieldSignUpPW_1.text = "";
+            inputFieldSignUpPW_2.text = "";
+            inputFieldSignUpUserName.text = "";
+            signUpErrorText.text = "공백을 포함할 수 없습니다.";
+            signUpErrorText.gameObject.SetActive(true);
+            btnSignUp.interactable = true;
+            return;
+        }
+
+        btnSignUp.interactable = false;
+
+        Backend.BMember.CustomSignUp(idText, pwText_1, callback =>
+        {
+            if (callback.IsSuccess())
+            {
+                Debug.Log($"회원가입 성공");
+
+                // 닉네임 항목에 입력한 유저 닉네임 할당
+                Backend.BMember.CreateNickname(userNameText);
+            }
+            else
+            {
+                inputFieldSignUpID.text = "";
+                inputFieldSignUpPW_1.text = "";
+                inputFieldSignUpPW_2.text = "";
+                inputFieldSignUpUserName.text = "";
+                btnSignUp.interactable = true;
+
+                string message = string.Empty;
+
+                switch (int.Parse(callback.GetStatusCode()))
+                {
+                    case 401:
+                        message = "프로젝트 상태가 '점검'입니다.";
+                        break;
+                    case 403:
+                        message = callback.GetMessage().Contains("blocked") ? "차단당한 디바이스입니다." : "출시 설정이 테스트인데 AU가 10을 초과하였습니다.";
+                        break;
+                    case 409:
+                        message = "중복된 아이디입니다.";
+                        break;
+                    default:
+                        message = callback.GetMessage();
+                        break;
+                }
+
+                inputFieldSignUpID.text = "";
+                inputFieldSignUpPW_1.text = "";
+                inputFieldSignUpPW_2.text = "";
+                inputFieldSignUpUserName.text = "";
+                signUpErrorText.text = $"{message}";
+                signUpErrorText.gameObject.SetActive(true);
+                btnSignUp.interactable = true;
+            }
+        });
+    }
+
+    public void GoToCustomLogIn()
+    {
+        popUp_Menu.SetActive(false);
+        popUp_LogIn.SetActive(true);
+        popUp_SignUp.SetActive(false);
+    }
+
+    public void GoToSignUp()
+    {
+        popUp_LogIn.SetActive(false);
+        popUp_SignUp.SetActive(true);
+    }
+
+    public void GoToMenu()
+    {
+        popUp_Menu.SetActive(true);
+        popUp_LogIn.SetActive(false);
     }
 }

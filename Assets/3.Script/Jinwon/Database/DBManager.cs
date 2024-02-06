@@ -84,46 +84,61 @@ public class User
 {
     public string userID { get; set; } // 유저 아이디
     public string password { get; set; } // 유저 비밀번호
-    public string name { get; set; } // 유저 이름
-    public List<Character> character { get; set; } // 보유한 캐릭터 리스트
+    public string userName { get; set; } // 유저 이름
+    public List<int> character { get; set; } // 보유한 캐릭터 리스트
     public Dictionary<string, int> goods { get; set; } // 보유한 재화의 종류와 수량
-    public List<HousingObject> housingObject { get; set; } // 보유한 하우징 오브젝트 리스트
-    public List<Friend> friend { get; set; } // 친구 리스트
-    public List<GuestBook> guestBook { get; set; } // 방명록 리스트
-    public List<Mail> mail { get; set; } // 우편 리스트
+    public List<int> housingObject { get; set; } // 보유한 하우징 오브젝트 리스트
+    public List<string> friend { get; set; } // 친구 리스트
+    public List<int> guestBook { get; set; } // 방명록 리스트
+    public List<int> mail { get; set; } // 우편 리스트
+
+    public User() // 생성자
+    {
+        userID = "";
+        password = "";
+        userName = "";
+        character = new List<int>();
+        goods = new Dictionary<string, int> { { "friendshipPoint", 0 }, { "ruby", 0 }, { "gold", 0 } };
+        housingObject = new List<int>();
+        friend = new List<string>();
+        guestBook = new List<int>();
+        mail = new List<int>();
+    }
 
     // + 스테이지 클리어 정보 추가 필요
 }
 
 public class DBManager : MonoBehaviour
 {
+    public static DBManager instance;
+
+    public User user = new User();
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(this);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void Start()
     {
         InitializeServer();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            SaveData();
-        }
-
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            LoadData();
-        }
-    }
-
-    private void InitializeServer() // 뒤끝 서버 접속
+    private void InitializeServer() // 초기 뒤끝 서버 접속
     {
         var bro = Backend.Initialize(true);
 
         if (bro.IsSuccess())
         {
             Debug.Log($"서버 접속 성공 : {bro}");
-
-            //Login_Temp();
         }
         else
         {
@@ -131,24 +146,8 @@ public class DBManager : MonoBehaviour
         }
     }
 
-    private void Login_Temp() // 테스트용 자동 로그인 메서드
+    private void SaveDataExample() // DB에 데이터 저장하기 예시
     {
-        var bro = Backend.BMember.CustomLogin("test123", "1234");
-
-        if (bro.IsSuccess())
-        {
-            Debug.Log($"로그인 성공");
-        }
-        else
-        {
-            Debug.LogError($"로그인 실패");
-        }
-    }
-
-    private void SaveData() // DB에 데이터 저장하기
-    {
-        Debug.Log("SaveData");
-
         Param param = new Param(); // DB에 저장할 데이터들
 
         Dictionary<string, int> testDictionary = new Dictionary<string, int>
@@ -180,7 +179,7 @@ public class DBManager : MonoBehaviour
         });*/
     }
 
-    private void LoadData() // DB에서 데이터 불러오기
+    private void LoadDataExample() // DB에서 데이터 불러오기 예시
     {
         // 1. 자신의 데이터만 조회 (select절의 유무와 상관없이 처리하는 데이터양은 동일)
         // public BackendReturnObject GetMyData(string tableName, Where where, string[] select, int limit, string firstKey, TableSortOrder sortOrder);
@@ -238,5 +237,85 @@ public class DBManager : MonoBehaviour
         // list 형식 접근 : bro.FlattenRows()[0]["list"][0].ToString(); (0번째 인덱스 데이터의 "list" 컬럼의 0번째 인덱스 데이터)
         // dictionary 형식 접근 : bro.FlattenRows()[0]["dictionary"]["num1"].ToString(); (0번째 인덱스 데이터의 "dictionary" 컬럼의 "num1" 키의 밸류값)
         // param 형식 접근 : bro.FlattenRows()[0]["param"]["내부1"].ToString(); (0번째 인덱스 데이터의 "param" 컬럼의 "내부1" 파라미터의 값)
+    }
+
+    public void DB_Init(string idText, string pwText) // 로그인 시 DB 초기설정
+    {
+        Where where = new Where();
+        where.Equal("owner_inDate", Backend.UserInDate); // 로그인 한 유저의 owner_inDate로 DB 조회
+
+        var bro = Backend.GameData.GetMyData("User", where);
+
+        user.userID = idText;
+        user.password = pwText;
+        user.userName = Backend.UserNickName; // 닉네임 수정 필요
+
+        if (bro.IsSuccess() == false || bro.GetReturnValuetoJSON()["rows"].Count <= 0) // 새로운 유저인 경우
+        {
+            // 데이터 초기값 삽입
+
+            Param param = new Param(); // DB에 저장할 데이터들
+            param.Add("UserID", user.userID);
+            param.Add("Password", user.password);
+            param.Add("UserName", user.userName);
+            param.Add("Character", user.character);
+            param.Add("Goods", user.goods); // 재화 무엇 있는지 파악하여 0 할당 필요
+            param.Add("HousingObject", user.housingObject);
+            param.Add("Friend", user.friend);
+            param.Add("GuestBook", user.guestBook);
+            param.Add("Mail", user.mail);
+
+            Backend.GameData.Insert("User", param); // User 테이블에 데이터 삽입
+
+            Debug.Log("새로운 유저 데이터 삽입 완료");
+        }
+        else // 기존 유저인 경우
+        {
+            // 저장된 데이터 불러와 user 클래스에 할당
+
+            // [보유한 캐릭터]
+            for (int i = 0; i < bro.FlattenRows()[0]["Character"].Count; i++)
+            {
+                user.character[i] = int.Parse(bro.FlattenRows()[0]["Character"][i].ToString());
+            }
+
+            // [보유한 재화]
+            var keys = bro.FlattenRows()[0]["Goods"].Keys; // JsonData를 딕셔너리 키로 변환하는 과정
+
+            string[] goodsArray = new string[keys.Count];
+            keys.CopyTo(goodsArray, 0);
+
+            for (var i = 0; i < keys.Count; i++)
+            {
+                var key = goodsArray[i];
+                user.goods[key] = int.Parse(bro.FlattenRows()[0]["Goods"][key].ToString());
+            }
+
+            // [보유한 하우징 오브젝트]
+            for (int i = 0; i < bro.FlattenRows()[0]["HousingObject"].Count; i++)
+            {
+                user.housingObject[i] = int.Parse(bro.FlattenRows()[0]["HousingObject"][i].ToString());
+            }
+
+            // [친구]
+            for (int i = 0; i < bro.FlattenRows()[0]["Friend"].Count; i++)
+            {
+                user.friend[i] = bro.FlattenRows()[0]["Friend"][i].ToString();
+            }
+
+            // [방명록]
+            for (int i = 0; i < bro.FlattenRows()[0]["GuestBook"].Count; i++)
+            {
+                user.guestBook[i] = int.Parse(bro.FlattenRows()[0]["GuestBook"][i].ToString());
+            }
+
+            // [우편]
+            for (int i = 0; i < bro.FlattenRows()[0]["Mail"].Count; i++)
+            {
+                user.mail[i] = int.Parse(bro.FlattenRows()[0]["Mail"][i].ToString());
+            }
+
+            Debug.Log("기존 데이터 불러오기 완료");
+        }
     }
 }
