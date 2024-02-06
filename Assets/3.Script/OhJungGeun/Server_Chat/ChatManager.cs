@@ -270,7 +270,7 @@ public class ChatManager
         string channelIndate = bro.GetReturnValuetoJSON()["rows"][0]["inDate"].ToString();
 
         //uuid를 이용하여 해당 일반 채널의 최근 채팅 내역 가져오기(25개만)
-        BackendReturnObject result = Backend.Chat.GetRecentChat(ChannelType.Public, channelIndate, 20);
+        BackendReturnObject result = Backend.Chat.GetRecentChat(ChannelType.Public, channelIndate, 15);
 
 
          for (int i = 0; i < result.Rows().Count; i++)

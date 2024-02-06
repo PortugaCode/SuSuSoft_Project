@@ -13,6 +13,14 @@ public class LocalChatList : MonoBehaviour
     [SerializeField] private TextMeshProUGUI userName;
     [SerializeField] private TextMeshProUGUI userSpeakText;
 
+    [SerializeField] private bool isWhisper = false;
+    public bool IsWhisper => isWhisper;
+
+    public void SetIsWhisper(bool isWhisper)
+    {
+        this.isWhisper = isWhisper;
+    }
+
     public string GetUserName()
     {
         return userName.text;
