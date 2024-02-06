@@ -8,7 +8,7 @@ public class HousingGrid : MonoBehaviour
     private void Start()
     {
         RectTransform rect = GetComponent<RectTransform>();
-        Grid grid = new Grid(10, 20, 100f);
-        Debug.Log(rect.anchoredPosition);
+        //Grid grid = new Grid(10, 20, 100f);
+        Debug.Log(rect.position);
     }
 }
