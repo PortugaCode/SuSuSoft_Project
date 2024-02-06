@@ -591,6 +591,9 @@ MonoBehaviour:
   blinkFace: {fileID: 292339438}
   speed: 100
   rotationSpeed: 50
+  acceleration: 100
+  initialSpeed: 20
+  maxSpeed: 300
   horizon_Joystick: {fileID: 8410861845419789164}
   rigidbody2D: {fileID: 520462518}
 --- !u!1 &591748247

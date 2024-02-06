@@ -14,7 +14,11 @@ public class HorizontalPlayer : MonoBehaviour
     [Header("PlyerSpeed")]
     [SerializeField] private float speed;
     [SerializeField] private float rotationSpeed;
-    private float yMove;
+
+    [SerializeField] private float acceleration;
+    [SerializeField] private float initialSpeed;
+    [SerializeField] private float maxSpeed;
+    private float currentSpeed;
 
     [Header("  ")]
     public Horizon_Joystick horizon_Joystick;
@@ -49,21 +53,19 @@ public class HorizontalPlayer : MonoBehaviour
             direction = (touchPosition - transform.position).normalized;
 
             // 터치 했을 때 플레이어 속력 증가
-
-            float xMove = transform.position.x;
-            float yMove = transform.position.y;
-            Vector3 speedUp = new Vector3(xMove, yMove, 0) * speed * Time.deltaTime;
-            //rigidbody2D.speed
-
-           // rigidbody2D.velocity = new Vector2(direction.x, 0) * speed * Time.deltaTime + Vector2.up * 1000f * Time.deltaTime;
+            currentSpeed += acceleration * Time.deltaTime;
+            currentSpeed = Mathf.Clamp(currentSpeed, initialSpeed, maxSpeed);
+            rigidbody2D.velocity = new Vector2(direction.x * currentSpeed, 0) * Time.deltaTime + Vector2.up * currentSpeed * Time.deltaTime;
 
             //Player Rotation
             PlayerRotation();
 
             if (touch.phase == TouchPhase.Ended)     //터치가 끝난 상태
             {
+                // 속도 초기화
+                currentSpeed = initialSpeed;
                 rigidbody2D.velocity = Vector2.zero;
-                rigidbody2D.velocity = Vector2.up * 1000f / 2f  * Time.deltaTime;
+                rigidbody2D.velocity = Vector2.up * currentSpeed * Time.deltaTime;
 
                 //터치 끝났을 때 일정속도 유지
                 rigidbody2D.velocity = new Vector2(direction.x, 0) * speed * Time.deltaTime + Vector2.up * 1000f * Time.deltaTime;
@@ -73,7 +75,7 @@ public class HorizontalPlayer : MonoBehaviour
 
     public void PlayerRotation()
     {
-        if(Input.touchCount>0)
+        if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
 
@@ -90,7 +92,7 @@ public class HorizontalPlayer : MonoBehaviour
 
     IEnumerator BlinkFace()
     {
-        while(true)
+        while (true)
         {
 
             basicFace.SetActive(true);
@@ -100,7 +102,7 @@ public class HorizontalPlayer : MonoBehaviour
             basicFace.SetActive(false);
             blinkFace.SetActive(true);
             yield return new WaitForSeconds(0.5f);
-        }  
+        }
     }
 
     private void StartGame()
