@@ -9,7 +9,7 @@ public class JoinUI : MonoBehaviour
 
     public void SetJoinUserName(string username)
     {
-        userName.text = $"{username}¥‘¿Ã ¡¢º”«œºÃΩ¿¥œ¥Ÿ.";
+        userName.text = $"[{username}]¥‘¿Ã ¡¢º”«œºÃΩ¿¥œ¥Ÿ.";
     }
 
     public void SetErrorMessage(string msg)

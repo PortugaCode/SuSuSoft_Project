@@ -23,7 +23,9 @@ public class ChatListManager : MonoBehaviour
     private void Start()
     {
         BackEndManager.Instance.GetChatManager().chatListManager = this;
+        chatLineControl.GetChatUI().SetActive(true);
         BackEndManager.Instance.GetChatManager().GetRecentChat();
+        chatLineControl.GetChatUI().SetActive(false);
         SpawnJoinUI(Backend.UserNickName);
     }
 
@@ -66,7 +68,7 @@ public class ChatListManager : MonoBehaviour
         myChatList.SetMyChatList(username, chat);
         myChatListClone.transform.SetParent(contents);
         myChatListClone.SetActive(true);
-        chatLineControl.SetChatLine(myChatListClone);
+        chatLineControl.SetChatLine(myChatListClone, false, false);
         ChatDestroyer();
     }
 
@@ -77,7 +79,7 @@ public class ChatListManager : MonoBehaviour
         localChatList.SetLocalChatList(username, chat);
         localChatListClone.transform.SetParent(contents);
         localChatListClone.SetActive(true);
-        chatLineControl.SetChatLine(localChatListClone);
+        chatLineControl.SetChatLine(localChatListClone, true, false);
         ChatDestroyer();
     }
 
@@ -88,7 +90,7 @@ public class ChatListManager : MonoBehaviour
         myChatList.SetMyChatList(username, chat);
         myChatListClone.transform.SetParent(contents);
         myChatListClone.SetActive(true);
-        chatLineControl.SetChatLine(myChatListClone);
+        chatLineControl.SetChatLine(myChatListClone, false, true);
         ChatDestroyer();
     }
 
@@ -99,7 +101,7 @@ public class ChatListManager : MonoBehaviour
         localChatList.SetLocalChatList(username, chat);
         localChatListClone.transform.SetParent(contents);
         localChatListClone.SetActive(true);
-        chatLineControl.SetChatLine(localChatListClone);
+        chatLineControl.SetChatLine(localChatListClone, true, true);
         ChatDestroyer();
     }
 

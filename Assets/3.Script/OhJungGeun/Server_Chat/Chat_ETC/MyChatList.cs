@@ -14,6 +14,16 @@ public class MyChatList : MonoBehaviour
     [SerializeField] private TextMeshProUGUI userSpeakText;
 
 
+    public string GetUserName()
+    {
+        return userName.text;
+    }
+
+    public string GetUserSpeakText()
+    {
+        return userSpeakText.text;
+    }
+
     public void SetMyChatList(string userName, string userSpeakText)
     {
         this.userName.text = userName;

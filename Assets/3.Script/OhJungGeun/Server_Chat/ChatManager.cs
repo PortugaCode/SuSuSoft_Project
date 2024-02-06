@@ -239,7 +239,7 @@ public class ChatManager
         {
             Backend.Notification.DisConnect();
             Debug.Log("존재하지 않는 닉네임입니다.");
-            chatListManager.SpawnErrorUI($"{nickName}은 존재하지 않는 닉네임입니다.");
+            chatListManager.SpawnErrorUI($"[{nickName}]님은 존재하지 않는 닉네임입니다.");
             return false;
         }
         else
@@ -273,15 +273,15 @@ public class ChatManager
         BackendReturnObject result = Backend.Chat.GetRecentChat(ChannelType.Public, channelIndate, 20);
 
 
-        for (int i = 0; i < result.Rows().Count; i++)
-        {
-            string nickname = result.Rows()[i]["nickname"].ToString();
-            string message = result.Rows()[i]["message"].ToString();
+         for (int i = 0; i < result.Rows().Count; i++)
+         {
+             string nickname = result.Rows()[i]["nickname"].ToString();
+             string message = result.Rows()[i]["message"].ToString();
 
             if (nickname.Equals(Backend.UserNickName))
             {
-                Debug.Log("최근 채팅 내역 불러오기");
-                chatListManager.SpawnMyChatList(nickname, message);
+                 Debug.Log("최근 채팅 내역 불러오기");
+                 chatListManager.SpawnMyChatList(nickname, message);
             }
             else
             {

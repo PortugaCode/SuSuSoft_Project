@@ -13,6 +13,15 @@ public class LocalChatList : MonoBehaviour
     [SerializeField] private TextMeshProUGUI userName;
     [SerializeField] private TextMeshProUGUI userSpeakText;
 
+    public string GetUserName()
+    {
+        return userName.text;
+    }
+
+    public string GetUserSpeakText()
+    {
+        return userSpeakText.text;
+    }
 
     public void SetLocalChatList(string userName, string userSpeakText)
     {
