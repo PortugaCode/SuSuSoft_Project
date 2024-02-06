@@ -18,9 +18,9 @@ public class CameraController : MonoBehaviour
     {
         Vector3 targetPos = new Vector3(player.position.x, player.position.y, this.transform.position.z);
 
-        targetPos.x = Mathf.Clamp(targetPos.x, minCameraPos.x, maxCameraPos.x);
+        //targetPos.x = Mathf.Clamp(targetPos.x, minCameraPos.x, maxCameraPos.x);
         targetPos.y = Mathf.Clamp(targetPos.y, minCameraPos.y, maxCameraPos.y);
 
-        transform.position = Vector3.Lerp(transform.position, targetPos, smothing);
+        transform.position = Vector3.Lerp(transform.position, targetPos, smothing * Time.deltaTime);
     }
 }
