@@ -61,6 +61,7 @@ public class LoginManager : MonoBehaviour
             if (callback.IsSuccess())
             {
                 Debug.Log($"로그인 성공");
+                ChartManager.instance.GetChartData();
                 DBManager.instance.DB_Init(idText, pwText);
             }
             else
@@ -148,6 +149,14 @@ public class LoginManager : MonoBehaviour
 
                 // 닉네임 항목에 입력한 유저 닉네임 할당
                 Backend.BMember.CreateNickname(userNameText);
+
+                inputFieldSignUpID.text = "";
+                inputFieldSignUpPW_1.text = "";
+                inputFieldSignUpPW_2.text = "";
+                inputFieldSignUpUserName.text = "";
+                btnSignUp.interactable = true;
+
+                GoToCustomLogIn();
             }
             else
             {
