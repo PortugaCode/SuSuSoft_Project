@@ -45,7 +45,7 @@ public class Login : LoginBase
             {
 
                 SetMessage($"{inputFieldID.text}님 환영합니다.");
-                //BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
+                BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
                 BackEndManager.Instance.GetChatManager().GetChatStatus();
             }
 

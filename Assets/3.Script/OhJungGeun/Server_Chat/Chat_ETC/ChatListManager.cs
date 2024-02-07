@@ -31,6 +31,10 @@ public class ChatListManager : MonoBehaviour
     public JoinUI errorUIPrefab;
 
 
+
+    [SerializeField] private GameObject matchInvitedUI;
+
+
     private int listCounts;
 
 
@@ -57,6 +61,7 @@ public class ChatListManager : MonoBehaviour
         chatLineControl.GetChatUI().SetActive(true);
         BackEndManager.Instance.GetChatManager().GetRecentChat();
         chatLineControl.GetChatUI().SetActive(false);
+        BackEndManager.Instance.GetMatchSystem().OnMatchMakingRoomSomeoneInvited(SetMatchInvitedUI_True);
         SpawnJoinUI(Backend.UserNickName);
     }
 
@@ -163,7 +168,7 @@ public class ChatListManager : MonoBehaviour
 
     public void SpawnMyChatList_Whisper(string username, string chat)
     {
-        MyChatList myChatList = myChatLists.Dequeue();
+        MyChatList myChatList = myChatLists_Whisper.Dequeue();
         myChatList.SetMyChatList(username, chat);
         myChatList.SetIsWhisper(true);
 
@@ -175,7 +180,7 @@ public class ChatListManager : MonoBehaviour
 
     public void SpawnLocalChatList_Whisper(string username, string chat)
     {
-        LocalChatList localChatList = localChatLists.Dequeue();
+        LocalChatList localChatList = localChatLists_Whisper.Dequeue();
         localChatList.SetLocalChatList(username, chat);
         localChatList.SetIsWhisper(true);
 
@@ -183,6 +188,11 @@ public class ChatListManager : MonoBehaviour
         localChatList.gameObject.SetActive(true);
         listCounts++;
         chatLineControl.SetChatLine(localChatList.gameObject, true, true);
+    }
+
+    public void SetMatchInvitedUI_True()
+    {
+        matchInvitedUI.gameObject.SetActive(true);
     }
 
 }

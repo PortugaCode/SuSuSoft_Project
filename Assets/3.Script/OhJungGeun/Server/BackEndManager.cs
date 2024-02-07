@@ -51,10 +51,13 @@ public class BackEndManager : MonoBehaviour
             Backend.AsyncPoll();
 
             Backend.Match.Poll();
+            matchSystem.SetTimer();
+
+
+
             Backend.Chat.Poll();
             chatManager.ReceiveChat();
             chatManager.ReceiveWhisperChat();
-
         }
     }
 

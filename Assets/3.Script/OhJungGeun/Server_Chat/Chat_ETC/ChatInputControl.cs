@@ -24,7 +24,7 @@ public class ChatInputControl : MonoBehaviour
             textInput.ActivateInputField();
             return;
         }
-        else if(textInput.text.StartsWith("/w ") || textInput.text.StartsWith("/W ") || textInput.text.StartsWith("/庇加富 "))
+        else if(textInput.text.StartsWith("/w ") || textInput.text.StartsWith("/W ") || textInput.text.StartsWith("/庇加富 ") || textInput.text.StartsWith("/じ "))
         {
             string valueStr = textInput.text;
             string[] splitStr = valueStr.Split(' ');
@@ -38,6 +38,17 @@ public class ChatInputControl : MonoBehaviour
                 textInput.text = "";
                 textInput.ActivateInputField();
             }
+        }
+        else if(textInput.text.StartsWith("/檬措 "))
+        {
+            string valueStr = textInput.text;
+            string[] splitStr = valueStr.Split(' ');
+            string nickName = splitStr[1];
+
+            BackEndManager.Instance.GetMatchSystem().CreateMatchRoom(nickName);
+
+            textInput.text = "";
+            textInput.ActivateInputField();
         }
         else
         {
