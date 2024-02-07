@@ -2271,7 +2271,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 549626122}
   m_HandleRect: {fileID: 0}
   m_Direction: 0
-  m_Value: -0.00000024536746
+  m_Value: 0
   m_Size: 0.26568267
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2869,7 +2869,7 @@ Transform:
   m_GameObject: {fileID: 734895476}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.53, y: -3.74, z: 0}
+  m_LocalPosition: {x: 5.53, y: -12.49, z: 0}
   m_LocalScale: {x: 17.878202, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3296,7 +3296,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -719.999, y: 0}
+  m_AnchoredPosition: {x: -719.9999, y: 0}
   m_SizeDelta: {x: 0, y: 250}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &854018541
@@ -5276,7 +5276,7 @@ GameObject:
   - component: {fileID: 1263642891}
   m_Layer: 7
   m_Name: 10 x 12
-  m_TagString: Untagged
+  m_TagString: NotBuild
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5290,7 +5290,7 @@ Transform:
   m_GameObject: {fileID: 1263642889}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.25, y: 3, z: 0.1}
+  m_LocalPosition: {x: -1.5, y: 3, z: 0.1}
   m_LocalScale: {x: 3, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6580,7 +6580,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1543418338
 Transform:
   m_ObjectHideFlags: 0
@@ -6590,7 +6590,7 @@ Transform:
   m_GameObject: {fileID: 1543418337}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.25, y: -1.25, z: 0.1}
+  m_LocalPosition: {x: 1.5, y: -1, z: 0.1}
   m_LocalScale: {x: 3, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7756,13 +7756,13 @@ GameObject:
   - component: {fileID: 1858161329}
   - component: {fileID: 1858161330}
   - component: {fileID: 1858161331}
-  m_Layer: 0
-  m_Name: 1 x 1
-  m_TagString: Untagged
+  m_Layer: 6
+  m_Name: 20 x 28
+  m_TagString: CanBuild
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1858161329
 Transform:
   m_ObjectHideFlags: 0
@@ -7772,7 +7772,7 @@ Transform:
   m_GameObject: {fileID: 1858161328}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0.2}
   m_LocalScale: {x: 20, y: 28, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9257,14 +9257,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9377,8 +9377,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
-  Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  drag: {fileID: 0}
+  Building: {fileID: 5572879100542003124, guid: 25f35f8fe5f5ead4f9f5d48ac7a48a30, type: 3}
+  buildingSpace: {fileID: 1179858107}
 --- !u!114 &743467542326875958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9399,8 +9400,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
+  drag: {fileID: 0}
   Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  buildingSpace: {fileID: 1179858107}
 --- !u!114 &796236849665140621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9512,14 +9514,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9549,8 +9551,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
-  Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  drag: {fileID: 0}
+  Building: {fileID: 5572879100542003124, guid: 957aa2123b77c094d939258b43a49591, type: 3}
+  buildingSpace: {fileID: 1179858107}
 --- !u!222 &1092448601659669338
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9704,8 +9707,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
+  drag: {fileID: 0}
   Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  buildingSpace: {fileID: 1179858107}
 --- !u!224 &1308517050892516574
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9802,8 +9806,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
-  Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  drag: {fileID: 0}
+  Building: {fileID: 5572879100542003124, guid: eb64cb2f87fc2e84d970c1f44848f61b, type: 3}
+  buildingSpace: {fileID: 1179858107}
 --- !u!114 &1401380800366859889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9824,8 +9829,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
+  drag: {fileID: 0}
   Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  buildingSpace: {fileID: 1179858107}
 --- !u!114 &1445227511786696528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9846,8 +9852,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
-  Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  drag: {fileID: 0}
+  Building: {fileID: 5572879100542003124, guid: ec38082b9b86dcb42acd54e4f9215193, type: 3}
+  buildingSpace: {fileID: 1179858107}
 --- !u!114 &1615845652897324523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9984,8 +9991,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
+  drag: {fileID: 0}
   Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  buildingSpace: {fileID: 1179858107}
 --- !u!114 &1911733106220514551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9999,14 +10007,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10029,14 +10037,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10131,8 +10139,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
+  drag: {fileID: 0}
   Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  buildingSpace: {fileID: 1179858107}
 --- !u!222 &2258163066032065281
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10414,14 +10423,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10698,8 +10707,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
+  drag: {fileID: 0}
   Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  buildingSpace: {fileID: 1179858107}
 --- !u!114 &3325691078960117101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11142,8 +11152,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
+  drag: {fileID: 0}
   Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  buildingSpace: {fileID: 1179858107}
 --- !u!1 &3866172650445556293
 GameObject:
   m_ObjectHideFlags: 0
@@ -11416,14 +11427,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -11473,14 +11484,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -11733,14 +11744,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -11921,8 +11932,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
-  Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  drag: {fileID: 0}
+  Building: {fileID: 5572879100542003124, guid: 0a29cf0620a5f1b4fadecf6f4bdf92bc, type: 3}
+  buildingSpace: {fileID: 1179858107}
 --- !u!222 &5597926134805811416
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11951,8 +11963,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
+  drag: {fileID: 0}
   Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  buildingSpace: {fileID: 1179858107}
 --- !u!224 &5641325114938275918
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12520,8 +12533,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
+  drag: {fileID: 0}
   Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  buildingSpace: {fileID: 1179858107}
 --- !u!224 &6331320553288894290
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12698,14 +12712,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -12735,6 +12749,7 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
+  drag: {fileID: 0}
   Building: {fileID: 5572879100542003124, guid: a810333c7e95f5c44a9b02c19f5d5fe2, type: 3}
   buildingSpace: {fileID: 1179858107}
 --- !u!114 &6877312042559720568
@@ -12877,14 +12892,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -12907,14 +12922,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -12975,14 +12990,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -13196,14 +13211,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -13297,8 +13312,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
-  Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  drag: {fileID: 0}
+  Building: {fileID: 5572879100542003124, guid: 3aedfdd4951250d4abac0f236df6ff30, type: 3}
+  buildingSpace: {fileID: 1179858107}
 --- !u!1 &7570571097172224422
 GameObject:
   m_ObjectHideFlags: 0
@@ -13337,8 +13353,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
+  drag: {fileID: 0}
   Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  buildingSpace: {fileID: 1179858107}
 --- !u!224 &7619966306811443370
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13410,14 +13427,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -13486,14 +13503,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14014,11 +14031,17 @@ MonoBehaviour:
   isDragging: 0
   isCanBuild: 0
   offset: {x: 0, y: 0, z: 0}
-  check: {fileID: 0}
+  previousParent: {fileID: 0}
+  space: {fileID: 0}
+  spaceX: 0
+  spaceY: 0
   canBuild:
     serializedVersion: 2
     m_Bits: 0
   cannotBuild:
+    serializedVersion: 2
+    m_Bits: 0
+  buildingLayer:
     serializedVersion: 2
     m_Bits: 0
 --- !u!224 &8550490717011252507
@@ -14099,8 +14122,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
+  drag: {fileID: 0}
   Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  buildingSpace: {fileID: 1179858107}
 --- !u!224 &8670485815829218672
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14170,14 +14194,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14200,14 +14224,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0aae75b3d2464a7409efe6537af7a499, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14272,6 +14296,7 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
+  drag: {fileID: 0}
   Building: {fileID: 5572879100542003124, guid: bcd34cb1f636c0243b41451b8a766677, type: 3}
   buildingSpace: {fileID: 1179858107}
 --- !u!224 &9037838395301929828
@@ -14307,14 +14332,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.47253847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300012, guid: 2d7f8438d0cc1064d947997e7405cd6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7f964e6f86de448380a7acee57709d6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14344,8 +14369,9 @@ MonoBehaviour:
   rect: {fileID: 0}
   canvasGroup: {fileID: 1071685788}
   image: {fileID: 0}
+  drag: {fileID: 0}
   Building: {fileID: 0}
-  buildingSpace: {fileID: 0}
+  buildingSpace: {fileID: 1179858107}
 --- !u!222 &9178799198751811268
 CanvasRenderer:
   m_ObjectHideFlags: 0

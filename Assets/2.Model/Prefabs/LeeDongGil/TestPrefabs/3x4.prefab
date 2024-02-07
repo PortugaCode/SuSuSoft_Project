@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 6621264533684671820}
   - component: {fileID: 9215071218758292209}
   - component: {fileID: 7964810965108693367}
-  m_Layer: 0
-  m_Name: TestBuilding 1
-  m_TagString: Untagged
+  m_Layer: 30
+  m_Name: 3x4
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30,7 +30,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -1.66, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7270396915530610099}
   m_Father: {fileID: 0}
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9eda7fdd65e344e1e95eac4d16ccf7da, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 341d24db5c13444afb87c02c09b2bfa6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -100,13 +100,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDragging: 0
+  isCanBuild: 0
   offset: {x: 0, y: 0, z: 0}
+  previousParent: {fileID: 0}
+  space: {fileID: 9073170849238675846}
+  spaceX: 3
+  spaceY: 4
   canBuild:
     serializedVersion: 2
     m_Bits: 64
   cannotBuild:
     serializedVersion: 2
     m_Bits: 128
+  buildingLayer:
+    serializedVersion: 2
+    m_Bits: 1073741824
 --- !u!65 &7964810965108693367
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -138,7 +146,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7270396915530610099}
   - component: {fileID: 6345069717864459532}
-  m_Layer: 0
+  m_Layer: 30
   m_Name: CanBuildSpace
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155,7 +163,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 3, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6016882980445628369}

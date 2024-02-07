@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 6621264533684671820}
   - component: {fileID: 9215071218758292209}
   - component: {fileID: 7964810965108693367}
-  m_Layer: 0
-  m_Name: TestBuilding
-  m_TagString: Untagged
+  m_Layer: 30
+  m_Name: 1x1
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -100,13 +100,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDragging: 0
+  isCanBuild: 0
   offset: {x: 0, y: 0, z: 0}
+  previousParent: {fileID: 0}
+  space: {fileID: 9073170849238675846}
+  spaceX: 1
+  spaceY: 1
   canBuild:
     serializedVersion: 2
     m_Bits: 64
   cannotBuild:
     serializedVersion: 2
     m_Bits: 128
+  buildingLayer:
+    serializedVersion: 2
+    m_Bits: 1073741824
 --- !u!65 &7964810965108693367
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -138,7 +146,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7270396915530610099}
   - component: {fileID: 6345069717864459532}
-  m_Layer: 0
+  m_Layer: 30
   m_Name: CanBuildSpace
   m_TagString: Untagged
   m_Icon: {fileID: 0}

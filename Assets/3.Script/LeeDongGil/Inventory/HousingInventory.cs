@@ -35,6 +35,10 @@ public class HousingInventory : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     private void Start()
     {
         previousParent = transform.parent;
+        if(Building == null)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -48,6 +52,7 @@ public class HousingInventory : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         canvasGroup.blocksRaycasts = false;
         transform.localScale = new Vector3(sizeX * 0.01f, sizeY * 0.01f, 1);        //todo... scale값은 나중에 space값만 변하게 바꾸기
         */
+        if (image.color.a <= 0) return;
 
         Debug.Log("Start Drag");
         image.color = new Color(1, 1, 1, 0);
@@ -112,6 +117,7 @@ public class HousingInventory : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         if(image.color.a <= 0 && buildingSpace.childCount == 0)
         {
             transform.parent.SetAsLastSibling();
+            Building = null;
             gameObject.SetActive(false);
         }
     }
