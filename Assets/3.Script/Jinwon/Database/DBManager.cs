@@ -33,17 +33,21 @@ public struct Character
 
 public struct HousingObject
 {
-    int index; // 인덱스(아이디)
-    string name; // 이름
-    string type; // 타입
-    string setType; // 세트효과 타입
-    string interactType; // 상호작용 타입
-    int reinforceLevel; // 강화 단계
-    int maxReinforceLevel; // 최대 강화 단계
-    float statIncreaseRate; // 능력치 상승량
-    int layer; // 레이어
-
-    // + 세트효과 상승 능력치 추가 필요
+    public int index; // 인덱스(식별번호)
+    public string name_e; // 이름 (영문)
+    public string name_k; // 이름 (한글)
+    public string type; // 종류 (배경, 전경, 상호작용..)
+    public int layer; // 레이어 순서
+    public string setType; // 세트효과 타입
+    public int effect; // 효과 종류 (-1: none, 0: gold, 1: maxHP)
+    public int maxReinforceLevel; // 최대 강화 수치
+    public int level; // 강화 단계
+    public float increaseRate; // 강화당 능력치 상승량
+    public int imageIndex; // 오브젝트 이미지 인덱스
+    public int interactType; // 상호작용 타입 (0: Touch, 1: Drag & Drop)
+    public int price; // 판매가격
+    public string reinforceText_e; // 강화 시 출력 텍스트 (영문)
+    public string reinforceText_k; // 강화 시 출력 텍스트 (한글)
 }
 
 public struct GuestBook
@@ -92,7 +96,7 @@ public class User
     public string userName { get; set; } // 유저 이름
     public List<Character> character { get; set; } // 보유한 캐릭터 리스트
     public Dictionary<string, int> goods { get; set; } // 보유한 재화의 종류와 수량
-    public List<int> housingObject { get; set; } // 보유한 하우징 오브젝트 리스트
+    public List<HousingObject> housingObject { get; set; } // 보유한 하우징 오브젝트 리스트
     public List<Friend> friend { get; set; } // 친구 리스트
     public List<int> guestBook { get; set; } // 방명록 리스트
     public List<Mail> mail { get; set; } // 우편 리스트
@@ -104,7 +108,7 @@ public class User
         userName = "";
         character = new List<Character>();
         goods = new Dictionary<string, int> { { "friendshipPoint", 0 }, { "ruby", 0 }, { "gold", 0 } };
-        housingObject = new List<int>();
+        housingObject = new List<HousingObject>();
         friend = new List<Friend>();
         guestBook = new List<int>();
         mail = new List<Mail>();
@@ -263,12 +267,7 @@ public class DBManager : MonoBehaviour
             param.Add("UserID", user.userID);
             param.Add("Password", user.password);
             param.Add("UserName", user.userName);
-            AddCharacter(101); // 기본 캐릭터 (index : 101) 추가 
             param.Add("Goods", user.goods); // 재화 무엇 있는지 파악하여 0 할당 필요
-            param.Add("HousingObject", user.housingObject);
-            param.Add("Friend", user.friend);
-            param.Add("GuestBook", user.guestBook);
-            param.Add("Mail", user.mail);
 
             Backend.GameData.Insert("User", param); // User 테이블에 데이터 삽입
 
@@ -277,7 +276,7 @@ public class DBManager : MonoBehaviour
         else // 기존 유저인 경우
         {
             // 저장된 데이터를 불러와 user 클래스에 할당
-            LitJson.JsonData json = bro.FlattenRows(); // 캐싱
+            JsonData json = bro.FlattenRows(); // 캐싱
 
             // [보유한 재화]
             var keys = json[0]["Goods"].Keys; // JsonData를 딕셔너리 키로 변환하는 과정
@@ -291,26 +290,8 @@ public class DBManager : MonoBehaviour
                 user.goods[key] = int.Parse(json[0]["Goods"][key].ToString());
             }
 
-            // [보유한 하우징 오브젝트]
-            for (int i = 0; i < json[0]["HousingObject"].Count; i++)
-            {
-                user.housingObject[i] = int.Parse(json[0]["HousingObject"][i].ToString());
-            }
-
             // [친구] (뒤끝 내장 친구 목록에서 불러오기)
             CommunityManager.instance.GetFriendsList();
-
-            // [방명록]
-            for (int i = 0; i < json[0]["GuestBook"].Count; i++)
-            {
-                user.guestBook[i] = int.Parse(json[0]["GuestBook"][i].ToString());
-            }
-
-            // [우편]
-            for (int i = 0; i < json[0]["Mail"].Count; i++)
-            {
-                user.mail[i] = int.Parse(json[0]["Mail"][i].ToString());
-            }
 
             // [캐릭터] (Character 테이블에서 불러오기)
             var c_bro = Backend.GameData.GetMyData("Character", where);

@@ -200,7 +200,32 @@ public class CommunityManager : MonoBehaviour
 
     #region 우편 시스템
 
+    // 프로토타입 완성 이후에 재개할게요~~
 
+    public void GetPostList()
+    {
+        // PostType : Admin, Rank, Coupon, User
+
+        BackendReturnObject bro = Backend.UPost.GetPostList(PostType.User, 30);
+        LitJson.JsonData json = bro.GetReturnValuetoJSON()["postList"];
+
+        for (int i = 0; i < json.Count; i++)
+        {
+            // json[i]["content"].ToString();
+            // json[i]["expirationDate"].ToString();
+            // json[i]["receiverInDate"].ToString();
+            // json[i]["item"].ToString(); -> 딕셔너리
+            // json[i]["itemLocation"].ToString(); -> 딕셔너리
+            // json[i]["receiverNickname"].ToString();
+            // json[i]["receivedDate"].ToString();
+            // json[i]["sender"].ToString();
+            // json[i]["inDate"].ToString();
+            // json[i]["senderNickname"].ToString();
+            // json[i]["senderInDate"].ToString();
+            // json[i]["sentDate"].ToString();
+            // json[i]["title"].ToString();
+        }
+    }
 
     #endregion
 }
