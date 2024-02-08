@@ -20,17 +20,17 @@ public class MatchSystem
     public SessionId RoomID => roomId;
     public string RoomToken => roomToken;
 
-    //ÃÊ´ë ¿äÃ» ½Ã Á¦ÇÑ ½Ã°£
+    //ì´ˆëŒ€ ìš”ì²­ ì‹œ ì œí•œ ì‹œê°„
     float timer = 15.0f;
     bool isTimerOn = false;
 
 
-    //°ÔÀÓ·ë Á¤º¸
-    public MatchInGameRoomInfo roomInfo; // Á¢¼ÓÇÑ ·ëÀÇ Á¤º¸
-    public List<string> gameRecords = new List<string>(); // ÇöÀç °ÔÀÓ¹æ¿¡ Á¢¼ÓÇØ ÀÖ´Â À¯ÀúµéÀÇ Á¤º¸
+    //ê²Œì„ë£¸ ì •ë³´
+    public MatchInGameRoomInfo roomInfo; // ì ‘ì†í•œ ë£¸ì˜ ì •ë³´
+    public List<string> gameRecords = new List<string>(); // í˜„ì¬ ê²Œì„ë°©ì— ì ‘ì†í•´ ìˆëŠ” ìœ ì €ë“¤ì˜ ì •ë³´
 
 
-    //¸ÅÄª ¼­¹ö ¸®½ºÆ® ÀÎµ¦½º Á¢±Ù
+    //ë§¤ì¹­ ì„œë²„ ë¦¬ìŠ¤íŠ¸ ì¸ë±ìŠ¤ ì ‘ê·¼
     public MatchCard GetMatchList(int index)
     {
         var callback = Backend.Match.GetMatchList();
@@ -134,7 +134,7 @@ public class MatchSystem
     }
 
 
-    //¿ì¸® ¸ÅÄª ¼­¹ö ¸®½ºÆ® Á¶È¸
+    //ìš°ë¦¬ ë§¤ì¹­ ì„œë²„ ë¦¬ìŠ¤íŠ¸ ì¡°íšŒ
     public void GetMatchList()
     {
         var callback = Backend.Match.GetMatchList();
@@ -243,7 +243,7 @@ public class MatchSystem
     }
 
 
-    //¸ÅÄª Á¶ÀÎÀÌ °¡´ÉÇÑÁö  Ã¼Å©
+    //ë§¤ì¹­ ì¡°ì¸ì´ ê°€ëŠ¥í•œì§€  ì²´í¬
     public void JoinMatchMakingCheck()
     {
         ErrorInfo errorInfo;
@@ -251,7 +251,7 @@ public class MatchSystem
         Debug.Log(errorInfo);
     }
 
-    //¸ÅÄ¡ ¸ŞÀÌÅ· ¼­¹ö¿¡ ¿¬°á½ÅÃ»
+    //ë§¤ì¹˜ ë©”ì´í‚¹ ì„œë²„ì— ì—°ê²°ì‹ ì²­
     public void JoinMatchMaking()
     {
 
@@ -282,12 +282,12 @@ public class MatchSystem
         };
     }
 
-    //¸ÅÄª ¼­¹ö¿¡ ¿¬°áµÆÀ» ½Ã È£ÃâÇÒ ´ë±â¹æ »ı¼º ¸Ş¼­µå
+    //ë§¤ì¹­ ì„œë²„ì— ì—°ê²°ëì„ ì‹œ í˜¸ì¶œí•  ëŒ€ê¸°ë°© ìƒì„± ë©”ì„œë“œ
     public void CreateMatchRoom(string nickName)
     {
         if (timer <= 14.9f)
         {
-            Debug.Log("ÇöÀç ÃÊ´ë ÁßÀÔ´Ï´Ù.");
+            Debug.Log("í˜„ì¬ ì´ˆëŒ€ ì¤‘ì…ë‹ˆë‹¤.");
             return;
         }
         Backend.Match.CreateMatchRoom();
@@ -304,7 +304,7 @@ public class MatchSystem
         };
     }
 
-    //ÇØ´ç À¯Àú ÃÊ´ë
+    //í•´ë‹¹ ìœ ì € ì´ˆëŒ€
     public void InviteUser(string nickName)
     {
 
@@ -320,7 +320,7 @@ public class MatchSystem
         };
     }
 
-    //ÃÊ´ë ¼ö½Å ÀÌº¥Æ®
+    //ì´ˆëŒ€ ìˆ˜ì‹  ì´ë²¤íŠ¸
     public void OnMatchMakingRoomSomeoneInvited(Action Todo)
     {
         Backend.Match.OnMatchMakingRoomSomeoneInvited = (MatchMakingInvitedRoomEventArgs args) => 
@@ -335,7 +335,7 @@ public class MatchSystem
         };
     }
 
-    //ÃÊ´ë ¿äÃ»ÀÌ ¼ö½ÅÀÌ Àß µÆ´Ù¸é ½Ã°£ Èå¸£±â
+    //ì´ˆëŒ€ ìš”ì²­ì´ ìˆ˜ì‹ ì´ ì˜ ëë‹¤ë©´ ì‹œê°„ íë¥´ê¸°
     public void SetTimer()
     {
         if(isTimerOn)
@@ -349,7 +349,7 @@ public class MatchSystem
         }
     }
 
-    //ÃÊ´ë ¼ö¶ô Or °ÅÀı ÀÌº¥Æ®
+    //ì´ˆëŒ€ ìˆ˜ë½ Or ê±°ì ˆ ì´ë²¤íŠ¸
     public void AreYouAccept(bool isAccept)
     {
         if (isAccept)
@@ -357,14 +357,14 @@ public class MatchSystem
             Backend.Match.AcceptInvitation(roomId, roomToken);
             Backend.Match.OnMatchMakingRoomUserList = (MatchMakingGamerInfoListInRoomEventArgs args) => 
             {
-                Debug.Log("´ë±â ¹æ ÃÊ´ë ¼ö¶ô ÀÔÀå");
+                Debug.Log("ëŒ€ê¸° ë°© ì´ˆëŒ€ ìˆ˜ë½ ì…ì¥");
             };
         }
         else
         {
             Backend.Match.DeclineInvitation(roomId, roomToken);
             {
-                Debug.Log("´ë±â¹æ ÃÊ´ë °ÅÀı");
+                Debug.Log("ëŒ€ê¸°ë°© ì´ˆëŒ€ ê±°ì ˆ");
             }
         }
 
@@ -375,19 +375,19 @@ public class MatchSystem
         };
     }
 
-    //À¯Àú ÀÔÀå ÀÌº¥Æ®
+    //ìœ ì € ì…ì¥ ì´ë²¤íŠ¸
     public void OnMatchMakingRoomJoin()
     {
         Backend.Match.OnMatchMakingRoomJoin = (MatchMakingGamerInfoInRoomEventArgs args) => 
         {
-            Debug.Log("À¯Àú µé¾î¿È");
+            Debug.Log("ìœ ì € ë“¤ì–´ì˜´");
             RequestMatchMaking(0);
         };
     }
 
 
 
-    //´ë±â¹æ ÅğÀå
+    //ëŒ€ê¸°ë°© í‡´ì¥
     public void LeaveMatchRoom()
     {
         isTimerOn = false;
@@ -408,9 +408,9 @@ public class MatchSystem
 
 
 
-    //=========ÀÌÈÄ ¸ÅÄª ½ÅÃ» + ÀÎ°ÔÀÓ ¼­¹ö ================//
+    //=========ì´í›„ ë§¤ì¹­ ì‹ ì²­ + ì¸ê²Œì„ ì„œë²„ ================//
 
-    //ÇØ´ç ÀÎµ¦½ºÀÇ ¸ÅÄª ¼­¹ö¸¦ ÅëÇØ ¸ÅÄª ½ÅÃ»
+    //í•´ë‹¹ ì¸ë±ìŠ¤ì˜ ë§¤ì¹­ ì„œë²„ë¥¼ í†µí•´ ë§¤ì¹­ ì‹ ì²­
     public void RequestMatchMaking(int index)
     {
         Backend.Match.RequestMatchMaking(GetMatchList(index).matchTypeEnum, GetMatchList(index).matchModeTypeEnum, GetMatchList(index).inDate);
@@ -419,7 +419,7 @@ public class MatchSystem
             Debug.Log(args.ErrInfo);
             if(args.ErrInfo == ErrorCode.Success)
             {
-                //¿¬°á µÆ´Ù¸é JoinGameServer È£Ãâ
+                //ì—°ê²° ëë‹¤ë©´ JoinGameServer í˜¸ì¶œ
                 string severAddress = args.RoomInfo.m_inGameServerEndPoint.m_address;
                 ushort serverPort = args.RoomInfo.m_inGameServerEndPoint.m_port;
                 string roomToken = args.RoomInfo.m_inGameRoomToken;
@@ -435,13 +435,13 @@ public class MatchSystem
 
         if(Backend.Match.JoinGameServer(serverAddress, serverPort, isReconnect, out errorInfo) == false)
         {
-            //¿¡·¯ È®ÀÎ
+            //ì—ëŸ¬ í™•ì¸
             Debug.LogError(errorInfo);
             return;
         }
         else if(Backend.Match.JoinGameServer(serverAddress, serverPort, isReconnect, out errorInfo))
         {
-            Backend.Match.OnSessionJoinInServer += (args) =>
+            Backend.Match.OnSessionJoinInServer = (args) =>
             {
                 Debug.Log(errorInfo);
                 JoinInGameRoom(roomToken);
@@ -455,10 +455,11 @@ public class MatchSystem
 
 
 
-        //°ÔÀÓ¹æ ÃÖÃÊ Á¢¼Ó ½Ã 1¹ø È£ÃâµÇ´Â ÀÌº¥Æ®
+        //ê²Œì„ë°© ìµœì´ˆ ì ‘ì† ì‹œ 1ë²ˆ í˜¸ì¶œë˜ëŠ” ì´ë²¤íŠ¸
         Backend.Match.OnSessionListInServer = (MatchInGameSessionListEventArgs args) =>
         {
             roomInfo = args.RoomInfo;
+            gameRecords.Clear();
             for(int i = 0; i < args.GameRecords.Count; i++)
             {
                 gameRecords.Add(args.GameRecords[i].m_nickname);
@@ -466,7 +467,7 @@ public class MatchSystem
             Debug.Log(gameRecords);
         };
 
-        //°ÔÀÓ¹æ¿¡ À¯Àú°¡ Á¢¼Ó ½Ã ¸ğµç Å¬¶óÀÌ¾ğÆ®¿¡°Ô È£ÃâµÇ´Â ÀÌº¥Æ®
+        //ê²Œì„ë°©ì— ìœ ì €ê°€ ì ‘ì† ì‹œ ëª¨ë“  í´ë¼ì´ì–¸íŠ¸ì—ê²Œ í˜¸ì¶œë˜ëŠ” ì´ë²¤íŠ¸
         Backend.Match.OnMatchInGameAccess = (MatchInGameSessionEventArgs args) =>
         {
             if(args.GameRecord.m_nickname != Backend.UserNickName)
@@ -477,17 +478,17 @@ public class MatchSystem
             Debug.Log(gameRecords.Count);
         };
 
-        //°ÔÀÓ¹æ¿¡ ¸ğµÎ°¡ µé¾î¿À°í °ÔÀÓÀÌ ½ÃÀÛÇßÀ» ¶§ È£ÃâµÇ´Â ÀÌº¥Æ®
+        //ê²Œì„ë°©ì— ëª¨ë‘ê°€ ë“¤ì–´ì˜¤ê³  ê²Œì„ì´ ì‹œì‘í–ˆì„ ë•Œ í˜¸ì¶œë˜ëŠ” ì´ë²¤íŠ¸
         Backend.Match.OnMatchInGameStart = () => 
         {
             Utils.Instance.LoadScene(SceneNames.MatchRoom);
         };
 
-        //´©±º°¡ °ÔÀÓ¹æ¿¡ ³ª°¬À» ¶§ ¸ğµÎ¿¡°Ô È£ÃâµÇ´Â ÀÌº¥Æ®
+        //ëˆ„êµ°ê°€ ê²Œì„ë°©ì— ë‚˜ê°”ì„ ë•Œ ëª¨ë‘ì—ê²Œ í˜¸ì¶œë˜ëŠ” ì´ë²¤íŠ¸
         Backend.Match.OnSessionOffline = (MatchInGameSessionEventArgs args) => 
         {
             gameRecords.Remove(args.GameRecord.m_nickname);
-            Debug.Log(args.GameRecord.m_nickname + "´ÔÀÌ ³ª°¡¼Ì½À´Ï´Ù.");
+            Debug.Log(args.GameRecord.m_nickname + "ë‹˜ì´ ë‚˜ê°€ì…¨ìŠµë‹ˆë‹¤.");
 
             Debug.Log(gameRecords.Count);
         };
@@ -500,12 +501,12 @@ public class MatchSystem
 
         Backend.Match.OnLeaveInGameServer = (MatchInGameSessionEventArgs args) => 
         {
-            Debug.Log($"{args.GameRecord.m_nickname}´ÔÀÌ ÀÎ °ÔÀÓ ¼­¹ö¸¦ ³ª°¡¼Ì½À´Ï´Ù.");
+            Debug.Log($"{args.GameRecord.m_nickname}ë‹˜ì´ ì¸ ê²Œì„ ì„œë²„ë¥¼ ë‚˜ê°€ì…¨ìŠµë‹ˆë‹¤.");
             Utils.Instance.LoadScene(SceneNames.Chatting);
 
             if (args.ErrInfo == ErrorCode.Exception)
             {
-                Debug.Log("ÀçÁ¢¼Ó ½ÃµµÁß");
+                Debug.Log("ì¬ì ‘ì† ì‹œë„ì¤‘");
                 Backend.Match.IsGameRoomActivate((callback) =>
                 {
                     var bro = Backend.Match.IsGameRoomActivate();
@@ -518,7 +519,7 @@ public class MatchSystem
                     {
                         if (Backend.Match.JoinGameServer(addr, port, true, out errorInfo) == false)
                         {
-                            // ¿¡·¯ È®ÀÎ
+                            // ì—ëŸ¬ í™•ì¸
                             return;
                         }
 
@@ -526,17 +527,17 @@ public class MatchSystem
                         {
                             // TODO
                             gameRecords.Add(args.GameRecord.m_nickname);
-                            Debug.Log(args.GameRecord.m_nickname + "´ÔÀÌ ÀçÁ¢¼Ó ÇÏ¼Ì½À´Ï´Ù.");
+                            Debug.Log(args.GameRecord.m_nickname + "ë‹˜ì´ ì¬ì ‘ì† í•˜ì…¨ìŠµë‹ˆë‹¤.");
 
                             Debug.Log(gameRecords.Count);
                         };
                     }
-                    Debug.Log("ÀçÁ¢¼Ó ºÒ°¡ÇÕ´Ï´Ù.");
+                    Debug.Log("ì¬ì ‘ì† ë¶ˆê°€í•©ë‹ˆë‹¤.");
                 });
             }
             else
             {
-                Debug.Log("°ÔÀÓ·ë Á¤º¸ ÃÊ±âÈ­");
+                Debug.Log("ê²Œì„ë£¸ ì •ë³´ ì´ˆê¸°í™”");
                 roomInfo = null;
                 gameRecords.Clear();
             }
