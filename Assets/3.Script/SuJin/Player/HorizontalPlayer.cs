@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,14 +15,14 @@ public class HorizontalPlayer : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float rotationSpeed;
 
-    [SerializeField] private float acceleration;
-    [SerializeField] private float initialSpeed;
-    [SerializeField] private float maxSpeed;
+    public float acceleration;
+    public float initialSpeed;
+    public float maxSpeed;
     private float currentSpeed;
 
     [Header("  ")]
     public Horizon_Joystick horizon_Joystick;
-    public Rigidbody2D rigidbody2D;
+    public Rigidbody2D rb2D;
     private bool gameStart = false;
 
     float dragLength;
@@ -53,9 +53,11 @@ public class HorizontalPlayer : MonoBehaviour
             direction = (touchPosition - transform.position).normalized;
 
             // 터치 했을 때 플레이어 속력 증가
+            //PlayerProperty의 속도를 참조하기 
+
             currentSpeed += acceleration * Time.deltaTime;
             currentSpeed = Mathf.Clamp(currentSpeed, initialSpeed, maxSpeed);
-            rigidbody2D.velocity = new Vector2(direction.x * currentSpeed, 0) * Time.deltaTime + Vector2.up * currentSpeed * Time.deltaTime;
+            rb2D.velocity = new Vector2(direction.x * currentSpeed, 0) * Time.deltaTime + Vector2.up * currentSpeed * Time.deltaTime;
 
             //Player Rotation
             PlayerRotation();
@@ -64,11 +66,11 @@ public class HorizontalPlayer : MonoBehaviour
             {
                 // 속도 초기화
                 currentSpeed = initialSpeed;
-                rigidbody2D.velocity = Vector2.zero;
-                rigidbody2D.velocity = Vector2.up * currentSpeed * Time.deltaTime;
+                rb2D.velocity = Vector2.zero;
+                rb2D.velocity = Vector2.up * currentSpeed * Time.deltaTime;
 
                 //터치 끝났을 때 일정속도 유지
-                rigidbody2D.velocity = new Vector2(direction.x, 0) * speed * Time.deltaTime + Vector2.up * 1000f * Time.deltaTime;
+                rb2D.velocity = new Vector2(direction.x, 0) * speed * Time.deltaTime + Vector2.up * 1000f * Time.deltaTime;
             }
         }
     }

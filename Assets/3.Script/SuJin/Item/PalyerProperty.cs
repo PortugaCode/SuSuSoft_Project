@@ -19,9 +19,10 @@ public class PalyerProperty : MonoBehaviour
     public int HealthIncreaseRate = 10;
 
     [Header("Skill")]
-    private int maxCoolTime;
+    //private int maxCoolTime;
 
     [Header("Speed")]
+    [SerializeField] GameObject speedItem;
     public int maxSpeed;
     public int minSpeed;
 
@@ -43,26 +44,30 @@ public class PalyerProperty : MonoBehaviour
     [Header("GetStars")]
     [SerializeField] GameObject star;
     [SerializeField] int getStarCount;
-    private float getStarPercent;
+    //private float getStarPercent;
 
-    // ���� ��ȿ
+    // 공격 무효
+
+    HorizontalPlayer horizontalPlayer;
 
     private void Start()
     {
         level = 1;
         maxSpeed = 300;
         maxHealth = 100;
-        maxCoolTime = 30;
+        //maxCoolTime = 30;
 
         maxSightRange = 300;
         maxMagnetismRange = 10;
         maxWeight = 10;
         getStarCount = 0;
+
+        horizontalPlayer = GetComponent<HorizontalPlayer>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Finish"))      
+        if(collision.gameObject.CompareTag("Obstacles"))      
         {
             //Player Damage
             damage = 10; 
@@ -71,15 +76,18 @@ public class PalyerProperty : MonoBehaviour
             Debug.Log($" currentHP: {currentHealth} ");
         }
 
-        if(collision.gameObject.CompareTag("GameController"))
+        if(collision.gameObject.CompareTag("Star"))
         {
-            if (collision.gameObject.CompareTag("Player"))
-            {
-                getStarCount++;
-                Instantiate(star, transform.position, Quaternion.identity);
-                Destroy(gameObject);
-                Debug.Log($" getStarCount : {getStarCount}");
-            }
+            getStarCount++;
+            Instantiate(star, transform.position, Quaternion.identity);
+            Destroy(collision.gameObject);
+            Debug.Log($" getStarCount : {getStarCount}");
+        }
+        if(collision.gameObject.CompareTag("SpeedItem"))
+        {
+            //horizontalPlayer  참조하지 말고 이 스크립트에서 관리하기
+            Destroy(collision.gameObject);
+           //horizontalPlayer. =  horizontalPlayer.maxSpeed++;
         }
     }
 

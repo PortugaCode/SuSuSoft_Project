@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +12,7 @@ public class AllRotationPlayer : MonoBehaviour
     [SerializeField]private float deceleration = 10f;
 
     public VariableJoystick variableJoystick;
-    public Rigidbody2D rigidbody2D;
+    public Rigidbody2D rb2D;
 
     public void FixedUpdate()
     {
@@ -22,15 +22,15 @@ public class AllRotationPlayer : MonoBehaviour
     private void AllRotationMove()
     {
         Vector2 direction = new Vector2(variableJoystick.Horizontal, variableJoystick.Vertical).normalized;
-        rigidbody2D.velocity = direction * speed * Time.fixedDeltaTime;
+        rb2D.velocity = direction * speed * Time.fixedDeltaTime;
 
-        if (direction.magnitude == 0 && rigidbody2D.velocity.magnitude > 0)
+        if (direction.magnitude == 0 && rb2D.velocity.magnitude > 0)
         {
-            rigidbody2D.velocity -= direction * deceleration * Time.fixedDeltaTime;
+            rb2D.velocity -= direction * deceleration * Time.fixedDeltaTime;
 
-            if (rigidbody2D.velocity.magnitude > 5f)
+            if (rb2D.velocity.magnitude > 5f)
             {
-                rigidbody2D.velocity = Vector2.zero;
+                rb2D.velocity = Vector2.zero;
             }
         }
     }
@@ -41,7 +41,7 @@ public class AllRotationPlayer : MonoBehaviour
         Vector2 direction = new Vector2(variableJoystick.Horizontal, variableJoystick.Vertical).normalized;
 
         // 플레이어의 속도 설정
-        rigidbody2D.velocity = direction * speed * Time.fixedDeltaTime;
+        rb2D.velocity = direction * speed * Time.fixedDeltaTime;
 
         // 플레이어 회전 설정
         if (direction.magnitude > 0)
