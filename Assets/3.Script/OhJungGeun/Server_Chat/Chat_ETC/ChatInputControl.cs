@@ -24,6 +24,32 @@ public class ChatInputControl : MonoBehaviour
             textInput.ActivateInputField();
             return;
         }
+        else if(textInput.text.StartsWith("/w ") || textInput.text.StartsWith("/W ") || textInput.text.StartsWith("/±Ó¼Ó¸» ") || textInput.text.StartsWith("/¤¸ ") || textInput.text.StartsWith("/±Ó "))
+        {
+            string valueStr = textInput.text;
+            string[] splitStr = valueStr.Split(' ');
+            string nickName = splitStr[1];
+            var wMesssageStart = splitStr[0].Length + splitStr[1].Length + 2;
+            if (wMesssageStart < valueStr.Length)
+            {
+                Debug.Log("±Ó¼Ó¸» µé¾î¿È");
+                string wMessage = valueStr.Substring(wMesssageStart);
+                BackEndManager.Instance.GetChatManager().Whisper(nickName, wMessage);
+                textInput.text = "";
+                textInput.ActivateInputField();
+            }
+        }
+        else if(textInput.text.StartsWith("/ÃÊ´ë ") || textInput.text.StartsWith("/invite ") || textInput.text.StartsWith("/Invite "))
+        {
+            string valueStr = textInput.text;
+            string[] splitStr = valueStr.Split(' ');
+            string nickName = splitStr[1];
+
+            BackEndManager.Instance.GetMatchSystem().CreateMatchRoom(nickName);
+
+            textInput.text = "";
+            textInput.ActivateInputField();
+        }
         else
         {
             BackEndManager.Instance.GetChatManager().ChatToChannel(textInput.text);
@@ -31,4 +57,6 @@ public class ChatInputControl : MonoBehaviour
             textInput.ActivateInputField();
         }
     }
+
+
 }

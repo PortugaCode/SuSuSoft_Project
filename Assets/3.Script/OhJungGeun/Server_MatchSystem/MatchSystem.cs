@@ -6,6 +6,29 @@ using UnityEngine;
 
 public class MatchSystem
 {
+    private bool isCanInviteUser;
+
+    public bool IsCanInviteUser => isCanInviteUser;
+
+    [Header("Invited Data")]
+    private SessionId roomId;
+    private string roomToken;
+    private MatchMakingUserInfo inviteUserInfo;
+
+
+    public MatchMakingUserInfo InviteUserInfo => inviteUserInfo;
+    public SessionId RoomID => roomId;
+    public string RoomToken => roomToken;
+
+    //초대 요청 시 제한 시간
+    float timer = 15.0f;
+    bool isTimerOn = false;
+
+
+    //게임룸 정보
+    public MatchInGameRoomInfo roomInfo; // 접속한 룸의 정보
+    public List<string> gameRecords = new List<string>(); // 현재 게임방에 접속해 있는 유저들의 정보
+
 
     //매칭 서버 리스트 인덱스 접근
     public MatchCard GetMatchList(int index)
@@ -231,6 +254,8 @@ public class MatchSystem
     //매치 메이킹 서버에 연결신청
     public void JoinMatchMaking()
     {
+
+
         ErrorInfo errorInfo;
 
 
@@ -238,22 +263,152 @@ public class MatchSystem
         Backend.Match.OnJoinMatchMakingServer = (JoinChannelEventArgs args) =>
         {
             
-            Debug.Log(args.ErrInfo);
+            Debug.Log("JoinMatchMaking : " + args.ErrInfo);
 
-            CreateMatchRoom();
-            RequestMatchMaking(0);
+            if(args.ErrInfo == ErrorInfo.Success)
+            {
+                Backend.Match.OnLeaveMatchMakingServer = (LeaveChannelEventArgs args) =>
+                {
+                    if(args.ErrInfo.Category == ErrorCode.Exception || args.ErrInfo.Category == ErrorCode.NetworkTimeout)
+                    {
+                        JoinMatchMaking();
+                    }
+                };
+            }
+
+
+            //CreateMatchRoom();
+            //RequestMatchMaking(0);
         };
     }
 
     //매칭 서버에 연결됐을 시 호출할 대기방 생성 메서드
-    private void CreateMatchRoom()
+    public void CreateMatchRoom(string nickName)
     {
+        if (timer <= 14.9f)
+        {
+            Debug.Log("현재 초대 중입니다.");
+            return;
+        }
         Backend.Match.CreateMatchRoom();
         Backend.Match.OnMatchMakingRoomCreate = (MatchMakingInteractionEventArgs args) =>
         {
+            Debug.Log("CreateMatchRoom : " + args.ErrInfo);
+
+            if(args.ErrInfo == ErrorCode.Success)
+            {
+                isCanInviteUser = true;
+                InviteUser(nickName);
+            }
+            Debug.Log(isCanInviteUser);
+        };
+    }
+
+    //해당 유저 초대
+    public void InviteUser(string nickName)
+    {
+
+        Backend.Match.InviteUser(nickName);
+        Backend.Match.OnMatchMakingRoomInvite = (MatchMakingInteractionEventArgs args) => 
+        {
+            Debug.Log("InviteUser : " + args.ErrInfo);
+            if (args.ErrInfo != ErrorCode.Success) LeaveMatchRoom();
+            else
+            {
+                isTimerOn = true;
+            }
+        };
+    }
+
+    //초대 수신 이벤트
+    public void OnMatchMakingRoomSomeoneInvited(Action Todo)
+    {
+        Backend.Match.OnMatchMakingRoomSomeoneInvited = (MatchMakingInvitedRoomEventArgs args) => 
+        {
+            if(args.ErrInfo == ErrorCode.Success)
+            {
+                roomId = args.RoomId;
+                roomToken = args.RoomToken;
+                inviteUserInfo = args.InviteUserInfo;
+                Todo();
+            }
+        };
+    }
+
+    //초대 요청이 수신이 잘 됐다면 시간 흐르기
+    public void SetTimer()
+    {
+        if(isTimerOn)
+        {
+            Debug.Log(timer);
+            this.timer -= Time.deltaTime;
+            if (timer <= 0)
+            {
+                LeaveMatchRoom();
+            }
+        }
+    }
+
+    //초대 수락 Or 거절 이벤트
+    public void AreYouAccept(bool isAccept)
+    {
+        if (isAccept)
+        {
+            Backend.Match.AcceptInvitation(roomId, roomToken);
+            Backend.Match.OnMatchMakingRoomUserList = (MatchMakingGamerInfoListInRoomEventArgs args) => 
+            {
+                Debug.Log("대기 방 초대 수락 입장");
+            };
+        }
+        else
+        {
+            Backend.Match.DeclineInvitation(roomId, roomToken);
+            {
+                Debug.Log("대기방 초대 거절");
+            }
+        }
+
+        Backend.Match.OnMatchMakingRoomInviteResponse = (MatchMakingInteractionEventArgs args) => 
+        {
+            // TODO
             Debug.Log(args.ErrInfo);
         };
     }
+
+    //유저 입장 이벤트
+    public void OnMatchMakingRoomJoin()
+    {
+        Backend.Match.OnMatchMakingRoomJoin = (MatchMakingGamerInfoInRoomEventArgs args) => 
+        {
+            Debug.Log("유저 들어옴");
+            RequestMatchMaking(0);
+        };
+    }
+
+
+
+    //대기방 퇴장
+    public void LeaveMatchRoom()
+    {
+        isTimerOn = false;
+        timer = 15.0f;
+        Backend.Match.LeaveMatchRoom();
+        //Backend.Match.LeaveMatchMakingServer();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //=========이후 매칭 신청 + 인게임 서버 ================//
 
     //해당 인덱스의 매칭 서버를 통해 매칭 신청
     public void RequestMatchMaking(int index)
@@ -267,12 +422,13 @@ public class MatchSystem
                 //연결 됐다면 JoinGameServer 호출
                 string severAddress = args.RoomInfo.m_inGameServerEndPoint.m_address;
                 ushort serverPort = args.RoomInfo.m_inGameServerEndPoint.m_port;
-                JoinInGameServer(severAddress, serverPort);
+                string roomToken = args.RoomInfo.m_inGameRoomToken;
+                JoinInGameServer(severAddress, serverPort, roomToken);
             }
         };
     }
 
-    private void JoinInGameServer(string serverAddress, ushort serverPort)
+    private void JoinInGameServer(string serverAddress, ushort serverPort, string roomToken)
     {
         bool isReconnect = false;
         ErrorInfo errorInfo = null;
@@ -288,7 +444,102 @@ public class MatchSystem
             Backend.Match.OnSessionJoinInServer += (args) =>
             {
                 Debug.Log(errorInfo);
+                JoinInGameRoom(roomToken);
             };
         }
+    }
+
+    private void JoinInGameRoom(string token)
+    {
+        Backend.Match.JoinGameRoom(token);
+
+
+
+        //게임방 최초 접속 시 1번 호출되는 이벤트
+        Backend.Match.OnSessionListInServer = (MatchInGameSessionListEventArgs args) =>
+        {
+            roomInfo = args.RoomInfo;
+            for(int i = 0; i < args.GameRecords.Count; i++)
+            {
+                gameRecords.Add(args.GameRecords[i].m_nickname);
+            }
+            Debug.Log(gameRecords);
+        };
+
+        //게임방에 유저가 접속 시 모든 클라이언트에게 호출되는 이벤트
+        Backend.Match.OnMatchInGameAccess = (MatchInGameSessionEventArgs args) =>
+        {
+            if(args.GameRecord.m_nickname != Backend.UserNickName)
+            {
+                gameRecords.Add(args.GameRecord.m_nickname);
+                Debug.Log(args.GameRecord);
+            }
+            Debug.Log(gameRecords.Count);
+        };
+
+        //게임방에 모두가 들어오고 게임이 시작했을 때 호출되는 이벤트
+        Backend.Match.OnMatchInGameStart = () => 
+        {
+            Utils.Instance.LoadScene(SceneNames.MatchRoom);
+        };
+
+        //누군가 게임방에 나갔을 때 모두에게 호출되는 이벤트
+        Backend.Match.OnSessionOffline = (MatchInGameSessionEventArgs args) => 
+        {
+            gameRecords.Remove(args.GameRecord.m_nickname);
+            Debug.Log(args.GameRecord.m_nickname + "님이 나가셨습니다.");
+
+            Debug.Log(gameRecords.Count);
+        };
+    }
+
+    public void LeaveGameServer()
+    {
+        Backend.Match.LeaveGameServer();
+        LeaveMatchRoom();
+
+        Backend.Match.OnLeaveInGameServer = (MatchInGameSessionEventArgs args) => 
+        {
+            Debug.Log($"{args.GameRecord.m_nickname}님이 인 게임 서버를 나가셨습니다.");
+            Utils.Instance.LoadScene(SceneNames.Chatting);
+
+            if (args.ErrInfo == ErrorCode.Exception)
+            {
+                Debug.Log("재접속 시도중");
+                Backend.Match.IsGameRoomActivate((callback) =>
+                {
+                    var bro = Backend.Match.IsGameRoomActivate();
+                    var roomInfo = bro.GetReturnValuetoJSON();
+                    var addr = roomInfo["serverPublicHostName"].ToString();
+                    var port = Convert.ToUInt16(roomInfo["serverPort"].ToString());
+                    ErrorInfo errorInfo = null;
+
+                    if (callback.GetStatusCode() == "200")
+                    {
+                        if (Backend.Match.JoinGameServer(addr, port, true, out errorInfo) == false)
+                        {
+                            // 에러 확인
+                            return;
+                        }
+
+                        Backend.Match.OnSessionOnline += (MatchInGameSessionEventArgs args) =>
+                        {
+                            // TODO
+                            gameRecords.Add(args.GameRecord.m_nickname);
+                            Debug.Log(args.GameRecord.m_nickname + "님이 재접속 하셨습니다.");
+
+                            Debug.Log(gameRecords.Count);
+                        };
+                    }
+                    Debug.Log("재접속 불가합니다.");
+                });
+            }
+            else
+            {
+                Debug.Log("게임룸 정보 초기화");
+                roomInfo = null;
+                gameRecords.Clear();
+            }
+        };
     }
 }

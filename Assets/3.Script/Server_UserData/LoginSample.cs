@@ -8,13 +8,13 @@ public class LoginSample : MonoBehaviour
 
     private void Awake()
     {
-        string ID = "OhJungGeun";
+/*        string ID = "OhJungGeun";
         string PW = "1234";
         string email = "example123@gmail.com";
         string nickName = "Test User";
 
         //회원 가입
-        Backend.BMember.CustomSignUp(ID, PW);
+        Backend.BMember.CustomSignUp(ID, PW);*/
 /*
         //이메일 설정
         Backend.BMember.UpdateCustomEmail(email);
