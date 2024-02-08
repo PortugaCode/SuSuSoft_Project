@@ -7,6 +7,10 @@ public class TrailItem : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] float fllowSpeed;
 
+  /*  public GameObject star;     //따라오는 별
+    public GameObject eatStar;
+    public int getStarCount=0;*/
+
     private float distance;
 
     private void Awake()
@@ -23,6 +27,17 @@ public class TrailItem : MonoBehaviour
     {
         ItemRotate();
     }
+
+    /*    private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if(collision.gameObject.CompareTag("Player"))
+            {
+                getStarCount++;
+                Instantiate(eatStar, transform.position, Quaternion.identity);
+                Destroy(gameObject);
+                Debug.Log($" getStarCount : {getStarCount}");
+            }
+        }*/
 
     private void ChasePlayer()
     {

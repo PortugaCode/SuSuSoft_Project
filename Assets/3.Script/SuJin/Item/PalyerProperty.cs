@@ -4,42 +4,88 @@ using UnityEngine;
 
 public class PalyerProperty : MonoBehaviour
 {
-    private float originalPlayer;
-    [SerializeField] Rigidbody2D rigidbody2D;
+    public int level;
 
-    private int hp;
-    [SerializeField] private int sightRange;     //시야범위
-    private bool isMagnetism;     //자성
-    private bool isGiant;
-    //+speed
+    [Header("Player")]
+    [SerializeField] private string playerName;
+    public string PlayerColor;
+    public int activeSkill;
+    public int passiveSkill;
+
+    [Header("HP")]
+    public int currentHealth;
+    public int maxHealth;
+    private int damage = 0;
+    public int HealthIncreaseRate = 10;
+
+    [Header("Skill")]
+    private int maxCoolTime;
+
+    [Header("Speed")]
+    public int maxSpeed;
+    public int minSpeed;
+
+    [Header("Sight")]
+    public int maxSightRange;
+    public int minSightRange;
+
+    [Header("Magnetism")]
+    public float maxMagnetismRange;
+    public float minMagnetismRange;
+
+    [Header("Weight")]
+    public float maxWeight;
+    public float minWeight;
+
+    [Header("Shield")]
+    public bool isShield = false;
+
+    [Header("GetStars")]
+    [SerializeField] GameObject star;
+    [SerializeField] int getStarCount;
+    private float getStarPercent;
+
+    // 공격 무효
 
     private void Start()
     {
-        hp = 100;
-        sightRange = 10;
-        isMagnetism = false;
-        isGiant = false;
+        level = 1;
+        maxSpeed = 300;
+        maxHealth = 100;
+        maxCoolTime = 30;
+
+        maxSightRange = 300;
+        maxMagnetismRange = 10;
+        maxWeight = 10;
+        getStarCount = 0;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Item"))
+        if(collision.gameObject.CompareTag("Finish"))      
         {
-            isGiant = collision.gameObject.name.Contains("Gient");
+            //Player Damage
+            damage = 10; 
+            currentHealth = maxHealth - damage;
 
-            if(isGiant)
+            Debug.Log($" currentHP: {currentHealth} ");
+        }
+
+        if(collision.gameObject.CompareTag("GameController"))
+        {
+            if (collision.gameObject.CompareTag("Player"))
             {
-                //Face SetActive Add
-
-                transform.localScale = new Vector2(originalPlayer * 3f, originalPlayer * 3f);
-
+                getStarCount++;
+                Instantiate(star, transform.position, Quaternion.identity);
+                Destroy(gameObject);
+                Debug.Log($" getStarCount : {getStarCount}");
             }
         }
     }
 
-    private IEnumerator Giant_Co(float delay)
+    private void PassiveSkill()
     {
-        yield return new WaitForSeconds(delay);
-        //ri
+        //
     }
+
 }
