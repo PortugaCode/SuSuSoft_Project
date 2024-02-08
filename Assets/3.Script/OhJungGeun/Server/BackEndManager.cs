@@ -41,6 +41,7 @@ public class BackEndManager : MonoBehaviour
         chatManager = new ChatManager();
 
         BackEndSetUp();
+        matchSystem.OnMatchMakingRoomJoin();
     }
 
     private void Update()
@@ -51,7 +52,7 @@ public class BackEndManager : MonoBehaviour
             Backend.AsyncPoll();
 
             Backend.Match.Poll();
-            matchSystem.SetTimer();
+            //matchSystem.SetTimer();
 
 
 
