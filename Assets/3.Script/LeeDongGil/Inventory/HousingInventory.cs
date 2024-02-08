@@ -56,7 +56,10 @@ public class HousingInventory : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
         Debug.Log("Start Drag");
         image.color = new Color(1, 1, 1, 0);
-        Instantiate(Building, Camera.main.ScreenToWorldPoint(eventData.position), Quaternion.identity, buildingSpace);
+        //Instantiate(Building, Camera.main.ScreenToWorldPoint(eventData.position), Quaternion.identity, buildingSpace);
+        //canvasGroup.alpha = 0f;
+        Instantiate(Building, Vector3.zero, Quaternion.identity, buildingSpace);
+        TestManager.instance.isEditMode = true;
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -119,6 +122,7 @@ public class HousingInventory : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             transform.parent.SetAsLastSibling();
             Building = null;
             gameObject.SetActive(false);
+            canvasGroup.alpha = 1.0f;
         }
     }
 }

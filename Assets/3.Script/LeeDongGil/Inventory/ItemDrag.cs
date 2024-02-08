@@ -27,7 +27,7 @@ public class ItemDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     {
         transform.SetParent(canvasTransform);
         transform.SetAsLastSibling();
-
+        Debug.Log("Drag");
         canvasGroup.alpha = 0.6f;
         canvasGroup.blocksRaycasts = false;
 
@@ -45,7 +45,7 @@ public class ItemDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             transform.SetParent(previousParent);
             rect.position = previousParent.GetComponent<RectTransform>().position;
         }
-
+        Debug.Log("End Drag");
         canvasGroup.alpha = 1.0f;
         canvasGroup.blocksRaycasts = true;
     }

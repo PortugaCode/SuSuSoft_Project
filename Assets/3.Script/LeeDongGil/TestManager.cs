@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class TestManager : MonoBehaviour
 {
-    private static TestManager instance = null;
+    public static TestManager instance = null;
 
     public ItemData testData;
     public ItemData testData1;
     public InventorySystem invenSys;
+
+    public bool isEditMode = false;
 
     private void Awake()
     {
