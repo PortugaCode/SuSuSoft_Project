@@ -24,7 +24,7 @@ public class ChatInputControl : MonoBehaviour
             textInput.ActivateInputField();
             return;
         }
-        else if(textInput.text.StartsWith("/w ") || textInput.text.StartsWith("/W ") || textInput.text.StartsWith("/庇加富 ") || textInput.text.StartsWith("/じ "))
+        else if(textInput.text.StartsWith("/w ") || textInput.text.StartsWith("/W ") || textInput.text.StartsWith("/庇加富 ") || textInput.text.StartsWith("/じ ") || textInput.text.StartsWith("/庇 "))
         {
             string valueStr = textInput.text;
             string[] splitStr = valueStr.Split(' ');
