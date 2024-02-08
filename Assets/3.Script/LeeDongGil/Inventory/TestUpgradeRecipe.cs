@@ -6,21 +6,32 @@ public class TestUpgradeRecipe : MonoBehaviour
 {
     public ItemInfo item;
     public InventorySystem invenSys;
-    public GameObject tier2Item;
+    public ItemData tier2Item;
+    public Recipe[] recipes;
     private void Awake()
     {
         invenSys = FindObjectOfType<InventorySystem>();
     }
 
-    public bool Tier2Gem()
+    public void Upgrade()
     {
-        if(item._itemName.Equals("보석1") && item._itemCount >= 10)
+        Slot[] upSlots = GetComponentsInChildren<Slot>();
+        foreach (Slot upSlot in upSlots)
         {
-            return true;
-        }
-        else
-        {
-            return false;
+            if (upSlot.itemInfomation != null)
+            {
+                if (upSlot.slotItemCount >= 10 && upSlot.slotItemName.Equals("보석1"))
+                {
+                    int result = upSlot.slotItemCount / 10;
+                    invenSys.GetItem(tier2Item, 1 * result);
+                    upSlot.GetComponentInChildren<ItemInfo>()._itemCount -= result * 10;
+                    break;
+                }
+            }
+            else
+            {
+                continue;
+            }
         }
     }
 }

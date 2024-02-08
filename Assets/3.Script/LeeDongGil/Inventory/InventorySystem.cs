@@ -12,7 +12,7 @@ public class InventorySystem : MonoBehaviour
         {
             if(slot.IsSlotUse)
             {
-                if(slot.slotItemName.Equals(slot.transform.GetComponentInChildren<ItemInfo>()._itemName))
+                if(slot.slotItemName.Equals(itemData.itemName))
                 {
                     slot.GetComponentInChildren<ItemInfo>()._itemCount += getCount;
                     break;
@@ -28,9 +28,10 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
-    public void SetItemInfo(ItemData _itemData, Slot _slot)
+    public void SetItemInfo(ItemData itemData, Slot _slot)
     {
-        _slot.transform.GetChild(0).GetComponent<Image>().sprite = _itemData.sprite;
-        _slot.transform.GetComponentInChildren<ItemInfo>()._itemName = _itemData.itemName;
+        _slot.transform.GetChild(0).GetComponent<Image>().sprite = itemData.sprite;
+        _slot.transform.GetComponentInChildren<ItemInfo>()._itemData = itemData;
+        _slot.transform.GetComponentInChildren<ItemInfo>()._itemName = itemData.itemName;
     }
 }
