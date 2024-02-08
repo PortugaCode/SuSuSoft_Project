@@ -39,7 +39,7 @@ public class ChatInputControl : MonoBehaviour
                 textInput.ActivateInputField();
             }
         }
-        else if(textInput.text.StartsWith("/초대 "))
+        else if(textInput.text.StartsWith("/초대 ") || textInput.text.StartsWith("/invite ") || textInput.text.StartsWith("/Invite "))
         {
             string valueStr = textInput.text;
             string[] splitStr = valueStr.Split(' ');
