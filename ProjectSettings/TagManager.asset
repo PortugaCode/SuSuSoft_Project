@@ -8,6 +8,13 @@ TagManager:
   - CanBuild
   - NotBuild
   - Building
+  - Star
+  - Obstacles
+  - Item
+  - Magnet
+  - Gold
+  - Shield
+  - SpeedItem
   layers:
   - Default
   - TransparentFX
