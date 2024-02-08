@@ -40,14 +40,14 @@ public struct HousingObject
     public int layer; // 레이어 순서
     public string setType; // 세트효과 타입
     public int effect; // 효과 종류 (-1: none, 0: gold, 1: maxHP)
-    public int maxReinforceLevel; // 최대 강화 수치
+    public int maxLevel; // 최대 강화 수치
     public int level; // 강화 단계
     public float increaseRate; // 강화당 능력치 상승량
     public int imageIndex; // 오브젝트 이미지 인덱스
     public int interactType; // 상호작용 타입 (0: Touch, 1: Drag & Drop)
     public int price; // 판매가격
-    public string reinforceText_e; // 강화 시 출력 텍스트 (영문)
-    public string reinforceText_k; // 강화 시 출력 텍스트 (한글)
+    public string text_e; // 강화 시 출력 텍스트 (영문)
+    public string text_k; // 강화 시 출력 텍스트 (한글)
 }
 
 public struct GuestBook
