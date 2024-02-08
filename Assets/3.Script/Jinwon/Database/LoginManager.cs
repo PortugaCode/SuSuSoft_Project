@@ -138,6 +138,18 @@ public class LoginManager : MonoBehaviour
             btnSignUp.interactable = true;
             return;
         }
+        else if (Backend.BMember.CheckNicknameDuplication(userNameText).IsSuccess())
+        {
+            // 닉네임이 다른 유저의 닉네임과 중복될 때
+            inputFieldSignUpID.text = "";
+            inputFieldSignUpPW_1.text = "";
+            inputFieldSignUpPW_2.text = "";
+            inputFieldSignUpUserName.text = "";
+            signUpErrorText.text = "이미 사용중인 닉네임입니다.";
+            signUpErrorText.gameObject.SetActive(true);
+            btnSignUp.interactable = true;
+            return;
+        }
 
         btnSignUp.interactable = false;
 
@@ -174,7 +186,7 @@ public class LoginManager : MonoBehaviour
                         message = "프로젝트 상태가 '점검'입니다.";
                         break;
                     case 403:
-                        message = callback.GetMessage().Contains("blocked") ? "차단당한 디바이스입니다." : "출시 설정이 테스트인데 AU가 10을 초과하였습니다.";
+                        message = callback.GetMessage().Contains("blocked") ? "차단당한 디바이스입니다." : "출시 설정이 '테스트'인데 AU가 10을 초과하였습니다.";
                         break;
                     case 409:
                         message = "중복된 아이디입니다.";

@@ -6,9 +6,11 @@ using LitJson;
 
 public struct Friend
 {
-    int index; // 인덱스
-    string id; // 아이디
-    string name; // 이름
+    public string id; // 아이디
+    public string name; // 이름
+    public string inDate; // 유저의 inDate
+    public string createdAt; // 친구가 된 시각
+    public string lastLogin; // 마지막 접속 시각
 }
 
 public struct Character
@@ -54,10 +56,19 @@ public struct GuestBook
 
 public struct Mail
 {
-    int index; // 인덱스
-    string id; // 작성자 아이디
-    string name; // 작성자 이름
-    string content; // 내용
+    public string content; // 우편 내용
+    public string expirationDate; // 만료 날짜
+    public string receiverIndate; // 받은 유저의 inDate
+    //public Dictionary<string, string> item; // 보낸 아이템 정보
+    //public Dictionary<string, string> itemLocation // 해당 아이템이 위치해있던 테이블 정보
+    public string receiverNickname; // 받을 유저 닉네임
+    public string receivedDate; // 수령한 날짜 (수령한 경우에만 보임)
+    public string sender; // 보낸 유저의 uuid
+    public string inDate; // 우편의 inDate
+    public string senderNickname; // 보낸 유저의 닉네임
+    public string senderIndate; // 보낸 유저의 inDate
+    public string sentDate; // 보낸 날짜
+    public string title; // 우편 제목
 }
 
 public struct Skill
@@ -82,9 +93,9 @@ public class User
     public List<Character> character { get; set; } // 보유한 캐릭터 리스트
     public Dictionary<string, int> goods { get; set; } // 보유한 재화의 종류와 수량
     public List<int> housingObject { get; set; } // 보유한 하우징 오브젝트 리스트
-    public List<string> friend { get; set; } // 친구 리스트
+    public List<Friend> friend { get; set; } // 친구 리스트
     public List<int> guestBook { get; set; } // 방명록 리스트
-    public List<int> mail { get; set; } // 우편 리스트
+    public List<Mail> mail { get; set; } // 우편 리스트
 
     public User() // 생성자에서 초기화
     {
@@ -94,9 +105,9 @@ public class User
         character = new List<Character>();
         goods = new Dictionary<string, int> { { "friendshipPoint", 0 }, { "ruby", 0 }, { "gold", 0 } };
         housingObject = new List<int>();
-        friend = new List<string>();
+        friend = new List<Friend>();
         guestBook = new List<int>();
-        mail = new List<int>();
+        mail = new List<Mail>();
     }
 
     // + 스테이지 클리어 정보 추가 필요
@@ -286,11 +297,8 @@ public class DBManager : MonoBehaviour
                 user.housingObject[i] = int.Parse(json[0]["HousingObject"][i].ToString());
             }
 
-            // [친구]
-            for (int i = 0; i < json[0]["Friend"].Count; i++)
-            {
-                user.friend[i] = json[0]["Friend"][i].ToString();
-            }
+            // [친구] (뒤끝 내장 친구 목록에서 불러오기)
+            CommunityManager.instance.GetFriendsList();
 
             // [방명록]
             for (int i = 0; i < json[0]["GuestBook"].Count; i++)
