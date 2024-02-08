@@ -5,6 +5,16 @@ TagManager:
   serializedVersion: 2
   tags:
   - ChatListContent
+  - CanBuild
+  - NotBuild
+  - Building
+  - Star
+  - Obstacles
+  - Item
+  - Magnet
+  - Gold
+  - Shield
+  - SpeedItem
   layers:
   - Default
   - TransparentFX
@@ -41,4 +51,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 2729965397
     locked: 0

@@ -8,85 +8,71 @@ using BackEnd.Tcp;
 
 public class Login : LoginBase
 {
-    [SerializeField] private Image imageID;                  // ID �ʵ� ���� ����
-    [SerializeField] private TMP_InputField inputFieldID;    // ID �ʵ� �ؽ�Ʈ
+    [SerializeField] private Image imageID;                  //ID 색상 변경
+    [SerializeField] private TMP_InputField inputFieldID;    //ID Input
 
-    [SerializeField] private Image imagePW;                  // PW �ʵ� ���� ����
-    [SerializeField] private TMP_InputField inputFieldPW;    // PW �ʵ� �ؽ�Ʈ
+    [SerializeField] private Image imagePW;                  //PW 색상 변경
+    [SerializeField] private TMP_InputField inputFieldPW;    //PW Input
 
     [SerializeField] private Button btnLogin;
 
-    /// <summary>
-    /// "�α���" ��ư�� ������ �� ȣ��
-    /// </summary>
+
     public void OnClickLogin()
     {
-        //�Ű������� �Է��� InputField UI�� ����� Message ���� �ʱ�ȭ
         ResetUI(imageID, imagePW);
 
-        //�ʵ� ���� ����ִ��� üũ
-        if (IsFieldDataEmpty(imageID, inputFieldID.text, "���̵�")) return;
-        if (IsFieldDataEmpty(imagePW, inputFieldPW.text, "��й�ȣ")) return;
+        if (IsFieldDataEmpty(imageID, inputFieldID.text, "ID")) return;
+        if (IsFieldDataEmpty(imagePW, inputFieldPW.text, "PassWord")) return;
 
-        //�α��� ��ư�� ��Ÿ���� ���ϵ��� ��ȣ�ۿ� ��Ȱ��ȭ
         btnLogin.interactable = false;
 
-        //������ �α����� ��û�ϴ� ���� ȭ�鿡 ����ϴ� ���� ������Ʈ
-        //ex) �α��� ���� �ؽ�Ʈ ���, ��Ϲ��� ������ ȸ�� ��
+
         StartCoroutine(nameof(LoginProcess));
 
-        //�ڳ� ���� �α��� �õ�
         ResponseToLogin(inputFieldID.text, inputFieldPW.text);
     }
 
 
-    /// <summary>
-    /// �α��� �õ� �� �����κ��� ���޹��� message�� ������� ���� ó��
-    /// </summary>
+
     private void ResponseToLogin(string Id, string Pw)
     {
-        //������ �α��� ��û
         Backend.BMember.CustomLogin(Id, Pw, callback =>
         {
             StopCoroutine(nameof(LoginProcess));
 
 
-            //�α��� ����
             if (callback.IsSuccess())
             {
 
-                SetMessage($"{inputFieldID.text}�� ȯ���մϴ�");
-                //BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
+                SetMessage($"{inputFieldID.text}님 환영합니다.");
+                BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
                 BackEndManager.Instance.GetChatManager().GetChatStatus();
-
             }
-            //�α��� ����
+
             else
             {
-                //�α��� �������� ���� �ٽ� �α����� �ؾ��ϱ� ������ �α��� ��ư Ȱ��ȭ
                 btnLogin.interactable = true;
 
                 string message = string.Empty;
 
                 switch(int.Parse(callback.GetStatusCode()))
                 { 
-                    case 401: //�������� �ʴ� ���̵�, �߸��� ��й�ȣ
-                        message = callback.GetMessage().Contains("customId") ? "�������� �ʴ� ���̵��Դϴ�." : "�߸��� ��й�ȣ�Դϴ�.";
+                    case 401: 
+                        message = callback.GetMessage().Contains("customId") ? "존재하지 않는 아이디입니다." : "잘못된 비밀번호입니다.";
                         break;
 
-                    case 403: // ���� or ����̽� ����
-                        message = callback.GetMessage().Contains("user") ? "���ܴ��� �����Դϴ�." : "���ܴ��� ����̽��Դϴ�";
+                    case 403: 
+                        message = callback.GetMessage().Contains("user") ? "차단한 유저입니다." : "차단당한 디바이스입니다.";
                         break;
-                    case 410: // Ż�� ������
-                        message = "Ż�� �������� �����Դϴ�.";
+                    case 410:
+                        message = "탈퇴가 진행중인 계정입니다.";
                         break;
                     default:
                         message = callback.GetMessage();
                         break;
                 }
 
-                // StatusCode 401���� "�߸��� ��й�ȣ �Դϴ�." �� ��
-                if(message.Contains("��й�ȣ"))
+                if(message.Contains("비밀번호"))
                 {
                     GuideForIncorrectlyEnteredData(imagePW, message);
                 }
@@ -106,7 +92,7 @@ public class Login : LoginBase
         {
             timer += Time.deltaTime;
 
-            SetMessage($"�α��� ���Դϴ�... {timer:F1}");
+            SetMessage($"로그인 중입니다... {timer:F1}");
             yield return null;
         }
     }
