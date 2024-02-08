@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class HousingDrag : MonoBehaviour
 {
@@ -84,11 +85,14 @@ public class HousingDrag : MonoBehaviour
 
                 if (Physics.Raycast(ray, out hit))
                 {
-                    Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
-                    if (hit.collider.gameObject == gameObject)
+                    if (EventSystem.current.IsPointerOverGameObject() == false)
                     {
-                        isDragging = true;
-                        offset = transform.position - ray.GetPoint(hit.distance);
+                        Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
+                        if (hit.collider.gameObject == gameObject)
+                        {
+                            isDragging = true;
+                            offset = transform.position - ray.GetPoint(hit.distance);
+                        }
                     }
 
                     #region Gizmos
@@ -222,18 +226,18 @@ public class HousingDrag : MonoBehaviour
         {
             Gizmos.color = Color.green;
 
-            // ÇÔ¼ö ÆÄ¶ó¹ÌÅÍ : ÇöÀç À§Ä¡, BoxÀÇ Àı¹İ »çÀÌÁî, RayÀÇ ¹æÇâ, RaycastHit °á°ú, BoxÀÇ È¸Àü°ª, BoxCast¸¦ ÁøÇàÇÒ °Å¸®
+            // í•¨ìˆ˜ íŒŒë¼ë¯¸í„° : í˜„ì¬ ìœ„ì¹˜, Boxì˜ ì ˆë°˜ ì‚¬ì´ì¦ˆ, Rayì˜ ë°©í–¥, RaycastHit ê²°ê³¼, Boxì˜ íšŒì „ê°’, BoxCastë¥¼ ì§„í–‰í•  ê±°ë¦¬
             if (true == Physics.BoxCast(gizmosPosition, new Vector3(0.495f, 0.495f, 0.2f), gizmosDirection, out gizmosHit, Quaternion.identity))
             {
-                // HitµÈ ÁöÁ¡±îÁö ray¸¦ ±×·ÁÁØ´Ù.
+                // Hitëœ ì§€ì ê¹Œì§€ rayë¥¼ ê·¸ë ¤ì¤€ë‹¤.
                 Gizmos.DrawRay(gizmosPosition, gizmosDirection * gizmosHit.distance);
 
-                // HitµÈ ÁöÁ¡¿¡ ¹Ú½º¸¦ ±×·ÁÁØ´Ù.
+                // Hitëœ ì§€ì ì— ë°•ìŠ¤ë¥¼ ê·¸ë ¤ì¤€ë‹¤.
                 Gizmos.DrawWireCube(gizmosPosition + gizmosDirection * gizmosHit.distance, new Vector3(0.495f, 0.495f, 0.2f) * 2);
             }
             else
             {
-                // Hit°¡ µÇÁö ¾Ê¾ÒÀ¸¸é ÃÖ´ë °ËÃâ °Å¸®·Î ray¸¦ ±×·ÁÁØ´Ù.
+                // Hitê°€ ë˜ì§€ ì•Šì•˜ìœ¼ë©´ ìµœëŒ€ ê²€ì¶œ ê±°ë¦¬ë¡œ rayë¥¼ ê·¸ë ¤ì¤€ë‹¤.
                 Gizmos.DrawRay(gizmosPosition, gizmosDirection * 20.0f);
             }
         }
