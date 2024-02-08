@@ -4,7 +4,7 @@ using UnityEngine;
 using BackEnd;
 using BackEnd.Tcp;
 
-public class MatchCard : MonoBehaviour
+public class MatchCard
 {
     public string inDate;
     public string matchTitle;

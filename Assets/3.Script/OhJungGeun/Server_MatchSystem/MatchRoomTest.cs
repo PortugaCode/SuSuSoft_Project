@@ -13,9 +13,14 @@ public class MatchRoomTest : MonoBehaviour
     {
         Backend.Match.OnSessionOffline += (MatchInGameSessionEventArgs args) =>
         {
-            Debug.Log("누군가 나감");
             SetText();
         };
+
+        Backend.Match.OnSessionOnline = (MatchInGameSessionEventArgs args) =>
+        {
+            SetText();
+        };
+
         SetText();
     }
 

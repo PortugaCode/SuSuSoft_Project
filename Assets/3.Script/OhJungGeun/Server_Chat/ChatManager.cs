@@ -118,6 +118,13 @@ public class ChatManager
                 if (!args.Session.IsRemote)
                 {
                     Utils.Instance.LoadScene(SceneNames.Chatting);
+                    Backend.Chat.OnLeaveChannel = (LeaveChannelEventArgs args) =>
+                    {
+                        if(args.ErrInfo.Detail == ErrorCode.DisconnectFromRemote)
+                        {
+                            JoinChannel();
+                        }
+                    };
                 }
                 //다른 유저가 접속한 경우
                 else
@@ -130,6 +137,11 @@ public class ChatManager
             {
                 //에러가 발생했을 경우
                 Debug.Log($"입장 도중 에러가 발생했습니다 : {args.ErrInfo.Reason}");
+
+                if(args.ErrInfo.Category == ErrorCode.Exception)
+                {
+                    JoinChannel();
+                }
             }
         };
     }
