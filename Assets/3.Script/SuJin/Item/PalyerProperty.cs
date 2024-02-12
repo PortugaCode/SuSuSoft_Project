@@ -7,7 +7,7 @@ public class PalyerProperty : MonoBehaviour
     public int level;
 
     [Header("Player")]
-    [SerializeField] private string playerName;
+    [SerializeField] private Transform player;
     public string PlayerColor;
     public int activeSkill;
     public int passiveSkill;
@@ -18,51 +18,27 @@ public class PalyerProperty : MonoBehaviour
     private int damage = 0;
     public int HealthIncreaseRate = 10;
 
+    [Header("Magnetism")]
+    public float magneticTime = 10f;
+    public float maxMagnetismRange = 30f;
+    public float minMagnetismRange;
+
     [Header("Skill")]
     //private int maxCoolTime;
-
-    [Header("Speed")]
-    [SerializeField] GameObject speedItem;
-    public int maxSpeed;
-    public int minSpeed;
 
     [Header("Sight")]
     public int maxSightRange;
     public int minSightRange;
 
-    [Header("Magnetism")]
-    public float maxMagnetismRange;
-    public float minMagnetismRange;
-
-    [Header("Weight")]
-    public float maxWeight;
-    public float minWeight;
-
-    [Header("Shield")]
-    public bool isShield = false;
-
     [Header("GetStars")]
-    [SerializeField] GameObject star;
+    [SerializeField] GameObject[] stars;
     [SerializeField] int getStarCount;
     //private float getStarPercent;
-
-    // 공격 무효
-
-    HorizontalPlayer horizontalPlayer;
 
     private void Start()
     {
         level = 1;
-        maxSpeed = 300;
         maxHealth = 100;
-        //maxCoolTime = 30;
-
-        maxSightRange = 300;
-        maxMagnetismRange = 10;
-        maxWeight = 10;
-        getStarCount = 0;
-
-        horizontalPlayer = GetComponent<HorizontalPlayer>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -71,29 +47,24 @@ public class PalyerProperty : MonoBehaviour
         {
             //Player Damage
             damage = 10; 
-            currentHealth = maxHealth - damage;
+            currentHealth -= damage;
 
             Debug.Log($" currentHP: {currentHealth} ");
         }
-
         if(collision.gameObject.CompareTag("Star"))
         {
             getStarCount++;
-            Instantiate(star, transform.position, Quaternion.identity);
+            Instantiate(stars[0], transform.position, Quaternion.identity);     
             Destroy(collision.gameObject);
             Debug.Log($" getStarCount : {getStarCount}");
         }
-        if(collision.gameObject.CompareTag("SpeedItem"))
-        {
-            //horizontalPlayer  참조하지 말고 이 스크립트에서 관리하기
-            Destroy(collision.gameObject);
-           //horizontalPlayer. =  horizontalPlayer.maxSpeed++;
-        }
     }
 
-    private void PassiveSkill()
-    {
-        //
-    }
+    //플레이어는 패시브로 자력을 가지고 있음
 
+    /*
+    1. 아이템 태그를 끌어오는 코드 
+    2. maxRange를 설정해서 자력범위를 정해주고, 자력 유지 시간 정하기
+
+     */
 }
