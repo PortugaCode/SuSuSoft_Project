@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BackEnd;
 using LitJson;
+using UnityEngine.SceneManagement;
 
 public struct Friend
 {
@@ -17,7 +18,7 @@ public struct Character
 {
     public int index; // 인덱스
     public int imageIndex; // 이미지 인덱스
-    public int lookImageIndex; // 표정 이미지 인덱스 (추가 필요할수도)
+    public int lookImageIndex; // 표정 이미지 인덱스 배열의 시작 인덱스
     public string name; // 이름
     public string color; // 색상
     public int level; // 레벨
@@ -269,6 +270,8 @@ public class DBManager : MonoBehaviour
             param.Add("UserName", user.userName);
             param.Add("Goods", user.goods); // 재화 무엇 있는지 파악하여 0 할당 필요
 
+            AddCharacter(101);
+
             Backend.GameData.Insert("User", param); // User 테이블에 데이터 삽입
 
             Debug.Log("새로운 유저 데이터 초기값 설정 완료");
@@ -325,6 +328,8 @@ public class DBManager : MonoBehaviour
 
             Debug.Log("기존 유저 데이터 불러오기 완료");
         }
+
+        SceneManager.LoadScene("Jinwon_CharacterSelect"); // 현재 캐릭터 선택창으로 이동하게 해놓음
     }
 
     public void AddCharacter(int index) // Character 테이블에 Chart에서 가져온 기본값을 입력 (Index로 구분)
