@@ -52,6 +52,11 @@ public class TestManager : MonoBehaviour
             housingInvenSys.GetHousingItem_test(testHousing[1], 1);
         }
     }
+
+    public void TestButton()
+    {
+        housingInvenSys.GetHousingItem_test(testHousing[0], 1);
+    }
 }
 public class TestItem
 {
