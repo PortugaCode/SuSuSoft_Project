@@ -12,20 +12,32 @@ public class HorizontalPlayer : MonoBehaviour
     private Vector3 direction;
 
     [Header("PlyerSpeed")]
-    [SerializeField] private float speed;
+    private float speed;
+
     public float maxSpeed;
     public float minSpeed;
-    public float SpeedItemAmount = 20;
 
-    public float acceleration;
+    public float baseAcceleration;
+    public float currentAcceleration;
+
     public float initialSpeed;
-    private float currentSpeed;
+    public  float currentSpeed;
+
+    private bool isSpeed = false;
+    public int speedDuration;
+
+    //Player Location
     [SerializeField] private float rotationSpeed;
 
     [Header("  ")]
     public Horizon_Joystick horizon_Joystick;
     public Rigidbody2D rb2D;
     private bool gameStart = false;
+
+    private void Awake()
+    {
+        currentAcceleration = baseAcceleration;
+    }
 
     private void Start()
     {
@@ -53,15 +65,14 @@ public class HorizontalPlayer : MonoBehaviour
             direction = (touchPosition - transform.position).normalized;
 
             // 터치 했을 때 플레이어 속력 증가
-
-            currentSpeed += acceleration * Time.deltaTime;
+            currentSpeed += currentAcceleration * Time.deltaTime;
             currentSpeed = Mathf.Clamp(currentSpeed, initialSpeed, maxSpeed);
             rb2D.velocity = new Vector2(direction.x * currentSpeed, 0) * Time.deltaTime + Vector2.up * currentSpeed * Time.deltaTime;
 
             //Player Rotation
             PlayerRotation();
 
-            if (touch.phase == TouchPhase.Ended)     //터치가 끝난 상태
+            if (touch.phase == TouchPhase.Ended && isSpeed == false)     //터치가 끝난 상태
             {
                 // 속도 초기화
                 currentSpeed = initialSpeed;
@@ -75,25 +86,24 @@ public class HorizontalPlayer : MonoBehaviour
     }
 
     //Player Speed Item
-/*    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("SpeedItem"))
         {
-            IncreaseSpeed(SpeedItemAmount); // 아이템에서 받아온 속도 증가량을 전달
+            IncreaseSpeed(); // 아이템에서 받아온 속도 증가량을 전달
             Destroy(collision.gameObject);
+            StartCoroutine(Speed_Co());
         }
     }
 
-    public void IncreaseSpeed(float speedIncrease)
+    public void IncreaseSpeed()
     {
-        currentSpeed += speedIncrease * acceleration + 30f * Time.deltaTime; // 속도 증가량을 매개변수로 전달받아 현재 속도에 추가
-        currentSpeed = Mathf.Clamp(currentSpeed, minSpeed, maxSpeed);
-        transform.Translate(Vector2.up * currentSpeed * Time.deltaTime);
-
+        isSpeed = true;
+        maxSpeed = maxSpeed * 2f;
+        currentAcceleration = baseAcceleration * 10f;
         Debug.Log($"{currentSpeed}:    ");
-        // rb2D.velocity = new Vector2(direction.x * currentSpeed, 0) * Time.deltaTime + Vector2.up * currentSpeed * Time.deltaTime;
     }
-*/
+
 
     public void PlayerRotation()
     {
@@ -125,6 +135,15 @@ public class HorizontalPlayer : MonoBehaviour
             blinkFace.SetActive(true);
             yield return new WaitForSeconds(0.5f);
         }
+    }
+
+    IEnumerator Speed_Co()
+    {
+        yield return new WaitForSeconds(speedDuration);
+
+        isSpeed = false;
+        maxSpeed = maxSpeed / 2f;
+        currentAcceleration = baseAcceleration;
     }
 
     private void StartGame()

@@ -14,36 +14,40 @@ public class AllRotationPlayer : MonoBehaviour
     public VariableJoystick variableJoystick;
     public Rigidbody2D rb2D;
 
+    public bool isMove = false;
+    public bool isRotate = false;
+
+
     public void FixedUpdate()
     {
         AllRotationMove();
-        MoveRotation();
+
     }
     private void AllRotationMove()
     {
         Vector2 direction = new Vector2(variableJoystick.Horizontal, variableJoystick.Vertical).normalized;
         rb2D.velocity = direction * speed * Time.fixedDeltaTime;
 
-        if (direction.magnitude == 0 && rb2D.velocity.magnitude > 0)
+        if (direction.magnitude == 0 && rb2D.velocity.magnitude > 0) 
         {
             rb2D.velocity -= direction * deceleration * Time.fixedDeltaTime;
 
-            if (rb2D.velocity.magnitude > 5f)
+            if (rb2D.velocity.magnitude > 5f)   
             {
                 rb2D.velocity = Vector2.zero;
             }
         }
+        MoveRotation();
     }
 
     private void MoveRotation()
     {
-        // 플레이어 이동 방향 설정
+        // 플레이어 이동 방향
         Vector2 direction = new Vector2(variableJoystick.Horizontal, variableJoystick.Vertical).normalized;
 
-        // 플레이어의 속도 설정
+        // 플레이어의 속도
         rb2D.velocity = direction * speed * Time.fixedDeltaTime;
 
-        // 플레이어 회전 설정
         if (direction.magnitude > 0)
         {
             // 플레이어가 바라보는 각도 계산
