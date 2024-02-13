@@ -40,32 +40,26 @@ public class Slot : MonoBehaviour, IPointerDownHandler
     {
         if (!IsSlotUse) return;
         Debug.Log(IsSlotUse);
-        if (!isUpgradeSlot)         //ÀÎº¥Åä¸® ½½·ÔÀÏ ¶§
+        if (!isUpgradeSlot)         //ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯ì¼ ë•Œ ì—…ê·¸ë ˆì´ë“œ ìŠ¬ë¡¯ ê²€ì‚¬í•˜ê¸°
         {
             Slot[] upgradeSlots = UpgradeSlot.GetComponentsInChildren<Slot>();
-            foreach (Slot upgradeSlot in upgradeSlots)         //¾÷±×·¹ÀÌµå ½½·Ô ºñ¾îÀÖ´Â ½½·Ô °Ë»ç
+            foreach (Slot upgradeSlot in upgradeSlots)         //ì—…ê·¸ë ˆì´ë“œ ìŠ¬ë¡¯ ë¹„ì–´ìˆëŠ” ìŠ¬ë¡¯ ê²€ì‚¬
             {
                 if (upgradeSlot.IsSlotUse)
                 {
-                    if (upgradeSlot.slotItemName.Equals(itemInfomation.itemName))
-                    {
-                        Debug.Log("¾ÆÀÌÅÛ Ãß°¡");
-                        upgradeSlot.GetComponentInChildren<ItemInfo>()._itemCount++;
-                        eventData.pointerCurrentRaycast.gameObject.transform.GetComponentInChildren<ItemInfo>()._itemCount--;
-                        break;
-                    }
-                    else continue;
+                    continue;
                 }
                 else
                 {
                     SetItem(itemInfomation, upgradeSlot);
                     upgradeSlot.GetComponentInChildren<ItemInfo>()._itemCount = 1;
                     eventData.pointerCurrentRaycast.gameObject.transform.GetComponentInChildren<ItemInfo>()._itemCount--;
-                    Debug.Log("¾ÆÀÌÅÛ »ı¼º");
+                    Debug.Log("ì•„ì´í…œ ìƒì„±");
                     break;
                 }
             }
         }
+        //ì—…ê·¸ë ˆì´ë“œ ìŠ¬ë¡¯
         else
         {   
             Slot[] invenSlots = InventorySlot.GetComponentsInChildren<Slot>();
