@@ -102,6 +102,10 @@ public class LoginManager : MonoBehaviour
         string pwText_2 = inputFieldSignUpPW_2.text;
         string userNameText = inputFieldSignUpUserName.text;
 
+        Where where = new Where();
+        where.Equal("UserName", userNameText); // 로그인 한 유저의 owner_inDate로 User DB 조회
+        var bro = Backend.GameData.GetMyData("User", where);
+
         if (idText.Trim().Equals("") || pwText_1.Trim().Equals("") || pwText_2.Trim().Equals("") || userNameText.Trim().Equals(""))
         {
             // InputField가 비워져있을 때
@@ -138,9 +142,10 @@ public class LoginManager : MonoBehaviour
             btnSignUp.interactable = true;
             return;
         }
-        else if (Backend.BMember.CheckNicknameDuplication(userNameText).IsSuccess())
+        else if (bro.IsSuccess() == false || bro.GetReturnValuetoJSON()["rows"].Count > 0)
         {
             // 닉네임이 다른 유저의 닉네임과 중복될 때
+            Debug.Log("중복");
             inputFieldSignUpID.text = "";
             inputFieldSignUpPW_1.text = "";
             inputFieldSignUpPW_2.text = "";
