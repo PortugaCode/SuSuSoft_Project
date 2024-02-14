@@ -3,6 +3,7 @@ using BackEnd.Tcp;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Protocol;
 
 public class MatchSystem
 {
@@ -20,6 +21,8 @@ public class MatchSystem
     public SessionId RoomID => roomId;
     public string RoomToken => roomToken;
 
+
+
     //초대 요청 시 제한 시간
     float timer = 15.0f;
     bool isTimerOn = false;
@@ -27,7 +30,7 @@ public class MatchSystem
 
     //게임룸 정보
     public MatchInGameRoomInfo roomInfo; // 접속한 룸의 정보
-    public List<string> gameRecords = new List<string>(); // 현재 게임방에 접속해 있는 유저들의 정보
+    public Dictionary<SessionId, string> userNickName = new Dictionary<SessionId, string>(); // 현재 게임방에 접속해 있는 유저들의 닉네임
 
 
     //매칭 서버 리스트 인덱스 접근
@@ -459,12 +462,11 @@ public class MatchSystem
         Backend.Match.OnSessionListInServer = (MatchInGameSessionListEventArgs args) =>
         {
             roomInfo = args.RoomInfo;
-            gameRecords.Clear();
+            userNickName.Clear();
             for(int i = 0; i < args.GameRecords.Count; i++)
             {
-                gameRecords.Add(args.GameRecords[i].m_nickname);
+                userNickName.Add(args.GameRecords[i].m_sessionId, args.GameRecords[i].m_nickname);
             }
-            Debug.Log(gameRecords);
         };
 
         //게임방에 유저가 접속 시 모든 클라이언트에게 호출되는 이벤트
@@ -472,25 +474,31 @@ public class MatchSystem
         {
             if(args.GameRecord.m_nickname != Backend.UserNickName)
             {
-                gameRecords.Add(args.GameRecord.m_nickname);
+                userNickName.Add(args.GameRecord.m_sessionId, args.GameRecord.m_nickname);
                 Debug.Log(args.GameRecord);
             }
-            Debug.Log(gameRecords.Count);
         };
 
         //게임방에 모두가 들어오고 게임이 시작했을 때 호출되는 이벤트
         Backend.Match.OnMatchInGameStart = () => 
         {
+            Backend.Match.OnMatchRelay += (args) =>
+            {
+                // 각 클라이언트들이 서버를 통해 주고받은 패킷들
+                // 서버는 단순 브로드캐스팅만 지원 (서버에서 어떠한 연산도 수행하지 않음)
+                OnRecieve(args);
+            };
+
             Utils.Instance.LoadScene(SceneNames.MatchRoom);
         };
 
         //누군가 게임방에 나갔을 때 모두에게 호출되는 이벤트
         Backend.Match.OnSessionOffline = (MatchInGameSessionEventArgs args) => 
         {
-            gameRecords.Remove(args.GameRecord.m_nickname);
+            userNickName.Remove(args.GameRecord.m_sessionId);
             Debug.Log(args.GameRecord.m_nickname + "님이 나가셨습니다.");
 
-            Debug.Log(gameRecords.Count);
+            Debug.Log(userNickName.Count);
         };
     }
 
@@ -526,10 +534,10 @@ public class MatchSystem
                         Backend.Match.OnSessionOnline += (MatchInGameSessionEventArgs args) =>
                         {
                             // TODO
-                            gameRecords.Add(args.GameRecord.m_nickname);
+                            userNickName.Add(args.GameRecord.m_sessionId, args.GameRecord.m_nickname);
                             Debug.Log(args.GameRecord.m_nickname + "님이 재접속 하셨습니다.");
 
-                            Debug.Log(gameRecords.Count);
+                            Debug.Log(userNickName.Count);
                         };
                     }
                     Debug.Log("재접속 불가합니다.");
@@ -539,8 +547,56 @@ public class MatchSystem
             {
                 Debug.Log("게임룸 정보 초기화");
                 roomInfo = null;
-                gameRecords.Clear();
+                userNickName.Clear();
             }
         };
     }
+
+
+
+
+
+    //=========MatchInRoom==============
+    public void SendDataToInGame<T>(T msg)
+    {
+        var byteArray = DataParser.DataToJsonData<T>(msg);
+        Backend.Match.SendDataToInGameRoom(byteArray);
+    }
+
+    public void OnRecieve(MatchRelayEventArgs args)
+    {
+        if (args.BinaryUserData == null)
+        {
+            Debug.LogWarning(string.Format("빈 데이터가 브로드캐스팅 되었습니다.\n{0} - {1}", args.From, args.ErrInfo));
+            // 데이터가 없으면 그냥 리턴
+            return;
+        }
+
+        Message msg = DataParser.ReadJsonData<Message>(args.BinaryUserData);
+        if (msg == null)
+        {
+            return;
+        }
+
+        if (args.From.SessionId == Backend.Match.GetMySessionId())
+        {
+            return;
+        }
+
+        switch (msg.type)
+        {
+            case Protocol.Type.PlayerMove:
+                if(Utils.Instance.nowScene == SceneNames.MatchRoom)
+                {
+                    Debug.Log("누가 움직임");
+                    PlayerMoveMessage moveMessage = DataParser.ReadJsonData<PlayerMoveMessage>(args.BinaryUserData);
+                    MatchRoomTest.Instance.ProcessPlayerData(moveMessage);
+                }
+                break;
+            default:
+                Debug.Log("Unknown protocol type");
+                return;
+        }
+    }
+
 }
