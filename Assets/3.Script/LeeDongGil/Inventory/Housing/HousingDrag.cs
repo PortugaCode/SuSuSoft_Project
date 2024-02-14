@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class HousingDrag : MonoBehaviour
 {
     public bool isDragging = false;
-    public bool isApply = false;
+    public bool isCanBuild = false;
     public Vector3 offset;
     public Transform previousParent;
     public CanvasGroup group;
@@ -71,52 +71,37 @@ public class HousingDrag : MonoBehaviour
             DragObject();
             CheckToBuild();
         }
+        else
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+            check.gameObject.SetActive(false);
+            subCollider.enabled = false;
+        }
     }
 
 
     private void DragObject()
     {
-        if (Input.touchCount > 0 || Input.GetMouseButton(0))
+        Ray ray;
+        RaycastHit hit;
+        if (Input.touchCount > 0)
         {
             Touch touch;
-            mouseX = Input.GetAxis("Mouse X");
-            mouseY = Input.GetAxis("Mouse Y");
-            if (Input.touchCount > 0)
-            {
-                touch = Input.GetTouch(0);
-            }
-            else
-            {
-                if (mouseX == 0 && mouseY == 0)
-                {
-                    touch = new Touch { position = Input.mousePosition, phase = TouchPhase.Began };
-                }
-                else if (Input.GetMouseButtonUp(0))
-                {
-                    touch = new Touch { position = Input.mousePosition, phase = TouchPhase.Ended };
-                }
-                else
-                {
-                    touch = new Touch { position = Input.mousePosition, phase = TouchPhase.Moved };
-                }
-            }
+            touch = Input.GetTouch(0);
+            ray = Camera.main.ScreenPointToRay(touch.position);
 
-
-            //Debug.Log(touch.phase);
 
             if (touch.phase == TouchPhase.Began)
             {
-                Debug.Log("Began 실행");
-                Ray ray = Camera.main.ScreenPointToRay(touch.position);
-                RaycastHit hit;
+                //Debug.Log("Began 실행");
                 if (Physics.Raycast(ray, out hit))
                 {
-                    if (EventSystem.current.IsPointerOverGameObject() == false)
+                    if (EventSystem.current.IsPointerOverGameObject(0) == false && hit.collider.gameObject == gameObject)
                     {
                         Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
-                        transform.position = new Vector3(transform.position.x, transform.position.y, -1);
-                        check.gameObject.SetActive(true);
-                        subCollider.enabled = true;
+                        Debug.Log("Began 실행2");
+                        offset = transform.position - ray.GetPoint(hit.distance);
+                        isDragging = true;
                     }
 
                     #region Gizmos
@@ -131,25 +116,28 @@ public class HousingDrag : MonoBehaviour
             }
             else if (touch.phase == TouchPhase.Ended)
             {
-                Debug.Log("End");
+                //Debug.Log("End");
                 isDragging = false;
                 subCollider.enabled = false;
+                if (isCanBuild)
+                {
+                    transform.position = new Vector3(transform.position.x, transform.position.y, -0.5f);
+                }
+                else
+                {
+                    transform.position = new Vector3(transform.position.x, transform.position.y, -0.8f);
+                }
             }
             else
             {
-                Debug.Log("Moved 실행");
-                Ray ray = Camera.main.ScreenPointToRay(touch.position);
-                RaycastHit hit;
+                //Debug.Log("Moved 실행");
                 if (Physics.Raycast(ray, out hit))
                 {
-                    if (EventSystem.current.IsPointerOverGameObject() == false)
+                    if (EventSystem.current.IsPointerOverGameObject() == false && hit.collider.gameObject == gameObject)
                     {
                         Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
-                        if (hit.collider.gameObject == gameObject)
-                        {
-                            isDragging = true;
-                            offset = transform.position - ray.GetPoint(hit.distance);
-                        }
+
+                        group.alpha = 0;
                     }
 
                 }
@@ -157,7 +145,9 @@ public class HousingDrag : MonoBehaviour
 
             if (isDragging)
             {
-                Ray ray = Camera.main.ScreenPointToRay(touch.position);
+                transform.position = new Vector3(transform.position.x, transform.position.y, -1);
+                check.gameObject.SetActive(true);
+                subCollider.enabled = true;
                 Vector3 newPosition = ray.GetPoint(offset.z);
                 checkMinusX = newPosition.x >= 0 ? 1 : -1;
                 checkMinusY = newPosition.y >= 0 ? 1 : -1;
@@ -170,8 +160,8 @@ public class HousingDrag : MonoBehaviour
                 //Debug.Log(-(grid.boundX / 2) + spaceX / 2);
                 //Debug.Log(-(grid.boundY / 2) + spaceY / 2);
 
-                transform.position = new Vector3(clampX, clampY, -1);
-                group.alpha = 0f;
+                transform.position = new Vector3(clampX, clampY, transform.position.z);
+
             }
         }
         else
@@ -231,22 +221,14 @@ public class HousingDrag : MonoBehaviour
         {
             check.color = new Color32(0, 255, 0, 100);
             transform.SetParent(hit_Center.collider.transform.parent);
-            if (!TestManager.instance.isEditMode)
-            {
-                transform.position = new Vector3(transform.position.x, transform.position.y, 0);
-                check.gameObject.SetActive(false);
-                subCollider.enabled = false;
-            }
+            isCanBuild = true;
         }
         else
         {
             check.color = new Color32(255, 0, 0, 100);
+            check.gameObject.SetActive(true);
             transform.SetParent(previousParent);
-            if (!isDragging)
-            {
-                transform.position = new Vector3(transform.position.x, transform.position.y, -0.5f);
-                subCollider.enabled = false;
-            }
+            isCanBuild = false;
         }
 
         #region Draw Ray

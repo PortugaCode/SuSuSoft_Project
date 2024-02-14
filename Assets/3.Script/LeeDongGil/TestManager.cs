@@ -14,7 +14,6 @@ public class TestManager : MonoBehaviour
     public InventorySystem housingInvenSys;
 
     public bool isEditMode = false;
-
     private void Awake()
     {
         if(instance == null)
@@ -28,6 +27,12 @@ public class TestManager : MonoBehaviour
         }
     }
 
+    public Ray TouchRay()
+    {
+        Touch touch = Input.GetTouch(0);
+        Camera cam = Camera.main;
+        return cam.ScreenPointToRay(touch.position);
+    }
 
     private void Update()
     {
@@ -56,6 +61,11 @@ public class TestManager : MonoBehaviour
     public void TestButton()
     {
         housingInvenSys.GetHousingItem_test(testHousing[0], 1);
+    }
+
+    public void TestButton_1()
+    {
+        housingInvenSys.GetHousingItem_test(testHousing[1], 1);
     }
 }
 public class TestItem

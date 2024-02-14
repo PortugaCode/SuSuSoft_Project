@@ -7,7 +7,8 @@ public class HousingItemData : ScriptableObject
 {
     [Header("Materials order == MaterialCount order")]
     public Sprite housingSprite;
-    public string housingName;
+    public string housingENName;
+    public string housingKRName;
     public int housingID;
     public int enhanceLevel;
 

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: HousingItemData 1
   m_EditorClassIdentifier: 
   housingSprite: {fileID: 21300000, guid: 1d2554db24725491c9aa32ca3cf9986c, type: 3}
-  housingName: Sword
+  housingENName: Sword
+  housingKRName: "\uAC80"
   housingID: 1
   enhanceLevel: 0
   housingWidth: 2

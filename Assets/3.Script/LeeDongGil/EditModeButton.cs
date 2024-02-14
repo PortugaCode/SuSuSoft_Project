@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class EditModeButton : MonoBehaviour
 {
     public GameObject editModeBtn;
+    public GameObject HousingInventory;
     public Transform cannotBuild;
     public Button button;
 
@@ -35,9 +36,16 @@ public class EditModeButton : MonoBehaviour
         }
     }
 
+    public void StartEditMode()
+    {
+        TestManager.instance.isEditMode = true;
+        HousingInventory.SetActive(true);
+    }
+
 
     public void EndEditMode()
     {
         TestManager.instance.isEditMode = false;
+        HousingInventory.SetActive(false);
     }
 }

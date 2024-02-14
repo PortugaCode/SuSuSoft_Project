@@ -42,7 +42,7 @@ public class HousingInventory : MonoBehaviour
     private void Start()
     {
         previousParent = transform.parent;
-        if(Building == null)
+        if (Building == null)
         {
             button.interactable = false;
             gameObject.SetActive(false);
@@ -91,11 +91,14 @@ public class HousingInventory : MonoBehaviour
     private void Update()
     {
 
-        if(image.color.a <= 0 && buildingSpace.childCount == 0 && !TestManager.instance.isEditMode)
+        if (image.color.a <= 0)
         {
-            transform.parent.SetAsLastSibling();
             button.interactable = false;
-            canvasGroup.alpha = 1.0f;
+            if (!TestManager.instance.isEditMode)
+            {
+                transform.parent.SetAsLastSibling();
+                canvasGroup.alpha = 1.0f;
+            }
         }
         else
         {
@@ -126,7 +129,8 @@ public class HousingInventory : MonoBehaviour
     {
         image.color = new Color(1, 1, 1, 0);
         count--;
-        thisBuilding = Instantiate(Building, Vector3.zero, Quaternion.identity, buildingSpace);
+        Vector3 createPos = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, 0);
+        thisBuilding = Instantiate(Building, createPos, Quaternion.identity, buildingSpace);
         HousingDrag buildSetting = thisBuilding.GetComponent<HousingDrag>();
         buildSetting.id = housingData.housingID;
         buildSetting.buildSprite.sprite = housingData.housingSprite;
