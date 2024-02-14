@@ -34,6 +34,12 @@ public class HorizontalPlayer : MonoBehaviour
     public Rigidbody2D rb2D;
     private bool gameStart = false;
 
+    //Player Light
+    [SerializeField] private Transform player;
+    [SerializeField] private Light playerLight;
+    private float lightRangeOuter;
+    private float lightRangeInner;
+
     private void Awake()
     {
         currentAcceleration = baseAcceleration;
@@ -43,6 +49,8 @@ public class HorizontalPlayer : MonoBehaviour
     {
         Invoke("StartGame", 3f);
         StartCoroutine(BlinkFace());
+
+        playerLight = GetComponent<Light>();
     }
 
     public void FixedUpdate()
@@ -53,7 +61,7 @@ public class HorizontalPlayer : MonoBehaviour
         }
     }
 
-    private void PlayerUp()
+    private void PlayerUp()         //플레이어 위로 이동
     {
         if (Input.touchCount > 0)
         {
@@ -67,7 +75,7 @@ public class HorizontalPlayer : MonoBehaviour
             // 터치 했을 때 플레이어 속력 증가
             currentSpeed += currentAcceleration * Time.deltaTime;
             currentSpeed = Mathf.Clamp(currentSpeed, initialSpeed, maxSpeed);
-            rb2D.velocity = new Vector2(direction.x * currentSpeed, 0) * Time.deltaTime + Vector2.up * currentSpeed * Time.deltaTime;
+            rb2D.velocity = new Vector2 (direction.x * currentSpeed, 0) * Time.deltaTime + Vector2.up * currentSpeed * Time.deltaTime;
 
             //Player Rotation
             PlayerRotation();
@@ -85,25 +93,23 @@ public class HorizontalPlayer : MonoBehaviour
         }
     }
 
-    //Player Speed Item
+  
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("SpeedItem"))
+        if (collision.gameObject.CompareTag("SpeedItem"))     //Player Speed Item
         {
-            IncreaseSpeed(); // 아이템에서 받아온 속도 증가량을 전달
+            IncreaseSpeed(); // 속도 증가
             Destroy(collision.gameObject);
             StartCoroutine(Speed_Co());
         }
     }
 
-    public void IncreaseSpeed()
+    public void IncreaseSpeed()     //Player Speed Method
     {
         isSpeed = true;
         maxSpeed = maxSpeed * 2f;
         currentAcceleration = baseAcceleration * 10f;
-        Debug.Log($"{currentSpeed}:    ");
     }
-
 
     public void PlayerRotation()
     {
@@ -120,13 +126,29 @@ public class HorizontalPlayer : MonoBehaviour
             float rotationZ = Mathf.Atan2(directiontToRotate.y, directiontToRotate.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0, 0, rotationZ + -90f);
         }
+    }       //Player Location Method
+
+    private void PlayerLight()
+    {
+        //터치 했을 때 Light Range Outer 2.72
+        if(Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            Vector3 playerlightOn = Camera.main.ScreenToViewportPoint(player.position);
+            playerlightOn.z = 0;
+            
+          //  float lightRange = Light.
+
+        }
+
+        //터치 안했을 때 Light Range Inner 1
+
     }
 
     IEnumerator BlinkFace()
     {
         while (true)
         {
-
             basicFace.SetActive(true);
             blinkFace.SetActive(false);
             yield return new WaitForSeconds(4f);

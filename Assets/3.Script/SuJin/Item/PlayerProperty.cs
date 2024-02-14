@@ -21,8 +21,10 @@ public class PlayerProperty : MonoBehaviour
     [Header("Giant")]
     private Vector2 originalSize;
     private bool isGiant;
-    [SerializeField] private int giantDuration = 3;
+    [SerializeField] private int sizeDuration = 3;
     public float bigSpeed; //커질 때의 속도
+
+    private bool isSmaller;
 
 
 
@@ -72,23 +74,40 @@ public class PlayerProperty : MonoBehaviour
         }
         if(collision.gameObject.CompareTag("Item"))
         {
+            //Giant
             isGiant = collision.gameObject.name.Contains("Giant");
 
             if(isGiant)
             {
                 transform.localScale = new Vector2(player.localScale.x * 2f, player.localScale.y * 2f);
-                Debug.Log($"{giantDuration} : " );
-                StartCoroutine(Giant_co());
+                Destroy(collision.gameObject);
+                StartCoroutine(Giant_Co());
             }
-            
+
+            //Smaller
+            isSmaller = collision.gameObject.name.Contains("Smaller");
+
+            if(isSmaller)
+            {
+                transform.localScale = new Vector2(player.localScale.x / (float) 1.3f, player.localScale.y / (float)1.3f);
+                Destroy(collision.gameObject);
+                StartCoroutine(Smaller_Co());
+            }
         }
     }
 
-    private IEnumerator Giant_co()
+    private IEnumerator Giant_Co()
     {
-        yield return new WaitForSeconds(giantDuration);
+        yield return new WaitForSeconds(sizeDuration);
         isGiant = false;
         transform.localScale = new Vector2(player.localScale.x /2f, player.localScale.y /2f);
+    }
+
+    private IEnumerator Smaller_Co()
+    {
+        yield return new WaitForSeconds(sizeDuration);
+        isSmaller = false;
+        transform.localScale = new Vector2(player.localScale.x * (float)1.3f, player.localScale.y * (float) 1.3f);
     }
 
 }
