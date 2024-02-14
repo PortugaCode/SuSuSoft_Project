@@ -3,25 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
-public class HousingInventory : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class HousingInventory : MonoBehaviour
 {
-    [Header("Touch Time")]
-    public float touchTime;
-    public float minTouchTime = 0.3f;
-    public bool isTouch = false;
-
-    [Header("Drag System")]
+    [HideInInspector]
     public Transform canvas;
     public Transform previousParent;
     public RectTransform rect;
     public CanvasGroup canvasGroup;
     public Image image;
+    public Button button;
     public HousingDrag drag;
 
-    [Header("Spacing")]
+    [Header("Inventory Info")]
+    public HousingItemData housingData;
+    public string housingName;
+    public int count = 0;
+    public TextMeshProUGUI countText;
+    public GameObject countObject;
+
+    [Header("Building Info")]
     public GameObject Building;
     public Transform buildingSpace;
+
+    private GameObject thisBuilding;
 
     [Space(30f)]
     public PointerEventData EventData;
@@ -30,6 +36,7 @@ public class HousingInventory : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     {
         rect = GetComponent<RectTransform>();
         image = GetComponent<Image>();
+        button = GetComponent<Button>();
     }
 
     private void Start()
@@ -37,45 +44,11 @@ public class HousingInventory : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         previousParent = transform.parent;
         if(Building == null)
         {
+            button.interactable = false;
             gameObject.SetActive(false);
         }
     }
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        /*
-        transform.SetParent(canvas);
-        transform.SetAsLastSibling();
-
-        space.SetActive(true);
-        canvasGroup.alpha = 0.6f;
-        canvasGroup.blocksRaycasts = false;
-        transform.localScale = new Vector3(sizeX * 0.01f, sizeY * 0.01f, 1);        //todo... scale∞™¿∫ ≥™¡ﬂø° space∞™∏∏ ∫Ø«œ∞‘ πŸ≤Ÿ±‚
-        */
-        if (image.color.a <= 0) return;
-
-        Debug.Log("Start Drag");
-        image.color = new Color(1, 1, 1, 0);
-        //Instantiate(Building, Camera.main.ScreenToWorldPoint(eventData.position), Quaternion.identity, buildingSpace);
-        //canvasGroup.alpha = 0f;
-        Instantiate(Building, Vector3.zero, Quaternion.identity, buildingSpace);
-        TestManager.instance.isEditMode = true;
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        Debug.Log("Pointer Up");
-        /*if (buildingSpace.childCount > 0)
-        {
-            image.color = Color.white;
-            Destroy(buildingSpace.GetChild(0).gameObject);
-        }
-        else
-        {
-            transform.SetAsLastSibling();
-            gameObject.SetActive(false);
-        }*/
-    }
     #region UI Drag
     /*
     public void OnDrag(PointerEventData eventData)
@@ -92,7 +65,7 @@ public class HousingInventory : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         {
             transform.SetParent(previousParent);
             rect.position = previousParent.GetComponent<RectTransform>().position;
-            transform.localScale = new Vector3(2, 2, 1);        //todo... scale∞™¿∫ ≥™¡ﬂø° space∞™∏∏ ∫Ø«œ∞‘ πŸ≤Ÿ±‚
+            transform.localScale = new Vector3(2, 2, 1);        //todo... scaleÍ∞íÏùÄ ÎÇòÏ§ëÏóê spaceÍ∞íÎßå Î≥ÄÌïòÍ≤å Î∞îÍæ∏Í∏∞
         }
 
         if (previousParent.childCount == 0)
@@ -117,12 +90,48 @@ public class HousingInventory : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     private void Update()
     {
-        if(image.color.a <= 0 && buildingSpace.childCount == 0)
+
+        if(image.color.a <= 0 && buildingSpace.childCount == 0 && !TestManager.instance.isEditMode)
         {
             transform.parent.SetAsLastSibling();
-            Building = null;
-            gameObject.SetActive(false);
+            button.interactable = false;
             canvasGroup.alpha = 1.0f;
         }
+        else
+        {
+            button.interactable = true;
+        }
+
+        if (count < 100)
+        {
+            if (count <= 0)
+            {
+                image.color = new Color(1, 1, 1, 0);
+                countObject.SetActive(false);
+            }
+            else
+            {
+                image.color = new Color(1, 1, 1, 1);
+                countObject.SetActive(true);
+            }
+            countText.text = string.Format("{0}", count);
+        }
+        else
+        {
+            countText.text = "99+";
+        }
+    }
+
+    public void BuildSet()
+    {
+        image.color = new Color(1, 1, 1, 0);
+        count--;
+        thisBuilding = Instantiate(Building, Vector3.zero, Quaternion.identity, buildingSpace);
+        HousingDrag buildSetting = thisBuilding.GetComponent<HousingDrag>();
+        buildSetting.id = housingData.housingID;
+        buildSetting.buildSprite.sprite = housingData.housingSprite;
+
+
+        TestManager.instance.isEditMode = true;
     }
 }

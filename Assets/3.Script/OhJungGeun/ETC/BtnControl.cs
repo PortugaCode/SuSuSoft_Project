@@ -11,4 +11,10 @@ public class BtnControl : MonoBehaviour
     {
         chatUI.SetActive(value);
     }
+
+    public void SetInterfaceUI(GameObject a)
+    {
+        a.SetActive(true);
+        gameObject.SetActive(false);
+    }
 }

@@ -2,15 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrailItem : MonoBehaviour
+public class TrailStar : MonoBehaviour
 {
     [SerializeField] GameObject player;
     [SerializeField] float fllowSpeed;
+    //[SerializeField] float distanceBetweenStars = 50f; // Î≥ÑÎì§ ÏÇ¨Ïù¥Ïùò Í±∞Î¶¨
 
-  /*  public GameObject star;     //µ˚∂Ûø¿¥¬ ∫∞
-    public GameObject eatStar;
-    public int getStarCount=0;*/
-
+    private Vector3 previousStarPosition;
     private float distance;
 
     private void Awake()
@@ -28,17 +26,6 @@ public class TrailItem : MonoBehaviour
         ItemRotate();
     }
 
-    /*    private void OnTriggerEnter2D(Collider2D collision)
-        {
-            if(collision.gameObject.CompareTag("Player"))
-            {
-                getStarCount++;
-                Instantiate(eatStar, transform.position, Quaternion.identity);
-                Destroy(gameObject);
-                Debug.Log($" getStarCount : {getStarCount}");
-            }
-        }*/
-
     private void ChasePlayer()
     {
         transform.position = Vector2.Lerp(this.transform.position, player.transform.position + Vector3.down * 0.8f, fllowSpeed * Time.deltaTime);
@@ -52,4 +39,6 @@ public class TrailItem : MonoBehaviour
         float directionZ = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, directionZ - 90f);
     }
+
+
 }
