@@ -6,7 +6,7 @@ public class TrailStar : MonoBehaviour
 {
     [SerializeField] GameObject player;
     [SerializeField] float fllowSpeed;
-    [SerializeField] float distanceBetweenStars = 50f; // 별들 사이의 거리
+    //[SerializeField] float distanceBetweenStars = 50f; // 별들 사이의 거리
 
     private Vector3 previousStarPosition;
     private float distance;

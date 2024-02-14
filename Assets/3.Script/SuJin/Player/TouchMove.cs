@@ -16,12 +16,12 @@ public class TouchMove : MonoBehaviour
     [Header("PlyerSpeed")]
     [SerializeField] private float speed;
 
-    private float smoothing = 50f;
+    //private float smoothing = 50f;
     [SerializeField] private float rotationSpeed;
 
     [Header("  ")]
     public Rigidbody2D rb2D;
-    private bool gameStart = false;
+    //private bool gameStart = false; //지금 안써서 지움
 
     private void Start()
     {
@@ -103,6 +103,6 @@ public class TouchMove : MonoBehaviour
 
     private void StartGame()
     {
-        gameStart = true;
+        //gameStart = true;
     }
 }
