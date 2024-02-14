@@ -1,30 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class HousingDrag : MonoBehaviour
 {
     public bool isDragging = false;
-    public bool isCanBuild = false;
+    public bool isApply = false;
     public Vector3 offset;
     public Transform previousParent;
     public CanvasGroup group;
 
     [Header("Build Setting")]
+    public HousingItemData data;
+    public SpriteRenderer buildSprite;
     public GameObject space;
     public float spaceX;
     public float spaceY;
-    private int checkMinusY = 1;
-    private int checkMinusX = 1;
+    public int id;
     public LayerMask canBuild;
     public LayerMask cannotBuild;
     public LayerMask buildingLayer;
 
+
+    private int checkMinusY = 1;
+    private int checkMinusX = 1;
     public HousingGrid grid;
 
     private SpriteRenderer check;
     private BoxCollider boxCollider;
     private BoxCollider subCollider;
+
+    public float mouseX = 0;
+    public float mouseY = 0;
 
     #region Gizmos parameter
     /*
@@ -38,10 +46,15 @@ public class HousingDrag : MonoBehaviour
 
     private void Start()
     {
-        check = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        transform.position = new Vector3(transform.position.x, transform.position.y, -1);
         previousParent = transform.parent;
+        data = TestManager.instance.testHousing[id];
+        spaceX = data.housingWidth;
+        spaceY = data.housingHeight;
+
+        transform.position = new Vector3(transform.position.x, transform.position.y, -1);
         space.transform.localScale = new Vector3(spaceX, spaceY, 1);
+
+        check = transform.GetChild(0).GetComponent<SpriteRenderer>();
         boxCollider = GetComponent<BoxCollider>();
         subCollider = transform.GetChild(1).GetComponent<BoxCollider>();
         group = FindObjectOfType<TestNavigationBar>().transform.root.GetComponent<CanvasGroup>();
@@ -66,29 +79,44 @@ public class HousingDrag : MonoBehaviour
         if (Input.touchCount > 0 || Input.GetMouseButton(0))
         {
             Touch touch;
+            mouseX = Input.GetAxis("Mouse X");
+            mouseY = Input.GetAxis("Mouse Y");
             if (Input.touchCount > 0)
             {
                 touch = Input.GetTouch(0);
             }
             else
             {
-                touch = new Touch { position = Input.mousePosition, phase = TouchPhase.Began };
+                if (mouseX == 0 && mouseY == 0)
+                {
+                    touch = new Touch { position = Input.mousePosition, phase = TouchPhase.Began };
+                }
+                else if (Input.GetMouseButtonUp(0))
+                {
+                    touch = new Touch { position = Input.mousePosition, phase = TouchPhase.Ended };
+                }
+                else
+                {
+                    touch = new Touch { position = Input.mousePosition, phase = TouchPhase.Moved };
+                }
             }
+
+
+            //Debug.Log(touch.phase);
 
             if (touch.phase == TouchPhase.Began)
             {
+                Debug.Log("Began ì‹¤í–‰");
                 Ray ray = Camera.main.ScreenPointToRay(touch.position);
                 RaycastHit hit;
-                //gizmosRay = ray;
-
-
                 if (Physics.Raycast(ray, out hit))
                 {
-                    Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
-                    if (hit.collider.gameObject == gameObject)
+                    if (EventSystem.current.IsPointerOverGameObject() == false)
                     {
-                        isDragging = true;
-                        offset = transform.position - ray.GetPoint(hit.distance);
+                        Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
+                        transform.position = new Vector3(transform.position.x, transform.position.y, -1);
+                        check.gameObject.SetActive(true);
+                        subCollider.enabled = true;
                     }
 
                     #region Gizmos
@@ -105,12 +133,30 @@ public class HousingDrag : MonoBehaviour
             {
                 Debug.Log("End");
                 isDragging = false;
+                subCollider.enabled = false;
+            }
+            else
+            {
+                Debug.Log("Moved ì‹¤í–‰");
+                Ray ray = Camera.main.ScreenPointToRay(touch.position);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (EventSystem.current.IsPointerOverGameObject() == false)
+                    {
+                        Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
+                        if (hit.collider.gameObject == gameObject)
+                        {
+                            isDragging = true;
+                            offset = transform.position - ray.GetPoint(hit.distance);
+                        }
+                    }
+
+                }
             }
 
             if (isDragging)
             {
-                check.gameObject.SetActive(true);
-                subCollider.enabled = true;
                 Ray ray = Camera.main.ScreenPointToRay(touch.position);
                 Vector3 newPosition = ray.GetPoint(offset.z);
                 checkMinusX = newPosition.x >= 0 ? 1 : -1;
@@ -121,8 +167,8 @@ public class HousingDrag : MonoBehaviour
                 float clampX = Mathf.Clamp(moveX, -(grid.boundX / 2) + (spaceX / 2) + grid.posX, (grid.boundX / 2) - (spaceX / 2) + grid.posX);
                 float clampY = Mathf.Clamp(moveY, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
 
-                Debug.Log(-(grid.boundX / 2) + spaceX / 2);
-                Debug.Log(-(grid.boundY / 2) + spaceY / 2);
+                //Debug.Log(-(grid.boundX / 2) + spaceX / 2);
+                //Debug.Log(-(grid.boundY / 2) + spaceY / 2);
 
                 transform.position = new Vector3(clampX, clampY, -1);
                 group.alpha = 0f;
@@ -130,7 +176,9 @@ public class HousingDrag : MonoBehaviour
         }
         else
         {
+            //Debug.Log("else End");
             isDragging = false;
+            subCollider.enabled = false;
             group.alpha = 1.0f;
         }
     }
@@ -173,18 +221,18 @@ public class HousingDrag : MonoBehaviour
         distance_Center = hit_Center.distance;
         distance_Box = hit_Box.distance;
 
+
         if (hit_RT.collider.CompareTag("CanBuild") &&
             hit_LT.collider.CompareTag("CanBuild") &&
             hit_LB.collider.CompareTag("CanBuild") &&
             hit_RB.collider.CompareTag("CanBuild") &&
             hit_Center.collider.CompareTag("CanBuild") &&
-            !hit_Box.collider.gameObject.CompareTag("Building"))
+            !hit_Box.collider.gameObject.CompareTag("Building"))    //ì˜¬ë°”ë¥¸ ìœ„ì¹˜ì— í•˜ìš°ì§•ì´ ë˜ì—ˆì„ ë•Œ
         {
-            isCanBuild = true;
             check.color = new Color32(0, 255, 0, 100);
-            if (!isDragging)
+            transform.SetParent(hit_Center.collider.transform.parent);
+            if (!TestManager.instance.isEditMode)
             {
-                transform.SetParent(hit_Center.collider.transform.parent);
                 transform.position = new Vector3(transform.position.x, transform.position.y, 0);
                 check.gameObject.SetActive(false);
                 subCollider.enabled = false;
@@ -192,7 +240,6 @@ public class HousingDrag : MonoBehaviour
         }
         else
         {
-            isCanBuild = false;
             check.color = new Color32(255, 0, 0, 100);
             transform.SetParent(previousParent);
             if (!isDragging)
@@ -216,26 +263,34 @@ public class HousingDrag : MonoBehaviour
         #endregion
     }
 
+    public void SetBuild()
+    {
+
+    }
+
+
+    #region OnDrawGizmos
     //OnDrawGizmos
     /*
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
 
-            // ÇÔ¼ö ÆÄ¶ó¹ÌÅÍ : ÇöÀç À§Ä¡, BoxÀÇ Àı¹İ »çÀÌÁî, RayÀÇ ¹æÇâ, RaycastHit °á°ú, BoxÀÇ È¸Àü°ª, BoxCast¸¦ ÁøÇàÇÒ °Å¸®
+            // í•¨ìˆ˜ íŒŒë¼ë¯¸í„° : í˜„ì¬ ìœ„ì¹˜, Boxì˜ ì ˆë°˜ ì‚¬ì´ì¦ˆ, Rayì˜ ë°©í–¥, RaycastHit ê²°ê³¼, Boxì˜ íšŒì „ê°’, BoxCastë¥¼ ì§„í–‰í•  ê±°ë¦¬
             if (true == Physics.BoxCast(gizmosPosition, new Vector3(0.495f, 0.495f, 0.2f), gizmosDirection, out gizmosHit, Quaternion.identity))
             {
-                // HitµÈ ÁöÁ¡±îÁö ray¸¦ ±×·ÁÁØ´Ù.
+                // Hitëœ ì§€ì ê¹Œì§€ rayë¥¼ ê·¸ë ¤ì¤€ë‹¤.
                 Gizmos.DrawRay(gizmosPosition, gizmosDirection * gizmosHit.distance);
 
-                // HitµÈ ÁöÁ¡¿¡ ¹Ú½º¸¦ ±×·ÁÁØ´Ù.
+                // Hitëœ ì§€ì ì— ë°•ìŠ¤ë¥¼ ê·¸ë ¤ì¤€ë‹¤.
                 Gizmos.DrawWireCube(gizmosPosition + gizmosDirection * gizmosHit.distance, new Vector3(0.495f, 0.495f, 0.2f) * 2);
             }
             else
             {
-                // Hit°¡ µÇÁö ¾Ê¾ÒÀ¸¸é ÃÖ´ë °ËÃâ °Å¸®·Î ray¸¦ ±×·ÁÁØ´Ù.
+                // Hitê°€ ë˜ì§€ ì•Šì•˜ìœ¼ë©´ ìµœëŒ€ ê²€ì¶œ ê±°ë¦¬ë¡œ rayë¥¼ ê·¸ë ¤ì¤€ë‹¤.
                 Gizmos.DrawRay(gizmosPosition, gizmosDirection * 20.0f);
             }
         }
     */
+    #endregion
 }
