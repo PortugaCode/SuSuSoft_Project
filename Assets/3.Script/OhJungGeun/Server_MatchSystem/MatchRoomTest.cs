@@ -73,6 +73,8 @@ public class MatchRoomTest : MonoBehaviour
             if(a == Backend.Match.GetMySessionId())
             {
                 playerList[count].isHost = true;
+                CameraController cameraController = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
+                cameraController.SetPlayer(playerList[count].gameObject);
             }
             Debug.Log(a.ToString());
             count++;
