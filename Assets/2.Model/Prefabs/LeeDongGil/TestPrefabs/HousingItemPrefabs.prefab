@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6956011921943837870}
   - component: {fileID: 1429963603025119064}
-  m_Layer: 30
+  m_Layer: 0
   m_Name: OnDragCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -66,7 +66,7 @@ GameObject:
   - component: {fileID: 2451641274770785061}
   - component: {fileID: 9215071218758292209}
   - component: {fileID: 7964810965108693367}
-  m_Layer: 30
+  m_Layer: 0
   m_Name: HousingItemPrefabs
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -180,15 +180,9 @@ MonoBehaviour:
   spaceX: 1
   spaceY: 1
   id: 0
-  canBuild:
-    serializedVersion: 2
-    m_Bits: 64
-  cannotBuild:
-    serializedVersion: 2
-    m_Bits: 128
   buildingLayer:
     serializedVersion: 2
-    m_Bits: 1073741824
+    m_Bits: 1
   grid: {fileID: 0}
   mouseX: 0
   mouseY: 0
@@ -223,7 +217,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7270396915530610099}
   - component: {fileID: 6345069717864459532}
-  m_Layer: 30
+  m_Layer: 0
   m_Name: CanBuildSpace
   m_TagString: Untagged
   m_Icon: {fileID: 0}

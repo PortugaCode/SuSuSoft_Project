@@ -135,6 +135,7 @@ public class HousingInventory : MonoBehaviour
         buildSetting.id = housingData.housingID;
         buildSetting.buildSprite.sprite = housingData.housingSprite;
 
+        
 
         TestManager.instance.isEditMode = true;
     }
