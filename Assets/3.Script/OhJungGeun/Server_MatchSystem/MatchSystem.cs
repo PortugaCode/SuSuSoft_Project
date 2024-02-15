@@ -496,6 +496,7 @@ public class MatchSystem
         Backend.Match.OnSessionOffline = (MatchInGameSessionEventArgs args) => 
         {
             userNickName.Remove(args.GameRecord.m_sessionId);
+            MatchRoomTest.Instance.LeaveIDObjectDestory(args.GameRecord.m_sessionId);
             Debug.Log(args.GameRecord.m_nickname + "님이 나가셨습니다.");
 
             Debug.Log(userNickName.Count);
@@ -588,9 +589,15 @@ public class MatchSystem
             case Protocol.Type.PlayerMove:
                 if(Utils.Instance.nowScene == SceneNames.MatchRoom)
                 {
-                    Debug.Log("누가 움직임");
                     PlayerMoveMessage moveMessage = DataParser.ReadJsonData<PlayerMoveMessage>(args.BinaryUserData);
                     MatchRoomTest.Instance.ProcessPlayerData(moveMessage);
+                }
+                break;
+            case Protocol.Type.PlayerChat:
+                if (Utils.Instance.nowScene == SceneNames.MatchRoom)
+                {
+                    PlayerChatMessage chatMessage = DataParser.ReadJsonData<PlayerChatMessage>(args.BinaryUserData);
+                    MatchRoomTest.Instance.ProcessPlayerData(chatMessage);
                 }
                 break;
             default:

@@ -11,12 +11,21 @@ public class MatchRoomTest : MonoBehaviour
 {
     public static MatchRoomTest Instance = null; 
 
-
+    [Header("User Info")]
     [SerializeField] private TextMeshProUGUI[] textMeshProList;
-    [SerializeField] private TouchMove playerPrefab;
+    [SerializeField] private Dictionary<SessionId, TouchMove> players = new Dictionary<SessionId, TouchMove>();
     [SerializeField] private List<TouchMove> playerList = new List<TouchMove>();
 
-    [SerializeField] private Dictionary<SessionId, TouchMove> players = new Dictionary<SessionId, TouchMove>();
+    [Header("User Prefeb")]
+    [SerializeField] private TouchMove playerPrefab;
+    [SerializeField] private GameObject chatBox;
+
+
+
+
+
+    [SerializeField] private TMP_InputField textInput;
+
 
 
     private void Awake()
@@ -38,26 +47,32 @@ public class MatchRoomTest : MonoBehaviour
     {
         for(int i =0; i < BackEndManager.Instance.GetMatchSystem().userNickName.Count; i++)
         {
-            playerList.Add(TouchMove.Instantiate(playerPrefab, new Vector3(2,2,0), Quaternion.identity));
+            playerList.Add(TouchMove.Instantiate(playerPrefab, new Vector3(0f, -2f, 0f), Quaternion.identity));
         }
         Debug.Log(playerList.Count);
 
 
         Backend.Match.OnSessionOffline += (MatchInGameSessionEventArgs args) =>
         {
-            SetText();
+            SetRoomInfo();
         };
 
         Backend.Match.OnSessionOnline = (MatchInGameSessionEventArgs args) =>
         {
-            SetText();
+            SetRoomInfo();
         };
 
-        SetText();
+        SetRoomInfo();
+    }
+
+    public void LeaveIDObjectDestory(SessionId sessionId)
+    {
+        playerList.Remove(players[sessionId]);
+        Destroy(players[sessionId].gameObject);
     }
 
 
-    private void SetText()
+    private void SetRoomInfo()
     {
         Debug.Log("SetText");
         for(int i = 0; i < textMeshProList.Length; i++)
@@ -67,10 +82,22 @@ public class MatchRoomTest : MonoBehaviour
 
         players.Clear();
         int count = 0;
+
+        int order1 = 100;
+        int order2 = 101;
         foreach (SessionId a in BackEndManager.Instance.GetMatchSystem().userNickName.Keys)
         {
+            GameObject cloneChatBox = GameObject.Instantiate(chatBox, chatBox.transform.position, Quaternion.Euler(0f,0f,-90f));
+
+
             players.Add(a, playerList[count]);
-            if(a == Backend.Match.GetMySessionId())
+            players[a].gameObject.GetComponent<MatchChat>().SetChatBox(cloneChatBox);
+            players[a].gameObject.GetComponent<MatchChat>().SetChatOrder(order1, order2);
+
+            order1 += 2;
+            order2 += 2;
+
+            if (a == Backend.Match.GetMySessionId())
             {
                 playerList[count].isHost = true;
                 CameraController cameraController = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
@@ -90,7 +117,36 @@ public class MatchRoomTest : MonoBehaviour
         }
     }
 
+    public void SendChat_InGame()
+    {
+        if (textInput.text.Length <= 1)
+        {
+            textInput.text = "";
+            textInput.ActivateInputField();
+            return;
+        }
 
+        players[Backend.Match.GetMySessionId()].GetComponent<MatchChat>().SetChatInGame(textInput.text);
+        PlayerChatMessage msg = new PlayerChatMessage(Backend.Match.GetMySessionId(), textInput.text);
+        BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerChatMessage>(msg);
+
+        textInput.text = "";
+        textInput.ActivateInputField();
+    }
+
+
+    public void ProcessPlayerData(PlayerChatMessage data)
+    {
+        Debug.Log(data.playerSession.ToString());
+        if (data.playerSession == Backend.Match.GetMySessionId())
+        {
+            Debug.Log("내가 입력함");
+            return;
+        }
+
+        Debug.Log("상대방 채팅 입력함 : " + data.chat);
+        players[data.playerSession].GetComponent<MatchChat>().SetChatInGame(data.chat);
+    }
 
 
     public void ProcessPlayerData(PlayerMoveMessage data)

@@ -5,6 +5,7 @@ using BackEnd;
 using BackEnd.Tcp;
 using Protocol;
 using System;
+using UnityEngine.EventSystems;
 
 public class TouchMove : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class TouchMove : MonoBehaviour
 
     private Vector3 touchPosition;
     public Vector3 TouchPosition => touchPosition;
-    private Vector3 direction;
+    private Vector3 direction = Vector3.zero;
     public Vector3 Direction => direction;
     Vector3 deceleration;
 
@@ -56,7 +57,7 @@ public class TouchMove : MonoBehaviour
         {
             Touch touch = Input.GetTouch(0);
 
-            if(touch.phase == TouchPhase.Began)
+            if(touch.phase == TouchPhase.Began && EventSystem.current.IsPointerOverGameObject(0) == false)
             {
                 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
                 touchPosition.z = 0;
@@ -82,11 +83,14 @@ public class TouchMove : MonoBehaviour
         {
             rb2D.velocity = target * speed * Time.fixedDeltaTime;
 
-            // 플레이어가 바라보는 각도 계산
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            if(direction != Vector3.zero)
+            {
+                // 플레이어가 바라보는 각도 계산
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-            // 플레이어를 각도에 따라 회전
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle - 90f)), rotationSpeed * Time.deltaTime);
+                // 플레이어를 각도에 따라 회전
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle - 90f)), rotationSpeed * Time.deltaTime);
+            }
         }
         else
         {
@@ -133,5 +137,10 @@ public class TouchMove : MonoBehaviour
     private void StartGame()
     {
         //gameStart = true;
+    }
+
+    private void OnDestroy()
+    {
+        GetComponent<MatchChat>().DestroyChatBox();
     }
 }

@@ -43,4 +43,16 @@ namespace Protocol
             this.zDir = dir.z;
         }
     }
+
+    public class PlayerChatMessage : Message
+    {
+        public SessionId playerSession;
+        public string chat;
+
+        public PlayerChatMessage(SessionId session, string chat) : base(Type.PlayerChat)
+        {
+            this.playerSession = session;
+            this.chat = chat;
+        }
+    }
 }
