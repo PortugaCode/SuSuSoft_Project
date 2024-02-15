@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class HorizontalPlayer : MonoBehaviour
 {
@@ -36,9 +37,9 @@ public class HorizontalPlayer : MonoBehaviour
 
     //Player Light
     [SerializeField] private Transform player;
-    [SerializeField] private Light playerLight;
-    private float lightRangeOuter;
-    private float lightRangeInner;
+    [SerializeField] private Light2D playerLight;
+    private float lightRangeOuter = 2.72f;
+    private float lightRangeBaseOuter = 1.3f;
 
     private void Awake()
     {
@@ -47,10 +48,13 @@ public class HorizontalPlayer : MonoBehaviour
 
     private void Start()
     {
-        Invoke("StartGame", 3f);
+        //Invoke("StartGame", 3f);
         StartCoroutine(BlinkFace());
-
-        playerLight = GetComponent<Light>();
+    }
+    private void Update()
+    {
+        StartGame();
+        PlayerLight();
     }
 
     public void FixedUpdate()
@@ -58,6 +62,18 @@ public class HorizontalPlayer : MonoBehaviour
         if (gameStart)
         {
             PlayerUp();
+        }
+    }
+
+    private void StartGame()
+    {
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                StartCoroutine(StartCorutine_Co());
+            }
         }
     }
 
@@ -93,7 +109,6 @@ public class HorizontalPlayer : MonoBehaviour
         }
     }
 
-  
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("SpeedItem"))     //Player Speed Item
@@ -134,15 +149,16 @@ public class HorizontalPlayer : MonoBehaviour
         if(Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            Vector3 playerlightOn = Camera.main.ScreenToViewportPoint(player.position);
-            playerlightOn.z = 0;
-            
-          //  float lightRange = Light.
+           //Vector3 playerlightOn = Camera.main.ScreenToViewportPoint(player.position);
+           //playerlightOn.z = 0;
 
+            playerLight.pointLightOuterRadius = lightRangeOuter;
+
+            if(touch.phase == TouchPhase.Ended)
+            {
+                playerLight.pointLightOuterRadius = lightRangeBaseOuter;
+            }
         }
-
-        //터치 안했을 때 Light Range Inner 1
-
     }
 
     IEnumerator BlinkFace()
@@ -168,8 +184,16 @@ public class HorizontalPlayer : MonoBehaviour
         currentAcceleration = baseAcceleration;
     }
 
-    private void StartGame()
+    private IEnumerator StartCorutine_Co()
     {
+        float touchStart = Time.time;
+
+        while(Time.time - touchStart <= 3f)    //터치가 3초 이상 지속되지 않았을 때 반복
+        {
+            if (Input.touchCount == 0) yield break;
+
+            yield return null;
+        }
         gameStart = true;
     }
 }

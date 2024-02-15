@@ -15,18 +15,18 @@ public class PlayerProperty : MonoBehaviour
     [Header("HP")]
     public int currentHealth;
     public int maxHealth;
-    private int damage = 0;
-    public int HealthIncreaseRate = 10;
+    public int damage;
+    //public int HealthIncreaseRate = 10;   
+
+    //Attack nullified 공격 무효화
+    public float ignoreAttack = 0.1f;
+    private bool GodMode = false;
 
     [Header("Giant")]
     private Vector2 originalSize;
     private bool isGiant;
-    [SerializeField] private int sizeDuration = 3;
-    public float bigSpeed; //커질 때의 속도
-
     private bool isSmaller;
-
-
+    [SerializeField] private int sizeDuration = 3;
 
     #region [나중에 구현]
     /*[Header("Magnetism")]
@@ -50,21 +50,21 @@ public class PlayerProperty : MonoBehaviour
     private void Start()
     {
         level = 1;
-        maxHealth = 100;
-
+        currentHealth = maxHealth;
         originalSize = transform.localScale;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //장애물
         if(collision.gameObject.CompareTag("Obstacles"))      
         {
             //Player Damage
-            damage = 10; 
-            currentHealth -= damage;
-
+            PassiveAttackNull();
             Debug.Log($" currentHP: {currentHealth} ");
         }
+
+        //별
         if(collision.gameObject.CompareTag("Star"))
         {
             getStarCount++;
@@ -72,6 +72,8 @@ public class PlayerProperty : MonoBehaviour
             Destroy(collision.gameObject);
             Debug.Log($" getStarCount : {getStarCount}");
         }
+
+        //거대화, 최소화
         if(collision.gameObject.CompareTag("Item"))
         {
             //Giant
@@ -80,6 +82,7 @@ public class PlayerProperty : MonoBehaviour
             if(isGiant)
             {
                 transform.localScale = new Vector2(player.localScale.x * 2f, player.localScale.y * 2f);
+                ignoreAttack = 1f;
                 Destroy(collision.gameObject);
                 StartCoroutine(Giant_Co());
             }
@@ -96,6 +99,25 @@ public class PlayerProperty : MonoBehaviour
         }
     }
 
+    #region [Attack nullified 공격 무효화]
+    private void PassiveAttackNull()    //10% 확률로 데미지 무효화
+    {
+        float randomoValue = Random.value;
+
+        if (randomoValue >= ignoreAttack)
+        {
+            SetDamage();
+        }
+    }
+
+    private void SetDamage()     //Damage 입는 메서드
+    {
+        currentHealth -= damage;
+    }
+    #endregion //Attack nullified 공격 무효화
+
+
+    #region  [IEnumerator]
     private IEnumerator Giant_Co()
     {
         yield return new WaitForSeconds(sizeDuration);
@@ -109,5 +131,5 @@ public class PlayerProperty : MonoBehaviour
         isSmaller = false;
         transform.localScale = new Vector2(player.localScale.x * (float)1.3f, player.localScale.y * (float) 1.3f);
     }
-
+    #endregion
 }
