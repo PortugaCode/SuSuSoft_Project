@@ -92,6 +92,7 @@ public class MatchRoomTest : MonoBehaviour
 
             players.Add(a, playerList[count]);
             players[a].gameObject.GetComponent<MatchChat>().SetChatBox(cloneChatBox);
+            players[a].gameObject.GetComponent<MatchChat>().SetNickName(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
             players[a].gameObject.GetComponent<MatchChat>().SetChatOrder(order1, order2);
 
             order1 += 2;

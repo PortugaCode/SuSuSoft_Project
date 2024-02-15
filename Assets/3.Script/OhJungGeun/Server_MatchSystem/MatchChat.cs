@@ -9,7 +9,7 @@ public class MatchChat : MonoBehaviour
     [SerializeField] private TextMeshPro chatInGame;
 
     [SerializeField] private SpriteRenderer chatBoxRenderer;
-
+    [SerializeField] private TextMeshPro nickName;
 
     public void SetChatOrder(int a, int b)
     {
@@ -33,6 +33,11 @@ public class MatchChat : MonoBehaviour
     private void Update()
     {
         chatBox.transform.position = new Vector2(transform.position.x, transform.position.y + 1f);
+    }
+
+    public void SetNickName(string name)
+    {
+        nickName.text = name;
     }
 
 
