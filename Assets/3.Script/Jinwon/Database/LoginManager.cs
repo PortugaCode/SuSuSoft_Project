@@ -63,6 +63,8 @@ public class LoginManager : MonoBehaviour
                 Debug.Log($"로그인 성공");
                 ChartManager.instance.GetChartData();
                 DBManager.instance.DB_Init(idText, pwText);
+                BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
+                BackEndManager.Instance.GetChatManager().GetChatStatus();
             }
             else
             {

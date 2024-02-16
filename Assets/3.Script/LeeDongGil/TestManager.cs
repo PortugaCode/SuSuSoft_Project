@@ -16,7 +16,15 @@ public class TestManager : MonoBehaviour
     public bool isEditMode = false;
     private void Awake()
     {
-        if(instance == null)
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+
+
+/*        if(instance == null)
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
@@ -24,7 +32,7 @@ public class TestManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
-        }
+        }*/
     }
 
     public Ray TouchRay()

@@ -83,7 +83,7 @@ public class HousingDrag : MonoBehaviour
         check = transform.GetChild(0).GetComponent<SpriteRenderer>();
         boxCollider = GetComponent<BoxCollider>();
         subCollider = transform.GetChild(1).GetComponent<BoxCollider>();
-        group = FindObjectOfType<TestNavigationBar>().transform.root.GetComponent<CanvasGroup>();
+        group = FindObjectOfType<EditModeButton>().GetComponent<CanvasGroup>();
         grid = FindAnyObjectByType<HousingGrid>();
 
         boxCollider.size = new Vector3(spaceX, spaceY, 0.2f);

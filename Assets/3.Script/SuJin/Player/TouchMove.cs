@@ -65,9 +65,11 @@ public class TouchMove : MonoBehaviour
 
 
                 Debug.Log(direction);
-
-                PlayerMoveMessage msg = new PlayerMoveMessage(Backend.Match.GetMySessionId(), touchPosition, direction);
-                BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerMoveMessage>(msg);
+                if(Utils.Instance.nowScene == SceneNames.MatchRoom)
+                {
+                    PlayerMoveMessage msg = new PlayerMoveMessage(Backend.Match.GetMySessionId(), touchPosition, direction);
+                    BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerMoveMessage>(msg);
+                }
             }
         }
     }
@@ -141,6 +143,9 @@ public class TouchMove : MonoBehaviour
 
     private void OnDestroy()
     {
-        GetComponent<MatchChat>().DestroyChatBox();
+        if(Utils.Instance.nowScene == SceneNames.MatchRoom)
+        {
+            GetComponent<MatchChat>().DestroyChatBox();
+        }
     }
 }

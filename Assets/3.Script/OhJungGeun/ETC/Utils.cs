@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public enum SceneNames
 {
     Loading,
-    Login,
+    Jinwon_Login,
     Chatting,
     MatchRoom,
     MatchLoad

@@ -9,8 +9,8 @@ EditorBuildSettings:
     path: Assets/1.Scene/OhJungGeun/Test_Oh/Loading.unity
     guid: dad54578e81d75b45867c0c9b175e85f
   - enabled: 1
-    path: Assets/1.Scene/OhJungGeun/Test_Oh/Login.unity
-    guid: 22e7b05076378954199cb2129953afce
+    path: Assets/1.Scene/Jinwon/Jinwon_Login.unity
+    guid: 729801174f0a1f54697a26eeafc6224c
   - enabled: 1
     path: Assets/1.Scene/OhJungGeun/MatchServer/MatchRoom.unity
     guid: fbe91206dc66c3b4f905312a1074836a
@@ -23,4 +23,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/1.Scene/OhJungGeun/MatchServer/MatchLoad.unity
     guid: 40d4f7b8b89463341a4969b45739c2d9
+  - enabled: 1
+    path: Assets/1.Scene/Jinwon/Jinwon_Tutorial.unity
+    guid: fccb405facecd1c47be19b91c9cc21e8
+  - enabled: 1
+    path: Assets/1.Scene/LeeDongGil/TestStartScene.unity
+    guid: 461f43ae153191e499005bc58b3e61f8
+  - enabled: 1
+    path: Assets/1.Scene/LeeDongGil/Inventory.unity
+    guid: 3f717ced67ac13c45ab5f729831c530b
   m_configObjects: {}

@@ -147,7 +147,7 @@ public class DBManager : MonoBehaviour
 
     private void Start()
     {
-        InitializeServer();
+        //InitializeServer();
     }
 
     private void InitializeServer() // 초기 뒤끝 서버 접속
@@ -337,7 +337,7 @@ public class DBManager : MonoBehaviour
             Debug.Log("기존 유저 데이터 불러오기 완료");
         }
 
-        SceneManager.LoadScene("Jinwon_CharacterSelect"); // 현재 캐릭터 선택창으로 이동하게 해놓음
+        //Utils.Instance.LoadScene(SceneNames.Chatting);
     }
 
     public void AddCharacter(int index) // Character 테이블에 Chart에서 가져온 기본값을 입력 (Index로 구분)

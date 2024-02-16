@@ -1,5 +1,5 @@
 using UnityEngine;
-using BackEnd;    // �ڳ� SDK
+using BackEnd;    // Backend SDK
 
 public class BackEndManager : MonoBehaviour
 {
