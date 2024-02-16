@@ -63,17 +63,25 @@ public struct Mail
 {
     public string content; // 우편 내용
     public string expirationDate; // 만료 날짜
-    public string receiverIndate; // 받은 유저의 inDate
-    //public Dictionary<string, string> item; // 보낸 아이템 정보
+    //public string receiverIndate; // 받은 유저의 inDate
+    public Goods goods; // 보낸 재화 정보
     //public Dictionary<string, string> itemLocation // 해당 아이템이 위치해있던 테이블 정보
-    public string receiverNickname; // 받을 유저 닉네임
-    public string receivedDate; // 수령한 날짜 (수령한 경우에만 보임)
-    public string sender; // 보낸 유저의 uuid
+    //public string receiverNickname; // 받을 유저 닉네임
+    //public string receivedDate; // 수령한 날짜 (수령한 경우에만 보임)
+    //public string sender; // 보낸 유저의 uuid
     public string inDate; // 우편의 inDate
-    public string senderNickname; // 보낸 유저의 닉네임
-    public string senderIndate; // 보낸 유저의 inDate
+    //public string senderNickname; // 보낸 유저의 닉네임
+    //public string senderIndate; // 보낸 유저의 inDate
     public string sentDate; // 보낸 날짜
     public string title; // 우편 제목
+}
+
+public struct Goods
+{
+    public int index;
+    public int imageIndex;
+    public string name;
+    public int quantity;
 }
 
 public struct Skill
@@ -139,7 +147,7 @@ public class DBManager : MonoBehaviour
 
     private void Start()
     {
-        InitializeServer();
+        //InitializeServer();
     }
 
     private void InitializeServer() // 초기 뒤끝 서버 접속
@@ -329,7 +337,7 @@ public class DBManager : MonoBehaviour
             Debug.Log("기존 유저 데이터 불러오기 완료");
         }
 
-        SceneManager.LoadScene("Jinwon_CharacterSelect"); // 현재 캐릭터 선택창으로 이동하게 해놓음
+        //Utils.Instance.LoadScene(SceneNames.Chatting);
     }
 
     public void AddCharacter(int index) // Character 테이블에 Chart에서 가져온 기본값을 입력 (Index로 구분)

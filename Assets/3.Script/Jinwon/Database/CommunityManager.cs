@@ -41,7 +41,7 @@ public class CommunityManager : MonoBehaviour
 
             currentFriend.name = json[i]["nickname"].ToString();
             currentFriend.inDate = json[i]["inDate"].ToString();
-            currentFriend.lastLogin = json[i]["lastLogin"].ToString();
+            //currentFriend.lastLogin = json[i]["lastLogin"].ToString();
             currentFriend.createdAt = json[i]["createdAt"].ToString();
 
             user.friend.Add(currentFriend);

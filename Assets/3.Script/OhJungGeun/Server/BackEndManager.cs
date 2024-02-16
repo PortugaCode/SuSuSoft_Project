@@ -1,5 +1,5 @@
 using UnityEngine;
-using BackEnd;    // �ڳ� SDK
+using BackEnd;    // Backend SDK
 
 public class BackEndManager : MonoBehaviour
 {
@@ -7,7 +7,6 @@ public class BackEndManager : MonoBehaviour
 
     [SerializeField] private MatchSystem matchSystem;
     [SerializeField] private ChatManager chatManager;
-
 
 
     public MatchSystem GetMatchSystem()

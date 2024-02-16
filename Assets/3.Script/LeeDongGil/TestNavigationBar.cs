@@ -23,10 +23,12 @@ public class TestNavigationBar : MonoBehaviour
         if (!HousingInventoryUI.activeSelf)
         {
             HousingInventoryUI.SetActive(true);
+            TestManager.instance.isEditMode = true;
         }
         else
         {
             HousingInventoryUI.SetActive(false);
+            TestManager.instance.isEditMode = false;
         }
     }
 }

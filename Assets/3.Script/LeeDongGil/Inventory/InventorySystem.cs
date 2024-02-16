@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,26 +6,37 @@ using UnityEngine.UI;
 
 public class InventorySystem : MonoBehaviour
 {
+    public bool checkObjectEqual = false;
+
     public void GetItem(ItemData itemData, int getCount)
     {
         Slot[] slots = GetComponentsInChildren<Slot>();
+        int currentIndex = 0;
         foreach(Slot slot in slots)
         {
             if(slot.IsSlotUse)
             {
                 if(slot.slotItemName.Equals(itemData.itemName))
                 {
+                    checkObjectEqual = true;
                     slot.GetComponentInChildren<ItemInfo>()._itemCount += getCount;
                     break;
                 }
-                else continue;
+                else
+                {
+                    currentIndex++;
+                }
             }
             else
             {
-                SetItemInfo(itemData, slot);
-                slot.GetComponentInChildren<ItemInfo>()._itemCount = getCount;
-                break;
+                checkObjectEqual = false;
             }
+        }
+
+        if(!checkObjectEqual)
+        {
+            SetItemInfo(itemData, slots[currentIndex]);
+            slots[currentIndex].GetComponentInChildren<ItemInfo>()._itemCount = getCount;
         }
     }
 
@@ -35,7 +47,7 @@ public class InventorySystem : MonoBehaviour
         {
             if (slot.IsSlotUse)
             {
-                if (slot.slotItemName.Equals(housingItemData.housingName))
+                if (slot.slotItemName.Equals(housingItemData.housingENName))
                 {
                     slot.GetComponentInChildren<HousingInventory>().count += getCount;
                     break;
@@ -62,6 +74,6 @@ public class InventorySystem : MonoBehaviour
     {
         _slot.transform.GetChild(0).GetComponent<Image>().sprite = housingData.housingSprite;
         _slot.transform.GetComponentInChildren<HousingInventory>().housingData = housingData;
-        _slot.transform.GetComponentInChildren<HousingInventory>().housingName = housingData.housingName;
+        _slot.transform.GetComponentInChildren<HousingInventory>().housingName = housingData.housingENName;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,7 @@ public class ChatListManager : MonoBehaviour
     [SerializeField] private ChatLineControl chatLineControl;
 
 
-    //ÀÌ °÷ÀÇ ÀÚ½ÄÀ¸·Î ¸»Ç³¼± »ı¼º
+    //ì´ ê³³ì˜ ìì‹ìœ¼ë¡œ ë§í’ì„  ìƒì„±
     public Transform contents;
     [SerializeField] private Transform mainParent;
 
@@ -33,6 +34,7 @@ public class ChatListManager : MonoBehaviour
 
 
     [SerializeField] private GameObject matchInvitedUI;
+    [SerializeField] private GameObject matchInvitedCheckUI;
 
 
     private int listCounts;
@@ -62,6 +64,8 @@ public class ChatListManager : MonoBehaviour
         BackEndManager.Instance.GetChatManager().GetRecentChat();
         chatLineControl.GetChatUI().SetActive(false);
         BackEndManager.Instance.GetMatchSystem().OnMatchMakingRoomSomeoneInvited(SetMatchInvitedUI_True);
+        BackEndManager.Instance.GetMatchSystem().OnMatchInviteUI = SetMatchInvitedCheckUI_True;
+        BackEndManager.Instance.GetMatchSystem().OnMatchInviteUI_Error = InviteUserError;
         SpawnJoinUI(Backend.UserNickName);
     }
 
@@ -193,6 +197,18 @@ public class ChatListManager : MonoBehaviour
     public void SetMatchInvitedUI_True()
     {
         matchInvitedUI.gameObject.SetActive(true);
+    }
+
+    public void SetMatchInvitedCheckUI_True(object sender, EventArgs args)
+    {
+        matchInvitedCheckUI.gameObject.SetActive(true);
+    }
+
+    public void InviteUserError(object sender, EventArgs args)
+    {
+        string errorMsg = "ë§¤ì¹­ ì„œë²„ ì´ˆëŒ€ì— ì‹¤íŒ¨í•˜ì…¨ìŠµë‹ˆë‹¤.";
+
+        SpawnErrorUI(errorMsg);
     }
 
 }
