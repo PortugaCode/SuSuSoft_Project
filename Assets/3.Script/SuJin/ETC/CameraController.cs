@@ -9,6 +9,14 @@ public class CameraController : MonoBehaviour
     [SerializeField] Vector2 minCameraPos;
     [SerializeField] Vector2 maxCameraPos;
 
+
+
+    public void SetPlayer(GameObject a)
+    {
+        player = a.transform;
+    }
+
+
     private void FixedUpdate()
     {
         CameraPos();

@@ -8,16 +8,19 @@ public enum SceneNames
     Loading,
     Login,
     Chatting,
-    MatchRoom
+    MatchRoom,
+    MatchLoad
 }
 
 public class Utils : MonoBehaviour
 {
     public static Utils Instance;
 
+    public SceneNames nowScene;
+
     private void Awake()
     {
-        #region [½Ì±ÛÅæ] 
+        #region [ì‹±ê¸€í†¤] 
         if (Instance != null)
         {
             Destroy(gameObject);
@@ -35,7 +38,7 @@ public class Utils : MonoBehaviour
 
     public string GetActiveScene()
     {
-        //ÇöÀç ¾À name ¹ÝÈ¯
+        //í˜„ìž¬ ì”¬ name ë°˜í™˜
         return SceneManager.GetActiveScene().name;
     }
 
@@ -53,6 +56,7 @@ public class Utils : MonoBehaviour
 
     public void LoadScene(SceneNames sceneNames)
     {
+        nowScene = sceneNames;
         SceneManager.LoadScene(sceneNames.ToString());
     }
 }
