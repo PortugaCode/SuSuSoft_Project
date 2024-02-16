@@ -19,6 +19,7 @@ public class MatchRoomTest : MonoBehaviour
     [Header("User Prefeb")]
     [SerializeField] private TouchMove playerPrefab;
     [SerializeField] private GameObject chatBox;
+    [SerializeField] private GameObject playerNickName;
 
 
 
@@ -54,15 +55,15 @@ public class MatchRoomTest : MonoBehaviour
 
         Backend.Match.OnSessionOffline += (MatchInGameSessionEventArgs args) =>
         {
-            SetRoomInfo();
+            SetRoomInfo(false);
         };
 
         Backend.Match.OnSessionOnline = (MatchInGameSessionEventArgs args) =>
         {
-            SetRoomInfo();
+            SetRoomInfo(true);
         };
 
-        SetRoomInfo();
+        SetRoomInfo(true);
     }
 
     public void LeaveIDObjectDestory(SessionId sessionId)
@@ -72,7 +73,7 @@ public class MatchRoomTest : MonoBehaviour
     }
 
 
-    private void SetRoomInfo()
+    private void SetRoomInfo(bool isFirst)
     {
         Debug.Log("SetText");
         for(int i = 0; i < textMeshProList.Length; i++)
@@ -85,18 +86,25 @@ public class MatchRoomTest : MonoBehaviour
 
         int order1 = 100;
         int order2 = 101;
+
         foreach (SessionId a in BackEndManager.Instance.GetMatchSystem().userNickName.Keys)
         {
-            GameObject cloneChatBox = GameObject.Instantiate(chatBox, chatBox.transform.position, Quaternion.Euler(0f,0f,-90f));
-
-
             players.Add(a, playerList[count]);
-            players[a].gameObject.GetComponent<MatchChat>().SetChatBox(cloneChatBox);
-            players[a].gameObject.GetComponent<MatchChat>().SetNickName(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
-            players[a].gameObject.GetComponent<MatchChat>().SetChatOrder(order1, order2);
+            if (isFirst)
+            {
+                GameObject cloneChatBox = GameObject.Instantiate(chatBox, chatBox.transform.position, Quaternion.Euler(0f, 0f, -90f));
+                GameObject cloneNickName = GameObject.Instantiate(playerNickName, playerNickName.transform.position, Quaternion.identity);
 
-            order1 += 2;
-            order2 += 2;
+                players[a].gameObject.GetComponent<MatchChat>().SetChatBox(cloneChatBox);
+                players[a].gameObject.GetComponent<MatchChat>().SetChatOrder(order1, order2);
+                players[a].gameObject.GetComponent<MatchChat>().SetNickName(cloneNickName.GetComponent<TextMeshPro>());
+                players[a].gameObject.GetComponent<MatchChat>().SetNickName(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
+
+
+                order1 += 2;
+                order2 += 2;
+            }
+
 
             if (a == Backend.Match.GetMySessionId())
             {

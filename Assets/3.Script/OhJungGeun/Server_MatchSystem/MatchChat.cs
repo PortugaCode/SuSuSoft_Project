@@ -25,14 +25,21 @@ public class MatchChat : MonoBehaviour
         chatBoxRenderer = chatBox.GetComponent<SpriteRenderer>();
     }
 
+    public void SetNickName(TextMeshPro nickName)
+    {
+        this.nickName = nickName;
+    }
+
     public void DestroyChatBox()
     {
         Destroy(chatBox);
+        Destroy(nickName.gameObject);
     }
 
     private void Update()
     {
         chatBox.transform.position = new Vector2(transform.position.x, transform.position.y + 1f);
+        nickName.transform.position = new Vector2(transform.position.x, transform.position.y - 0.5f);
     }
 
     public void SetNickName(string name)

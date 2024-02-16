@@ -907,8 +907,9 @@ MonoBehaviour:
   - {fileID: 990989534}
   - {fileID: 569594209}
   playerList: []
-  playerPrefab: {fileID: 1199609447504270033, guid: 9f043b5d96a083c46af3f6bdc994efb2, type: 3}
+  playerPrefab: {fileID: 556911611880741161, guid: ee98baa16e2be5e4a80b3b2a654685e3, type: 3}
   chatBox: {fileID: 7100197704529733400, guid: 7d5e1bb6d0289bc4bb109cf0326bac0f, type: 3}
+  playerNickName: {fileID: 3076938418173612318, guid: 464c583dae5a47847afc751c7f2df299, type: 3}
   textInput: {fileID: 1442661790}
 --- !u!1 &990989532
 GameObject:
