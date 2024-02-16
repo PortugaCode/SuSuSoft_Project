@@ -10,6 +10,8 @@ public class HousingDrag : MonoBehaviour
     public Vector3 offset;
     public Transform previousParent;
     public CanvasGroup group;
+    public bool isTouch = false;
+    public float touchTime = 0;
 
     [Header("Build Setting")]
     public HousingItemData data;
@@ -75,7 +77,7 @@ public class HousingDrag : MonoBehaviour
         }
 
 
-        transform.position = new Vector3(transform.position.x, transform.position.y, -1);
+        //transform.position = new Vector3(transform.position.x, transform.position.y, -1);
         space.transform.localScale = new Vector3(spaceX, spaceY, 1);
 
         check = transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -97,9 +99,17 @@ public class HousingDrag : MonoBehaviour
         }
         else
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y, 0);        //todo... 종류에 따라 z값 다르게 설정하기
             check.gameObject.SetActive(false);
             subCollider.enabled = false;
+        }
+
+        if(isTouch)
+        {
+            touchTime += Time.deltaTime;
+            if (touchTime > 0.5f)
+            {
+                isDragging = true;
+            }
         }
     }
 
@@ -117,15 +127,16 @@ public class HousingDrag : MonoBehaviour
 
             if (touch.phase == TouchPhase.Began)
             {
+                
                 //Debug.Log("Began 실행");
                 if (Physics.Raycast(ray, out hit))
                 {
                     if (EventSystem.current.IsPointerOverGameObject(0) == false && hit.collider.gameObject == gameObject)
                     {
+                        isTouch = true;
                         Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
                         Debug.Log("Began 실행2");
                         offset = transform.position - ray.GetPoint(hit.distance);
-                        isDragging = true;
                     }
 
                     #region Gizmos
@@ -143,6 +154,8 @@ public class HousingDrag : MonoBehaviour
                 //Debug.Log("End");
                 isDragging = false;
                 subCollider.enabled = false;
+                isTouch = false;
+                touchTime = 0;
                 if (isCanBuild)
                 {
                     switch (data.housingType)
@@ -219,6 +232,7 @@ public class HousingDrag : MonoBehaviour
 
     private void CheckToBuild()
     {
+        #region Housing Object Ray
         Vector3 point_RT = new Vector3(transform.position.x - 0.01f + spaceX * 0.5f, transform.position.y - 0.01f + spaceY * 0.5f, transform.position.z);
         Vector3 point_LT = new Vector3(transform.position.x + 0.01f - spaceX * 0.5f, transform.position.y - 0.01f + spaceY * 0.5f, transform.position.z);
         Vector3 point_LB = new Vector3(transform.position.x + 0.01f - spaceX * 0.5f, transform.position.y + 0.01f - spaceY * 0.5f, transform.position.z);
@@ -242,8 +256,6 @@ public class HousingDrag : MonoBehaviour
         int defaultLayer = LayerMask.NameToLayer("Default");
         int exceptLayer = ~(1 << defaultLayer);
 
-        Debug.Log("현재 레이어 : " + currentLayer);
-
         bool isHitRT = Physics.Raycast(ray_RT, out hit_RT, distance_RT, exceptLayer);
         bool isHitLT = Physics.Raycast(ray_LT, out hit_LT, distance_LT, exceptLayer);
         bool isHitLB = Physics.Raycast(ray_LB, out hit_LB, distance_LB, exceptLayer);
@@ -258,6 +270,8 @@ public class HousingDrag : MonoBehaviour
         distance_RB = hit_RB.distance;
         distance_Center = hit_Center.distance;
         distance_Box = hit_Box.distance;
+        #endregion
+
 
         #region Draw Ray
         Color color = new Color();
@@ -293,18 +307,12 @@ public class HousingDrag : MonoBehaviour
         //Debug.Log("RB : " + distance_RB);
         #endregion
 
-        if ((hit_RT.collider.CompareTag("CanBuild") &&
-             hit_LT.collider.CompareTag("CanBuild") &&
-             hit_LB.collider.CompareTag("CanBuild") &&
-             hit_RB.collider.CompareTag("CanBuild") &&
-             hit_Center.collider.CompareTag("CanBuild") &&
-            !hit_Box.collider.gameObject.CompareTag("Building")) ||
-            ((hit_RT.collider.gameObject.layer & ~(1 << currentLayer)) != 0 &&
-            (hit_LT.collider.gameObject.layer & ~(1 << currentLayer)) != 0 &&
-            (hit_LB.collider.gameObject.layer & ~(1 << currentLayer)) != 0 &&
-            (hit_RB.collider.gameObject.layer & ~(1 << currentLayer)) != 0 &&
-            (hit_Center.collider.gameObject.layer & ~(1 << currentLayer)) != 0 &&
-            (hit_Box.collider.gameObject.layer & ~(1 << currentLayer)) != 0))    //올바른 위치에 하우징이 되었을 때
+        if (hit_RT.collider.gameObject.layer != currentLayer &&
+             hit_LT.collider.gameObject.layer != currentLayer &&
+             hit_LB.collider.gameObject.layer != currentLayer &&
+             hit_RB.collider.gameObject.layer != currentLayer &&
+             hit_Center.collider.gameObject.layer != currentLayer &&
+             hit_Box.collider.gameObject.layer != currentLayer)
         {
             check.color = new Color32(0, 255, 0, 100);
             transform.SetParent(hit_Center.collider.transform.parent);

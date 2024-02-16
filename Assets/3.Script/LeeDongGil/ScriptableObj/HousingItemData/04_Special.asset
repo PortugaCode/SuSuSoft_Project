@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f686ceb02fa8cd4ab6239412778cdeb, type: 3}
-  m_Name: Back
+  m_Name: 04_Special
   m_EditorClassIdentifier: 
-  housingSprite: {fileID: 21300000, guid: 18ebb1865c6d1fb48b7d76c5ae3bd4c1, type: 3}
-  housingENName: Back
-  housingKRName: "\uD6C4\uACBD"
-  housingID: 1
+  housingSprite: {fileID: 21300000, guid: 1d2554db24725491c9aa32ca3cf9986c, type: 3}
+  housingENName: Sword
+  housingKRName: "\uAC80"
+  housingID: 4
   enhanceLevel: 0
-  housingWidth: 5
-  housingHeight: 9
-  housingType: 2
+  housingWidth: 2
+  housingHeight: 2
+  housingType: 32
   Info: "\uAC80"

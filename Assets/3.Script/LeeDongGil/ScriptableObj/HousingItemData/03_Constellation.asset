@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f686ceb02fa8cd4ab6239412778cdeb, type: 3}
-  m_Name: Constellation
+  m_Name: 03_Constellation
   m_EditorClassIdentifier: 
   housingSprite: {fileID: 21300000, guid: 268be0bde0197c3409ca553a50708b31, type: 3}
   housingENName: Constellation

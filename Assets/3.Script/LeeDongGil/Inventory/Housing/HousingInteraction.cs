@@ -22,7 +22,7 @@ public class HousingInteraction : MonoBehaviour
         }
         else
         {
-            //InteractionPopUp();
+            InteractionPopUp();
         }
     }
 
@@ -66,9 +66,13 @@ public class HousingInteraction : MonoBehaviour
                 gameTime += Time.deltaTime;
                 if (gameTime > 0.5f)
                 {
-                    window.transform.GetChild(0).gameObject.SetActive(true);
+                    window.transform.GetChild(1).gameObject.SetActive(true);
                 }
             }
+        }
+        else
+        {
+            gameTime = 0;
         }
     }
 }
