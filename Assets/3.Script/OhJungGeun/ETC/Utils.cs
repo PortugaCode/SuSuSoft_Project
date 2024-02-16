@@ -8,7 +8,8 @@ public enum SceneNames
     Loading,
     Login,
     Chatting,
-    MatchRoom
+    MatchRoom,
+    MatchLoad
 }
 
 public class Utils : MonoBehaviour

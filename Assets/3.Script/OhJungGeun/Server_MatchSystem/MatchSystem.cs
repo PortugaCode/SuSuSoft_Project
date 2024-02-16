@@ -8,14 +8,20 @@ using Protocol;
 public class MatchSystem
 {
     private bool isCanInviteUser;
-
     public bool IsCanInviteUser => isCanInviteUser;
+
+
+
+
+    public EventHandler OnMatchInviteUI;
+    public EventHandler OnMatchInviteUI_Error;
+
 
     [Header("Invited Data")]
     private SessionId roomId;
     private string roomToken;
     private MatchMakingUserInfo inviteUserInfo;
-
+    public string inviteUserNickName;
 
     public MatchMakingUserInfo InviteUserInfo => inviteUserInfo;
     public SessionId RoomID => roomId;
@@ -315,9 +321,15 @@ public class MatchSystem
         Backend.Match.OnMatchMakingRoomInvite = (MatchMakingInteractionEventArgs args) => 
         {
             Debug.Log("InviteUser : " + args.ErrInfo);
-            if (args.ErrInfo != ErrorCode.Success) LeaveMatchRoom();
+            if (args.ErrInfo != ErrorCode.Success)
+            {
+                LeaveMatchRoom();
+                OnMatchInviteUI_Error?.Invoke(this, EventArgs.Empty);
+            }
             else
             {
+                inviteUserNickName = nickName;
+                OnMatchInviteUI?.Invoke(this, EventArgs.Empty);
                 isTimerOn = true;
             }
         };
@@ -385,6 +397,7 @@ public class MatchSystem
         {
             Debug.Log("유저 들어옴");
             RequestMatchMaking(0);
+            Utils.Instance.LoadScene(SceneNames.MatchLoad);
         };
     }
 
