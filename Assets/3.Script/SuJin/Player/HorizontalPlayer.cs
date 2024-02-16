@@ -38,8 +38,12 @@ public class HorizontalPlayer : MonoBehaviour
     //Player Light
     [SerializeField] private Transform player;
     [SerializeField] private Light2D playerLight;
-    private float lightRangeOuter = 2.72f;
-    private float lightRangeBaseOuter = 1.3f;
+    private float MaxSightRange = 2.72f;      //lightRangeOuter
+    private float MinSightRange = 1.3f;      //lightRangeBaseOuter
+
+    //+
+    private int ActiveSkill;
+    private int PassiveSkill;
 
     private void Awake()
     {
@@ -152,11 +156,11 @@ public class HorizontalPlayer : MonoBehaviour
            //Vector3 playerlightOn = Camera.main.ScreenToViewportPoint(player.position);
            //playerlightOn.z = 0;
 
-            playerLight.pointLightOuterRadius = lightRangeOuter;
+            playerLight.pointLightOuterRadius = MaxSightRange;
 
             if(touch.phase == TouchPhase.Ended)
             {
-                playerLight.pointLightOuterRadius = lightRangeBaseOuter;
+                playerLight.pointLightOuterRadius = MinSightRange;
             }
         }
     }
@@ -188,7 +192,7 @@ public class HorizontalPlayer : MonoBehaviour
     {
         float touchStart = Time.time;
 
-        while(Time.time - touchStart <= 3f)    //터치가 3초 이상 지속되지 않았을 때 반복
+        while(Time.time - touchStart <= 1.5f)    //터치가 3초 이상 지속되지 않았을 때 반복
         {
             if (Input.touchCount == 0) yield break;
 

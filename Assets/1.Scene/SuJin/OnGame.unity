@@ -257,7 +257,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6be703744b257f429d36ea7d518fcde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  button: {fileID: 0}
 --- !u!114 &47911541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -992,9 +991,9 @@ MonoBehaviour:
   basicFace: {fileID: 32741892}
   blinkFace: {fileID: 292339438}
   maxSpeed: 150
-  minSpeed: 0
+  minSpeed: 20
   baseAcceleration: 30
-  currentAcceleration: 10
+  currentAcceleration: 15
   initialSpeed: 15
   currentSpeed: 0
   speedDuration: 2
@@ -1025,11 +1024,9 @@ MonoBehaviour:
   damage: 10
   ignoreAttack: 0.1
   sizeDuration: 3
-  stars:
-  - {fileID: 2706757372089185473, guid: 170d8566b7c3e9947b5f860433083712, type: 3}
-  - {fileID: 2706757372089185473, guid: 170d8566b7c3e9947b5f860433083712, type: 3}
-  - {fileID: 2706757372089185473, guid: 170d8566b7c3e9947b5f860433083712, type: 3}
-  getStarCount: 0
+  getStarCount: 3
+  starPrefebs: {fileID: 2706757372089185473, guid: 170d8566b7c3e9947b5f860433083712, type: 3}
+  stars: []
 --- !u!58 &520462522
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1841,7 +1838,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -6603,7 +6600,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1092668334}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2fa8de4c77c5684db4600e3a2b31011, type: 3}
   m_Name: 
