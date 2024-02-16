@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class EditModeButton : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class EditModeButton : MonoBehaviour
     public GameObject HousingInventory;
     public Transform cannotBuild;
     public Button button;
+    public TextMeshProUGUI btnTxt;
+    public bool isEdit;
 
     private void Start()
     {
@@ -17,11 +20,11 @@ public class EditModeButton : MonoBehaviour
 
     private void Update()
     {
-        if(TestManager.instance.isEditMode)
+        if (TestManager.instance.isEditMode)
         {
-            editModeBtn.SetActive(true);
-
-            if(cannotBuild.childCount > 0)
+            isEdit = true;
+            btnTxt.text = "편집모드 종료";
+            if (cannotBuild.childCount > 0)
             {
                 button.interactable = false;
             }
@@ -32,20 +35,14 @@ public class EditModeButton : MonoBehaviour
         }
         else
         {
-            editModeBtn.SetActive(false);
+            isEdit = false;
+            btnTxt.text = "편집모드 시작";
         }
     }
 
-    public void StartEditMode()
-    {
-        TestManager.instance.isEditMode = true;
-        HousingInventory.SetActive(true);
-    }
 
-
-    public void EndEditMode()
+    public void EditMode()
     {
-        TestManager.instance.isEditMode = false;
-        HousingInventory.SetActive(false);
+        TestManager.instance.isEditMode = !isEdit;
     }
 }

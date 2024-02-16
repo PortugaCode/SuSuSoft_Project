@@ -36,6 +36,7 @@ public class HousingInterationWindow : MonoBehaviour
 
     public void CheckHousingObjectToTouch()
     {
+        // 중근아 여기도 봐
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);

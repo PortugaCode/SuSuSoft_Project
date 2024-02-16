@@ -123,6 +123,15 @@ public class HousingInventory : MonoBehaviour
         {
             countText.text = "99+";
         }
+
+        if(TestManager.instance.isEditMode)
+        {
+            button.interactable = true;
+        }
+        else
+        {
+            button.interactable = false;
+        }
     }
 
     public void BuildSet()

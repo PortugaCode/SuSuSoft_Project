@@ -14,7 +14,7 @@ public class HousingDrag : MonoBehaviour
     public float touchTime = 0;
 
     [Header("Build Setting")]
-    public HousingItemData data;
+    public HousingItemData data;  //중근아 여기 참조해
     public SpriteRenderer buildSprite;
     public GameObject space;
     public float spaceX;
