@@ -6,10 +6,12 @@ using UnityEngine.EventSystems;
 public class HousingDrag : MonoBehaviour
 {
     public bool isDragging = false;
-    public bool isApply = false;
+    public bool isCanBuild = false;
     public Vector3 offset;
     public Transform previousParent;
     public CanvasGroup group;
+    public bool isTouch = false;
+    public float touchTime = 0;
 
     [Header("Build Setting")]
     public HousingItemData data;
@@ -18,9 +20,6 @@ public class HousingDrag : MonoBehaviour
     public float spaceX;
     public float spaceY;
     public int id;
-    public LayerMask canBuild;
-    public LayerMask cannotBuild;
-    public LayerMask buildingLayer;
 
 
     private int checkMinusY = 1;
@@ -51,7 +50,34 @@ public class HousingDrag : MonoBehaviour
         spaceX = data.housingWidth;
         spaceY = data.housingHeight;
 
-        transform.position = new Vector3(transform.position.x, transform.position.y, -1);
+        switch (data.housingType)
+        {
+            case HousingType.front:
+                int layer_Front = LayerMask.NameToLayer("Front");
+                gameObject.layer = layer_Front;
+                break;
+            case HousingType.back:
+                int layer_Back = LayerMask.NameToLayer("Back");
+                gameObject.layer = layer_Back;
+                break;
+            case HousingType.building:
+                int layer_Building = LayerMask.NameToLayer("Building");
+                gameObject.layer = layer_Building;
+                break;
+            case HousingType.constellation:
+                int layer_Constellation = LayerMask.NameToLayer("Constellation");
+                gameObject.layer = layer_Constellation;
+                break;
+            case HousingType.special:
+                int layer_Special = LayerMask.NameToLayer("Special");
+                gameObject.layer = layer_Special;
+                break;
+            default:
+                break;
+        }
+
+
+        //transform.position = new Vector3(transform.position.x, transform.position.y, -1);
         space.transform.localScale = new Vector3(spaceX, spaceY, 1);
 
         check = transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -71,52 +97,46 @@ public class HousingDrag : MonoBehaviour
             DragObject();
             CheckToBuild();
         }
+        else
+        {
+            check.gameObject.SetActive(false);
+            subCollider.enabled = false;
+        }
+
+        if(isTouch)
+        {
+            touchTime += Time.deltaTime;
+            if (touchTime > 0.5f)
+            {
+                isDragging = true;
+            }
+        }
     }
 
 
     private void DragObject()
     {
-        if (Input.touchCount > 0 || Input.GetMouseButton(0))
+        Ray ray;
+        RaycastHit hit;
+        if (Input.touchCount > 0)
         {
             Touch touch;
-            mouseX = Input.GetAxis("Mouse X");
-            mouseY = Input.GetAxis("Mouse Y");
-            if (Input.touchCount > 0)
-            {
-                touch = Input.GetTouch(0);
-            }
-            else
-            {
-                if (mouseX == 0 && mouseY == 0)
-                {
-                    touch = new Touch { position = Input.mousePosition, phase = TouchPhase.Began };
-                }
-                else if (Input.GetMouseButtonUp(0))
-                {
-                    touch = new Touch { position = Input.mousePosition, phase = TouchPhase.Ended };
-                }
-                else
-                {
-                    touch = new Touch { position = Input.mousePosition, phase = TouchPhase.Moved };
-                }
-            }
+            touch = Input.GetTouch(0);
+            ray = Camera.main.ScreenPointToRay(touch.position);
 
-
-            //Debug.Log(touch.phase);
 
             if (touch.phase == TouchPhase.Began)
             {
-                Debug.Log("Began 실행");
-                Ray ray = Camera.main.ScreenPointToRay(touch.position);
-                RaycastHit hit;
+                
+                //Debug.Log("Began 실행");
                 if (Physics.Raycast(ray, out hit))
                 {
-                    if (EventSystem.current.IsPointerOverGameObject() == false)
+                    if (EventSystem.current.IsPointerOverGameObject(0) == false && hit.collider.gameObject == gameObject)
                     {
+                        isTouch = true;
                         Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
-                        transform.position = new Vector3(transform.position.x, transform.position.y, -1);
-                        check.gameObject.SetActive(true);
-                        subCollider.enabled = true;
+                        Debug.Log("Began 실행2");
+                        offset = transform.position - ray.GetPoint(hit.distance);
                     }
 
                     #region Gizmos
@@ -131,25 +151,50 @@ public class HousingDrag : MonoBehaviour
             }
             else if (touch.phase == TouchPhase.Ended)
             {
-                Debug.Log("End");
+                //Debug.Log("End");
                 isDragging = false;
                 subCollider.enabled = false;
+                isTouch = false;
+                touchTime = 0;
+                if (isCanBuild)
+                {
+                    switch (data.housingType)
+                    {
+                        case HousingType.front:
+                            transform.position = new Vector3(transform.position.x, transform.position.y, -0.6f);
+                            break;
+                        case HousingType.back:
+                            transform.position = new Vector3(transform.position.x, transform.position.y, -0.4f);
+                            break;
+                        case HousingType.building:
+                            transform.position = new Vector3(transform.position.x, transform.position.y, -0.5f);
+                            break;
+                        case HousingType.constellation:
+                            transform.position = new Vector3(transform.position.x, transform.position.y, -0.3f);
+                            break;
+                        case HousingType.special:
+                            transform.position = new Vector3(transform.position.x, transform.position.y, -0.7f);
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+                else
+                {
+                    transform.position = new Vector3(transform.position.x, transform.position.y, -0.8f);
+                }
             }
             else
             {
-                Debug.Log("Moved 실행");
-                Ray ray = Camera.main.ScreenPointToRay(touch.position);
-                RaycastHit hit;
+                //Debug.Log("Moved 실행");
                 if (Physics.Raycast(ray, out hit))
                 {
-                    if (EventSystem.current.IsPointerOverGameObject() == false)
+                    if (EventSystem.current.IsPointerOverGameObject() == false && hit.collider.gameObject == gameObject)
                     {
                         Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
-                        if (hit.collider.gameObject == gameObject)
-                        {
-                            isDragging = true;
-                            offset = transform.position - ray.GetPoint(hit.distance);
-                        }
+
+                        group.alpha = 0;
                     }
 
                 }
@@ -157,7 +202,9 @@ public class HousingDrag : MonoBehaviour
 
             if (isDragging)
             {
-                Ray ray = Camera.main.ScreenPointToRay(touch.position);
+                transform.position = new Vector3(transform.position.x, transform.position.y, -1);
+                check.gameObject.SetActive(true);
+                subCollider.enabled = true;
                 Vector3 newPosition = ray.GetPoint(offset.z);
                 checkMinusX = newPosition.x >= 0 ? 1 : -1;
                 checkMinusY = newPosition.y >= 0 ? 1 : -1;
@@ -170,8 +217,8 @@ public class HousingDrag : MonoBehaviour
                 //Debug.Log(-(grid.boundX / 2) + spaceX / 2);
                 //Debug.Log(-(grid.boundY / 2) + spaceY / 2);
 
-                transform.position = new Vector3(clampX, clampY, -1);
-                group.alpha = 0f;
+                transform.position = new Vector3(clampX, clampY, transform.position.z);
+
             }
         }
         else
@@ -185,6 +232,7 @@ public class HousingDrag : MonoBehaviour
 
     private void CheckToBuild()
     {
+        #region Housing Object Ray
         Vector3 point_RT = new Vector3(transform.position.x - 0.01f + spaceX * 0.5f, transform.position.y - 0.01f + spaceY * 0.5f, transform.position.z);
         Vector3 point_LT = new Vector3(transform.position.x + 0.01f - spaceX * 0.5f, transform.position.y - 0.01f + spaceY * 0.5f, transform.position.z);
         Vector3 point_LB = new Vector3(transform.position.x + 0.01f - spaceX * 0.5f, transform.position.y + 0.01f - spaceY * 0.5f, transform.position.z);
@@ -204,14 +252,16 @@ public class HousingDrag : MonoBehaviour
         float distance_Box = 20f;
 
         RaycastHit hit_RT, hit_LT, hit_LB, hit_RB, hit_Center, hit_Box;
-        int defaultLayer = ~(1 << LayerMask.NameToLayer("Default"));
+        int currentLayer = gameObject.layer;
+        int defaultLayer = LayerMask.NameToLayer("Default");
+        int exceptLayer = ~(1 << defaultLayer);
 
-        bool isHitRT = Physics.Raycast(ray_RT, out hit_RT, distance_RT, defaultLayer);
-        bool isHitLT = Physics.Raycast(ray_LT, out hit_LT, distance_LT, defaultLayer);
-        bool isHitLB = Physics.Raycast(ray_LB, out hit_LB, distance_LB, defaultLayer);
-        bool isHitRB = Physics.Raycast(ray_RB, out hit_RB, distance_RB, defaultLayer);
-        bool isHitCenter = Physics.Raycast(ray_Center, out hit_Center, distance_Center, defaultLayer);
-        bool isHitBox = Physics.BoxCast(transform.position, new Vector3(spaceX * 0.495f, spaceY * 0.495f, 0.05f), Vector3.forward, out hit_Box, Quaternion.identity, distance_Box, defaultLayer);
+        bool isHitRT = Physics.Raycast(ray_RT, out hit_RT, distance_RT, exceptLayer);
+        bool isHitLT = Physics.Raycast(ray_LT, out hit_LT, distance_LT, exceptLayer);
+        bool isHitLB = Physics.Raycast(ray_LB, out hit_LB, distance_LB, exceptLayer);
+        bool isHitRB = Physics.Raycast(ray_RB, out hit_RB, distance_RB, exceptLayer);
+        bool isHitCenter = Physics.Raycast(ray_Center, out hit_Center, distance_Center, exceptLayer);
+        bool isHitBox = Physics.BoxCast(transform.position, new Vector3(spaceX * 0.495f, spaceY * 0.495f, 0.05f), Vector3.forward, out hit_Box, Quaternion.identity, distance_Box, exceptLayer);
 
 
         distance_RT = hit_RT.distance;
@@ -220,54 +270,63 @@ public class HousingDrag : MonoBehaviour
         distance_RB = hit_RB.distance;
         distance_Center = hit_Center.distance;
         distance_Box = hit_Box.distance;
+        #endregion
 
-
-        if (hit_RT.collider.CompareTag("CanBuild") &&
-            hit_LT.collider.CompareTag("CanBuild") &&
-            hit_LB.collider.CompareTag("CanBuild") &&
-            hit_RB.collider.CompareTag("CanBuild") &&
-            hit_Center.collider.CompareTag("CanBuild") &&
-            !hit_Box.collider.gameObject.CompareTag("Building"))    //올바른 위치에 하우징이 되었을 때
-        {
-            check.color = new Color32(0, 255, 0, 100);
-            transform.SetParent(hit_Center.collider.transform.parent);
-            if (!TestManager.instance.isEditMode)
-            {
-                transform.position = new Vector3(transform.position.x, transform.position.y, 0);
-                check.gameObject.SetActive(false);
-                subCollider.enabled = false;
-            }
-        }
-        else
-        {
-            check.color = new Color32(255, 0, 0, 100);
-            transform.SetParent(previousParent);
-            if (!isDragging)
-            {
-                transform.position = new Vector3(transform.position.x, transform.position.y, -0.5f);
-                subCollider.enabled = false;
-            }
-        }
 
         #region Draw Ray
-        Debug.DrawRay(point_RT, Vector3.forward * distance_RT, Color.red);
-        Debug.DrawRay(point_LT, Vector3.forward * distance_LT, Color.red);
-        Debug.DrawRay(point_LB, Vector3.forward * distance_LB, Color.red);
-        Debug.DrawRay(point_RB, Vector3.forward * distance_RB, Color.red);
-        Debug.DrawRay(transform.position, Vector3.forward * distance_Center, Color.red);
+        Color color = new Color();
+        switch (currentLayer)
+        {
+            case 23:                //back
+                color = Color.blue;
+                break;
+            case 24:                //front
+                color = Color.red;
+                break;
+            case 25:                //building
+                color = Color.white;
+                break;
+            case 26:                //constrellation
+                color = Color.green;
+                break;
+            case 27:
+                color = Color.cyan;
+                break;
+            default:
+                break;
+        }
+        Debug.DrawRay(point_RT, Vector3.forward * distance_RT, color);
+        Debug.DrawRay(point_LT, Vector3.forward * distance_LT, color);
+        Debug.DrawRay(point_LB, Vector3.forward * distance_LB, color);
+        Debug.DrawRay(point_RB, Vector3.forward * distance_RB, color);
+        Debug.DrawRay(transform.position, Vector3.forward * distance_Center, color);
 
         //Debug.Log("RT : " + distance_RT);
         //Debug.Log("LT : " + distance_LT);
         //Debug.Log("LB : " + distance_LB);
         //Debug.Log("RB : " + distance_RB);
         #endregion
+
+        if (hit_RT.collider.gameObject.layer != currentLayer &&
+             hit_LT.collider.gameObject.layer != currentLayer &&
+             hit_LB.collider.gameObject.layer != currentLayer &&
+             hit_RB.collider.gameObject.layer != currentLayer &&
+             hit_Center.collider.gameObject.layer != currentLayer &&
+             hit_Box.collider.gameObject.layer != currentLayer)
+        {
+            check.color = new Color32(0, 255, 0, 100);
+            transform.SetParent(hit_Center.collider.transform.parent);
+            isCanBuild = true;
+        }
+        else
+        {
+            check.color = new Color32(255, 0, 0, 100);
+            check.gameObject.SetActive(true);
+            transform.SetParent(previousParent);
+            isCanBuild = false;
+        }
+
     }
-
-    public void SetBuild()
-    {
-
-    }
-
 
     #region OnDrawGizmos
     //OnDrawGizmos

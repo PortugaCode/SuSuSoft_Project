@@ -158,19 +158,15 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   previousParent: {fileID: 0}
   group: {fileID: 0}
+  data: {fileID: 0}
+  buildSprite: {fileID: 0}
   space: {fileID: 9073170849238675846}
   spaceX: 3
   spaceY: 4
-  canBuild:
-    serializedVersion: 2
-    m_Bits: 64
-  cannotBuild:
-    serializedVersion: 2
-    m_Bits: 128
-  buildingLayer:
-    serializedVersion: 2
-    m_Bits: 1073741824
+  id: 0
   grid: {fileID: 0}
+  mouseX: 0
+  mouseY: 0
 --- !u!65 &7964810965108693367
 BoxCollider:
   m_ObjectHideFlags: 0

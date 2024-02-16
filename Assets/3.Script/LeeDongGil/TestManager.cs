@@ -14,7 +14,6 @@ public class TestManager : MonoBehaviour
     public InventorySystem housingInvenSys;
 
     public bool isEditMode = false;
-
     private void Awake()
     {
         if(instance == null)
@@ -28,6 +27,12 @@ public class TestManager : MonoBehaviour
         }
     }
 
+    public Ray TouchRay()
+    {
+        Touch touch = Input.GetTouch(0);
+        Camera cam = Camera.main;
+        return cam.ScreenPointToRay(touch.position);
+    }
 
     private void Update()
     {
@@ -53,9 +58,29 @@ public class TestManager : MonoBehaviour
         }
     }
 
-    public void TestButton()
+    public void TestButton_Front()
     {
         housingInvenSys.GetHousingItem_test(testHousing[0], 1);
+    }
+
+    public void TestButton_Back()
+    {
+        housingInvenSys.GetHousingItem_test(testHousing[1], 1);
+    }
+
+    public void TestButton_Building()
+    {
+        housingInvenSys.GetHousingItem_test(testHousing[2], 1);
+    }
+
+    public void TestButton_Constellation()
+    {
+        housingInvenSys.GetHousingItem_test(testHousing[3], 1);
+    }
+
+    public void TestButton_Special()
+    {
+        housingInvenSys.GetHousingItem_test(testHousing[4], 1);
     }
 }
 public class TestItem
@@ -75,5 +100,7 @@ public enum HousingType
     front = 1,
     back = 2,
     building = 4,
-    interactionable = 8
+    interactionable = 8,
+    constellation = 16,
+    special = 32
 }

@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f686ceb02fa8cd4ab6239412778cdeb, type: 3}
-  m_Name: HousingItemData
+  m_Name: 02_Building
   m_EditorClassIdentifier: 
-  housingSprite: {fileID: 21300000, guid: 3122e1848dc7b48918ba4e3b31a39425, type: 3}
-  housingName: Star
-  housingID: 0
+  housingSprite: {fileID: 21300000, guid: 918906b2fd7f84bf4aba935fb96d6e98, type: 3}
+  housingENName: Building
+  housingKRName: "\uAC74\uBB3C"
+  housingID: 2
   enhanceLevel: 0
-  housingWidth: 1
-  housingHeight: 1
-  housingType: 1
-  Info: "\uBCC4"
+  housingWidth: 2
+  housingHeight: 3
+  housingType: 4
+  Info: "\uAC80"
