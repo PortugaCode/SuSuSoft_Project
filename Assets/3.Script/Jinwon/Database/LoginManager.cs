@@ -104,9 +104,31 @@ public class LoginManager : MonoBehaviour
         string pwText_2 = inputFieldSignUpPW_2.text;
         string userNameText = inputFieldSignUpUserName.text;
 
-        Where where = new Where();
-        where.Equal("UserName", userNameText); // 로그인 한 유저의 owner_inDate로 User DB 조회
-        var bro = Backend.GameData.GetMyData("User", where);
+        var bro = Backend.GameData.Get("User", new Where());
+
+        if (bro.IsSuccess())
+        {
+            // 닉네임이 다른 유저의 닉네임과 중복될 때
+
+            Debug.Log("들어오긴 함");
+
+            for (int i = 0; i < bro.GetReturnValuetoJSON()["rows"].Count; i++)
+            {
+                Debug.Log($"{bro.GetReturnValuetoJSON()["rows"][i]["UserName"][0].ToString()}랑 Equals 체크");
+
+                if (bro.GetReturnValuetoJSON()["rows"][i]["UserName"][0].ToString().Equals(userNameText))
+                {
+                    inputFieldSignUpID.text = "";
+                    inputFieldSignUpPW_1.text = "";
+                    inputFieldSignUpPW_2.text = "";
+                    inputFieldSignUpUserName.text = "";
+                    signUpErrorText.text = "이미 사용중인 닉네임입니다.";
+                    signUpErrorText.gameObject.SetActive(true);
+                    btnSignUp.interactable = true;
+                    return;
+                }
+            }
+        }
 
         if (idText.Trim().Equals("") || pwText_1.Trim().Equals("") || pwText_2.Trim().Equals("") || userNameText.Trim().Equals(""))
         {
@@ -144,19 +166,6 @@ public class LoginManager : MonoBehaviour
             btnSignUp.interactable = true;
             return;
         }
-        else if (bro.IsSuccess() == false || bro.GetReturnValuetoJSON()["rows"].Count > 0)
-        {
-            // 닉네임이 다른 유저의 닉네임과 중복될 때
-            Debug.Log("중복");
-            inputFieldSignUpID.text = "";
-            inputFieldSignUpPW_1.text = "";
-            inputFieldSignUpPW_2.text = "";
-            inputFieldSignUpUserName.text = "";
-            signUpErrorText.text = "이미 사용중인 닉네임입니다.";
-            signUpErrorText.gameObject.SetActive(true);
-            btnSignUp.interactable = true;
-            return;
-        }
 
         btnSignUp.interactable = false;
 
@@ -174,6 +183,8 @@ public class LoginManager : MonoBehaviour
                 inputFieldSignUpPW_2.text = "";
                 inputFieldSignUpUserName.text = "";
                 btnSignUp.interactable = true;
+
+                DBManager.instance.DB_Add(idText, pwText_1, userNameText);
 
                 GoToCustomLogIn();
             }
