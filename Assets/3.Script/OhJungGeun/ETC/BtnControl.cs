@@ -6,6 +6,10 @@ public class BtnControl : MonoBehaviour
 {
     [SerializeField] private GameObject chatUI;
 
+    [SerializeField] private List<GameObject> allUI;
+
+
+
     [SerializeField] private GameObject characterUI;
     [SerializeField] private GameObject inventoryUI;
     [SerializeField] private GameObject testHousingButton;
@@ -19,14 +23,11 @@ public class BtnControl : MonoBehaviour
 
     public void SetInterfaceUI(GameObject a)
     {
+        for(int i = 0; i < allUI.Count; i++)
+        {
+            allUI[i].SetActive(false);
+        }
         a.SetActive(true);
-        gameObject.SetActive(false);
-    }
-
-    public void SetInterfaceUI_Off(GameObject a)
-    {
-        a.SetActive(false);
-        gameObject.SetActive(true);
     }
 
     public void PopUp_CharacterUI(bool value)

@@ -13,6 +13,9 @@ public class TouchMove : MonoBehaviour
     [SerializeField] private GameObject basicFace;
     [SerializeField] private GameObject blinkFace;
 
+    [Header("Animator")]
+    [SerializeField] private InteractionControl interactionControl;
+
     private Vector3 touchPosition;
     public Vector3 TouchPosition => touchPosition;
     private Vector3 direction = Vector3.zero;
@@ -31,6 +34,8 @@ public class TouchMove : MonoBehaviour
 
     public bool isHost = false;
 
+    public bool canMove = true;
+
     private void Start()
     {
         Invoke("StartGame", 0.1f);
@@ -39,16 +44,39 @@ public class TouchMove : MonoBehaviour
 
     public void FixedUpdate()
     {
+        if (!canMove) return;
         PlayerMove(direction);
     }
 
     private void Update()
     {
-        //MoveRotation();
+        
+
+        if (!canMove)
+        {
+            MoveRotation();
+            return;
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            interactionControl.doAnimatorArray[0].Invoke();
+        }
 
         if (!isHost) return;
         SetTouchPosition();
 
+    }
+
+    public void SetCanMove_true()
+    {
+        canMove = true;
+    }
+
+    public void SetCanMove_false()
+    {
+        canMove = false;
     }
 
     private void SetTouchPosition()
@@ -102,19 +130,7 @@ public class TouchMove : MonoBehaviour
 
     private void MoveRotation()
     {
-        if (Input.touchCount > 0)
-        {
-            if (direction.magnitude > 0)
-            {
-                // 플레이어가 바라보는 각도 계산
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-                // 플레이어를 각도에 따라 회전
-                //transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle - 90f));
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle - 90f)), rotationSpeed * Time.deltaTime);
-            }
-        }
-     
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, 0)), 10 * Time.deltaTime);
     }
 
     internal void SetPosition(Vector3 movePosition)
