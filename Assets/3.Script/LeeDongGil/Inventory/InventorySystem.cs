@@ -7,6 +7,9 @@ using UnityEngine.UI;
 public class InventorySystem : MonoBehaviour
 {
     public bool checkObjectEqual = false;
+    public Transform inventoryWindow;
+    public Transform inventoryScroll;
+
 
     public void GetItem(ItemData itemData, int getCount)
     {
@@ -62,6 +65,27 @@ public class InventorySystem : MonoBehaviour
             }
         }
     }
+
+    public void GotoWindow()
+    {
+        HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
+        foreach (HousingSlot slot in slots)
+        {
+            slot.transform.SetParent(inventoryWindow);
+            slot.isWindow = true;
+        }
+    }
+
+    public void GotoScroll()
+    {
+        HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
+        foreach (HousingSlot slot in slots)
+        {
+            slot.transform.SetParent(inventoryScroll);
+            slot.isWindow = false;
+        }
+    }
+
 
     public void SetItemInfo(ItemData itemData, Slot _slot)
     {
