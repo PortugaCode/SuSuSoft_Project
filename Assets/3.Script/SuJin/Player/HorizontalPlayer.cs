@@ -13,33 +13,34 @@ public class HorizontalPlayer : MonoBehaviour
     private Vector3 direction;
 
     [Header("PlyerSpeed")]
-    private float speed;
-
-    public float maxSpeed;
-    public float minSpeed;
-
-    public float baseAcceleration;
-    public float currentAcceleration;
+    [SerializeField] float currentSpeed;
+    [SerializeField] float maxSpeed;
+    [SerializeField] float minSpeed;
 
     public float initialSpeed;
-    public  float currentSpeed;
 
-    private bool isSpeed = false;
     public int speedDuration;
+    public float currentAcceleration;
+    public float baseAcceleration;
 
-    //Player Location
+    private float speed;
+    private bool isSpeed = false;
+
+    [Header("Player Location")]
     [SerializeField] private float rotationSpeed;
 
     [Header("  ")]
-    public Horizon_Joystick horizon_Joystick;
-    public Rigidbody2D rb2D;
+    [SerializeField] Horizon_Joystick horizon_Joystick;
+    [SerializeField] Rigidbody2D rb2D;
     private bool gameStart = false;
 
     //Player Light
     [SerializeField] private Transform player;
     [SerializeField] private Light2D playerLight;
-    private float MaxSightRange = 2.72f;      //lightRangeOuter
-    private float MinSightRange = 1.3f;      //lightRangeBaseOuter
+    private float maxSightRange = 2.72f;      //lightRangeOuter
+    private float minSightRange = 1.3f;      //lightRangeBaseOuter
+    private float sightRangeSpeed = 0.5f;
+    private bool isMaxSight = false;
 
     //+
     private int ActiveSkill;
@@ -54,6 +55,7 @@ public class HorizontalPlayer : MonoBehaviour
     {
         //Invoke("StartGame", 3f);
         StartCoroutine(BlinkFace());
+        playerLight.pointLightOuterRadius = maxSightRange;
     }
     private void Update()
     {
@@ -150,18 +152,35 @@ public class HorizontalPlayer : MonoBehaviour
     private void PlayerLight()
     {
         //터치 했을 때 Light Range Outer 2.72
-        if(Input.touchCount > 0)
+        if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-           //Vector3 playerlightOn = Camera.main.ScreenToViewportPoint(player.position);
-           //playerlightOn.z = 0;
+            //playerLight.pointLightOuterRadius = maxSightRange;
+            StartCoroutine(MaxSight_Co());
+        }
+        else
+        {
+            StartCoroutine(MinSight_Co());
+        }
+    }
 
-            playerLight.pointLightOuterRadius = MaxSightRange;
+    IEnumerator MaxSight_Co()
+    {
+        while (playerLight.pointLightOuterRadius < maxSightRange)
+        {
+            playerLight.pointLightOuterRadius += sightRangeSpeed * Time.deltaTime;
 
-            if(touch.phase == TouchPhase.Ended)
-            {
-                playerLight.pointLightOuterRadius = MinSightRange;
-            }
+            yield return null;
+        }
+    }
+
+    IEnumerator MinSight_Co()
+    {
+        while (playerLight.pointLightOuterRadius > minSightRange)
+        {
+            playerLight.pointLightOuterRadius -= sightRangeSpeed * Time.deltaTime;
+
+            yield return null;
         }
     }
 
