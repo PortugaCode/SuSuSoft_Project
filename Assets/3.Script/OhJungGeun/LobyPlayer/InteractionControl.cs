@@ -15,6 +15,7 @@ public class InteractionControl : MonoBehaviour
         doAnimatorArray = new animatorFunc[] { PlayBasketBall };
     }
 
+    #region [SetRootMotion] 
     public void SetApplyRootMotion_true()
     {
         animator.applyRootMotion = true;
@@ -24,6 +25,7 @@ public class InteractionControl : MonoBehaviour
     {
         animator.applyRootMotion = false;
     }
+    #endregion
 
     private void PlayBasketBall()
     {

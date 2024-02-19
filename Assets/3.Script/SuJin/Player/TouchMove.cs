@@ -24,17 +24,17 @@ public class TouchMove : MonoBehaviour
 
     [Header("PlyerSpeed")]
     [SerializeField] private float speed;
-
-    //private float smoothing = 50f;
     [SerializeField] private float rotationSpeed;
 
-    [Header("  ")]
-    public Rigidbody2D rb2D;
-    //private bool gameStart = false; //지금 안써서 지움
+    [HideInInspector] public Rigidbody2D rb2D;
 
     public bool isHost = false;
 
+
+    [Header("Interaction data")]
     public bool canMove = true;
+    public bool isInteraction = false;
+    [SerializeField] private GameObject interactionObject;
 
     private void Start()
     {
@@ -48,16 +48,46 @@ public class TouchMove : MonoBehaviour
         PlayerMove(direction);
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Building") && isInteraction)
+        {
+            HousingDrag housingDrag = collision.GetComponent<HousingDrag>();
+
+            if(housingDrag.data.housingType == HousingType.interactionable)
+            {
+                switch (housingDrag.data.housingID)
+                {
+                    case 5001:
+                        interactionObject = collision.gameObject;
+                        interactionControl.doAnimatorArray[0].Invoke();
+                        break;
+                    default:
+                        Debug.Log("Unknown housingID type");
+                        return;
+                }
+            }
+        }
+    }
+
+    public void SetInteractionObject_true()
+    {
+        interactionObject.SetActive(true);
+    }
+
+    public void SetInteractionObject_false()
+    {
+        interactionObject.SetActive(false);
+    }
+
+
     private void Update()
     {
-        
-
         if (!canMove)
         {
             MoveRotation();
             return;
         }
-
 
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -66,7 +96,6 @@ public class TouchMove : MonoBehaviour
 
         if (!isHost) return;
         SetTouchPosition();
-
     }
 
     public void SetCanMove_true()
@@ -87,6 +116,25 @@ public class TouchMove : MonoBehaviour
 
             if(touch.phase == TouchPhase.Began && EventSystem.current.IsPointerOverGameObject(0) == false)
             {
+
+                Ray touchRay = Camera.main.ScreenPointToRay(touch.position);
+                RaycastHit hit;
+
+                if (Physics.Raycast(touchRay, out hit))
+                {
+                    if (hit.collider.gameObject.CompareTag("Building"))
+                    {
+                        isInteraction = true;
+                    }
+                    else
+                    {
+                        isInteraction = false;
+                    }
+                }
+
+                //========================================================================================================
+
+
                 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
                 touchPosition.z = 0;
                 direction = (touchPosition - transform.position).normalized;
