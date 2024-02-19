@@ -350,8 +350,12 @@ public class DBManager : MonoBehaviour
 
         Param characterParam = new Param(); // Character 정보
 
+        Debug.Log($"Count : {characters.Count}");
+
         for (int i = 0; i < characters.Count; i++)
         {
+            Debug.Log($"index : {index}");
+
             if (characters[i].index == index)
             {
                 characterParam.Add("Index", characters[i].index);
@@ -373,5 +377,7 @@ public class DBManager : MonoBehaviour
         }
 
         Backend.GameData.Insert("Character", characterParam); // Character 테이블에 데이터 삽입
+
+        Debug.Log("캐릭터 추가 완료");
     }
 }
