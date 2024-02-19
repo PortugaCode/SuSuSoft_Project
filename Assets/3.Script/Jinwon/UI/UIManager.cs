@@ -19,12 +19,36 @@ public class UIManager : MonoBehaviour
     private List<Character> characterDatas;
     [SerializeField] GameObject currentCharacter; // 선택한 캐릭터
 
+    [Header("Goods UI - Lobby")]
+    [SerializeField] TMP_Text friendshipPointText;
+    [SerializeField] TMP_Text rubyText;
+    [SerializeField] TMP_Text goldText_1;
+
+    [Header("Goods UI - StageSelect")]
+    [SerializeField] TMP_Text activePointText;
+    [SerializeField] TMP_Text goldText_2;
+
+    private void OnEnable()
+    {
+        UpdateGoods();
+    }
+
     private void Start()
     {
         characters = DBManager.instance.user.character;
         characterDatas = ChartManager.instance.characterDatas;
         UpdateCharacterButton();
         SelectCharacter(0);
+    }
+
+    public void UpdateGoods()
+    {
+        friendshipPointText.text = DBManager.instance.user.goods["friendshipPoint"].ToString();
+        rubyText.text = DBManager.instance.user.goods["ruby"].ToString();
+        goldText_1.text = DBManager.instance.user.goods["gold"].ToString();
+
+        activePointText.text = $"임시"; // DB에 값 넣고 수정 필요
+        goldText_2.text = DBManager.instance.user.goods["gold"].ToString();
     }
 
     public void NextTab()

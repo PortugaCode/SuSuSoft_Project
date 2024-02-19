@@ -15,12 +15,37 @@ public class ItemEventControl : MonoBehaviour
     [SerializeField] private GameObject leverOn;
     [SerializeField] private GameObject leverOff;
 
+    [Header("Stage Clear UI")]
+    [SerializeField] private GameObject stageClearPopup;
+
+
+    private bool isTriggered = false;
+
     private void Start()
     {
         if (gameObject.CompareTag("Lever"))
         {
             horizontalPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<HorizontalPlayer>();
             horizontalPlayer.OnLaver += OnMoveRock;
+        }
+
+        if(gameObject.CompareTag("Finish"))
+        {
+            Debug.Log($"{gameObject.name}에서 Finish 씬 로드");
+            onEndGame += StageClear;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (gameObject.CompareTag("Lever"))
+        {
+            horizontalPlayer.OnLaver -= OnMoveRock;
+        }
+
+        if (gameObject.CompareTag("Finish"))
+        {
+            onEndGame -= StageClear;
         }
     }
 
@@ -43,14 +68,28 @@ public class ItemEventControl : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player") && gameObject.CompareTag("Respawn"))
+        if(collision.CompareTag("Player") && gameObject.CompareTag("Respawn") && !isTriggered)
         {
+            isTriggered = true;
             onItemEquip?.Invoke(this, EventArgs.Empty);
         }
-        else if(collision.CompareTag("Player") && gameObject.CompareTag("Finish"))
+
+        else if(collision.CompareTag("Player") && gameObject.CompareTag("Finish") && !isTriggered)
         {
+            isTriggered = true;
+            Debug.Log("OnTriggerEnter2D");
             //Todo End => Stage 클리어 보상 팝업 띄우기
             onEndGame?.Invoke(this, EventArgs.Empty);
         }
+    }
+
+    public void StageClear(object sender, EventArgs args)
+    {
+        stageClearPopup.GetComponent<StageClear>().ShowClearUI();
+
+        stageClearPopup.SetActive(true);
+
+        // 보상 획득
+        DBManager.instance.user.goods["gold"] += 1000;
     }
 }

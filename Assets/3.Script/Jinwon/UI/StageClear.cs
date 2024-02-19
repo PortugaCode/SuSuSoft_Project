@@ -18,6 +18,10 @@ public class StageClear : MonoBehaviour
     [SerializeField] private TMP_Text rewardText_3;
     [SerializeField] private TMP_Text rewardText_gold;
     [SerializeField] private TMP_Text rewardText_token;
+    [SerializeField] private TMP_Text starCountText;
+
+    [Header("Player")]
+    [SerializeField] private GameObject player;
 
     public void ShowClearUI()
     {
@@ -30,16 +34,19 @@ public class StageClear : MonoBehaviour
         character.transform.GetChild(0).GetComponent<Image>().sprite = characterBodyImages[characterIndex];
         character.transform.GetChild(1).GetComponent<Image>().sprite = characterFaceImages[characterIndex];
 
-        int reward_1 = 0;
+        starCountText.text = $"획득한 별 개수 : {player.GetComponent<PlayerProperty>().stars.Count}";
+
+        int reward_1 = 500;
         int reward_2 = 0;
         int reward_3 = 0;
-        int reward_gold = 0;
+        int reward_gold = 500;
         int reward_token = 0;
         rewardText_1.text = $"{reward_1}";
         rewardText_2.text = $"{reward_2}";
         rewardText_3.text = $"{reward_3}";
         rewardText_gold.text = $"{reward_gold}";
         rewardText_token.text = $"{reward_token}";
+
         // 토큰 보상 없으면 setactive false 하기
     }
 

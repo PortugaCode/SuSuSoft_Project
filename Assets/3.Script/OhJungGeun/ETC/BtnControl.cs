@@ -21,8 +21,14 @@ public class BtnControl : MonoBehaviour
         chatUI.SetActive(value);
     }
 
+    public void LoadScene(string sceneNames)
+    {
+        Utils.Instance.LoadScene(sceneNames);
+    }
+
     public void SetInterfaceUI(GameObject a)
     {
+        if (TestManager.instance.isEditMode) return;
         for(int i = 0; i < allUI.Count; i++)
         {
             allUI[i].SetActive(false);
@@ -37,6 +43,7 @@ public class BtnControl : MonoBehaviour
 
     public void PopUp_InventoryUI(bool value)
     {
+        if (TestManager.instance.isEditMode) return;
         inventoryUI.SetActive(value);
         testHousingButton.SetActive(value);
         editModeButton.SetActive(value);

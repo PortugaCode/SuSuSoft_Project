@@ -35,10 +35,10 @@ public class TestManager : MonoBehaviour
                     Destroy(gameObject);
                 }*/
 
-        invenSys = FindObjectOfType<EditModeButton>().transform.GetChild(3).GetChild(1).GetComponent<InventorySystem>();
-        housingInvenSys = FindObjectOfType<EditModeButton>().transform.GetChild(1).GetChild(0)
-            .GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<InventorySystem>();
-        housingInvenSysWindow = FindObjectOfType<EditModeButton>().transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<InventorySystem>();
+        //invenSys = FindObjectOfType<EditModeButton>().transform.GetChild(3).GetChild(1).GetComponent<InventorySystem>();
+        //housingInvenSys = FindObjectOfType<EditModeButton>().transform.GetChild(1).GetChild(0)
+        //    .GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<InventorySystem>();
+        //housingInvenSysWindow = FindObjectOfType<EditModeButton>().transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<InventorySystem>();
     }
 
     public Ray TouchRay()
@@ -127,6 +127,11 @@ public class TestManager : MonoBehaviour
     public void TestButton_Special2()
     {
         housingInvenSys.GetHousingItem_test(testHousing[9], 1);
+    }
+
+    public void TestButton_Interactionable()
+    {
+        housingInvenSys.GetHousingItem_test(testHousing[13], 1);
     }
 }
 public class TestItem

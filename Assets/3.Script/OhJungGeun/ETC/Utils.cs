@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,8 @@ public enum SceneNames
     Jinwon_Login,
     Chatting,
     MatchRoom,
-    MatchLoad
+    MatchLoad,
+    OnGame
 }
 
 public class Utils : MonoBehaviour
@@ -51,6 +53,7 @@ public class Utils : MonoBehaviour
        else
         {
             SceneManager.LoadScene(name);
+            nowScene = (SceneNames)Enum.Parse(typeof(SceneNames), name);
         }
     }
 

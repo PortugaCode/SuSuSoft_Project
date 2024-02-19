@@ -53,12 +53,14 @@ public class TouchMove : MonoBehaviour
         if (collision.CompareTag("Building") && isInteraction)
         {
             HousingDrag housingDrag = collision.GetComponent<HousingDrag>();
-
-            if(housingDrag.data.housingType == HousingType.interactionable)
+            Debug.Log(housingDrag.gameObject.name);
+            if (housingDrag.data.housingType == HousingType.interactionable)
             {
+                Debug.Log("housingType 들어옴");
                 switch (housingDrag.data.housingID)
                 {
                     case 5001:
+                        Debug.Log("5001 들어옴");
                         interactionObject = collision.gameObject;
                         interactionControl.doAnimatorArray[0].Invoke();
                         break;

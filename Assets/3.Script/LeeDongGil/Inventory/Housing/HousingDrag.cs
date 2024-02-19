@@ -46,7 +46,14 @@ public class HousingDrag : MonoBehaviour
     private void Start()
     {
         previousParent = transform.parent;
-        data = TestManager.instance.testHousing[id];
+        if (id == 5001)
+        {
+            data = TestManager.instance.testHousing[13];
+        }
+        else
+        {
+            data = TestManager.instance.testHousing[id];
+        }
         spaceX = data.housingWidth;
         spaceY = data.housingHeight;
 
@@ -77,7 +84,7 @@ public class HousingDrag : MonoBehaviour
                 gameObject.layer = layer_Interactionable;
                 break;
             default:
-                break; 
+                break;
         }
 
 
@@ -107,7 +114,7 @@ public class HousingDrag : MonoBehaviour
             subCollider.enabled = false;
         }
 
-        if(isTouch)
+        if (isTouch)
         {
             touchTime += Time.deltaTime;
             if (touchTime > 0.5f)
@@ -131,7 +138,7 @@ public class HousingDrag : MonoBehaviour
 
             if (touch.phase == TouchPhase.Began)
             {
-                
+
                 //Debug.Log("Began 실행");
                 if (Physics.Raycast(ray, out hit))
                 {
@@ -192,20 +199,6 @@ public class HousingDrag : MonoBehaviour
                     transform.position = new Vector3(transform.position.x, transform.position.y, -0.9f);
                 }
             }
-            else
-            {
-                //Debug.Log("Moved 실행");
-                if (Physics.Raycast(ray, out hit))
-                {
-                    if (EventSystem.current.IsPointerOverGameObject() == false && hit.collider.gameObject == gameObject)
-                    {
-                        Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
-
-                        group.alpha = 0;
-                    }
-
-                }
-            }
 
             if (isDragging)
             {
@@ -225,7 +218,11 @@ public class HousingDrag : MonoBehaviour
                 //Debug.Log(-(grid.boundY / 2) + spaceY / 2);
 
                 transform.position = new Vector3(clampX, clampY, transform.position.z);
-
+                group.alpha = 0;
+            }
+            else
+            {
+                group.alpha = 1.0f;
             }
         }
         else
@@ -233,7 +230,6 @@ public class HousingDrag : MonoBehaviour
             //Debug.Log("else End");
             isDragging = false;
             subCollider.enabled = false;
-            group.alpha = 1.0f;
         }
     }
 
