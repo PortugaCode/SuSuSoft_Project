@@ -16,6 +16,7 @@ public class HousingInventory : MonoBehaviour
     public Button button;
     public HousingDrag drag;
     public HousingSlot slot;
+    public FilterButton filter;
 
     [Header("Inventory Info")]
     public HousingItemData housingData;
@@ -108,6 +109,8 @@ public class HousingInventory : MonoBehaviour
 
     private void ShowSlot()
     {
+        filter = GetComponentInParent<FilterButton>();
+
         if (image.color.a <= 0)
         {
             button.interactable = false;
@@ -119,7 +122,10 @@ public class HousingInventory : MonoBehaviour
         }
         else
         {
-            button.interactable = true;
+            if (!filter.isFilter)
+            {
+                button.interactable = true;
+            }
         }
 
         if (count < 100)
@@ -131,8 +137,15 @@ public class HousingInventory : MonoBehaviour
             }
             else
             {
-                image.color = new Color(1, 1, 1, 1);
-                countObject.SetActive(true);
+                if (!filter.isFilter)
+                {
+                    image.color = Color.white;
+                    countObject.SetActive(true);
+                }
+                else
+                {
+                    image.color = new Color(1, 1, 1, image.color.a);
+                }
             }
             countText.text = string.Format("{0}", count);
         }

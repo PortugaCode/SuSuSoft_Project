@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f686ceb02fa8cd4ab6239412778cdeb, type: 3}
+  m_Name: 11_Back_4
+  m_EditorClassIdentifier: 
+  housingType: 2
+  housingSprite: {fileID: 21300000, guid: 95a8acdb92bc22542b97c670b5280616, type: 3}
+  housingENName: Back3
+  housingKRName: "\uD6C4\uACBD 3"
+  housingID: 11
+  housingWidth: 5
+  housingHeight: 9
+  enhanceLevel: 0
+  enhanceValue: 1
+  isPercentage_enhance: 0
+  SetName: "\uBC14\uB2E4\uC758 \uCE5C\uAD6C"
+  SetEffectName: "\uACE8\uB4DC \uD68D\uB4DD\uB7C9"
+  SetEffectValue: 10
+  isPercentage_set: 0
+  Info: "\uD574\uD30C\uB9AC\uB098\uBB34 \uC785\uB2C8\uB2E4."

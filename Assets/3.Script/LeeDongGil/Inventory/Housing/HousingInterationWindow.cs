@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Text;
 
 public class HousingInterationWindow : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class HousingInterationWindow : MonoBehaviour
     public TextMeshProUGUI P_housingInfo;
     public TextMeshProUGUI P_housingSetName;
     public TextMeshProUGUI P_housingSetItem;
+    public List<string> P_housingSetItemList = new List<string>();
     public TextMeshProUGUI P_housingSetInfo;
     public TextMeshProUGUI P_housingEnhanceInfo;
 
@@ -36,7 +38,7 @@ public class HousingInterationWindow : MonoBehaviour
             transform.GetChild(0).gameObject.SetActive(false);
         }
 
-        if(PopupObject.activeSelf)
+        if (PopupObject.activeSelf)
         {
             UpdatePopUpText();
         }
@@ -70,12 +72,26 @@ public class HousingInterationWindow : MonoBehaviour
 
     public void UpdatePopUpText()
     {
+        P_housingSetItemList.Clear();
+        foreach (HousingItemData data in TestManager.instance.testHousing)
+        {
+            if (data.SetName.Equals(housingDataWindow.SetName))
+            {
+                P_housingSetItemList.Add(data.housingKRName);
+            }
+        }
+        StringBuilder listAdd = new StringBuilder();
+
         P_housingImage.sprite = housingDataWindow.housingSprite;
         P_housingName.text = string.Format("{0} +{1}", housingDataWindow.housingKRName, housingDataWindow.enhanceLevel);
         P_housingCount.text = string.Format("{0}", P_housingCountInt);
         P_housingInfo.text = housingDataWindow.Info;
         P_housingSetName.text = housingDataWindow.SetName;
-        P_housingSetItem.text = "11";
+        for (int i = 0; i < P_housingSetItemList.Count; i++)
+        {
+            listAdd.Append(P_housingSetItemList[i]).Append("\n");
+            P_housingSetItem.text = listAdd.ToString();
+        }
         P_housingSetInfo.text = string.Format("{0} 이/가 {1}만큼 증가합니다.", housingDataWindow.SetEffectName, housingDataWindow.SetEffectValue);
         P_housingEnhanceInfo.text = string.Format("{0} 이/가 {0}만큼 증가합니다.", housingDataWindow.SetEffectName, housingDataWindow.enhanceValue);
     }

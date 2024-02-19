@@ -10,7 +10,6 @@ public class InventorySystem : MonoBehaviour
     public Transform inventoryWindow;
     public Transform inventoryScroll;
 
-
     public void GetItem(ItemData itemData, int getCount)
     {
         Slot[] slots = GetComponentsInChildren<Slot>();
@@ -53,6 +52,7 @@ public class InventorySystem : MonoBehaviour
                 if (slot.slotItemName.Equals(housingItemData.housingENName))
                 {
                     slot.GetComponentInChildren<HousingInventory>().count += getCount;
+                    slot.housingInven.image.color = Color.white;
                     break;
                 }
                 else continue;
@@ -61,6 +61,7 @@ public class InventorySystem : MonoBehaviour
             {
                 SetItemInfo(housingItemData, slot);
                 slot.GetComponentInChildren<HousingInventory>().count = getCount;
+                slot.housingInven.image.color = Color.white;
                 break;
             }
         }

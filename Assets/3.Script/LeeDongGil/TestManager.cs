@@ -12,6 +12,7 @@ public class TestManager : MonoBehaviour
 
     public InventorySystem invenSys;
     public InventorySystem housingInvenSys;
+    public InventorySystem housingInvenSysWindow;
 
     public bool isEditMode = false;
     private void Awake()
@@ -24,15 +25,20 @@ public class TestManager : MonoBehaviour
         instance = this;
 
 
-/*        if(instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }*/
+        /*        if(instance == null)
+                {
+                    instance = this;
+                    DontDestroyOnLoad(gameObject);
+                }
+                else
+                {
+                    Destroy(gameObject);
+                }*/
+
+        invenSys = FindObjectOfType<EditModeButton>().transform.GetChild(3).GetChild(1).GetComponent<InventorySystem>();
+        housingInvenSys = FindObjectOfType<EditModeButton>().transform.GetChild(1).GetChild(0)
+            .GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<InventorySystem>();
+        housingInvenSysWindow = FindObjectOfType<EditModeButton>().transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<InventorySystem>();
     }
 
     public Ray TouchRay()
@@ -70,25 +76,57 @@ public class TestManager : MonoBehaviour
     {
         housingInvenSys.GetHousingItem_test(testHousing[0], 1);
     }
-
+    public void TestButton_Front2()
+    {
+        housingInvenSys.GetHousingItem_test(testHousing[5], 1);
+    }
+    //--------------------------------------------------------------
     public void TestButton_Back()
     {
         housingInvenSys.GetHousingItem_test(testHousing[1], 1);
     }
-
+    public void TestButton_Back2()
+    {
+        housingInvenSys.GetHousingItem_test(testHousing[6], 1);
+    }
+    public void TestButton_Back3()
+    {
+        housingInvenSys.GetHousingItem_test(testHousing[10], 1);
+    }
+    public void TestButton_Back4()
+    {
+        housingInvenSys.GetHousingItem_test(testHousing[11], 1);
+    }
+    public void TestButton_Back5()
+    {
+        housingInvenSys.GetHousingItem_test(testHousing[12], 1);
+    }
+    //--------------------------------------------------------------
     public void TestButton_Building()
     {
         housingInvenSys.GetHousingItem_test(testHousing[2], 1);
     }
-
+    public void TestButton_Building2()
+    {
+        housingInvenSys.GetHousingItem_test(testHousing[7], 1);
+    }
+    //--------------------------------------------------------------
     public void TestButton_Constellation()
     {
         housingInvenSys.GetHousingItem_test(testHousing[3], 1);
     }
-
+    public void TestButton_Constellation2()
+    {
+        housingInvenSys.GetHousingItem_test(testHousing[8], 1);
+    }
+    //--------------------------------------------------------------
     public void TestButton_Special()
     {
         housingInvenSys.GetHousingItem_test(testHousing[4], 1);
+    }
+    public void TestButton_Special2()
+    {
+        housingInvenSys.GetHousingItem_test(testHousing[9], 1);
     }
 }
 public class TestItem
