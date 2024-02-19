@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,9 @@ using UnityEngine.Rendering.Universal;
 
 public class HorizontalPlayer : MonoBehaviour
 {
+    public EventHandler OnLaver;
+
+
     [Header("PlyerFace")]
     [SerializeField] private GameObject basicFace;
     [SerializeField] private GameObject blinkFace;
@@ -60,7 +64,6 @@ public class HorizontalPlayer : MonoBehaviour
     private void Update()
     {
         StartGame();
-        PlayerLight();
     }
 
     public void FixedUpdate()
@@ -68,6 +71,7 @@ public class HorizontalPlayer : MonoBehaviour
         if (gameStart)
         {
             PlayerUp();
+            PlayerLight();
         }
     }
 
@@ -97,21 +101,25 @@ public class HorizontalPlayer : MonoBehaviour
             // 터치 했을 때 플레이어 속력 증가
             currentSpeed += currentAcceleration * Time.deltaTime;
             currentSpeed = Mathf.Clamp(currentSpeed, initialSpeed, maxSpeed);
-            rb2D.velocity = new Vector2 (direction.x * currentSpeed, 0) * Time.deltaTime + Vector2.up * currentSpeed * Time.deltaTime;
+            rb2D.velocity = new Vector2(direction.x * currentSpeed, 0) * Time.deltaTime + Vector2.up * currentSpeed * Time.deltaTime;
 
             //Player Rotation
             PlayerRotation();
 
-            if (touch.phase == TouchPhase.Ended && isSpeed == false)     //터치가 끝난 상태
+/*            if (touch.phase == TouchPhase.Ended && isSpeed == false)     //터치가 끝난 상태
             {
-                // 속도 초기화
-                currentSpeed = initialSpeed;
-                rb2D.velocity = Vector2.zero;
-                rb2D.velocity = Vector2.up * currentSpeed * Time.deltaTime;
 
-                //터치 끝났을 때 일정속도 유지
-                rb2D.velocity = new Vector2(direction.x, 0) * speed * Time.deltaTime + Vector2.up * speed * Time.deltaTime;
-            }
+            }*/
+        }
+        else
+        {
+            // 속도 초기화
+            currentSpeed = initialSpeed;
+            rb2D.velocity = Vector2.zero;
+            rb2D.velocity = Vector2.up * currentSpeed * Time.deltaTime;
+
+            //터치 끝났을 때 일정속도 유지
+            rb2D.velocity = new Vector2(direction.x, 0) * currentSpeed * Time.deltaTime + Vector2.up * currentSpeed * Time.deltaTime;
         }
     }
 
@@ -122,6 +130,10 @@ public class HorizontalPlayer : MonoBehaviour
             IncreaseSpeed(); // 속도 증가
             Destroy(collision.gameObject);
             StartCoroutine(Speed_Co());
+        }
+        else if(collision.CompareTag("Lever"))
+        {
+            OnLaver?.Invoke(this, EventArgs.Empty);
         }
     }
 

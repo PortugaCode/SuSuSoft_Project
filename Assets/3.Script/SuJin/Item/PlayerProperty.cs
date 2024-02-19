@@ -73,6 +73,26 @@ public class PlayerProperty : MonoBehaviour
         {
             //Player Damage
             PassiveAttackNull();
+            Destroy(collision.gameObject);
+            Debug.Log($" currentHP: {currentHealth} ");
+        }
+
+        if(collision.gameObject.CompareTag("Breaking"))
+        {
+            Destroy(collision.gameObject);
+        }
+        
+        if(collision.gameObject.CompareTag("Wall"))
+        {
+            PassiveAttackNull();
+            Debug.Log($" currentHP: {currentHealth} ");
+        }
+
+        //HP
+        if(collision.gameObject.CompareTag("HPItem"))
+        {
+            currentHealth += damage;
+            Destroy(collision.gameObject);
             Debug.Log($" currentHP: {currentHealth} ");
         }
 
@@ -108,6 +128,12 @@ public class PlayerProperty : MonoBehaviour
                 StartCoroutine(Smaller_Co());
                 Destroy(collision.gameObject);
             }
+        }
+
+        //Token
+        if(collision.gameObject.CompareTag("Token"))
+        {
+            Destroy(collision.gameObject);
         }
     }
 

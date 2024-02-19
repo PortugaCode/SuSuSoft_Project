@@ -15,6 +15,11 @@ TagManager:
   - Gold
   - Shield
   - SpeedItem
+  - Wall
+  - HPItem
+  - Token
+  - Breaking
+  - Lever
   layers:
   - Default
   - TransparentFX
