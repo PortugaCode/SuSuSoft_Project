@@ -21,7 +21,7 @@ public class MatchSystem
     private SessionId roomId;
     private string roomToken;
     private MatchMakingUserInfo inviteUserInfo;
-    public string inviteUserNickName;
+    public string inviteUserNickName; // 방장 닉네임 => 나중에 여기 DB를 이용해서 하우징 오브젝트 동기화
 
     public MatchMakingUserInfo InviteUserInfo => inviteUserInfo;
     public SessionId RoomID => roomId;
@@ -37,6 +37,7 @@ public class MatchSystem
     //게임룸 정보
     public MatchInGameRoomInfo roomInfo; // 접속한 룸의 정보
     public Dictionary<SessionId, string> userNickName = new Dictionary<SessionId, string>(); // 현재 게임방에 접속해 있는 유저들의 닉네임
+    public Dictionary<string, byte> userTeam = new Dictionary<string, byte>(); // 현재 게임방에 접속해 있는 유저들의 팀
 
 
     //매칭 서버 리스트 인덱스 접근
@@ -479,15 +480,18 @@ public class MatchSystem
             for(int i = 0; i < args.GameRecords.Count; i++)
             {
                 userNickName.Add(args.GameRecords[i].m_sessionId, args.GameRecords[i].m_nickname);
+                userTeam.Add(args.GameRecords[i].m_nickname, args.GameRecords[i].m_teamNumber);
             }
         };
 
         //게임방에 유저가 접속 시 모든 클라이언트에게 호출되는 이벤트
         Backend.Match.OnMatchInGameAccess = (MatchInGameSessionEventArgs args) =>
         {
+
             if(args.GameRecord.m_nickname != Backend.UserNickName)
             {
                 userNickName.Add(args.GameRecord.m_sessionId, args.GameRecord.m_nickname);
+                userTeam.Add(args.GameRecord.m_nickname, args.GameRecord.m_teamNumber);
                 Debug.Log(args.GameRecord);
             }
         };
@@ -593,6 +597,11 @@ public class MatchSystem
         }
 
         if (args.From.SessionId == Backend.Match.GetMySessionId())
+        {
+            return;
+        }
+
+        if(userTeam[args.From.NickName] != userTeam[Backend.UserNickName])
         {
             return;
         }
