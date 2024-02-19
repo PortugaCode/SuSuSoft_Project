@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Text;
 
 public class HousingInterationWindow : MonoBehaviour
 {
@@ -12,9 +13,11 @@ public class HousingInterationWindow : MonoBehaviour
     public TextMeshProUGUI housingName;
     public GameObject housingObject;
     public HousingItemData housingData;
+    public HousingItemData housingDataWindow;
 
 
     [Header("PopUp")]
+    public GameObject PopupObject;
     public Image P_housingImage;
     public TextMeshProUGUI P_housingName;
     public TextMeshProUGUI P_housingCount;
@@ -22,8 +25,10 @@ public class HousingInterationWindow : MonoBehaviour
     public TextMeshProUGUI P_housingInfo;
     public TextMeshProUGUI P_housingSetName;
     public TextMeshProUGUI P_housingSetItem;
+    public List<string> P_housingSetItemList = new List<string>();
     public TextMeshProUGUI P_housingSetInfo;
     public TextMeshProUGUI P_housingEnhanceInfo;
+
 
     private void Update()
     {
@@ -31,6 +36,11 @@ public class HousingInterationWindow : MonoBehaviour
         if (!TestManager.instance.isEditMode)
         {
             transform.GetChild(0).gameObject.SetActive(false);
+        }
+
+        if (PopupObject.activeSelf)
+        {
+            UpdatePopUpText();
         }
     }
 
@@ -62,19 +72,28 @@ public class HousingInterationWindow : MonoBehaviour
 
     public void UpdatePopUpText()
     {
-        P_housingImage.sprite = housingObject.GetComponent<SpriteRenderer>().sprite;
-        P_housingName.text = string.Format("{0} +{1}", housingData.housingKRName, housingData.enhanceLevel);
-        P_housingCount.text = "1";
-        P_housingInfo.text = housingData.Info;
-        P_housingSetName.text = housingData.SetEffectName;
-        P_housingSetItem.text = "11";
-        P_housingSetInfo.text = string.Format("~~가 {0}만큼 증가합니다.", housingData.SetEffectValue);
-        P_housingEnhanceInfo.text = string.Format("~~가 {0}만큼 증가합니다.", housingData.enhanceValue);
+        P_housingSetItemList.Clear();
+        foreach (HousingItemData data in TestManager.instance.testHousing)
+        {
+            if (data.SetName.Equals(housingDataWindow.SetName))
+            {
+                P_housingSetItemList.Add(data.housingKRName);
+            }
+        }
+        StringBuilder listAdd = new StringBuilder();
 
-
-
-
-
+        P_housingImage.sprite = housingDataWindow.housingSprite;
+        P_housingName.text = string.Format("{0} +{1}", housingDataWindow.housingKRName, housingDataWindow.enhanceLevel);
+        P_housingCount.text = string.Format("{0}", P_housingCountInt);
+        P_housingInfo.text = housingDataWindow.Info;
+        P_housingSetName.text = housingDataWindow.SetName;
+        for (int i = 0; i < P_housingSetItemList.Count; i++)
+        {
+            listAdd.Append(P_housingSetItemList[i]).Append("\n");
+            P_housingSetItem.text = listAdd.ToString();
+        }
+        P_housingSetInfo.text = string.Format("{0} 이/가 {1}만큼 증가합니다.", housingDataWindow.SetEffectName, housingDataWindow.SetEffectValue);
+        P_housingEnhanceInfo.text = string.Format("{0} 이/가 {0}만큼 증가합니다.", housingDataWindow.SetEffectName, housingDataWindow.enhanceValue);
     }
 
     public void InsertHousingInventory()

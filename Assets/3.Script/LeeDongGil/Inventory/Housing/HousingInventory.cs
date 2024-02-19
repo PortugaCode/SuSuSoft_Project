@@ -15,6 +15,8 @@ public class HousingInventory : MonoBehaviour
     public Image image;
     public Button button;
     public HousingDrag drag;
+    public HousingSlot slot;
+    public FilterButton filter;
 
     [Header("Inventory Info")]
     public HousingItemData housingData;
@@ -37,6 +39,7 @@ public class HousingInventory : MonoBehaviour
         rect = GetComponent<RectTransform>();
         image = GetComponent<Image>();
         button = GetComponent<Button>();
+        slot = GetComponentInParent<HousingSlot>();
     }
 
     private void Start()
@@ -90,6 +93,23 @@ public class HousingInventory : MonoBehaviour
 
     private void Update()
     {
+        ShowSlot();
+
+
+
+        /*if (TestManager.instance.isEditMode)
+        {
+            button.interactable = true;
+        }
+        else
+        {
+            button.interactable = false;
+        }*/
+    }
+
+    private void ShowSlot()
+    {
+        filter = GetComponentInParent<FilterButton>();
 
         if (image.color.a <= 0)
         {
@@ -102,7 +122,10 @@ public class HousingInventory : MonoBehaviour
         }
         else
         {
-            button.interactable = true;
+            if (!filter.isFilter)
+            {
+                button.interactable = true;
+            }
         }
 
         if (count < 100)
@@ -114,8 +137,15 @@ public class HousingInventory : MonoBehaviour
             }
             else
             {
-                image.color = new Color(1, 1, 1, 1);
-                countObject.SetActive(true);
+                if (!filter.isFilter)
+                {
+                    image.color = Color.white;
+                    countObject.SetActive(true);
+                }
+                else
+                {
+                    image.color = new Color(1, 1, 1, image.color.a);
+                }
             }
             countText.text = string.Format("{0}", count);
         }
@@ -123,29 +153,23 @@ public class HousingInventory : MonoBehaviour
         {
             countText.text = "99+";
         }
-
-        if(TestManager.instance.isEditMode)
-        {
-            button.interactable = true;
-        }
-        else
-        {
-            button.interactable = false;
-        }
     }
 
     public void BuildSet()
     {
-        image.color = new Color(1, 1, 1, 0);
-        count--;
-        Vector3 createPos = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, 0);
-        thisBuilding = Instantiate(Building, createPos, Quaternion.identity, buildingSpace);
-        HousingDrag buildSetting = thisBuilding.GetComponent<HousingDrag>();
-        buildSetting.id = housingData.housingID;
-        buildSetting.buildSprite.sprite = housingData.housingSprite;
+        if (!slot.isWindow)
+        {
+            image.color = new Color(1, 1, 1, 0);
+            count--;
+            Vector3 createPos = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, 0);
+            thisBuilding = Instantiate(Building, createPos, Quaternion.identity, buildingSpace);
+            HousingDrag buildSetting = thisBuilding.GetComponent<HousingDrag>();
+            buildSetting.id = housingData.housingID;
+            buildSetting.buildSprite.sprite = housingData.housingSprite;
 
-        
 
-        TestManager.instance.isEditMode = true;
+
+            TestManager.instance.isEditMode = true;
+        }
     }
 }

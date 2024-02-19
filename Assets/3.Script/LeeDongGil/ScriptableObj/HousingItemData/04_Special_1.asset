@@ -10,14 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f686ceb02fa8cd4ab6239412778cdeb, type: 3}
-  m_Name: 04_Special
+  m_Name: 04_Special_1
   m_EditorClassIdentifier: 
+  housingType: 32
   housingSprite: {fileID: 21300000, guid: 1d2554db24725491c9aa32ca3cf9986c, type: 3}
   housingENName: Sword
   housingKRName: "\uAC80"
   housingID: 4
-  enhanceLevel: 0
   housingWidth: 2
   housingHeight: 2
-  housingType: 32
+  enhanceLevel: 0
+  enhanceValue: 0
+  isPercentage_enhance: 0
+  SetName: 
+  SetEffectName: 
+  SetEffectValue: 0
+  isPercentage_set: 0
   Info: "\uAC80"

@@ -72,8 +72,12 @@ public class HousingDrag : MonoBehaviour
                 int layer_Special = LayerMask.NameToLayer("Special");
                 gameObject.layer = layer_Special;
                 break;
-            default:
+            case HousingType.interactionable:
+                int layer_Interactionable = LayerMask.NameToLayer("Interactionable");
+                gameObject.layer = layer_Interactionable;
                 break;
+            default:
+                break; 
         }
 
 
@@ -175,6 +179,9 @@ public class HousingDrag : MonoBehaviour
                         case HousingType.special:
                             transform.position = new Vector3(transform.position.x, transform.position.y, -0.7f);
                             break;
+                        case HousingType.interactionable:
+                            transform.position = new Vector3(transform.position.x, transform.position.y, -0.8f);
+                            break;
                         default:
                             break;
                     }
@@ -182,7 +189,7 @@ public class HousingDrag : MonoBehaviour
                 }
                 else
                 {
-                    transform.position = new Vector3(transform.position.x, transform.position.y, -0.8f);
+                    transform.position = new Vector3(transform.position.x, transform.position.y, -0.9f);
                 }
             }
             else
