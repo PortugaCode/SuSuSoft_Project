@@ -18,13 +18,13 @@ public class ChatInputControl : MonoBehaviour
 
     public void Send()
     {
-        if (textInput.text.Length <= 1)
+        if (textInput.text.Length <= 0)
         {
             textInput.text = "";
             textInput.ActivateInputField();
             return;
         }
-        else if(textInput.text.StartsWith("/w ") || textInput.text.StartsWith("/W ") || textInput.text.StartsWith("/±Ó¼Ó¸» ") || textInput.text.StartsWith("/¤¸ ") || textInput.text.StartsWith("/±Ó "))
+        else if(textInput.text.StartsWith("/w ") || textInput.text.StartsWith("/W ") || textInput.text.StartsWith("/ê·“ì†ë§ ") || textInput.text.StartsWith("/ã…ˆ ") || textInput.text.StartsWith("/ê·“ "))
         {
             string valueStr = textInput.text;
             string[] splitStr = valueStr.Split(' ');
@@ -32,14 +32,14 @@ public class ChatInputControl : MonoBehaviour
             var wMesssageStart = splitStr[0].Length + splitStr[1].Length + 2;
             if (wMesssageStart < valueStr.Length)
             {
-                Debug.Log("±Ó¼Ó¸» µé¾î¿È");
+                Debug.Log("ê·“ì†ë§ ë“¤ì–´ì˜´");
                 string wMessage = valueStr.Substring(wMesssageStart);
                 BackEndManager.Instance.GetChatManager().Whisper(nickName, wMessage);
                 textInput.text = "";
                 textInput.ActivateInputField();
             }
         }
-        else if(textInput.text.StartsWith("/ÃÊ´ë ") || textInput.text.StartsWith("/invite ") || textInput.text.StartsWith("/Invite "))
+        else if(textInput.text.StartsWith("/ì´ˆëŒ€ ") || textInput.text.StartsWith("/invite ") || textInput.text.StartsWith("/Invite "))
         {
             string valueStr = textInput.text;
             string[] splitStr = valueStr.Split(' ');

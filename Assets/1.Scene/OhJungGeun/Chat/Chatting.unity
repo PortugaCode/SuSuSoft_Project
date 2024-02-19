@@ -30839,6 +30839,8 @@ MonoBehaviour:
   rb2D: {fileID: 143194284726758946}
   isHost: 1
   canMove: 1
+  isInteraction: 0
+  interactionObject: {fileID: 0}
 --- !u!224 &2466141115701102586
 RectTransform:
   m_ObjectHideFlags: 0
@@ -60874,7 +60876,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6472166937724091289
 RectTransform:
   m_ObjectHideFlags: 0
@@ -68478,7 +68480,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: -0.00007598688}
-  m_SizeDelta: {x: -1440, y: 100}
+  m_SizeDelta: {x: -1440, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &7803195155634227294
 CanvasRenderer:

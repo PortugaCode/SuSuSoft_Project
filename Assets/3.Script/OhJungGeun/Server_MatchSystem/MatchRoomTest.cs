@@ -87,6 +87,7 @@ public class MatchRoomTest : MonoBehaviour
         int order1 = 100;
         int order2 = 101;
 
+        bool isMyteam = true;
         foreach (SessionId a in BackEndManager.Instance.GetMatchSystem().userNickName.Keys)
         {
             players.Add(a, playerList[count]);
@@ -113,6 +114,13 @@ public class MatchRoomTest : MonoBehaviour
                 cameraController.SetPlayer(playerList[count].gameObject);
             }
             Debug.Log(a.ToString());
+
+            if(BackEndManager.Instance.GetMatchSystem().userTeam[Backend.UserNickName] != BackEndManager.Instance.GetMatchSystem().userTeam[BackEndManager.Instance.GetMatchSystem().userNickName[a]])
+            {
+                players[a].gameObject.SetActive(false);
+                isMyteam = false;
+            }
+
             count++;
         }
 
@@ -122,7 +130,9 @@ public class MatchRoomTest : MonoBehaviour
         foreach (string a in BackEndManager.Instance.GetMatchSystem().userNickName.Values)
         {
             textMeshProList[count].text = a;
+            if (!isMyteam) textMeshProList[count].gameObject.SetActive(false);
             count++;
+            
         }
     }
 
