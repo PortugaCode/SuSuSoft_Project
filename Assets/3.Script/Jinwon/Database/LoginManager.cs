@@ -24,10 +24,16 @@ public class LoginManager : MonoBehaviour
     [SerializeField] private TMP_InputField inputFieldSignUpID;
     [SerializeField] private TMP_InputField inputFieldSignUpPW_1;
     [SerializeField] private TMP_InputField inputFieldSignUpPW_2;
-    [SerializeField] private TMP_InputField inputFieldSignUpUserName;
     [SerializeField] private Button btnSignUp;
     [SerializeField] private Button btnGoToLogIn;
     [SerializeField] private TMP_Text signUpErrorText;
+    private string id;
+    private string pw;
+
+    [Header("UserName")]
+    [SerializeField] private GameObject popUp_UserName;
+    [SerializeField] private TMP_InputField inputFieldUserName;
+    [SerializeField] private TMP_Text userNameErrorText;
 
     private void Update()
     {
@@ -42,6 +48,9 @@ public class LoginManager : MonoBehaviour
         // 캐싱
         string idText = inputFieldID.text;
         string pwText = inputFieldPW.text;
+
+        id = idText;
+        pw = pwText;
 
         if (idText.Trim().Equals("") || pwText.Trim().Equals(""))
         {
@@ -61,10 +70,26 @@ public class LoginManager : MonoBehaviour
             if (callback.IsSuccess())
             {
                 Debug.Log($"로그인 성공");
-                ChartManager.instance.GetChartData();
-                DBManager.instance.DB_Init(idText, pwText);
-                BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
-                BackEndManager.Instance.GetChatManager().GetChatStatus();
+
+                Where where = new Where();
+                where.Equal("owner_inDate", Backend.UserInDate); // 로그인 한 유저의 owner_inDate로 User DB 조회
+
+                var bro = Backend.GameData.GetMyData("User", where);
+
+                if (bro.IsSuccess() && (bro.GetReturnValuetoJSON()["rows"].Count == 0 || (bro.GetReturnValuetoJSON()["rows"].Count > 0) && bro.GetReturnValuetoJSON()["rows"][0]["UserName"][0].ToString().Equals(string.Empty)))
+                {
+                    Debug.Log("닉네임 재설정 필요");
+                    btnLogin.interactable = true;
+                    GoToSetUserName();
+                }
+                else
+                {
+                    Debug.Log("로그인 완료");
+                    ChartManager.instance.GetChartData();
+                    DBManager.instance.DB_Init(idText, pwText);
+                    BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
+                    BackEndManager.Instance.GetChatManager().GetChatStatus();
+                }
             }
             else
             {
@@ -77,7 +102,7 @@ public class LoginManager : MonoBehaviour
                 switch (int.Parse(callback.GetStatusCode()))
                 {
                     case 401:
-                        message = callback.GetMessage().Contains("customID") ? "존재하지 않는 아이디입니다." : "잘못된 비밀번호입니다.";
+                        message = callback.GetMessage().Contains("Id") ? "존재하지 않는 아이디입니다." : "잘못된 비밀번호입니다.";
                         break;
                     case 403:
                         message = callback.GetMessage().Contains("user") ? "차단당한 유저입니다." : "차단당한 디바이스입니다.";
@@ -102,19 +127,13 @@ public class LoginManager : MonoBehaviour
         string idText = inputFieldSignUpID.text;
         string pwText_1 = inputFieldSignUpPW_1.text;
         string pwText_2 = inputFieldSignUpPW_2.text;
-        string userNameText = inputFieldSignUpUserName.text;
 
-        Where where = new Where();
-        where.Equal("UserName", userNameText); // 로그인 한 유저의 owner_inDate로 User DB 조회
-        var bro = Backend.GameData.GetMyData("User", where);
-
-        if (idText.Trim().Equals("") || pwText_1.Trim().Equals("") || pwText_2.Trim().Equals("") || userNameText.Trim().Equals(""))
+        if (idText.Trim().Equals("") || pwText_1.Trim().Equals("") || pwText_2.Trim().Equals(""))
         {
             // InputField가 비워져있을 때
             inputFieldSignUpID.text = "";
             inputFieldSignUpPW_1.text = "";
             inputFieldSignUpPW_2.text = "";
-            inputFieldSignUpUserName.text = "";
             signUpErrorText.text = "정보를 입력해주세요.";
             signUpErrorText.gameObject.SetActive(true);
             btnSignUp.interactable = true;
@@ -126,33 +145,18 @@ public class LoginManager : MonoBehaviour
             inputFieldSignUpID.text = "";
             inputFieldSignUpPW_1.text = "";
             inputFieldSignUpPW_2.text = "";
-            inputFieldSignUpUserName.text = "";
             signUpErrorText.text = "비밀번호가 일치하지 않습니다.";
             signUpErrorText.gameObject.SetActive(true);
             btnSignUp.interactable = true;
             return;
         }
-        else if (idText.Any(x => char.IsWhiteSpace(x) == true) || pwText_1.Any(x => char.IsWhiteSpace(x) == true) || pwText_2.Any(x => char.IsWhiteSpace(x) == true) || userNameText.Any(x => char.IsWhiteSpace(x) == true))
+        else if (idText.Any(x => char.IsWhiteSpace(x) == true) || pwText_1.Any(x => char.IsWhiteSpace(x) == true) || pwText_2.Any(x => char.IsWhiteSpace(x) == true))
         {
             // 공백이 포함되어 있을 때
             inputFieldSignUpID.text = "";
             inputFieldSignUpPW_1.text = "";
             inputFieldSignUpPW_2.text = "";
-            inputFieldSignUpUserName.text = "";
             signUpErrorText.text = "공백을 포함할 수 없습니다.";
-            signUpErrorText.gameObject.SetActive(true);
-            btnSignUp.interactable = true;
-            return;
-        }
-        else if (bro.IsSuccess() == false || bro.GetReturnValuetoJSON()["rows"].Count > 0)
-        {
-            // 닉네임이 다른 유저의 닉네임과 중복될 때
-            Debug.Log("중복");
-            inputFieldSignUpID.text = "";
-            inputFieldSignUpPW_1.text = "";
-            inputFieldSignUpPW_2.text = "";
-            inputFieldSignUpUserName.text = "";
-            signUpErrorText.text = "이미 사용중인 닉네임입니다.";
             signUpErrorText.gameObject.SetActive(true);
             btnSignUp.interactable = true;
             return;
@@ -166,23 +170,25 @@ public class LoginManager : MonoBehaviour
             {
                 Debug.Log($"회원가입 성공");
 
-                // 닉네임 항목에 입력한 유저 닉네임 할당
-                Backend.BMember.CreateNickname(userNameText);
-
                 inputFieldSignUpID.text = "";
                 inputFieldSignUpPW_1.text = "";
                 inputFieldSignUpPW_2.text = "";
-                inputFieldSignUpUserName.text = "";
                 btnSignUp.interactable = true;
 
-                GoToCustomLogIn();
+                id = idText;
+                pw = pwText_1;
+
+                Backend.BMember.CustomLogin(idText, pwText_1);
+                ChartManager.instance.GetChartData();
+                DBManager.instance.DB_Add(id, pw, "");
+
+                GoToSetUserName();
             }
             else
             {
                 inputFieldSignUpID.text = "";
                 inputFieldSignUpPW_1.text = "";
                 inputFieldSignUpPW_2.text = "";
-                inputFieldSignUpUserName.text = "";
                 btnSignUp.interactable = true;
 
                 string message = string.Empty;
@@ -206,7 +212,6 @@ public class LoginManager : MonoBehaviour
                 inputFieldSignUpID.text = "";
                 inputFieldSignUpPW_1.text = "";
                 inputFieldSignUpPW_2.text = "";
-                inputFieldSignUpUserName.text = "";
                 signUpErrorText.text = $"{message}";
                 signUpErrorText.gameObject.SetActive(true);
                 btnSignUp.interactable = true;
@@ -214,22 +219,88 @@ public class LoginManager : MonoBehaviour
         });
     }
 
+    public void SetUserName()
+    {
+        var bro = Backend.GameData.Get("User", new Where());
+
+        string userNameText = inputFieldUserName.text;
+
+        if (userNameText.Trim().Equals(""))
+        {
+            // InputField가 비워져있을 때
+            inputFieldUserName.text = "";
+            userNameErrorText.text = "정보를 입력해주세요.";
+            userNameErrorText.gameObject.SetActive(true);
+            return;
+        }
+        else if (userNameText.Any(x => char.IsWhiteSpace(x) == true))
+        {
+            // 공백이 포함되어 있을 때
+            inputFieldUserName.text = "";
+            userNameErrorText.text = "공백을 포함할 수 없습니다.";
+            userNameErrorText.gameObject.SetActive(true);
+            return;
+        }
+
+        if (bro.IsSuccess())
+        {
+            // 닉네임이 다른 유저의 닉네임과 중복될 때
+
+            for (int i = 0; i < bro.GetReturnValuetoJSON()["rows"].Count; i++)
+            {
+                Debug.Log($"{bro.GetReturnValuetoJSON()["rows"][i]["UserName"][0].ToString()}랑 Equals 체크");
+
+                if (bro.GetReturnValuetoJSON()["rows"][i]["UserName"][0].ToString().Equals(userNameText))
+                {
+                    inputFieldUserName.text = "";
+                    userNameErrorText.text = "사용중인 닉네임입니다.";
+                    userNameErrorText.gameObject.SetActive(true);
+                    return;
+                }
+            }
+        }
+
+        // 닉네임 항목에 입력한 유저 닉네임 할당
+        Backend.BMember.CreateNickname(userNameText);
+
+        Param param = new Param();
+        param.Add("UserName", userNameText);
+
+        // 해당 테이블 데이터 수정
+        Backend.PlayerData.UpdateMyLatestData("User", param);
+
+        GoToCustomLogIn();
+    }
+
     public void GoToCustomLogIn()
     {
         popUp_Menu.SetActive(false);
         popUp_LogIn.SetActive(true);
         popUp_SignUp.SetActive(false);
+        popUp_UserName.SetActive(false);
     }
 
     public void GoToSignUp()
     {
+        popUp_Menu.SetActive(false);
         popUp_LogIn.SetActive(false);
         popUp_SignUp.SetActive(true);
+        popUp_UserName.SetActive(false);
     }
 
     public void GoToMenu()
     {
         popUp_Menu.SetActive(true);
         popUp_LogIn.SetActive(false);
+        popUp_SignUp.SetActive(false);
+        popUp_UserName.SetActive(false);
+    }
+
+    public void GoToSetUserName()
+    {
+        popUp_Menu.SetActive(false);
+        popUp_LogIn.SetActive(false);
+        popUp_SignUp.SetActive(false);
+        popUp_UserName.SetActive(true);
     }
 }
