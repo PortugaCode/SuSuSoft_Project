@@ -10,14 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f686ceb02fa8cd4ab6239412778cdeb, type: 3}
-  m_Name: 03_Constellation
+  m_Name: 09_Special_2
   m_EditorClassIdentifier: 
-  housingSprite: {fileID: 21300000, guid: 268be0bde0197c3409ca553a50708b31, type: 3}
-  housingENName: Constellation
-  housingKRName: "\uBCC4\uC790\uB9AC"
-  housingID: 3
+  housingType: 32
+  housingSprite: {fileID: 21300000, guid: 2fe4af659450d4f5c8d779384fbf71b1, type: 3}
+  housingENName: Clock
+  housingKRName: "\uC2DC\uACC4"
+  housingID: 9
+  housingWidth: 2
+  housingHeight: 2
   enhanceLevel: 0
-  housingWidth: 5
-  housingHeight: 6
-  housingType: 16
-  Info: "\uAC80"
+  enhanceValue: 0
+  isPercentage_enhance: 0
+  SetName: 
+  SetEffectName: 
+  SetEffectValue: 0
+  isPercentage_set: 0
+  Info: "\uC2DC\uACC4\uC785\uB2C8\uB2E4"

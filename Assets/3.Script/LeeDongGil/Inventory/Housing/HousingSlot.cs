@@ -15,7 +15,13 @@ public class HousingSlot : MonoBehaviour
     }
     public string slotItemName = string.Empty;
     public int slotItemCount;
+    [Header("Window Inventory")]
     public HousingItemData itemInfomation;
+    public HousingInterationWindow housingInterationWindow;
+    public GameObject popUP;
+    public float gameTime = 0;
+    public bool isWindow = false;
+
 
     private void Start()
     {
@@ -33,6 +39,18 @@ public class HousingSlot : MonoBehaviour
         {
             slotItemName = string.Empty;
             itemInfomation = null;
+        }
+    }
+
+
+    public void InteractionPopUp()
+    {
+        if (isWindow)
+        {
+            popUP.transform.position = transform.position;
+            housingInterationWindow.housingDataWindow = itemInfomation;
+            housingInterationWindow.P_housingCountInt = slotItemCount;
+            popUP.SetActive(true);
         }
     }
 }

@@ -21,7 +21,10 @@ public class CameraDragMove : MonoBehaviour
 
     private void Update()
     {
-        MoveCamera();
+        if (TestManager.instance.isEditMode)
+        {
+            MoveCamera();
+        }
     }
 
     private void MoveCamera()

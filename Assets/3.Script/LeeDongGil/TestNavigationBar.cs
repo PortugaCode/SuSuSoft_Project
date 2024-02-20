@@ -6,6 +6,8 @@ public class TestNavigationBar : MonoBehaviour
 {
     public GameObject WorkShopUI;
     public GameObject HousingInventoryUI;
+    public GameObject HousingWindowUI;
+    public GameObject EditButton;
     public void OpenWorkShop()
     {
         if (!WorkShopUI.activeSelf)
@@ -22,13 +24,16 @@ public class TestNavigationBar : MonoBehaviour
     {
         if (!HousingInventoryUI.activeSelf)
         {
-            HousingInventoryUI.SetActive(true);
-            TestManager.instance.isEditMode = true;
+            if (!HousingWindowUI.activeSelf)
+            {
+                HousingInventoryUI.SetActive(true);
+                EditButton.SetActive(true);
+            }
         }
         else
         {
             HousingInventoryUI.SetActive(false);
-            TestManager.instance.isEditMode = false;
+            EditButton.SetActive(false);
         }
     }
 }

@@ -27,9 +27,6 @@ EditorBuildSettings:
     path: Assets/1.Scene/Jinwon/Jinwon_Tutorial.unity
     guid: fccb405facecd1c47be19b91c9cc21e8
   - enabled: 1
-    path: Assets/1.Scene/LeeDongGil/TestStartScene.unity
-    guid: 461f43ae153191e499005bc58b3e61f8
-  - enabled: 1
-    path: Assets/1.Scene/LeeDongGil/Inventory.unity
-    guid: 3f717ced67ac13c45ab5f729831c530b
+    path: Assets/1.Scene/SuJin/OnGame.unity
+    guid: d610d7c74077d534eae7b6d249ee3ec6
   m_configObjects: {}

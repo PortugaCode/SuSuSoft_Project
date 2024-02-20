@@ -13,6 +13,8 @@ public class EditModeButton : MonoBehaviour
     public TextMeshProUGUI btnTxt;
     public bool isEdit;
 
+    [SerializeField] private GameObject lobyPlayer;
+
     private void Start()
     {
         button = editModeBtn.GetComponent<Button>();
@@ -22,8 +24,6 @@ public class EditModeButton : MonoBehaviour
     {
         if (TestManager.instance.isEditMode)
         {
-            isEdit = true;
-            btnTxt.text = "편집모드 종료";
             if (cannotBuild.childCount > 0)
             {
                 button.interactable = false;
@@ -32,11 +32,15 @@ public class EditModeButton : MonoBehaviour
             {
                 button.interactable = true;
             }
+            isEdit = true;
+            btnTxt.text = "편집모드 종료";
+            lobyPlayer.SetActive(false);
         }
         else
         {
             isEdit = false;
             btnTxt.text = "편집모드 시작";
+            lobyPlayer.SetActive(true);
         }
     }
 

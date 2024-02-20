@@ -267,79 +267,81 @@ public class DBManager : MonoBehaviour
         user.password = pwText;
         user.userName = Backend.UserNickName; // 닉네임 수정 필요
 
-        if (bro.IsSuccess() == false || bro.GetReturnValuetoJSON()["rows"].Count <= 0) // 새로운 유저인 경우
+        // 저장된 데이터를 불러와 user 클래스에 할당
+        JsonData json = bro.FlattenRows(); // 캐싱
+
+        // [보유한 재화]
+        var keys = json[0]["Goods"].Keys; // JsonData를 딕셔너리 키로 변환하는 과정
+
+        string[] goodsArray = new string[keys.Count];
+        keys.CopyTo(goodsArray, 0);
+
+        for (var i = 0; i < keys.Count; i++)
         {
-            // 데이터 초기값 삽입
-
-            Param param = new Param(); // DB에 저장할 데이터들
-
-            param.Add("UserID", user.userID);
-            param.Add("Password", user.password);
-            param.Add("UserName", user.userName);
-            param.Add("Goods", user.goods); // 재화 무엇 있는지 파악하여 0 할당 필요
-
-            AddCharacter(101);
-
-            Backend.GameData.Insert("User", param); // User 테이블에 데이터 삽입
-
-            Debug.Log("새로운 유저 데이터 초기값 설정 완료");
+            var key = goodsArray[i];
+            user.goods[key] = int.Parse(json[0]["Goods"][key].ToString());
         }
-        else // 기존 유저인 경우
+
+        // [친구] (뒤끝 내장 친구 목록에서 불러오기)
+        CommunityManager.instance.GetFriendsList();
+
+        // [캐릭터] (Character 테이블에서 불러오기)
+        var c_bro = Backend.GameData.GetMyData("Character", where);
+
+        if (c_bro.GetReturnValuetoJSON()["rows"].Count > 0)
         {
-            // 저장된 데이터를 불러와 user 클래스에 할당
-            JsonData json = bro.FlattenRows(); // 캐싱
-
-            // [보유한 재화]
-            var keys = json[0]["Goods"].Keys; // JsonData를 딕셔너리 키로 변환하는 과정
-
-            string[] goodsArray = new string[keys.Count];
-            keys.CopyTo(goodsArray, 0);
-
-            for (var i = 0; i < keys.Count; i++)
+            for (int i = 0; i < c_bro.FlattenRows().Count; i++)
             {
-                var key = goodsArray[i];
-                user.goods[key] = int.Parse(json[0]["Goods"][key].ToString());
+                Character currentCharacter = new Character();
+
+                JsonData c_json = c_bro.GetReturnValuetoJSON()["rows"];
+
+                currentCharacter.index = int.Parse(c_json[i]["Index"][0].ToString());
+                currentCharacter.imageIndex = int.Parse(c_json[i]["ImageIndex"][0].ToString());
+                currentCharacter.lookImageIndex = int.Parse(c_json[i]["LookImageIndex"][0].ToString());
+                currentCharacter.name = c_json[i]["Name"][0].ToString();
+                currentCharacter.color = c_json[i]["Color"][0].ToString();
+                currentCharacter.level = int.Parse(c_json[i]["Level"][0].ToString());
+                currentCharacter.healthIncreaseRate = float.Parse(c_json[i]["HealthIncreaseRate"][0].ToString());
+                currentCharacter.maxHealth = float.Parse(c_json[i]["MaxHealth"][0].ToString());
+                currentCharacter.maxSpeed = float.Parse(c_json[i]["MaxSpeed"][0].ToString());
+                currentCharacter.minSpeed = float.Parse(c_json[i]["MinSpeed"][0].ToString());
+                currentCharacter.maxSightRange = float.Parse(c_json[i]["MaxSightRange"][0].ToString());
+                currentCharacter.minSightRange = float.Parse(c_json[i]["MinSightRange"][0].ToString());
+                currentCharacter.activeSkill = int.Parse(c_json[i]["ActiveSkill"][0].ToString());
+                currentCharacter.passiveSkill = int.Parse(c_json[i]["PassiveSkill"][0].ToString());
+
+                user.character.Add(currentCharacter);
             }
-
-            // [친구] (뒤끝 내장 친구 목록에서 불러오기)
-            CommunityManager.instance.GetFriendsList();
-
-            // [캐릭터] (Character 테이블에서 불러오기)
-            var c_bro = Backend.GameData.GetMyData("Character", where);
-
-            if (c_bro.GetReturnValuetoJSON()["rows"].Count > 0)
-            {
-                for (int i = 0; i < c_bro.FlattenRows().Count; i++)
-                {
-                    Character currentCharacter = new Character();
-
-                    JsonData c_json = c_bro.GetReturnValuetoJSON()["rows"];
-
-                    currentCharacter.index = int.Parse(c_json[i]["Index"][0].ToString());
-                    currentCharacter.imageIndex = int.Parse(c_json[i]["ImageIndex"][0].ToString());
-                    currentCharacter.lookImageIndex = int.Parse(c_json[i]["LookImageIndex"][0].ToString());
-                    currentCharacter.name = c_json[i]["Name"][0].ToString();
-                    currentCharacter.color = c_json[i]["Color"][0].ToString();
-                    currentCharacter.level = int.Parse(c_json[i]["Level"][0].ToString());
-                    currentCharacter.healthIncreaseRate = float.Parse(c_json[i]["HealthIncreaseRate"][0].ToString());
-                    currentCharacter.maxHealth = float.Parse(c_json[i]["MaxHealth"][0].ToString());
-                    currentCharacter.maxSpeed = float.Parse(c_json[i]["MaxSpeed"][0].ToString());
-                    currentCharacter.minSpeed = float.Parse(c_json[i]["MinSpeed"][0].ToString());
-                    currentCharacter.maxSightRange = float.Parse(c_json[i]["MaxSightRange"][0].ToString());
-                    currentCharacter.minSightRange = float.Parse(c_json[i]["MinSightRange"][0].ToString());
-                    currentCharacter.activeSkill = int.Parse(c_json[i]["ActiveSkill"][0].ToString());
-                    currentCharacter.passiveSkill = int.Parse(c_json[i]["PassiveSkill"][0].ToString());
-
-                    user.character.Add(currentCharacter);
-                }
-            }
-
-            Debug.Log("기존 유저 데이터 불러오기 완료");
         }
+
+        Debug.Log("기존 유저 데이터 불러오기 완료");
 
         //Utils.Instance.LoadScene(SceneNames.Chatting);
     }
 
+    public void DB_Add(string idText, string pwText, string userName)
+    {
+        user.userID = idText;
+        user.password = pwText;
+        user.userName = userName;
+
+        // 데이터 초기값 삽입
+
+        Param param = new Param(); // DB에 저장할 데이터들
+
+        param.Add("UserID", user.userID);
+        param.Add("Password", user.password);
+        param.Add("UserName", user.userName);
+        param.Add("Goods", user.goods); // 재화 무엇 있는지 파악하여 0 할당 필요
+
+        AddCharacter(101);
+
+        Backend.GameData.Insert("User", param); // User 테이블에 데이터 삽입
+
+        Debug.Log("새로운 유저 데이터 초기값 설정 완료");
+    }
+    
     public void AddCharacter(int index) // Character 테이블에 Chart에서 가져온 기본값을 입력 (Index로 구분)
     {
         // Chart 불러오는 과정 추가 필요
@@ -348,8 +350,12 @@ public class DBManager : MonoBehaviour
 
         Param characterParam = new Param(); // Character 정보
 
+        Debug.Log($"Count : {characters.Count}");
+
         for (int i = 0; i < characters.Count; i++)
         {
+            Debug.Log($"index : {index}");
+
             if (characters[i].index == index)
             {
                 characterParam.Add("Index", characters[i].index);
@@ -371,5 +377,7 @@ public class DBManager : MonoBehaviour
         }
 
         Backend.GameData.Insert("Character", characterParam); // Character 테이블에 데이터 삽입
+
+        Debug.Log("캐릭터 추가 완료");
     }
 }

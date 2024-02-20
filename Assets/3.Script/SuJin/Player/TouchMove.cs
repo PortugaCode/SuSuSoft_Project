@@ -13,6 +13,9 @@ public class TouchMove : MonoBehaviour
     [SerializeField] private GameObject basicFace;
     [SerializeField] private GameObject blinkFace;
 
+    [Header("Animator")]
+    [SerializeField] private InteractionControl interactionControl;
+
     private Vector3 touchPosition;
     public Vector3 TouchPosition => touchPosition;
     private Vector3 direction = Vector3.zero;
@@ -21,15 +24,17 @@ public class TouchMove : MonoBehaviour
 
     [Header("PlyerSpeed")]
     [SerializeField] private float speed;
-
-    //private float smoothing = 50f;
     [SerializeField] private float rotationSpeed;
 
-    [Header("  ")]
-    public Rigidbody2D rb2D;
-    //private bool gameStart = false; //지금 안써서 지움
+    [HideInInspector] public Rigidbody2D rb2D;
 
     public bool isHost = false;
+
+
+    [Header("Interaction data")]
+    public bool canMove = true;
+    public bool isInteraction = false;
+    [SerializeField] private GameObject interactionObject;
 
     private void Start()
     {
@@ -39,16 +44,70 @@ public class TouchMove : MonoBehaviour
 
     public void FixedUpdate()
     {
+        if (!canMove) return;
         PlayerMove(direction);
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Building") && isInteraction)
+        {
+            HousingDrag housingDrag = collision.GetComponent<HousingDrag>();
+            Debug.Log(housingDrag.gameObject.name);
+            if (housingDrag.data.housingType == HousingType.interactionable)
+            {
+                Debug.Log("housingType 들어옴");
+                switch (housingDrag.data.housingID)
+                {
+                    case 5001:
+                        Debug.Log("5001 들어옴");
+                        interactionObject = collision.gameObject;
+                        interactionControl.doAnimatorArray[0].Invoke();
+                        break;
+                    default:
+                        Debug.Log("Unknown housingID type");
+                        return;
+                }
+            }
+        }
+    }
+
+    public void SetInteractionObject_true()
+    {
+        interactionObject.SetActive(true);
+    }
+
+    public void SetInteractionObject_false()
+    {
+        interactionObject.SetActive(false);
+    }
+
+
     private void Update()
     {
-        //MoveRotation();
+        if (!canMove)
+        {
+            MoveRotation();
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            interactionControl.doAnimatorArray[0].Invoke();
+        }
 
         if (!isHost) return;
         SetTouchPosition();
+    }
 
+    public void SetCanMove_true()
+    {
+        canMove = true;
+    }
+
+    public void SetCanMove_false()
+    {
+        canMove = false;
     }
 
     private void SetTouchPosition()
@@ -59,6 +118,25 @@ public class TouchMove : MonoBehaviour
 
             if(touch.phase == TouchPhase.Began && EventSystem.current.IsPointerOverGameObject(0) == false)
             {
+
+                Ray touchRay = Camera.main.ScreenPointToRay(touch.position);
+                RaycastHit hit;
+
+                if (Physics.Raycast(touchRay, out hit))
+                {
+                    if (hit.collider.gameObject.CompareTag("Building"))
+                    {
+                        isInteraction = true;
+                    }
+                    else
+                    {
+                        isInteraction = false;
+                    }
+                }
+
+                //========================================================================================================
+
+
                 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
                 touchPosition.z = 0;
                 direction = (touchPosition - transform.position).normalized;
@@ -102,19 +180,7 @@ public class TouchMove : MonoBehaviour
 
     private void MoveRotation()
     {
-        if (Input.touchCount > 0)
-        {
-            if (direction.magnitude > 0)
-            {
-                // 플레이어가 바라보는 각도 계산
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-                // 플레이어를 각도에 따라 회전
-                //transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle - 90f));
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle - 90f)), rotationSpeed * Time.deltaTime);
-            }
-        }
-     
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, 0)), 10 * Time.deltaTime);
     }
 
     internal void SetPosition(Vector3 movePosition)

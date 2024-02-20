@@ -20,10 +20,6 @@ public class HousingInteraction : MonoBehaviour
         {
             InteractionWindow();
         }
-        else
-        {
-            InteractionPopUp();
-        }
     }
 
     private void InteractionWindow()
@@ -51,28 +47,4 @@ public class HousingInteraction : MonoBehaviour
         }
     }
 
-    private void InteractionPopUp()
-    {
-        if (Input.touchCount > 0)
-        {
-            Touch touch;
-            touch = Input.GetTouch(0);
-            Ray ray = Camera.main.ScreenPointToRay(touch.position);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.CompareTag("Building"))
-            {
-                housingData = hit.collider.gameObject.GetComponent<HousingDrag>().data;
-                gameTime += Time.deltaTime;
-                if (gameTime > 0.5f)
-                {
-                    window.transform.GetChild(1).gameObject.SetActive(true);
-                }
-            }
-        }
-        else
-        {
-            gameTime = 0;
-        }
-    }
 }
