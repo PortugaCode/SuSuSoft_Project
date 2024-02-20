@@ -44,7 +44,6 @@ public class HorizontalPlayer : MonoBehaviour
     private float maxSightRange = 2.72f;      //lightRangeOuter
     private float minSightRange = 1.3f;      //lightRangeBaseOuter
     private float sightRangeSpeed = 0.5f;
-    private bool isMaxSight = false;
 
     //+
     private int ActiveSkill;

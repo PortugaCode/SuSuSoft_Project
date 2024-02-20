@@ -20,7 +20,7 @@ public class PlayerProperty : MonoBehaviour
 
     //Attack nullified 공격 무효화
     public float ignoreAttack = 0.1f;
-    private bool GodMode = false;
+    //private bool GodMode = false;
 
     [Header("Giant")]
     [SerializeField] private GameObject GiantFace;
