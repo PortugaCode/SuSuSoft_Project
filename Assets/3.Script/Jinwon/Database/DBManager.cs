@@ -104,6 +104,7 @@ public class User
     public string password { get; set; } // 유저 비밀번호
     public string userName { get; set; } // 유저 이름
     public List<Character> character { get; set; } // 보유한 캐릭터 리스트
+    public int characterIndex { get; set; } // 현재 사용중인 캐릭터 인덱스
     public Dictionary<string, int> goods { get; set; } // 보유한 재화의 종류와 수량
     public List<HousingObject> housingObject { get; set; } // 보유한 하우징 오브젝트 리스트
     public List<Friend> friend { get; set; } // 친구 리스트
@@ -283,7 +284,7 @@ public class DBManager : MonoBehaviour
         }
 
         // [친구] (뒤끝 내장 친구 목록에서 불러오기)
-        CommunityManager.instance.GetFriendsList();
+        //CommunityManager.instance.GetFriendsList();
 
         // [캐릭터] (Character 테이블에서 불러오기)
         var c_bro = Backend.GameData.GetMyData("Character", where);
@@ -315,6 +316,9 @@ public class DBManager : MonoBehaviour
             }
         }
 
+        // [사용중인 캐릭터 인덱스]
+        user.characterIndex = int.Parse(json[0]["CurrentCharacterIndex"][0].ToString());
+
         Debug.Log("기존 유저 데이터 불러오기 완료");
 
         //Utils.Instance.LoadScene(SceneNames.Chatting);
@@ -336,6 +340,8 @@ public class DBManager : MonoBehaviour
         param.Add("Goods", user.goods); // 재화 무엇 있는지 파악하여 0 할당 필요
 
         AddCharacter(101);
+
+        param.Add("CurrentCharacterIndex", 101);
 
         Backend.GameData.Insert("User", param); // User 테이블에 데이터 삽입
 
