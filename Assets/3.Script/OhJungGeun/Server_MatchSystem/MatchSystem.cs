@@ -18,6 +18,7 @@ public class MatchSystem
 
 
     [Header("Invited Data")]
+    private bool isHost = false;
     private SessionId roomId;
     private string roomToken;
     private MatchMakingUserInfo inviteUserInfo;
@@ -324,11 +325,13 @@ public class MatchSystem
             Debug.Log("InviteUser : " + args.ErrInfo);
             if (args.ErrInfo != ErrorCode.Success)
             {
+                isHost = false;
                 LeaveMatchRoom();
                 OnMatchInviteUI_Error?.Invoke(this, EventArgs.Empty);
             }
             else
             {
+                isHost = true;
                 inviteUserNickName = nickName;
                 OnMatchInviteUI?.Invoke(this, EventArgs.Empty);
                 isTimerOn = true;
@@ -397,7 +400,23 @@ public class MatchSystem
         Backend.Match.OnMatchMakingRoomJoin = (MatchMakingGamerInfoInRoomEventArgs args) => 
         {
             Debug.Log("유저 들어옴");
-            RequestMatchMaking(0);
+            if(isHost)
+            {
+                RequestMatchMaking(0);
+            }
+
+            Backend.Match.OnMatchMakingResponse = (MatchMakingResponseEventArgs args) =>
+            {
+                Debug.Log(args.ErrInfo);
+                if (args.ErrInfo == ErrorCode.Success)
+                {
+                    //연결 됐다면 JoinGameServer 호출
+                    string severAddress = args.RoomInfo.m_inGameServerEndPoint.m_address;
+                    ushort serverPort = args.RoomInfo.m_inGameServerEndPoint.m_port;
+                    string roomToken = args.RoomInfo.m_inGameRoomToken;
+                    JoinInGameServer(severAddress, serverPort, roomToken);
+                }
+            };
             Utils.Instance.LoadScene(SceneNames.MatchLoad);
         };
     }
@@ -431,18 +450,6 @@ public class MatchSystem
     public void RequestMatchMaking(int index)
     {
         Backend.Match.RequestMatchMaking(GetMatchList(index).matchTypeEnum, GetMatchList(index).matchModeTypeEnum, GetMatchList(index).inDate);
-        Backend.Match.OnMatchMakingResponse = (MatchMakingResponseEventArgs args) =>
-        {
-            Debug.Log(args.ErrInfo);
-            if(args.ErrInfo == ErrorCode.Success)
-            {
-                //연결 됐다면 JoinGameServer 호출
-                string severAddress = args.RoomInfo.m_inGameServerEndPoint.m_address;
-                ushort serverPort = args.RoomInfo.m_inGameServerEndPoint.m_port;
-                string roomToken = args.RoomInfo.m_inGameRoomToken;
-                JoinInGameServer(severAddress, serverPort, roomToken);
-            }
-        };
     }
 
     private void JoinInGameServer(string serverAddress, ushort serverPort, string roomToken)
@@ -483,6 +490,8 @@ public class MatchSystem
                 userTeam.Add(args.GameRecords[i].m_nickname, args.GameRecords[i].m_teamNumber);
             }
 
+            Debug.Log("게임방 최초 접속 : " + userNickName.Count);
+
 
             //게임방에 유저가 접속 시 모든 클라이언트에게 호출되는 이벤트
             Backend.Match.OnMatchInGameAccess = (MatchInGameSessionEventArgs args) =>
@@ -492,7 +501,7 @@ public class MatchSystem
                 {
                     userNickName.Add(args.GameRecord.m_sessionId, args.GameRecord.m_nickname);
                     userTeam.Add(args.GameRecord.m_nickname, args.GameRecord.m_teamNumber);
-                    Debug.Log(args.GameRecord);
+                    Debug.Log("게임방에 유저 접속 : " + userNickName[args.GameRecord.m_sessionId] + $" / 총 {userNickName.Count}");
                 }
             };
 
@@ -515,7 +524,7 @@ public class MatchSystem
                     // 서버는 단순 브로드캐스팅만 지원 (서버에서 어떠한 연산도 수행하지 않음)
                     OnRecieve(args);
                 };
-
+                Debug.Log($"게임방에 모두 들어옴 : / 총 {userNickName.Count}");
                 Utils.Instance.LoadScene(SceneNames.MatchRoom);
             };
         };
@@ -525,6 +534,8 @@ public class MatchSystem
     {
         Backend.Match.LeaveGameServer();
         LeaveMatchRoom();
+
+        isHost = false;
 
         Backend.Match.OnLeaveInGameServer = (MatchInGameSessionEventArgs args) => 
         {
