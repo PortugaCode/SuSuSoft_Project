@@ -2,35 +2,85 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grid
+public class Grid : MonoBehaviour
 {
-    private int width;
-    private int height;
-    private float cellSize;
-    private int[,] gridArray;
+    private LineRenderer line;
+    public float startX, startY;
+    public int rowCount, colCount;
+    public float gridSize = 1;
 
-    public Grid(int _width, int _height, float _cellSize)
+    private void InitLineRenderer(LineRenderer lr)
     {
-        width = _width;
-        height = _height;
-        cellSize = _cellSize;
-
-        gridArray = new int[width, height];
-
-        for (int x = 0; x < gridArray.GetLength(0); x++)
-        {
-            for (int y = 0; y < gridArray.GetLength(1); y++)
-            {
-                Debug.Log(x + ", " + y);
-                Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
-                Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
-            }
-        }
+        //lr.startWidth = lr.endWidth = 0.01f;
+        lr.material.color = Color.white;
     }
 
 
-    private Vector3 GetWorldPosition(int x, int y)
+    private void DrawGrid(LineRenderer lr, float row, float col, int rowCount, int colCount)
     {
-        return new Vector3(x, y) * cellSize;
+        List<Vector3> gridPos = new List<Vector3>();
+        float ec = col + colCount * gridSize;
+        gridPos.Add(new Vector3(row, col, transform.position.z));
+        gridPos.Add(new Vector3(row, ec, transform.position.z));
+
+        int toggle = -1;
+        Vector3 currentPos = new Vector3(row, ec, transform.position.z);
+
+        for (int i = 0; i < rowCount; i++)
+        {
+            Vector3 nextPos = currentPos;
+
+            nextPos.x += gridSize;
+            gridPos.Add(nextPos);
+
+
+            nextPos.y += (colCount * toggle * gridSize);
+            gridPos.Add(nextPos);
+
+            currentPos = nextPos;
+            toggle *= -1;
+        }
+
+        currentPos.x = row;
+        gridPos.Add(currentPos);
+
+        int colToggle = toggle = 1;
+        if (currentPos.y == ec) colToggle = -1;
+
+        for(int i = 0; i< colCount; i++)
+        {
+            Vector3 nextPos = currentPos;
+            nextPos.y += (colToggle * gridSize);
+            gridPos.Add(nextPos);
+
+            nextPos.x += (rowCount * toggle * gridSize);
+            gridPos.Add(nextPos);
+
+            currentPos = nextPos;
+            toggle *= -1;
+        }
+
+        lr.positionCount = gridPos.Count;
+        lr.SetPositions(gridPos.ToArray());
+
+    }
+
+    private void Start()
+    {
+        line = GetComponent<LineRenderer>();
+        InitLineRenderer(line);
+        DrawGrid(line, startX, startY, rowCount, colCount);
+    }
+
+    private void Update()
+    {
+        if(TestManager.instance.isEditMode)
+        {
+            line.enabled = true;
+        }
+        else
+        {
+            line.enabled = false;
+        }
     }
 }

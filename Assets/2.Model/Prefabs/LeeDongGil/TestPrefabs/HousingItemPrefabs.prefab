@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6956011921943837870}
-  - component: {fileID: 1429963603025119064}
+  - component: {fileID: 1686905959176022116}
   m_Layer: 0
   m_Name: OnDragCollider
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6016882980445628369}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1429963603025119064
+--- !u!65 &1686905959176022116
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -51,7 +51,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 10, y: 10, z: 0.1}
+  m_Size: {x: 20, y: 20, z: 0.1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5572879100542003124
 GameObject:
@@ -65,7 +65,7 @@ GameObject:
   - component: {fileID: 6621264533684671820}
   - component: {fileID: 2451641274770785061}
   - component: {fileID: 9215071218758292209}
-  - component: {fileID: 7964810965108693367}
+  - component: {fileID: 2554417741279338056}
   m_Layer: 0
   m_Name: HousingItemPrefabs
   m_TagString: Building
@@ -174,19 +174,18 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   previousParent: {fileID: 0}
   group: {fileID: 0}
+  isTouch: 0
+  touchTime: 0
   data: {fileID: 0}
   buildSprite: {fileID: 6621264533684671820}
   space: {fileID: 9073170849238675846}
   spaceX: 1
   spaceY: 1
   id: 0
-  buildingLayer:
-    serializedVersion: 2
-    m_Bits: 1
   grid: {fileID: 0}
   mouseX: 0
   mouseY: 0
---- !u!65 &7964810965108693367
+--- !u!65 &2554417741279338056
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

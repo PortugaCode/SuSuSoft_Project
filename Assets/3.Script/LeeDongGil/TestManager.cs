@@ -39,6 +39,9 @@ public class TestManager : MonoBehaviour
         //housingInvenSys = FindObjectOfType<EditModeButton>().transform.GetChild(1).GetChild(0)
         //    .GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<InventorySystem>();
         //housingInvenSysWindow = FindObjectOfType<EditModeButton>().transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<InventorySystem>();
+
+        //ChartManager.instance.GetChartData();
+
     }
 
     public Ray TouchRay()
@@ -70,8 +73,19 @@ public class TestManager : MonoBehaviour
             Debug.Log("Test4");
             housingInvenSys.GetHousingItem_test(testHousing[1], 1);
         }
+        else if (Input.GetKeyDown(KeyCode.Q))
+        {
+            LoadHousingChart();
+        }
     }
 
+    public void LoadHousingChart()
+    {
+        Debug.Log($"{ChartManager.instance.housingObjectDatas[1].index} + {ChartManager.instance.housingObjectDatas[1].name_k}");
+    }
+
+
+    #region Test Button
     public void TestButton_Front()
     {
         housingInvenSys.GetHousingItem_test(testHousing[0], 1);
@@ -133,6 +147,7 @@ public class TestManager : MonoBehaviour
     {
         housingInvenSys.GetHousingItem_test(testHousing[13], 1);
     }
+    #endregion
 }
 public class TestItem
 {
