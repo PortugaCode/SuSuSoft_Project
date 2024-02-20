@@ -142,7 +142,7 @@ public class TouchMove : MonoBehaviour
                 direction = (touchPosition - transform.position).normalized;
 
 
-                //Debug.Log(direction);
+                Debug.Log(direction);
                 if(Utils.Instance.nowScene == SceneNames.MatchRoom)
                 {
                     PlayerMoveMessage msg = new PlayerMoveMessage(Backend.Match.GetMySessionId(), touchPosition, direction);
