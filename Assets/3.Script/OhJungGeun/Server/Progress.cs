@@ -9,7 +9,7 @@ public class Progress : MonoBehaviour
 {
     [SerializeField] private Slider progressSlider;
     [SerializeField] private TextMeshProUGUI textProgressData;
-    [SerializeField] private float progressTime; // ·Îµù ¹Ù Àç»ý½Ã°£
+    [SerializeField] private float progressTime; // ï¿½Îµï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã°ï¿½
 
     public void Play(UnityAction action = null)
     {
@@ -26,8 +26,8 @@ public class Progress : MonoBehaviour
             current += Time.deltaTime;
             percent = current / progressTime;
 
-            // ·Îµù Text ¼³Á¤
-            textProgressData.text = $"ÇöÀç ·Îµù ÁßÀÔ´Ï´Ù... {progressSlider.value * 100:F0}%";
+            // ï¿½Îµï¿½ Text ï¿½ï¿½ï¿½ï¿½
+            textProgressData.text = $"ë¡œë”©ì¤‘ìž…ë‹ˆë‹¤... {progressSlider.value * 100:F0}%";
             progressSlider.value = Mathf.Lerp(0, 1, percent);
             
             
