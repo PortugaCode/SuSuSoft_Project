@@ -627,7 +627,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -15720,7 +15720,7 @@ MonoBehaviour:
   button: {fileID: 6078516252053100980}
   btnTxt: {fileID: 4119805267768521499}
   isEdit: 0
-  lobyPlayer: {fileID: 0}
+  lobyPlayer: {fileID: 5856137565726761848}
 --- !u!114 &7552329087858997328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17302,6 +17302,10 @@ MonoBehaviour:
   grid: {fileID: 0}
   mouseX: 0
   mouseY: 0
+  moveX: 0
+  moveY: 0
+  clampX: 0
+  clampY: 0
 --- !u!114 &8565837518377424219
 MonoBehaviour:
   m_ObjectHideFlags: 0

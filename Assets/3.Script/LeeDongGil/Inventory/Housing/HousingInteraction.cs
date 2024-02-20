@@ -31,14 +31,24 @@ public class HousingInteraction : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(touch.position);
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.CompareTag("Building"))
+            if (Physics.Raycast(ray, out hit))
             {
-                housingData = hit.collider.gameObject.GetComponent<HousingDrag>().data;
-                gameTime += Time.deltaTime;
+                if (hit.collider.gameObject.CompareTag("Building") || EventSystem.current.IsPointerOverGameObject(0) == true)   //게임오브젝트 or UI터치
+                {
+                    if (hit.collider.gameObject.CompareTag("Building"))
+                    {
+                        housingData = hit.collider.gameObject.GetComponent<HousingDrag>().data;
+                        window.transform.GetChild(0).gameObject.SetActive(true);
+                    }
+                }
+                else if (!hit.collider.gameObject.CompareTag("Building") && EventSystem.current.IsPointerOverGameObject(0) == false)
+                {
+                    window.transform.GetChild(0).gameObject.SetActive(false);
+                }
+                /*gameTime += Time.deltaTime;
                 if(gameTime > 0.5f)
                 {
-                    window.transform.GetChild(0).gameObject.SetActive(true);
-                }
+                }*/
             }
         }
         else

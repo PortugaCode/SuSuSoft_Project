@@ -33,6 +33,11 @@ public class HousingDrag : MonoBehaviour
     public float mouseX = 0;
     public float mouseY = 0;
 
+    [SerializeField] private float moveX;
+    [SerializeField] private float moveY;
+    [SerializeField] private float clampX;
+    [SerializeField] private float clampY;
+
     #region Gizmos parameter
     /*
         private Vector3 gizmosPosition;
@@ -164,6 +169,7 @@ public class HousingDrag : MonoBehaviour
             {
                 //Debug.Log("End");
                 isDragging = false;
+                transform.position = new Vector3(clampX, clampY, transform.position.z);
                 subCollider.enabled = false;
                 isTouch = false;
                 touchTime = 0;
@@ -208,16 +214,16 @@ public class HousingDrag : MonoBehaviour
                 Vector3 newPosition = ray.GetPoint(offset.z);
                 checkMinusX = newPosition.x >= 0 ? 1 : -1;
                 checkMinusY = newPosition.y >= 0 ? 1 : -1;
-                float moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.x)) * checkMinusX : Mathf.FloorToInt(newPosition.x) + 0.5f;
-                float moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.y)) * checkMinusY : Mathf.FloorToInt(newPosition.y) + 0.5f;
-
-                float clampX = Mathf.Clamp(moveX, -(grid.boundX / 2) + (spaceX / 2) + grid.posX, (grid.boundX / 2) - (spaceX / 2) + grid.posX);
-                float clampY = Mathf.Clamp(moveY, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
+                moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.x)) * checkMinusX : Mathf.FloorToInt(newPosition.x) + 0.5f;
+                moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.y)) * checkMinusY : Mathf.FloorToInt(newPosition.y) + 0.5f;
+                
+                clampX = Mathf.Clamp(moveX, -(grid.boundX / 2) + (spaceX / 2) + grid.posX, (grid.boundX / 2) - (spaceX / 2) + grid.posX);
+                clampY = Mathf.Clamp(moveY, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
 
                 //Debug.Log(-(grid.boundX / 2) + spaceX / 2);
                 //Debug.Log(-(grid.boundY / 2) + spaceY / 2);
-
-                transform.position = new Vector3(clampX, clampY, transform.position.z);
+                transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
+                
                 group.alpha = 0;
             }
             else

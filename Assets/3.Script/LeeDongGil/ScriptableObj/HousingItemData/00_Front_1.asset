@@ -17,8 +17,8 @@ MonoBehaviour:
   housingENName: Front
   housingKRName: "\uC804\uACBD"
   housingID: 0
-  housingWidth: 1.5
-  housingHeight: 1
+  housingWidth: 3
+  housingHeight: 2
   enhanceLevel: 0
   enhanceValue: 0
   isPercentage_enhance: 0
