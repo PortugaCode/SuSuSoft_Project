@@ -7,7 +7,7 @@ public class BackEndManager : MonoBehaviour
 
     [SerializeField] private MatchSystem matchSystem;
     [SerializeField] private ChatManager chatManager;
-
+    public string googleHashKey;
 
     public MatchSystem GetMatchSystem()
     {
@@ -69,10 +69,17 @@ public class BackEndManager : MonoBehaviour
         if(bro.IsSuccess())
         {
             Debug.Log($"BackEnd Server : {bro}");
+            GoogleHashKey();
         }
         else
         {
             Debug.LogError($"BackEnd Server : {bro}");
         }
+    }
+
+    private void GoogleHashKey()
+    {
+        googleHashKey = Backend.Utils.GetGoogleHash();
+        Debug.Log("GoogleHashKey 확인 : " + googleHashKey);
     }
 }

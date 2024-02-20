@@ -35,6 +35,11 @@ public class LoginManager : MonoBehaviour
     [SerializeField] private TMP_InputField inputFieldUserName;
     [SerializeField] private TMP_Text userNameErrorText;
 
+    private void Start()
+    {
+        signUpErrorText.text = BackEndManager.Instance.googleHashKey;
+    }
+
     private void Update()
     {
         if (Backend.IsInitialized)
