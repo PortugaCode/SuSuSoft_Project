@@ -138,7 +138,7 @@ public class MatchRoomTest : MonoBehaviour
 
     public void SendChat_InGame()
     {
-        if (textInput.text.Length <= 1)
+        if (textInput.text.Length <= 0)
         {
             textInput.text = "";
             textInput.ActivateInputField();

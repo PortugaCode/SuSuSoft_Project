@@ -339,10 +339,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   basicFace: {fileID: 5919089505296093299}
   blinkFace: {fileID: 6926192324133288763}
-  speed: 100
+  interactionControl: {fileID: 0}
+  speed: 2.2
   rotationSpeed: 10
   rb2D: {fileID: 8738195489350241443}
   isHost: 0
+  canMove: 1
+  isInteraction: 0
+  interactionObject: {fileID: 0}
 --- !u!114 &1755505748216239946
 MonoBehaviour:
   m_ObjectHideFlags: 0

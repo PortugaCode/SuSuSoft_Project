@@ -448,6 +448,7 @@ public class MatchSystem
                 Backend.Match.OnSessionOffline = (MatchInGameSessionEventArgs args) =>
                 {
                     userNickName.Remove(args.GameRecord.m_sessionId);
+                    userTeam.Remove(args.GameRecord.m_nickname);
                     MatchRoomTest.Instance.LeaveIDObjectDestory(args.GameRecord.m_sessionId);
                     Debug.Log(args.GameRecord.m_nickname + "님이 나가셨습니다.");
 
@@ -564,6 +565,7 @@ public class MatchSystem
                         {
                             // TODO
                             userNickName.Add(args.GameRecord.m_sessionId, args.GameRecord.m_nickname);
+                            userTeam.Add(args.GameRecord.m_nickname, args.GameRecord.m_teamNumber);
                             Debug.Log(args.GameRecord.m_nickname + "님이 재접속 하셨습니다.");
 
                             Debug.Log(userNickName.Count);
@@ -577,6 +579,7 @@ public class MatchSystem
                 Debug.Log("게임룸 정보 초기화");
                 roomInfo = null;
                 userNickName.Clear();
+                userTeam.Clear();
             }
         };
     }

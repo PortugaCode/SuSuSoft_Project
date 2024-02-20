@@ -34387,7 +34387,7 @@ MonoBehaviour:
   basicFace: {fileID: 1103208946052515971}
   blinkFace: {fileID: 689387708531438475}
   interactionControl: {fileID: 2828057036784869062}
-  speed: 100
+  speed: 1.8
   rotationSpeed: 10
   rb2D: {fileID: 143194284726758946}
   isHost: 1

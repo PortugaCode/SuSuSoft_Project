@@ -159,11 +159,13 @@ public class TouchMove : MonoBehaviour
 
     private void PlayerMove(Vector3 target)
     {
-        if (Vector3.Distance(transform.position, touchPosition) > 0.2f)
+        if (Vector3.Distance(transform.position, touchPosition) > 0.6f)
         {
-            rb2D.velocity = target * speed * Time.fixedDeltaTime;
+            //transform.position += direction * speed * Time.deltaTime;
+            transform.position = Vector3.Lerp(transform.position, touchPosition, speed * Time.deltaTime);
+            //rb2D.velocity = target * speed * Time.fixedDeltaTime;
 
-            if(direction != Vector3.zero)
+            if (direction != Vector3.zero)
             {
                 // 플레이어가 바라보는 각도 계산
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
