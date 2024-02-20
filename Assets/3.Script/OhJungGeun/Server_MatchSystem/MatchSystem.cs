@@ -482,41 +482,42 @@ public class MatchSystem
                 userNickName.Add(args.GameRecords[i].m_sessionId, args.GameRecords[i].m_nickname);
                 userTeam.Add(args.GameRecords[i].m_nickname, args.GameRecords[i].m_teamNumber);
             }
-        };
 
-        //게임방에 유저가 접속 시 모든 클라이언트에게 호출되는 이벤트
-        Backend.Match.OnMatchInGameAccess = (MatchInGameSessionEventArgs args) =>
-        {
 
-            if(args.GameRecord.m_nickname != Backend.UserNickName)
+            //게임방에 유저가 접속 시 모든 클라이언트에게 호출되는 이벤트
+            Backend.Match.OnMatchInGameAccess = (MatchInGameSessionEventArgs args) =>
             {
-                userNickName.Add(args.GameRecord.m_sessionId, args.GameRecord.m_nickname);
-                userTeam.Add(args.GameRecord.m_nickname, args.GameRecord.m_teamNumber);
-                Debug.Log(args.GameRecord);
-            }
-        };
 
-        //게임방에 모두가 들어오고 게임이 시작했을 때 호출되는 이벤트
-        Backend.Match.OnMatchInGameStart = () => 
-        {
-            Backend.Match.OnMatchRelay += (args) =>
-            {
-                // 각 클라이언트들이 서버를 통해 주고받은 패킷들
-                // 서버는 단순 브로드캐스팅만 지원 (서버에서 어떠한 연산도 수행하지 않음)
-                OnRecieve(args);
+                if (args.GameRecord.m_nickname != Backend.UserNickName)
+                {
+                    userNickName.Add(args.GameRecord.m_sessionId, args.GameRecord.m_nickname);
+                    userTeam.Add(args.GameRecord.m_nickname, args.GameRecord.m_teamNumber);
+                    Debug.Log(args.GameRecord);
+                }
             };
 
-            Utils.Instance.LoadScene(SceneNames.MatchRoom);
-        };
+            //누군가 게임방에 나갔을 때 모두에게 호출되는 이벤트
+            Backend.Match.OnSessionOffline = (MatchInGameSessionEventArgs args) =>
+            {
+                userNickName.Remove(args.GameRecord.m_sessionId);
+                MatchRoomTest.Instance.LeaveIDObjectDestory(args.GameRecord.m_sessionId);
+                Debug.Log(args.GameRecord.m_nickname + "님이 나가셨습니다.");
 
-        //누군가 게임방에 나갔을 때 모두에게 호출되는 이벤트
-        Backend.Match.OnSessionOffline = (MatchInGameSessionEventArgs args) => 
-        {
-            userNickName.Remove(args.GameRecord.m_sessionId);
-            MatchRoomTest.Instance.LeaveIDObjectDestory(args.GameRecord.m_sessionId);
-            Debug.Log(args.GameRecord.m_nickname + "님이 나가셨습니다.");
+                Debug.Log(userNickName.Count);
+            };
 
-            Debug.Log(userNickName.Count);
+            //게임방에 모두가 들어오고 게임이 시작했을 때 호출되는 이벤트
+            Backend.Match.OnMatchInGameStart = () =>
+            {
+                Backend.Match.OnMatchRelay += (args) =>
+                {
+                    // 각 클라이언트들이 서버를 통해 주고받은 패킷들
+                    // 서버는 단순 브로드캐스팅만 지원 (서버에서 어떠한 연산도 수행하지 않음)
+                    OnRecieve(args);
+                };
+
+                Utils.Instance.LoadScene(SceneNames.MatchRoom);
+            };
         };
     }
 
