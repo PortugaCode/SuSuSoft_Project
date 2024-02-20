@@ -159,7 +159,7 @@ public class TouchMove : MonoBehaviour
 
     private void PlayerMove(Vector3 target)
     {
-        if (Vector3.Distance(transform.position, touchPosition) > 0.6f)
+        if (Vector3.Distance(transform.position, touchPosition) > 0.3f)
         {
             //transform.position += direction * speed * Time.deltaTime;
             transform.position = Vector3.Lerp(transform.position, touchPosition, speed * Time.deltaTime);

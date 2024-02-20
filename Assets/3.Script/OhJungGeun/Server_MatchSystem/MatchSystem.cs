@@ -31,7 +31,7 @@ public class MatchSystem
 
 
     //초대 요청 시 제한 시간
-    float timer = 15.0f;
+    float timer = 12.0f;
     bool isTimerOn = false;
 
 
@@ -296,7 +296,7 @@ public class MatchSystem
     //매칭 서버에 연결됐을 시 호출할 대기방 생성 메서드
     public void CreateMatchRoom(string nickName)
     {
-        if (timer <= 14.9f)
+        if (timer <= 11.9f)
         {
             Debug.Log("현재 초대 중입니다.");
             return;
@@ -363,6 +363,7 @@ public class MatchSystem
             this.timer -= Time.deltaTime;
             if (timer <= 0)
             {
+                OnMatchInviteUI_Error?.Invoke(this, EventArgs.Empty);
                 LeaveMatchRoom();
             }
         }
@@ -386,12 +387,6 @@ public class MatchSystem
                 Debug.Log("대기방 초대 거절");
             }
         }
-
-        Backend.Match.OnMatchMakingRoomInviteResponse = (MatchMakingInteractionEventArgs args) => 
-        {
-            // TODO
-            Debug.Log(args.ErrInfo);
-        };
     }
 
     //유저 입장 이벤트
@@ -399,6 +394,9 @@ public class MatchSystem
     {
         Backend.Match.OnMatchMakingRoomJoin = (MatchMakingGamerInfoInRoomEventArgs args) => 
         {
+            isTimerOn = false;
+            timer = 12.0f;
+
             Debug.Log("유저 들어옴");
             if(isHost)
             {
@@ -479,7 +477,7 @@ public class MatchSystem
     public void LeaveMatchRoom()
     {
         isTimerOn = false;
-        timer = 15.0f;
+        timer = 12.0f;
         Backend.Match.LeaveMatchRoom();
         //Backend.Match.LeaveMatchMakingServer();
     }
@@ -564,6 +562,7 @@ public class MatchSystem
                         Backend.Match.OnSessionOnline += (MatchInGameSessionEventArgs args) =>
                         {
                             // TODO
+                            Utils.Instance.LoadScene(SceneNames.MatchLoad);
                             userNickName.Add(args.GameRecord.m_sessionId, args.GameRecord.m_nickname);
                             userTeam.Add(args.GameRecord.m_nickname, args.GameRecord.m_teamNumber);
                             Debug.Log(args.GameRecord.m_nickname + "님이 재접속 하셨습니다.");

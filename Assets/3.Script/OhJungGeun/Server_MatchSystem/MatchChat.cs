@@ -54,7 +54,10 @@ public class MatchChat : MonoBehaviour
     {
         chatInGame.text = chat;
 
-        StopCoroutine(this.chat);
+        if(this.chat != null)
+        {
+            StopCoroutine(this.chat);
+        }
         this.chat = StartCoroutine(ChatBoxActive_Co());
     }
 
