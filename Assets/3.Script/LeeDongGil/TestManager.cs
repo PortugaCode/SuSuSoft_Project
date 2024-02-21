@@ -18,8 +18,10 @@ public class TestManager : MonoBehaviour
 
     [Header("Housing System")]
     public HousingObject[] invenHousing = new HousingObject[20];
-    public Dictionary<Vector3, HousingObject> localHousing = new Dictionary<Vector3, HousingObject>();
-    public List<Dictionary<Vector3, HousingObject>> saveLocal = new List<Dictionary<Vector3, HousingObject>>();
+    public Dictionary<int, (HousingObject, Vector3)> localHousing = new Dictionary<int, (HousingObject, Vector3)>();
+    public List<Dictionary<int, (HousingObject, Vector3)>> saveLocal = new List<Dictionary<int, (HousingObject, Vector3)>>();
+    public int primaryKey = 0;
+    public List<int> tempKey = new List<int>();
 
     public bool isEditMode = false;
     private void Awake()

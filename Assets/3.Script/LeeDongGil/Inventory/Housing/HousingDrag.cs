@@ -21,7 +21,7 @@ public class HousingDrag : MonoBehaviour
     public float spaceX;
     public float spaceY;
     public int id;
-
+    public int primaryIndex;
 
     private int checkMinusY = 1;
     private int checkMinusX = 1;
@@ -112,6 +112,12 @@ public class HousingDrag : MonoBehaviour
             default:
                 break;
         }
+
+        primaryIndex = TestManager.instance.primaryKey;             //test해보기 2
+        TestManager.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
+        TestManager.instance.saveLocal.Add(TestManager.instance.localHousing);
+
+        TestManager.instance.primaryKey += 1;
 
         #region Scriptable Object(연동 전)
         /*
@@ -256,8 +262,9 @@ public class HousingDrag : MonoBehaviour
                     transform.position = new Vector3(transform.position.x, transform.position.y, -0.9f);
                 }
 
-                //TestManager.instance.localHousing.Add(transform.position, housingObject);
-                //TestManager.instance.saveLocal.Add(TestManager.instance.localHousing);
+                TestManager.instance.localHousing[primaryIndex] = (housingObject, transform.position);      //test해보기 3
+                Debug.Log($"현재 오브젝트 : {TestManager.instance.localHousing[primaryIndex].Item1}");
+                Debug.Log($"현재 포지션 : {TestManager.instance.localHousing[primaryIndex].Item2}");
             }
 
             if (isDragging)
@@ -377,6 +384,13 @@ public class HousingDrag : MonoBehaviour
              hit_Center.collider.gameObject.layer != currentLayer &&
              hit_Box.collider.gameObject.layer != currentLayer)
         {
+            if(currentLayer == LayerMask.NameToLayer("Building") && transform.position.y > grid.boundRB.y - (spaceY / 2))   //test해보기 1
+            {
+                check.color = new Color32(255, 0, 0, 100);
+                check.gameObject.SetActive(true);
+                transform.SetParent(previousParent);
+                isCanBuild = false;
+            }
             check.color = new Color32(0, 255, 0, 100);
             transform.SetParent(hit_Center.collider.transform.parent);
             isCanBuild = true;
