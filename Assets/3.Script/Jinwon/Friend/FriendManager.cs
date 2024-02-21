@@ -29,7 +29,9 @@ public class FriendManager : MonoBehaviour
     [Header("Add Friend")]
     [SerializeField] private TMP_InputField searchInputField;
     [SerializeField] private GameObject searchTab;
+    [SerializeField] private GameObject errorText;
     [SerializeField] private Button sendRequestButton;
+    private string searchUserName;
 
     [Header("Sprite")]
     [SerializeField] Sprite[] characterBodyImages; // 캐릭터 Body 이미지 배열
@@ -41,23 +43,33 @@ public class FriendManager : MonoBehaviour
     private void Start()
     {
         // For Test
-        /*var bro = Backend.Initialize(true);
+        var bro = Backend.Initialize(true);
 
-        var login = Backend.BMember.CustomLogin("jinwon", "1234");
+        var login = Backend.BMember.CustomLogin("test5", "1234");
 
         if (login.IsSuccess())
         {
             GetFriendsData();
             ShowFriendsList();
-        }*/
+            ResetUI();
+        }
     }
 
     private void OnEnable()
     {
         //GetFriendsData();
         //ShowFriendsList();
+        //ResetUI();
+    }
 
-        // + UI들 초기화 필요 (interactable 등)
+    public void ResetUI()
+    {
+        // UI 초기화
+        searchTab.SetActive(false);
+        sendRequestButton.transform.GetChild(0).GetComponent<TMP_Text>().text = "전송";
+        sendRequestButton.interactable = true;
+        errorText.SetActive(false);
+        searchUserName = string.Empty;
     }
 
     public void GetFriendsData() // 친구 목록 조회
@@ -94,8 +106,12 @@ public class FriendManager : MonoBehaviour
             GameObject friendTab = Instantiate(friendTabPrefab);
             friendTab.transform.SetParent(content_friendList);
 
-            friendTab.transform.GetChild(1).GetComponent<Image>().sprite = characterBodyImages[0]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
-            friendTab.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = characterFaceImages[0]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
+            var bro = Backend.PlayerData.GetOtherData("User", friends[i].inDate);
+
+            int index = DBManager.instance.CharacterIndexMatching(int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString()));
+
+            friendTab.transform.GetChild(1).GetComponent<Image>().sprite = characterBodyImages[index]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
+            friendTab.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = characterFaceImages[index]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
             friendTab.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{friends[i].name}";
 
             int temp = i;
@@ -117,9 +133,13 @@ public class FriendManager : MonoBehaviour
             GameObject requestTab = Instantiate(requestTabPrefab);
             requestTab.transform.SetParent(content_requestList);
 
-            requestTab.transform.GetChild(1).GetComponent<Image>().sprite = characterBodyImages[0]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
-            requestTab.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = characterFaceImages[0]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
-            requestTab.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{friends[i].name}";
+            var bro = Backend.PlayerData.GetOtherData("User", requests[i].inDate);
+
+            int index = DBManager.instance.CharacterIndexMatching(int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString()));
+
+            requestTab.transform.GetChild(1).GetComponent<Image>().sprite = characterBodyImages[index]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
+            requestTab.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = characterFaceImages[index]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
+            requestTab.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{requests[i].name}";
 
             int temp = i;
             requestTab.transform.GetChild(3).GetComponent<Button>().onClick.AddListener(delegate { RejectRequest(temp, friends[temp].inDate); });
@@ -143,20 +163,26 @@ public class FriendManager : MonoBehaviour
             switch (int.Parse(bro.GetStatusCode()))
             {
                 case 403:
-                    message = "뒤끝 콘솔 소셜관리 메뉴의 친구 최대보유수 설정값이 0입니다.";
+                    message = "뒤끝 콘솔 소셜관리 메뉴의 친구 최대보유수 설정값이 0입니다";
                     break;
                 case 409:
-                    message = "이미 요청한 유저입니다.";
+                    message = "이미 요청을 보낸 유저입니다";
                     break;
                 case 412:
-                    message = bro.GetMessage().Contains("Send") ? "보낸 유저의 요청이 가득 찼습니다." : "받는 유저의 요청이 가득 찼습니다.";
+                    message = bro.GetMessage().Contains("Send") ? "보낸 유저의 요청이 가득 찼습니다" : "받는 유저의 요청이 가득 찼습니다";
                     break;
                 default:
                     message = bro.GetMessage();
                     break;
             }
-            Debug.Log(message);
+            errorText.GetComponent<TMP_Text>().text = message;
         }
+        else
+        {
+            errorText.GetComponent<TMP_Text>().text = $"친구 요청 전송 완료";
+        }
+
+        errorText.SetActive(true);
     }
 
     public List<Friend> GetSentFriendRequestList() // 보낸 친구요청 목록 조회 (수락, 거절 시 리스트에서 제거됨)
@@ -204,7 +230,7 @@ public class FriendManager : MonoBehaviour
 
             currentFriend.name = json[i]["nickname"].ToString();
             currentFriend.inDate = json[i]["inDate"].ToString();
-            currentFriend.lastLogin = json[i]["lastLogin"].ToString();
+            //currentFriend.lastLogin = json[i]["lastLogin"].ToString();
             currentFriend.createdAt = json[i]["createdAt"].ToString();
 
             list.Add(currentFriend);
@@ -310,29 +336,47 @@ public class FriendManager : MonoBehaviour
 
     public void SearchUser()
     {
-        searchTab.SetActive(true);
-
         var n_bro = Backend.Social.GetUserInfoByNickName(searchInputField.text);
-        string n_inDate = n_bro.GetReturnValuetoJSON()["row"]["inDate"].ToString();
 
-        // 해당 닉네임을 사용중인 유저 존재 시에만 표시!!
+        // 해당 닉네임을 사용중인 유저가 존재 시에만 표시
+        if (!n_bro.IsSuccess())
+        {
+            searchTab.SetActive(false);
+            errorText.SetActive(true);
+            errorText.GetComponent<TMP_Text>().text = $"검색에 실패했습니다";
+            return;
+        }
+        else
+        {
+            searchTab.SetActive(true);
+            errorText.SetActive(false);
+        }
+
+        string n_inDate = n_bro.GetReturnValuetoJSON()["row"]["inDate"].ToString();
+        var bro = Backend.PlayerData.GetOtherData("User", n_inDate);
+
+        int index = DBManager.instance.CharacterIndexMatching(int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString()));
 
         // 닉네임 & InDate로 유저 조회 후 표시 구현 필요
-        searchTab.transform.GetChild(1).GetComponent<Image>().sprite = characterBodyImages[0]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
-        searchTab.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = characterFaceImages[0]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
-        searchTab.transform.GetChild(2).GetComponent<TMP_Text>().text = $"해당친구닉네임";
+        searchTab.transform.GetChild(1).GetComponent<Image>().sprite = characterBodyImages[index]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
+        searchTab.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = characterFaceImages[index]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
+        searchTab.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{bro.GetReturnValuetoJSON()["rows"][0]["UserName"][0]}";
+
+        searchUserName = searchInputField.text;
     }
 
     public void SendAddRequest()
     {
         sendRequestButton.interactable = false;
-        sendRequestButton.gameObject.GetComponent<TMP_Text>().text = "전송 완료";
+        sendRequestButton.transform.GetChild(0).GetComponent<TMP_Text>().text = $"전송 완료";
 
-        SendFriendsRequest(searchInputField.text); // 또는 searchTab.transform.GetChild(2).GetComponent<TMP_Text>().text;
+        SendFriendsRequest(searchUserName); // 또는 searchTab.transform.GetChild(2).GetComponent<TMP_Text>().text;
     }
 
     public void OpenFriendListTab()
     {
+        ResetUI();
+
         tabText.text = $"친구 목록";
         friendListTabButton.interactable = false;
         friendRequestTabButton.interactable = true;
@@ -348,7 +392,9 @@ public class FriendManager : MonoBehaviour
 
     public void OpenFriendRequestTab()
     {
-        tabText.text = $"친구 요청";
+        ResetUI();
+
+        tabText.text = $"받은 요청";
         friendListTabButton.interactable = true;
         friendRequestTabButton.interactable = false;
         friendAddTabButton.interactable = true;
@@ -363,6 +409,8 @@ public class FriendManager : MonoBehaviour
 
     public void OpenFriendAddTab()
     {
+        ResetUI();
+
         tabText.text = $"친구 추가";
         friendListTabButton.interactable = true;
         friendRequestTabButton.interactable = true;
@@ -376,6 +424,7 @@ public class FriendManager : MonoBehaviour
     public void CloseFriendPopup()
     {
         OpenFriendListTab();
+        ResetUI();
         gameObject.SetActive(false);
     }
 }

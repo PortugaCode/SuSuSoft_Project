@@ -386,4 +386,97 @@ public class DBManager : MonoBehaviour
 
         Debug.Log("캐릭터 추가 완료");
     }
+
+    public int CharacterIndexMatching(int index)
+    {
+        int returnIndex = -1;
+
+        switch (index)
+        {
+            case 101:
+                returnIndex = 0;
+                break;
+
+            case 102:
+                returnIndex = 1;
+                break;
+
+            case 103:
+                returnIndex = 2;
+                break;
+
+            case 104:
+                returnIndex = 3;
+                break;
+
+            case 201:
+                returnIndex = 4;
+                break;
+
+            case 202:
+                returnIndex = 5;
+                break;
+
+            case 203:
+                returnIndex = 6;
+                break;
+
+            case 204:
+                returnIndex = 7;
+                break;
+
+            case 301:
+                returnIndex = 8;
+                break;
+
+            case 302:
+                returnIndex = 9;
+                break;
+
+            case 303:
+                returnIndex = 10;
+                break;
+
+            case 304:
+                returnIndex = 11;
+                break;
+
+            case 401:
+                returnIndex = 12;
+                break;
+
+            case 402:
+                returnIndex = 13;
+                break;
+
+            case 403:
+                returnIndex = 14;
+                break;
+
+            case 404:
+                returnIndex = 15;
+                break;
+
+            case 501:
+                returnIndex = 16;
+                break;
+
+            case 502:
+                returnIndex = 17;
+                break;
+
+            case 503:
+                returnIndex = 18;
+                break;
+
+            case 504:
+                returnIndex = 19;
+                break;
+
+            default:
+                break;
+        }
+
+        return returnIndex;
+    }
 }
