@@ -36,6 +36,11 @@ public class TouchMove : MonoBehaviour
     public bool isInteraction = false;
     [SerializeField] private GameObject interactionObject;
 
+
+
+
+    private bool isRight;
+
     private void Start()
     {
         Invoke("StartGame", 0.1f);
@@ -45,7 +50,7 @@ public class TouchMove : MonoBehaviour
     public void FixedUpdate()
     {
         if (!canMove) return;
-        PlayerMove(direction);
+        //PlayerMove(direction);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -90,6 +95,7 @@ public class TouchMove : MonoBehaviour
             MoveRotation();
             return;
         }
+        PlayerMove(direction);
 
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -141,6 +147,7 @@ public class TouchMove : MonoBehaviour
                 touchPosition.z = 0;
                 direction = (touchPosition - transform.position).normalized;
 
+                SetIsRight();
 
                 Debug.Log(direction);
                 if(Utils.Instance.nowScene == SceneNames.MatchRoom)
@@ -152,13 +159,49 @@ public class TouchMove : MonoBehaviour
         }
     }
 
+    private void SetIsRight()
+    {
+        if (touchPosition.x < transform.position.x)
+        {
+            isRight = false;
+        }
+        else if(touchPosition.x > transform.position.x)
+        {
+            isRight = true;
+        }
+    }
+
     public void SetDirection(Vector3 dir)
     {
         direction = dir;
     }
 
+
     private void PlayerMove(Vector3 target)
     {
+        #region [Repeat BG] 
+        if (transform.position.x >= 12.80f && isRight)
+        {
+            transform.position = new Vector2(transform.position.x * -1f, transform.position.y);
+
+            float a = touchPosition.x - 12.80f;
+            float b = -13f + a;
+
+            touchPosition = new Vector2(b, touchPosition.y);
+            return;
+        }
+        else if (transform.position.x <= -12.80f && !isRight)
+        {
+            transform.position = new Vector2(transform.position.x * -1f, transform.position.y);
+
+            float a = touchPosition.x + 12.80f;
+            float b = 13f - Mathf.Abs(a);
+
+            touchPosition = new Vector2(b, touchPosition.y);
+            return;
+        }
+        #endregion
+
         if (Vector3.Distance(transform.position, touchPosition) > 0.3f)
         {
             //transform.position += direction * speed * Time.deltaTime;
