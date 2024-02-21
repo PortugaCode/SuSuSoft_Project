@@ -150,10 +150,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 7
+        width: 9
         height: 12
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -169,12 +169,12 @@ TextureImporter:
       name: UI_progress_bar_R_Fill_1
       rect:
         serializedVersion: 2
-        x: 21
+        x: 9
         y: 0
-        width: 7
+        width: 10
         height: 12
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -190,19 +190,19 @@ TextureImporter:
       name: UI_progress_bar_R_Fill_2
       rect:
         serializedVersion: 2
-        x: 7
+        x: 19
         y: 0
-        width: 14
+        width: 9
         height: 12
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 311e2f360567de4b0800000000000000
-      internalID: -5409537489755774701
+      spriteID: 9714f94722946ae468e0f4211bfe0a7e
+      internalID: -1097611000
       vertices: []
       indices: 
       edges: []
@@ -220,7 +220,7 @@ TextureImporter:
     nameFileIdTable:
       UI_progress_bar_R_Fill_0: 3764918486002717801
       UI_progress_bar_R_Fill_1: -325605438094743061
-      UI_progress_bar_R_Fill_2: -5409537489755774701
+      UI_progress_bar_R_Fill_2: -1097611000
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

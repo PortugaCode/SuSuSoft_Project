@@ -1,6 +1,7 @@
+using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class PlayerProperty : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class PlayerProperty : MonoBehaviour
     public int maxHealth;
     public int damage;
     private int HealthIncreaseRate;   //+
+
+    public EventHandler onHPSlider;
+    public EventHandler onGetHealthSlider;
 
     //Attack nullified 공격 무효화
     public float ignoreAttack = 0.1f;
@@ -73,6 +77,7 @@ public class PlayerProperty : MonoBehaviour
         {
             //Player Damage
             PassiveAttackNull();
+            onHPSlider?.Invoke(this, EventArgs.Empty);
             Destroy(collision.gameObject);
             Debug.Log($" currentHP: {currentHealth} ");
         }
@@ -85,6 +90,7 @@ public class PlayerProperty : MonoBehaviour
         if(collision.gameObject.CompareTag("Wall"))
         {
             PassiveAttackNull();
+            onHPSlider?.Invoke(this, EventArgs.Empty);
             Debug.Log($" currentHP: {currentHealth} ");
         }
 
@@ -92,6 +98,11 @@ public class PlayerProperty : MonoBehaviour
         if(collision.gameObject.CompareTag("HPItem"))
         {
             currentHealth += damage;
+            if(currentHealth >= maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
+            onHPSlider?.Invoke(this, EventArgs.Empty);
             Destroy(collision.gameObject);
             Debug.Log($" currentHP: {currentHealth} ");
         }
@@ -141,7 +152,7 @@ public class PlayerProperty : MonoBehaviour
     #region [Attack nullified 공격 무효화]
     private void PassiveAttackNull()    //10% 확률로 데미지 무효화
     {
-        float randomoValue = Random.value;
+        float randomoValue = UnityEngine.Random. value;
 
         if (randomoValue >= ignoreAttack)
         {

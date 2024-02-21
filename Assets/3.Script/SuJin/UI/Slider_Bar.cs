@@ -2,34 +2,51 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class Slider_Bar : MonoBehaviour
 {
-    [SerializeField] int maxHealth;
-    [SerializeField] int currentHealth;
+    [SerializeField] Image fill;
+    [SerializeField] Image end;
 
-    public Slider healthSlider;
+    [SerializeField] PlayerProperty playerProperty;
+    private int maxValue = 1;
+    private float currentValue;
 
     private void Start()
     {
-        currentHealth = maxHealth;
-        UpdateUI();
+        currentValue = maxValue;
+        fill.fillAmount = 1;
+        playerProperty.onHPSlider = DamageHealth;
     }
 
-    public void TakeDamage(int amount)
+    private void DamageHealth(object sender, EventArgs args)
     {
-        currentHealth -= amount;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        UpdateUI();
+        if (currentValue < 0) currentValue = 0;
+        fill.fillAmount = (float) playerProperty.currentHealth / playerProperty.maxHealth;
 
-        if (currentHealth <=0)
+        SetEndImage();
+    }
+
+
+    private void SetEndImage()
+    {
+        if (playerProperty.currentHealth < playerProperty.maxHealth)
         {
-            //Health = 0
+            end.gameObject.SetActive(false);
+        }
+        else
+        {
+            end.gameObject.SetActive(true);
         }
     }
 
-    private void UpdateUI()
+    private void GetHealth(object sender, EventArgs args)
     {
-        healthSlider.value = (float)currentHealth / maxHealth;
+        fill.fillAmount += playerProperty.damage;
+        if(currentValue >= maxValue)
+        {
+            end.gameObject.SetActive(true);
+        }
     }
 }
