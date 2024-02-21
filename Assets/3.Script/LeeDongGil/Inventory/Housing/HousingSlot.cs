@@ -5,18 +5,14 @@ using UnityEngine;
 public class HousingSlot : MonoBehaviour
 {
     public HousingInventory housingInven;
-    [SerializeField]
-    public bool IsSlotUse
-    {
-        get
-        {
-            return transform.GetComponentInChildren<HousingInventory>().count >= 1;
-        }
-    }
+
+
+    public bool isSlotUse;
     public string slotItemName = string.Empty;
     public int slotItemCount;
     [Header("Window Inventory")]
-    public HousingItemData itemInfomation;
+    public HousingItemData itemInfomation;                  //데이터 연동 이전
+    public HousingObject? housingObject;                     //데이터 연동 이후
     public HousingInterationWindow housingInterationWindow;
     public GameObject popUP;
     public float gameTime = 0;
@@ -29,16 +25,27 @@ public class HousingSlot : MonoBehaviour
     }
     private void Update()
     {
-        if (IsSlotUse)
+        if(housingInven.count >= 1)
+        {
+            isSlotUse = true;
+        }
+        else
+        {
+            isSlotUse = false;
+        }
+
+        if (isSlotUse)
         {
             slotItemName = GetComponentInChildren<HousingInventory>().housingName;
             slotItemCount = GetComponentInChildren<HousingInventory>().count;
-            itemInfomation = GetComponentInChildren<HousingInventory>().housingData;
+            //itemInfomation = GetComponentInChildren<HousingInventory>().housingData;
+            housingObject = GetComponentInChildren<HousingInventory>().housingObj;
         }
         else
         {
             slotItemName = string.Empty;
             itemInfomation = null;
+            housingObject = null;
         }
     }
 

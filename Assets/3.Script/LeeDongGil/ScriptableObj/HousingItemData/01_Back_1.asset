@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: 01_Back_1
   m_EditorClassIdentifier: 
   housingType: 2
-  housingSprite: {fileID: 21300000, guid: 18ebb1865c6d1fb48b7d76c5ae3bd4c1, type: 3}
-  housingENName: Back
-  housingKRName: "\uD6C4\uACBD"
-  housingID: 1
-  housingWidth: 5
-  housingHeight: 9
+  housingSprite: {fileID: 21300000, guid: 37530390bab67a241a61e9187fa2e8bb, type: 3}
+  housingENName: Twin Tree
+  housingKRName: "\uC30D\uB465\uC774 \uB098\uBB34"
+  housingID: 3
+  housingWidth: 4
+  housingHeight: 5
   enhanceLevel: 0
   enhanceValue: 1
   isPercentage_enhance: 0

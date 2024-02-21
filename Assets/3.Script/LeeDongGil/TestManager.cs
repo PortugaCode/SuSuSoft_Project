@@ -9,10 +9,17 @@ public class TestManager : MonoBehaviour
     public ItemData testData;
     public ItemData testData1;
     public List<HousingItemData> testHousing = new List<HousingItemData>();
+    public List<HousingItemData> testHousingV2 = new List<HousingItemData>();
 
+    [Header("Housing Inventory")]
     public InventorySystem invenSys;
     public InventorySystem housingInvenSys;
     public InventorySystem housingInvenSysWindow;
+
+    [Header("Housing System")]
+    public HousingObject[] invenHousing = new HousingObject[20];
+    public Dictionary<Vector3, HousingObject> localHousing = new Dictionary<Vector3, HousingObject>();
+    public List<Dictionary<Vector3, HousingObject>> saveLocal = new List<Dictionary<Vector3, HousingObject>>();
 
     public bool isEditMode = false;
     private void Awake()
@@ -24,7 +31,7 @@ public class TestManager : MonoBehaviour
         }
         instance = this;
 
-
+        #region
         /*        if(instance == null)
                 {
                     instance = this;
@@ -41,7 +48,7 @@ public class TestManager : MonoBehaviour
         //housingInvenSysWindow = FindObjectOfType<EditModeButton>().transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<InventorySystem>();
 
         //ChartManager.instance.GetChartData();
-
+        #endregion
     }
 
     public Ray TouchRay()
@@ -53,17 +60,17 @@ public class TestManager : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Debug.Log("Test1");
             invenSys.GetItem(testData, 10);
         }
-        else if(Input.GetKeyDown(KeyCode.Alpha2))
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             Debug.Log("Test2");
             invenSys.GetItem(testData1, 5);
         }
-        else if(Input.GetKeyDown(KeyCode.Alpha7))
+        else if (Input.GetKeyDown(KeyCode.Alpha7))
         {
             Debug.Log("Test3");
             housingInvenSys.GetHousingItem_test(testHousing[0], 1);
@@ -81,9 +88,23 @@ public class TestManager : MonoBehaviour
 
     public void LoadHousingChart()
     {
+        int listIndex = GetIndex(5002);
         Debug.Log($"{ChartManager.instance.housingObjectDatas[1].index} + {ChartManager.instance.housingObjectDatas[1].name_k}");
+        Debug.Log($"index ID 1004의 List Index = {ChartManager.instance.housingObjectDatas.FindIndex(listIndex => listIndex.index == 1004)}");
+        Debug.Log($"index ID 3002의 List Index = {ChartManager.instance.housingObjectDatas.FindIndex(listIndex => listIndex.index == 3002)}");
+        Debug.Log($"index ID 5002의 List Index = {listIndex}");
     }
 
+
+    public int GetIndex(int indexNum)
+    {
+        return ChartManager.instance.housingObjectDatas.FindIndex(listIndex => listIndex.index == indexNum);
+    }
+
+    private void LocalInventoryData(HousingObject housing, Vector3 position)
+    {
+        
+    }
 
     #region Test Button
     public void TestButton_Front()
@@ -146,6 +167,61 @@ public class TestManager : MonoBehaviour
     public void TestButton_Interactionable()
     {
         housingInvenSys.GetHousingItem_test(testHousing[13], 1);
+    }
+
+    public void RandomGatcha()
+    {
+        int range = ChartManager.instance.housingObjectDatas.Count;
+        int randomNum = Random.Range(0, range);
+        Debug.Log("획득한 아이템");
+        Debug.Log($"Index : {ChartManager.instance.housingObjectDatas[randomNum].index}");
+        Debug.Log($"Name_EN : {ChartManager.instance.housingObjectDatas[randomNum].name_e}");
+        Debug.Log($"Name_KR : {ChartManager.instance.housingObjectDatas[randomNum].name_k}");
+        Debug.Log($"SetType : {ChartManager.instance.housingObjectDatas[randomNum].setType}");
+        Debug.Log($"Type : {ChartManager.instance.housingObjectDatas[randomNum].type}");
+        Debug.Log($"Price : {ChartManager.instance.housingObjectDatas[randomNum].price}");
+        Debug.Log($"Text_EN : {ChartManager.instance.housingObjectDatas[randomNum].text_e}");
+        Debug.Log($"Text_KR : {ChartManager.instance.housingObjectDatas[randomNum].text_k}");
+    }
+    #endregion
+
+    #region Test Button 2
+    public void TestV2_AppleTree()
+    {
+        //housingInvenSys.GetHousingItem_test(testHousingV2[0], 1);
+        housingInvenSys.GetHousingItem(3001, 1);
+    }
+    public void TestV2_Fence()
+    {
+        //housingInvenSys.GetHousingItem_test(testHousingV2[1], 1);
+        housingInvenSys.GetHousingItem(3002, 1);
+    }
+    public void TestV2_Bush()
+    {
+        //housingInvenSys.GetHousingItem_test(testHousingV2[2], 1);
+        housingInvenSys.GetHousingItem(3003, 1);
+    }
+
+    public void TestV2_TwinTree()
+    {
+        //housingInvenSys.GetHousingItem_test(testHousingV2[3], 1);
+        housingInvenSys.GetHousingItem(1001, 1);
+    }
+    public void TestV2_Tree()
+    {
+        //housingInvenSys.GetHousingItem_test(testHousingV2[4], 1);
+        housingInvenSys.GetHousingItem(1002, 1);
+    }
+
+    public void TestV2_PullBuilding()
+    {
+        //housingInvenSys.GetHousingItem_test(testHousingV2[5], 1);
+        housingInvenSys.GetHousingItem(2001, 1);
+    }
+    public void TestV2_CraftBuilding()
+    {
+        //housingInvenSys.GetHousingItem_test(testHousingV2[6], 1);
+        housingInvenSys.GetHousingItem(2002, 1);
     }
     #endregion
 }

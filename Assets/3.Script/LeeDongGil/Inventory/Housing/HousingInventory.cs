@@ -7,19 +7,20 @@ using TMPro;
 
 public class HousingInventory : MonoBehaviour
 {
-    [HideInInspector]
-    public Transform canvas;
-    public Transform previousParent;
-    public RectTransform rect;
-    public CanvasGroup canvasGroup;
-    public Image image;
-    public Button button;
-    public HousingDrag drag;
-    public HousingSlot slot;
-    public FilterButton filter;
+
+    [HideInInspector] public Transform canvas;
+    [HideInInspector] public Transform previousParent;
+    [HideInInspector] public RectTransform rect;
+    [HideInInspector] public CanvasGroup canvasGroup;
+    [HideInInspector] public Image image;
+    [HideInInspector] public Button button;
+    [HideInInspector] public HousingDrag drag;
+    [HideInInspector] public HousingSlot slot;
+    [HideInInspector] public FilterButton filter;
 
     [Header("Inventory Info")]
     public HousingItemData housingData;
+    public HousingObject housingObj;
     public string housingName;
     public int count = 0;
     public TextMeshProUGUI countText;
@@ -44,6 +45,7 @@ public class HousingInventory : MonoBehaviour
 
     private void Start()
     {
+        
         previousParent = transform.parent;
         if (Building == null)
         {
@@ -111,9 +113,9 @@ public class HousingInventory : MonoBehaviour
     {
         filter = GetComponentInParent<FilterButton>();
 
-        if (image.color.a <= 0)
+        if (image.color.a <= 0)             //슬롯 알파값이 0보다 작으면 아이템이 없으므로
         {
-            button.interactable = false;
+            button.interactable = false;    //비활성화
             if (!TestManager.instance.isEditMode)
             {
                 transform.parent.SetAsLastSibling();
@@ -164,8 +166,9 @@ public class HousingInventory : MonoBehaviour
             Vector3 createPos = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, 0);
             thisBuilding = Instantiate(Building, createPos, Quaternion.identity, buildingSpace);
             HousingDrag buildSetting = thisBuilding.GetComponent<HousingDrag>();
-            buildSetting.id = housingData.housingID;
-            buildSetting.buildSprite.sprite = housingData.housingSprite;
+            buildSetting.housingObject = housingObj;
+            buildSetting.id = housingObj.index;
+            buildSetting.buildSprite.sprite = SpriteManager.instance.sprites[housingObj.imageIndex];
 
 
 

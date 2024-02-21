@@ -14,7 +14,8 @@ public class HousingInterationWindow : MonoBehaviour
     public GameObject housingObject;
     public HousingItemData housingData;
     public HousingItemData housingDataWindow;
-
+    public HousingObject housingObj;
+    public HousingObject housingObjWindow;
 
     [Header("PopUp")]
     public GameObject PopupObject;
@@ -60,8 +61,9 @@ public class HousingInterationWindow : MonoBehaviour
                     if (hit.collider.gameObject.CompareTag("Building"))
                     {
                         housingObject = hit.collider.gameObject;
-                        housingData = housingObject.GetComponent<HousingDrag>().data;
-                        housingName.text = housingData.housingKRName;
+                        //housingData = housingObject.GetComponent<HousingDrag>().data;
+                        housingObj = this.housingObject.GetComponent<HousingDrag>().housingObject;
+                        housingName.text = housingObj.name_k;
                     }
                 }
 
@@ -70,7 +72,7 @@ public class HousingInterationWindow : MonoBehaviour
         }
     }
 
-    public void UpdatePopUpText()
+    public void UpdatePopUpText()           //수정
     {
         P_housingSetItemList.Clear();
         foreach (HousingItemData data in TestManager.instance.testHousing)
@@ -98,7 +100,7 @@ public class HousingInterationWindow : MonoBehaviour
 
     public void InsertHousingInventory()
     {
-        housingInvenSys.GetHousingItem_test(housingData, 1);
+        housingInvenSys.GetHousingItem(housingObj.index, 1);
         Destroy(housingObject);
         transform.GetChild(0).gameObject.SetActive(false);
     }

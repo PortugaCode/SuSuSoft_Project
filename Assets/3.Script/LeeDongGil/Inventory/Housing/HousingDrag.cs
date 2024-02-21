@@ -15,6 +15,7 @@ public class HousingDrag : MonoBehaviour
 
     [Header("Build Setting")]
     public HousingItemData data;  //중근아 여기 참조해
+    public HousingObject housingObject;
     public SpriteRenderer buildSprite;
     public GameObject space;
     public float spaceX;
@@ -38,6 +39,7 @@ public class HousingDrag : MonoBehaviour
     [SerializeField] private float clampX;
     [SerializeField] private float clampY;
 
+
     #region Gizmos parameter
     /*
         private Vector3 gizmosPosition;
@@ -51,46 +53,100 @@ public class HousingDrag : MonoBehaviour
     private void Start()
     {
         previousParent = transform.parent;
-        if (id == 5001)
+        //spaceX = data.housingWidth;
+        //spaceY = data.housingHeight;
+        switch (housingObject.index)
         {
-            data = TestManager.instance.testHousing[13];
+            case 1001:
+                spaceX = 4;
+                spaceY = 5;
+                break;
+            case 1002:
+                spaceX = 3;
+                spaceY = 5;
+                break;
+            case 2001:
+                spaceX = 4;
+                spaceY = 3;
+                break;
+            case 2002:
+                spaceX = 4;
+                spaceY = 3;
+                break;
+            case 3001:
+                spaceX = 3;
+                spaceY = 5;
+                break;
+            case 3002:
+                spaceX = 1;
+                spaceY = 1;
+                break;
+            case 3003:
+                spaceX = 1;
+                spaceY = 1;
+                break;
+            case 5001:
+                spaceX = 1;
+                spaceY = 1;
+                break;
         }
-        else
-        {
-            data = TestManager.instance.testHousing[id];
-        }
-        spaceX = data.housingWidth;
-        spaceY = data.housingHeight;
 
-        switch (data.housingType)
+        switch (housingObject.type)
         {
-            case HousingType.front:
+            case "전경":
                 int layer_Front = LayerMask.NameToLayer("Front");
                 gameObject.layer = layer_Front;
                 break;
-            case HousingType.back:
+            case "후경":
                 int layer_Back = LayerMask.NameToLayer("Back");
                 gameObject.layer = layer_Back;
                 break;
-            case HousingType.building:
+            case "건물":
                 int layer_Building = LayerMask.NameToLayer("Building");
                 gameObject.layer = layer_Building;
                 break;
-            case HousingType.constellation:
-                int layer_Constellation = LayerMask.NameToLayer("Constellation");
-                gameObject.layer = layer_Constellation;
-                break;
-            case HousingType.special:
-                int layer_Special = LayerMask.NameToLayer("Special");
-                gameObject.layer = layer_Special;
-                break;
-            case HousingType.interactionable:
+            case "상호작용":
                 int layer_Interactionable = LayerMask.NameToLayer("Interactionable");
                 gameObject.layer = layer_Interactionable;
                 break;
             default:
                 break;
         }
+
+        #region Scriptable Object(연동 전)
+        /*
+                switch (data.housingType)       //수정 1
+                {
+                    case HousingType.front:
+                        int layer_Front = LayerMask.NameToLayer("Front");
+                        gameObject.layer = layer_Front;
+                        break;
+                    case HousingType.back:
+                        int layer_Back = LayerMask.NameToLayer("Back");
+                        gameObject.layer = layer_Back;
+                        break;
+                    case HousingType.building:
+                        int layer_Building = LayerMask.NameToLayer("Building");
+                        gameObject.layer = layer_Building;
+                        break;
+                    case HousingType.constellation:
+                        int layer_Constellation = LayerMask.NameToLayer("Constellation");
+                        gameObject.layer = layer_Constellation;
+                        break;
+                    case HousingType.special:
+                        int layer_Special = LayerMask.NameToLayer("Special");
+                        gameObject.layer = layer_Special;
+                        break;
+                    case HousingType.interactionable:
+                        int layer_Interactionable = LayerMask.NameToLayer("Interactionable");
+                        gameObject.layer = layer_Interactionable;
+                        break;
+                    default:
+                        break;
+                }
+        */
+        #endregion
+
 
 
         //transform.position = new Vector3(transform.position.x, transform.position.y, -1);
@@ -173,26 +229,21 @@ public class HousingDrag : MonoBehaviour
                 subCollider.enabled = false;
                 isTouch = false;
                 touchTime = 0;
+                int currentLayer = gameObject.layer;
                 if (isCanBuild)
                 {
-                    switch (data.housingType)
+                    switch (currentLayer)         
                     {
-                        case HousingType.front:
+                        case 24:
                             transform.position = new Vector3(transform.position.x, transform.position.y, -0.6f);
                             break;
-                        case HousingType.back:
+                        case 23:
                             transform.position = new Vector3(transform.position.x, transform.position.y, -0.4f);
                             break;
-                        case HousingType.building:
+                        case 25:
                             transform.position = new Vector3(transform.position.x, transform.position.y, -0.5f);
                             break;
-                        case HousingType.constellation:
-                            transform.position = new Vector3(transform.position.x, transform.position.y, -0.3f);
-                            break;
-                        case HousingType.special:
-                            transform.position = new Vector3(transform.position.x, transform.position.y, -0.7f);
-                            break;
-                        case HousingType.interactionable:
+                        case 22:
                             transform.position = new Vector3(transform.position.x, transform.position.y, -0.8f);
                             break;
                         default:
@@ -204,6 +255,9 @@ public class HousingDrag : MonoBehaviour
                 {
                     transform.position = new Vector3(transform.position.x, transform.position.y, -0.9f);
                 }
+
+                //TestManager.instance.localHousing.Add(transform.position, housingObject);
+                //TestManager.instance.saveLocal.Add(TestManager.instance.localHousing);
             }
 
             if (isDragging)
@@ -216,14 +270,14 @@ public class HousingDrag : MonoBehaviour
                 checkMinusY = newPosition.y >= 0 ? 1 : -1;
                 moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.x)) * checkMinusX : Mathf.FloorToInt(newPosition.x) + 0.5f;
                 moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.y)) * checkMinusY : Mathf.FloorToInt(newPosition.y) + 0.5f;
-                
+
                 clampX = Mathf.Clamp(moveX, -(grid.boundX / 2) + (spaceX / 2) + grid.posX, (grid.boundX / 2) - (spaceX / 2) + grid.posX);
                 clampY = Mathf.Clamp(moveY, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
 
                 //Debug.Log(-(grid.boundX / 2) + spaceX / 2);
                 //Debug.Log(-(grid.boundY / 2) + spaceY / 2);
                 transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
-                
+
                 group.alpha = 0;
             }
             else

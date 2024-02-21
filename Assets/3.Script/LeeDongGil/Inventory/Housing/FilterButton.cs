@@ -9,14 +9,14 @@ public class FilterButton : MonoBehaviour
     public Transform windowInventory;
     public bool isFilter = false;
     public Button btn;
-
+    //전체적으로 수정
     public void AllButton()
     {
         isFilter = false;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         foreach (HousingSlot slot in slots)
         {
-            if (slot.IsSlotUse)
+            if (slot.isSlotUse)
             {
                 slot.housingInven.image.color = Color.white;
                 slot.housingInven.countObject.SetActive(true);
@@ -35,7 +35,7 @@ public class FilterButton : MonoBehaviour
         foreach (HousingSlot slot in slots)
         {
             currentindexs[index] = slot.transform.GetSiblingIndex();
-            if (slot.IsSlotUse)
+            if (slot.isSlotUse)
             {
                 if(slot.itemInfomation.housingType == HousingType.front)
                 {
@@ -65,7 +65,7 @@ public class FilterButton : MonoBehaviour
         foreach (HousingSlot slot in slots)
         {
             currentindexs[index] = slot.transform.GetSiblingIndex();
-            if (slot.IsSlotUse)
+            if (slot.isSlotUse)
             {
                 if (slot.itemInfomation.housingType == HousingType.back)
                 {
@@ -95,7 +95,7 @@ public class FilterButton : MonoBehaviour
         foreach (HousingSlot slot in slots)
         {
             currentindexs[index] = slot.transform.GetSiblingIndex();
-            if (slot.IsSlotUse)
+            if (slot.isSlotUse)
             {
                 if (slot.itemInfomation.housingType == HousingType.building)
                 {
@@ -125,7 +125,7 @@ public class FilterButton : MonoBehaviour
         foreach (HousingSlot slot in slots)
         {
             currentindexs[index] = slot.transform.GetSiblingIndex();
-            if (slot.IsSlotUse)
+            if (slot.isSlotUse)
             {
                 if (slot.itemInfomation.housingType == HousingType.constellation)
                 {
@@ -155,7 +155,7 @@ public class FilterButton : MonoBehaviour
         foreach (HousingSlot slot in slots)
         {
             currentindexs[index] = slot.transform.GetSiblingIndex();
-            if (slot.IsSlotUse)
+            if (slot.isSlotUse)
             {
                 if (slot.itemInfomation.housingType == HousingType.special)
                 {
@@ -181,7 +181,7 @@ public class FilterButton : MonoBehaviour
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         foreach (HousingSlot slot in slots)
         {
-            if (slot.IsSlotUse)
+            if (slot.isSlotUse)
             {
                 slot.housingInven.image.color = Color.white;
                 slot.housingInven.countObject.SetActive(true);
@@ -195,7 +195,7 @@ public class FilterButton : MonoBehaviour
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         foreach (HousingSlot slot in slots)
         {
-            if (slot.IsSlotUse)
+            if (slot.isSlotUse)
             {
                 slot.housingInven.image.color = Color.white;
                 slot.housingInven.button.interactable = true;

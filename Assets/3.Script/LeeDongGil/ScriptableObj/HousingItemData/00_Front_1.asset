@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: 00_Front_1
   m_EditorClassIdentifier: 
   housingType: 1
-  housingSprite: {fileID: 21300000, guid: 1062fc8946e8c8b4da1cc56beec1ada3, type: 3}
-  housingENName: Front
-  housingKRName: "\uC804\uACBD"
+  housingSprite: {fileID: 21300000, guid: 1e0fb408a77a5ba408e0293db475f865, type: 3}
+  housingENName: Apple Tree
+  housingKRName: "\uC0AC\uACFC \uB098\uBB34"
   housingID: 0
   housingWidth: 3
-  housingHeight: 2
+  housingHeight: 5
   enhanceLevel: 0
   enhanceValue: 0
   isPercentage_enhance: 0
@@ -26,4 +26,4 @@ MonoBehaviour:
   SetEffectName: "\uACE8\uB4DC \uD68D\uB4DD\uB7C9"
   SetEffectValue: 10
   isPercentage_set: 0
-  Info: "\uD480\uC785\uB2C8\uB2E4."
+  Info: "\uC0AC\uACFC\uB098\uBB34 \uC785\uB2C8\uB2E4."

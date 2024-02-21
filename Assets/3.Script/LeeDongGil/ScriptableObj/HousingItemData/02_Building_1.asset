@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: 02_Building_1
   m_EditorClassIdentifier: 
   housingType: 4
-  housingSprite: {fileID: 21300000, guid: 918906b2fd7f84bf4aba935fb96d6e98, type: 3}
-  housingENName: Building
-  housingKRName: "\uAC74\uBB3C"
-  housingID: 2
-  housingWidth: 2
+  housingSprite: {fileID: 21300000, guid: 2dda64e8a163384488d63858e1b94859, type: 3}
+  housingENName: Pull Building
+  housingKRName: "\uBF51\uAE30 \uC0C1\uC810"
+  housingID: 5
+  housingWidth: 4
   housingHeight: 3
   enhanceLevel: 0
   enhanceValue: 0
@@ -26,4 +26,4 @@ MonoBehaviour:
   SetEffectName: 
   SetEffectValue: 0
   isPercentage_set: 0
-  Info: "\uC0C1\uC810 \uC785\uB2C8\uB2E4."
+  Info: "\uBF51\uC0C1\uC810 \uC785\uB2C8\uB2E4."
