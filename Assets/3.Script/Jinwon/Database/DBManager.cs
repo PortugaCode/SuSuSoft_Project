@@ -104,7 +104,7 @@ public class User
     public string password { get; set; } // 유저 비밀번호
     public string userName { get; set; } // 유저 이름
     public List<Character> character { get; set; } // 보유한 캐릭터 리스트
-    public int characterIndex { get; set; } // 현재 사용중인 캐릭터 인덱스
+    public int currentCharacterIndex { get; set; } // 현재 사용중인 캐릭터 인덱스
     public Dictionary<string, int> goods { get; set; } // 보유한 재화의 종류와 수량
     public List<HousingObject> housingObject { get; set; } // 보유한 하우징 오브젝트 리스트
     public List<Friend> friend { get; set; } // 친구 리스트
@@ -149,6 +149,12 @@ public class DBManager : MonoBehaviour
     private void Start()
     {
         //InitializeServer();
+    }
+
+    private void OnApplicationQuit()
+    {
+        // 게임 종료 시 user class값과 DB값 동기화
+        SaveUserData();
     }
 
     private void InitializeServer() // 초기 뒤끝 서버 접속
@@ -317,7 +323,7 @@ public class DBManager : MonoBehaviour
         }
 
         // [사용중인 캐릭터 인덱스]
-        user.characterIndex = int.Parse(json[0]["CurrentCharacterIndex"][0].ToString());
+        user.currentCharacterIndex = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString());
 
         Debug.Log("기존 유저 데이터 불러오기 완료");
 
@@ -478,5 +484,14 @@ public class DBManager : MonoBehaviour
         }
 
         return returnIndex;
+    }
+
+    public void SaveUserData()
+    {
+        Param param = new Param();
+        param.Add("CurrentCharacterIndex", user.currentCharacterIndex);
+        param.Add("Goods", user.goods);
+
+        Backend.PlayerData.UpdateMyLatestData("User", param);
     }
 }
