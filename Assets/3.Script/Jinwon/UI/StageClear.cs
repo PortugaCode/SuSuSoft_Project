@@ -26,8 +26,8 @@ public class StageClear : MonoBehaviour
     public void ShowClearUI()
     {
         int chapter = 1;
-        int stageLevel = 1;
-        string stageName = "튜토리얼";
+        int stageLevel = ChartManager.instance.stageInfos[0].index + 1;
+        string stageName = ChartManager.instance.stageInfos[0].name_k;
         stageInfoText.text = $"{chapter} - {stageLevel} {stageName}";
 
         int characterIndex = 0; // 현재 사용중인 캐릭터의 인덱스 매칭 필요
@@ -36,11 +36,11 @@ public class StageClear : MonoBehaviour
 
         starCountText.text = $"획득한 별 개수 : {player.GetComponent<PlayerProperty>().stars.Count}";
 
-        int reward_1 = 500;
-        int reward_2 = 0;
-        int reward_3 = 0;
-        int reward_gold = 500;
-        int reward_token = 0;
+        int reward_1 = ChartManager.instance.stageInfos[0].reward_1;
+        int reward_2 = ChartManager.instance.stageInfos[0].reward_2;
+        int reward_3 = ChartManager.instance.stageInfos[0].reward_3;
+        int reward_gold = ChartManager.instance.stageInfos[0].reward_repeat;
+        int reward_token = ChartManager.instance.stageInfos[0].reward_4;
         rewardText_1.text = $"{reward_1}";
         rewardText_2.text = $"{reward_2}";
         rewardText_3.text = $"{reward_3}";
@@ -48,6 +48,10 @@ public class StageClear : MonoBehaviour
         rewardText_token.text = $"{reward_token}";
 
         // 토큰 보상 없으면 setactive false 하기
+        if (reward_token == -1)
+        {
+            rewardText_token.gameObject.SetActive(false);
+        }
     }
 
     public void GoToHome()

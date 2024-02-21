@@ -98,6 +98,18 @@ public struct Skill
     float activation; // 발동 시간
 }
 
+public struct StageInfo
+{
+    public int index;
+    public string name_e;
+    public string name_k;
+    public int reward_1; // 골드 양
+    public int reward_2; // 루비 양
+    public int reward_3; // 토큰 인덱스 (하우징 오브젝트 인덱스)
+    public int reward_4; // 특수 보상 인덱스 (하우징 오브젝트 인덱스)
+    public int reward_repeat; // 반복 획득 골드 양
+}
+
 public class User
 {
     public string userID { get; set; } // 유저 아이디
