@@ -35,6 +35,7 @@ public class ChatListManager : MonoBehaviour
 
     [SerializeField] private GameObject matchInvitedUI;
     [SerializeField] private GameObject matchInvitedCheckUI;
+    public GameObject matchInvitedFail;
 
 
     private int listCounts;
