@@ -11,9 +11,11 @@ public class ChartManager : MonoBehaviour
     // 차트로 관리할 데이터 목록
     // 1. Character
     // 2. Housing Object
+    // 3. Stage Info (스테이지 보상 획득 여부)
 
     public List<Character> characterDatas = new List<Character>();
     public List<HousingObject> housingObjectDatas = new List<HousingObject>();
+    public List<StageInfo> stageInfos = new List<StageInfo>();
 
     private void Awake()
     {
@@ -98,6 +100,38 @@ public class ChartManager : MonoBehaviour
         else
         {
             Debug.Log("하우징 오브젝트 차트 불러오기 실패");
+            return;
+        }
+
+        var s_bro = Backend.Chart.GetOneChartAndSave("109275", "StageInfo"); // Stage Info 차트
+
+        if (s_bro.IsSuccess())
+        {
+            JsonData chartJson = JsonMapper.ToObject(Backend.Chart.GetLocalChartData("StageInfo"));
+            var rows = chartJson["rows"];
+
+            for (int i = 0; i < rows.Count; i++)
+            {
+                StageInfo stageInfo = new StageInfo();
+
+                stageInfo.index = int.Parse(rows[i]["Index"]["S"].ToString());
+                stageInfo.name_e = rows[i]["Name_E"]["S"].ToString();
+                stageInfo.name_k = rows[i]["Name_K"]["S"].ToString();
+                stageInfo.reward_1 = int.Parse(rows[i]["Reward_1"]["S"].ToString());
+                stageInfo.reward_2 = int.Parse(rows[i]["Reward_2"]["S"].ToString());
+                stageInfo.reward_3 = int.Parse(rows[i]["Reward_3"]["S"].ToString());
+                stageInfo.reward_4 = int.Parse(rows[i]["Reward_4"]["S"].ToString());
+                stageInfo.reward_repeat = int.Parse(rows[i]["Reward_Repeat"]["S"].ToString());
+                stageInfo.condition_1 = int.Parse(rows[i]["Condition_1"]["S"].ToString());
+                stageInfo.condition_2 = int.Parse(rows[i]["Condition_2"]["S"].ToString());
+                stageInfo.condition_3 = int.Parse(rows[i]["Condition_3"]["S"].ToString());
+
+                stageInfos.Add(stageInfo);
+            }
+        }
+        else
+        {
+            Debug.Log("스테이지 정보 차트 불러오기 실패");
             return;
         }
     }

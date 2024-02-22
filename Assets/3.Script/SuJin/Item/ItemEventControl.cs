@@ -88,8 +88,5 @@ public class ItemEventControl : MonoBehaviour
         stageClearPopup.GetComponent<StageClear>().ShowClearUI();
 
         stageClearPopup.SetActive(true);
-
-        // 보상 획득
-        DBManager.instance.user.goods["gold"] += 1000;
     }
 }

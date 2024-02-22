@@ -1,5 +1,6 @@
 using UnityEngine;
 using BackEnd;    // Backend SDK
+using BackEnd.Tcp;
 
 public class BackEndManager : MonoBehaviour
 {
@@ -35,12 +36,23 @@ public class BackEndManager : MonoBehaviour
         }
         #endregion
 
-        
+
+
         matchSystem = new MatchSystem();
         chatManager = new ChatManager();
 
         BackEndSetUp();
         matchSystem.OnMatchMakingRoomJoin();
+
+        Backend.Match.OnMatchMakingRoomInviteResponse = (MatchMakingInteractionEventArgs args) =>
+        {
+            // TODO
+            if(args.ErrInfo == ErrorCode.Match_Making_InvalidRoom)
+            {
+                chatManager.chatListManager.matchInvitedFail.SetActive(true);
+            }
+            Debug.Log(args.ErrInfo);
+        };
     }
 
     private void Update()
@@ -51,7 +63,7 @@ public class BackEndManager : MonoBehaviour
             Backend.AsyncPoll();
 
             Backend.Match.Poll();
-            //matchSystem.SetTimer();
+            matchSystem.SetTimer();
 
 
 

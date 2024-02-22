@@ -98,17 +98,35 @@ public struct Skill
     float activation; // 발동 시간
 }
 
+public struct StageInfo
+{
+    public int index;
+    public string name_e;
+    public string name_k;
+    public int condition_1; // 1별 획득 조건
+    public int condition_2; // 2별 획득 조건
+    public int condition_3; // 3별 획득 조건
+    public int reward_1; // 골드 양
+    public int reward_2; // 루비 양
+    public int reward_3; // 토큰 인덱스 (하우징 오브젝트 인덱스)
+    public int reward_4; // 특수 보상 인덱스 (하우징 오브젝트 인덱스)
+    public int reward_repeat; // 반복 획득 골드 양
+}
+
 public class User
 {
     public string userID { get; set; } // 유저 아이디
     public string password { get; set; } // 유저 비밀번호
     public string userName { get; set; } // 유저 이름
     public List<Character> character { get; set; } // 보유한 캐릭터 리스트
+    public int currentCharacterIndex { get; set; } // 현재 사용중인 캐릭터 인덱스
     public Dictionary<string, int> goods { get; set; } // 보유한 재화의 종류와 수량
     public List<HousingObject> housingObject { get; set; } // 보유한 하우징 오브젝트 리스트
     public List<Friend> friend { get; set; } // 친구 리스트
     public List<int> guestBook { get; set; } // 방명록 리스트
     public List<Mail> mail { get; set; } // 우편 리스트
+
+    public int[,] clearInfo { get; set; } // 최초 보상 획득 정보
 
     public User() // 생성자에서 초기화
     {
@@ -121,6 +139,7 @@ public class User
         friend = new List<Friend>();
         guestBook = new List<int>();
         mail = new List<Mail>();
+        clearInfo = new int[10, 3];
     }
 
     // + 스테이지 클리어 정보 추가 필요
@@ -148,6 +167,12 @@ public class DBManager : MonoBehaviour
     private void Start()
     {
         //InitializeServer();
+    }
+
+    private void OnApplicationQuit()
+    {
+        // 게임 종료 시 user class값과 DB값 동기화
+        SaveUserData();
     }
 
     private void InitializeServer() // 초기 뒤끝 서버 접속
@@ -265,7 +290,7 @@ public class DBManager : MonoBehaviour
 
         user.userID = idText;
         user.password = pwText;
-        user.userName = Backend.UserNickName; // 닉네임 수정 필요
+        user.userName = Backend.UserNickName;
 
         // 저장된 데이터를 불러와 user 클래스에 할당
         JsonData json = bro.FlattenRows(); // 캐싱
@@ -282,8 +307,17 @@ public class DBManager : MonoBehaviour
             user.goods[key] = int.Parse(json[0]["Goods"][key].ToString());
         }
 
+        // [보상 획득 정보]
+        /*for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                user.clearInfo[i, j] = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["ClearInfo"][i][j].ToString());
+            }
+        }*/
+
         // [친구] (뒤끝 내장 친구 목록에서 불러오기)
-        CommunityManager.instance.GetFriendsList();
+        //CommunityManager.instance.GetFriendsList();
 
         // [캐릭터] (Character 테이블에서 불러오기)
         var c_bro = Backend.GameData.GetMyData("Character", where);
@@ -315,6 +349,9 @@ public class DBManager : MonoBehaviour
             }
         }
 
+        // [사용중인 캐릭터 인덱스]
+        user.currentCharacterIndex = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString());
+
         Debug.Log("기존 유저 데이터 불러오기 완료");
 
         //Utils.Instance.LoadScene(SceneNames.Chatting);
@@ -333,9 +370,12 @@ public class DBManager : MonoBehaviour
         param.Add("UserID", user.userID);
         param.Add("Password", user.password);
         param.Add("UserName", user.userName);
-        param.Add("Goods", user.goods); // 재화 무엇 있는지 파악하여 0 할당 필요
+        param.Add("Goods", user.goods);
+        param.Add("ClearInfo", user.clearInfo);
 
         AddCharacter(101);
+
+        param.Add("CurrentCharacterIndex", 101);
 
         Backend.GameData.Insert("User", param); // User 테이블에 데이터 삽입
 
@@ -379,5 +419,108 @@ public class DBManager : MonoBehaviour
         Backend.GameData.Insert("Character", characterParam); // Character 테이블에 데이터 삽입
 
         Debug.Log("캐릭터 추가 완료");
+    }
+
+    public int CharacterIndexMatching(int index)
+    {
+        int returnIndex = -1;
+
+        switch (index)
+        {
+            case 101:
+                returnIndex = 0;
+                break;
+
+            case 102:
+                returnIndex = 1;
+                break;
+
+            case 103:
+                returnIndex = 2;
+                break;
+
+            case 104:
+                returnIndex = 3;
+                break;
+
+            case 201:
+                returnIndex = 4;
+                break;
+
+            case 202:
+                returnIndex = 5;
+                break;
+
+            case 203:
+                returnIndex = 6;
+                break;
+
+            case 204:
+                returnIndex = 7;
+                break;
+
+            case 301:
+                returnIndex = 8;
+                break;
+
+            case 302:
+                returnIndex = 9;
+                break;
+
+            case 303:
+                returnIndex = 10;
+                break;
+
+            case 304:
+                returnIndex = 11;
+                break;
+
+            case 401:
+                returnIndex = 12;
+                break;
+
+            case 402:
+                returnIndex = 13;
+                break;
+
+            case 403:
+                returnIndex = 14;
+                break;
+
+            case 404:
+                returnIndex = 15;
+                break;
+
+            case 501:
+                returnIndex = 16;
+                break;
+
+            case 502:
+                returnIndex = 17;
+                break;
+
+            case 503:
+                returnIndex = 18;
+                break;
+
+            case 504:
+                returnIndex = 19;
+                break;
+
+            default:
+                break;
+        }
+
+        return returnIndex;
+    }
+
+    public void SaveUserData()
+    {
+        Param param = new Param();
+        param.Add("CurrentCharacterIndex", user.currentCharacterIndex);
+        param.Add("Goods", user.goods);
+        param.Add("ClearInfo", user.clearInfo);
+
+        Backend.PlayerData.UpdateMyLatestData("User", param);
     }
 }

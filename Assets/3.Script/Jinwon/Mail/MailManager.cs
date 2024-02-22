@@ -116,7 +116,7 @@ public class MailManager : MonoBehaviour
 
         if (bro.IsSuccess())
         {
-            //DBManager.instance.user.goods[mails[index].goods.name] += mails[index].goods.quantity;
+            DBManager.instance.user.goods[mails[index].goods.name] += mails[index].goods.quantity;
             Debug.Log($"{mails[index].goods.name}를 {mails[index].goods.quantity}만큼 획득");
 
             Destroy(content.GetChild(index).gameObject);

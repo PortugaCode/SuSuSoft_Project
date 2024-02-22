@@ -11,6 +11,8 @@ public class MatchChat : MonoBehaviour
     [SerializeField] private SpriteRenderer chatBoxRenderer;
     [SerializeField] private TextMeshPro nickName;
 
+    private Coroutine chat;
+
     public void SetChatOrder(int a, int b)
     {
         chatBoxRenderer.sortingOrder = a;
@@ -52,8 +54,11 @@ public class MatchChat : MonoBehaviour
     {
         chatInGame.text = chat;
 
-        StopCoroutine(ChatBoxActive_Co());
-        StartCoroutine(ChatBoxActive_Co());
+        if(this.chat != null)
+        {
+            StopCoroutine(this.chat);
+        }
+        this.chat = StartCoroutine(ChatBoxActive_Co());
     }
 
 

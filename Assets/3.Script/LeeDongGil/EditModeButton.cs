@@ -34,13 +34,19 @@ public class EditModeButton : MonoBehaviour
             }
             isEdit = true;
             btnTxt.text = "편집모드 종료";
-            lobyPlayer.SetActive(false);
+            if (lobyPlayer != null)
+            {
+                lobyPlayer.SetActive(false);
+            }
         }
         else
         {
             isEdit = false;
             btnTxt.text = "편집모드 시작";
-            lobyPlayer.SetActive(true);
+            if (lobyPlayer != null)
+            {
+                lobyPlayer.SetActive(true);
+            }
         }
     }
 
