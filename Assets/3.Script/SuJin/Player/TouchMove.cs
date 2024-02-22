@@ -43,15 +43,11 @@ public class TouchMove : MonoBehaviour
 
     private void Start()
     {
-        Invoke("StartGame", 0.1f);
-        StartCoroutine(BlinkFace());
+
+
+        //StartCoroutine(BlinkFace());
     }
 
-    public void FixedUpdate()
-    {
-        if (!canMove) return;
-        //PlayerMove(direction);
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -247,10 +243,6 @@ public class TouchMove : MonoBehaviour
         }
     }
 
-    private void StartGame()
-    {
-        //gameStart = true;
-    }
 
     private void OnDestroy()
     {

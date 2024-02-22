@@ -20,11 +20,7 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        if (Utils.Instance.nowScene == SceneNames.Chatting)
-        {
-            CameraPos();
-        }
-
+        CameraPos();
     }
 
 
@@ -33,14 +29,9 @@ public class CameraController : MonoBehaviour
         Vector3 targetPos = new Vector3(player.position.x, player.position.y, this.transform.position.z);
         targetPos.y = Mathf.Clamp(targetPos.y, minCameraPos.y, maxCameraPos.y);
         //targetPos.x = Mathf.Clamp(targetPos.x, minCameraPos.x, maxCameraPos.x);
+        transform.position = targetPos;
 
-        if (Utils.Instance.nowScene == SceneNames.Chatting)
-        {
-            transform.position = targetPos;
-            return;
-        }
-
-        transform.position = Vector3.Lerp(transform.position, targetPos, smothing * Time.deltaTime);
+        //transform.position = Vector3.Lerp(transform.position, targetPos, smothing * Time.deltaTime);
     }
 
     private void RepeatCam(Vector3 targetpos)
