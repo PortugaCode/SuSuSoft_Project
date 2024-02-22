@@ -6,7 +6,7 @@ public class CameraDragMove : MonoBehaviour
 {
     public float camSpeed = 0.005f;
     public HousingGrid grid;
-
+    private Camera mainCam = new Camera();
 
     private enum Gesture
     {
@@ -17,22 +17,26 @@ public class CameraDragMove : MonoBehaviour
     private void Start()
     {
         grid = FindObjectOfType<HousingGrid>();
+        mainCam = Camera.main;
     }
 
     private void Update()
     {
         if (TestManager.instance.isEditMode)
         {
+            mainCam.orthographicSize = 10.0f;
             MoveCamera();
+        }
+        else
+        {
+            mainCam.orthographicSize = 7.0f;
         }
     }
 
     private void MoveCamera()
     {
-        Camera mainCam = new Camera();
         if (Input.touchCount == (int)Gesture.Move)
         {
-            mainCam = Camera.main;
             Touch touch = Input.GetTouch(0);
             Ray cameraRay = mainCam.ScreenPointToRay(touch.position);
             RaycastHit hit;

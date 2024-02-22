@@ -11,8 +11,8 @@ public class HousingItemData : ScriptableObject
     public string housingENName;
     public string housingKRName;
     public int housingID;
-    public int housingWidth;
-    public int housingHeight;
+    public float housingWidth;
+    public float housingHeight;
 
     [Header("Housing Enhance")]
     public int enhanceLevel;

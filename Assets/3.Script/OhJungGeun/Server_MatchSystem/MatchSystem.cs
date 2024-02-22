@@ -18,6 +18,7 @@ public class MatchSystem
 
 
     [Header("Invited Data")]
+    private bool isHost = false;
     private SessionId roomId;
     private string roomToken;
     private MatchMakingUserInfo inviteUserInfo;
@@ -30,7 +31,7 @@ public class MatchSystem
 
 
     //초대 요청 시 제한 시간
-    float timer = 15.0f;
+    float timer = 12.0f;
     bool isTimerOn = false;
 
 
@@ -295,7 +296,7 @@ public class MatchSystem
     //매칭 서버에 연결됐을 시 호출할 대기방 생성 메서드
     public void CreateMatchRoom(string nickName)
     {
-        if (timer <= 14.9f)
+        if (timer <= 11.9f)
         {
             Debug.Log("현재 초대 중입니다.");
             return;
@@ -324,11 +325,13 @@ public class MatchSystem
             Debug.Log("InviteUser : " + args.ErrInfo);
             if (args.ErrInfo != ErrorCode.Success)
             {
+                isHost = false;
                 LeaveMatchRoom();
                 OnMatchInviteUI_Error?.Invoke(this, EventArgs.Empty);
             }
             else
             {
+                isHost = true;
                 inviteUserNickName = nickName;
                 OnMatchInviteUI?.Invoke(this, EventArgs.Empty);
                 isTimerOn = true;
@@ -360,6 +363,7 @@ public class MatchSystem
             this.timer -= Time.deltaTime;
             if (timer <= 0)
             {
+                OnMatchInviteUI_Error?.Invoke(this, EventArgs.Empty);
                 LeaveMatchRoom();
             }
         }
@@ -383,12 +387,6 @@ public class MatchSystem
                 Debug.Log("대기방 초대 거절");
             }
         }
-
-        Backend.Match.OnMatchMakingRoomInviteResponse = (MatchMakingInteractionEventArgs args) => 
-        {
-            // TODO
-            Debug.Log(args.ErrInfo);
-        };
     }
 
     //유저 입장 이벤트
@@ -396,8 +394,79 @@ public class MatchSystem
     {
         Backend.Match.OnMatchMakingRoomJoin = (MatchMakingGamerInfoInRoomEventArgs args) => 
         {
+            isTimerOn = false;
+            timer = 12.0f;
+
             Debug.Log("유저 들어옴");
-            RequestMatchMaking(0);
+            if(isHost)
+            {
+                RequestMatchMaking(0);
+            }
+
+            Backend.Match.OnMatchMakingResponse = (MatchMakingResponseEventArgs args) =>
+            {
+                Debug.Log(args.ErrInfo);
+                if (args.ErrInfo == ErrorCode.Success)
+                {
+                    //연결 됐다면 JoinGameServer 호출
+                    string severAddress = args.RoomInfo.m_inGameServerEndPoint.m_address;
+                    ushort serverPort = args.RoomInfo.m_inGameServerEndPoint.m_port;
+                    string roomToken = args.RoomInfo.m_inGameRoomToken;
+                    JoinInGameServer(severAddress, serverPort, roomToken);
+                }
+            };
+
+            //게임방 최초 접속 시 1번 호출되는 이벤트
+            Backend.Match.OnSessionListInServer = (MatchInGameSessionListEventArgs args) =>
+            {
+                roomInfo = args.RoomInfo;
+                userNickName.Clear();
+                for (int i = 0; i < args.GameRecords.Count; i++)
+                {
+                    userNickName.Add(args.GameRecords[i].m_sessionId, args.GameRecords[i].m_nickname);
+                    userTeam.Add(args.GameRecords[i].m_nickname, args.GameRecords[i].m_teamNumber);
+                }
+
+                Debug.Log("게임방 최초 접속 : " + userNickName.Count);
+
+
+                //게임방에 유저가 접속 시 모든 클라이언트에게 호출되는 이벤트
+                Backend.Match.OnMatchInGameAccess = (MatchInGameSessionEventArgs args) =>
+                {
+
+                    if (args.GameRecord.m_nickname != Backend.UserNickName)
+                    {
+                        userNickName.Add(args.GameRecord.m_sessionId, args.GameRecord.m_nickname);
+                        userTeam.Add(args.GameRecord.m_nickname, args.GameRecord.m_teamNumber);
+                        Debug.Log("게임방에 유저 접속 : " + userNickName[args.GameRecord.m_sessionId] + $" / 총 {userNickName.Count}");
+                    }
+                };
+
+                //누군가 게임방에 나갔을 때 모두에게 호출되는 이벤트
+                Backend.Match.OnSessionOffline = (MatchInGameSessionEventArgs args) =>
+                {
+                    userNickName.Remove(args.GameRecord.m_sessionId);
+                    userTeam.Remove(args.GameRecord.m_nickname);
+                    MatchRoomTest.Instance.LeaveIDObjectDestory(args.GameRecord.m_sessionId);
+                    Debug.Log(args.GameRecord.m_nickname + "님이 나가셨습니다.");
+
+                    Debug.Log(userNickName.Count);
+                };
+
+                //게임방에 모두가 들어오고 게임이 시작했을 때 호출되는 이벤트
+                Backend.Match.OnMatchInGameStart = () =>
+                {
+                    Backend.Match.OnMatchRelay += (args) =>
+                    {
+                        // 각 클라이언트들이 서버를 통해 주고받은 패킷들
+                        // 서버는 단순 브로드캐스팅만 지원 (서버에서 어떠한 연산도 수행하지 않음)
+                        OnRecieve(args);
+                    };
+                    Debug.Log($"게임방에 모두 들어옴 : / 총 {userNickName.Count}");
+                    Utils.Instance.LoadScene(SceneNames.MatchRoom);
+                };
+            };
+
             Utils.Instance.LoadScene(SceneNames.MatchLoad);
         };
     }
@@ -408,7 +477,7 @@ public class MatchSystem
     public void LeaveMatchRoom()
     {
         isTimerOn = false;
-        timer = 15.0f;
+        timer = 12.0f;
         Backend.Match.LeaveMatchRoom();
         //Backend.Match.LeaveMatchMakingServer();
     }
@@ -431,18 +500,6 @@ public class MatchSystem
     public void RequestMatchMaking(int index)
     {
         Backend.Match.RequestMatchMaking(GetMatchList(index).matchTypeEnum, GetMatchList(index).matchModeTypeEnum, GetMatchList(index).inDate);
-        Backend.Match.OnMatchMakingResponse = (MatchMakingResponseEventArgs args) =>
-        {
-            Debug.Log(args.ErrInfo);
-            if(args.ErrInfo == ErrorCode.Success)
-            {
-                //연결 됐다면 JoinGameServer 호출
-                string severAddress = args.RoomInfo.m_inGameServerEndPoint.m_address;
-                ushort serverPort = args.RoomInfo.m_inGameServerEndPoint.m_port;
-                string roomToken = args.RoomInfo.m_inGameRoomToken;
-                JoinInGameServer(severAddress, serverPort, roomToken);
-            }
-        };
     }
 
     private void JoinInGameServer(string serverAddress, ushort serverPort, string roomToken)
@@ -469,62 +526,14 @@ public class MatchSystem
     private void JoinInGameRoom(string token)
     {
         Backend.Match.JoinGameRoom(token);
-
-
-
-        //게임방 최초 접속 시 1번 호출되는 이벤트
-        Backend.Match.OnSessionListInServer = (MatchInGameSessionListEventArgs args) =>
-        {
-            roomInfo = args.RoomInfo;
-            userNickName.Clear();
-            for(int i = 0; i < args.GameRecords.Count; i++)
-            {
-                userNickName.Add(args.GameRecords[i].m_sessionId, args.GameRecords[i].m_nickname);
-                userTeam.Add(args.GameRecords[i].m_nickname, args.GameRecords[i].m_teamNumber);
-            }
-
-
-            //게임방에 유저가 접속 시 모든 클라이언트에게 호출되는 이벤트
-            Backend.Match.OnMatchInGameAccess = (MatchInGameSessionEventArgs args) =>
-            {
-
-                if (args.GameRecord.m_nickname != Backend.UserNickName)
-                {
-                    userNickName.Add(args.GameRecord.m_sessionId, args.GameRecord.m_nickname);
-                    userTeam.Add(args.GameRecord.m_nickname, args.GameRecord.m_teamNumber);
-                    Debug.Log(args.GameRecord);
-                }
-            };
-
-            //누군가 게임방에 나갔을 때 모두에게 호출되는 이벤트
-            Backend.Match.OnSessionOffline = (MatchInGameSessionEventArgs args) =>
-            {
-                userNickName.Remove(args.GameRecord.m_sessionId);
-                MatchRoomTest.Instance.LeaveIDObjectDestory(args.GameRecord.m_sessionId);
-                Debug.Log(args.GameRecord.m_nickname + "님이 나가셨습니다.");
-
-                Debug.Log(userNickName.Count);
-            };
-
-            //게임방에 모두가 들어오고 게임이 시작했을 때 호출되는 이벤트
-            Backend.Match.OnMatchInGameStart = () =>
-            {
-                Backend.Match.OnMatchRelay += (args) =>
-                {
-                    // 각 클라이언트들이 서버를 통해 주고받은 패킷들
-                    // 서버는 단순 브로드캐스팅만 지원 (서버에서 어떠한 연산도 수행하지 않음)
-                    OnRecieve(args);
-                };
-
-                Utils.Instance.LoadScene(SceneNames.MatchRoom);
-            };
-        };
     }
 
     public void LeaveGameServer()
     {
         Backend.Match.LeaveGameServer();
         LeaveMatchRoom();
+
+        isHost = false;
 
         Backend.Match.OnLeaveInGameServer = (MatchInGameSessionEventArgs args) => 
         {
@@ -553,7 +562,9 @@ public class MatchSystem
                         Backend.Match.OnSessionOnline += (MatchInGameSessionEventArgs args) =>
                         {
                             // TODO
+                            Utils.Instance.LoadScene(SceneNames.MatchLoad);
                             userNickName.Add(args.GameRecord.m_sessionId, args.GameRecord.m_nickname);
+                            userTeam.Add(args.GameRecord.m_nickname, args.GameRecord.m_teamNumber);
                             Debug.Log(args.GameRecord.m_nickname + "님이 재접속 하셨습니다.");
 
                             Debug.Log(userNickName.Count);
@@ -567,6 +578,7 @@ public class MatchSystem
                 Debug.Log("게임룸 정보 초기화");
                 roomInfo = null;
                 userNickName.Clear();
+                userTeam.Clear();
             }
         };
     }
