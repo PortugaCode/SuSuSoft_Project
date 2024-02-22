@@ -41,13 +41,6 @@ public class TouchMove : MonoBehaviour
 
     private bool isRight;
 
-    private void Start()
-    {
-
-
-        //StartCoroutine(BlinkFace());
-    }
-
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -98,8 +91,16 @@ public class TouchMove : MonoBehaviour
             interactionControl.doAnimatorArray[0].Invoke();
         }
 
+
+
         if (!isHost) return;
         SetTouchPosition();
+
+
+        if (interactionObject != null)
+        {
+            InteractionPlayer();
+        }
     }
 
     public void SetCanMove_true()
@@ -129,10 +130,12 @@ public class TouchMove : MonoBehaviour
                     if (hit.collider.gameObject.CompareTag("Building"))
                     {
                         isInteraction = true;
+                        interactionObject = hit.collider.gameObject;
                     }
                     else
                     {
                         isInteraction = false;
+                        interactionObject = null;
                     }
                 }
 
@@ -229,17 +232,51 @@ public class TouchMove : MonoBehaviour
         touchPosition = movePosition;
     }
 
-    IEnumerator BlinkFace()
-    {
-        while (true)
-        {
-            basicFace.SetActive(true);
-            blinkFace.SetActive(false);
-            yield return new WaitForSeconds(4f);
 
-            basicFace.SetActive(false);
-            blinkFace.SetActive(true);
-            yield return new WaitForSeconds(0.5f);
+    private void InteractionPlayer()
+    {
+        float width = interactionObject.GetComponent<HousingDrag>().spaceX;
+        float height = interactionObject.GetComponent<HousingDrag>().spaceY;
+        Vector3 targetPosition = interactionObject.transform.position;
+        if (Vector2.SqrMagnitude(targetPosition - transform.position) < Mathf.Pow(width / 2, 2) + Mathf.Pow(height / 2, 2) && isInteraction)
+        {
+            HousingDrag housingDrag = interactionObject.GetComponent<HousingDrag>();
+            Debug.Log(housingDrag.gameObject.name);
+
+            if(housingDrag.housingObject.type == "상호작용")
+            {
+                Debug.Log("housingType 들어옴");
+                switch (housingDrag.housingObject.index)
+                {
+                    case 7:
+                        Debug.Log("농구공 : 7 들어옴");
+                        interactionControl.doAnimatorArray[0].Invoke();
+                        touchPosition = transform.position;
+                        isInteraction = false;
+                        break;
+                    default:
+                        Debug.Log("Unknown housingID type");
+                        return;
+                }
+            }
+            
+            #region [type 비교]
+            /*            if (housingDrag.data.housingType == HousingType.interactionable)
+                        {
+                            Debug.Log("housingType 들어옴");
+                            switch (housingDrag.data.housingID)
+                            {
+                                case 5001:
+                                    Debug.Log("5001 들어옴");
+                                    interactionControl.doAnimatorArray[0].Invoke();
+                                    isInteraction = false;
+                                    break;
+                                default:
+                                    Debug.Log("Unknown housingID type");
+                                    return;
+                            }
+                        }*/
+            #endregion
         }
     }
 

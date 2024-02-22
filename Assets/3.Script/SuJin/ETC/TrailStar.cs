@@ -32,7 +32,7 @@ public class TrailStar : MonoBehaviour
 
     private void ChasePlayer()
     {
-        transform.position = Vector2.Lerp(this.transform.position, target.transform.position + Vector3.down * 0.1f, fllowSpeed * Time.deltaTime);
+        transform.position = Vector2.Lerp(this.transform.position, target.transform.position + Vector3.down * 0.3f, fllowSpeed * Time.deltaTime);
     }
 
     private void Update()
