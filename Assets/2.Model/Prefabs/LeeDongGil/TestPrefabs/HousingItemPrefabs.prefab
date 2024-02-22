@@ -182,9 +182,8 @@ MonoBehaviour:
   spaceX: 1
   spaceY: 1
   id: 0
+  primaryIndex: 0
   grid: {fileID: 0}
-  mouseX: 0
-  mouseY: 0
 --- !u!65 &2554417741279338056
 BoxCollider:
   m_ObjectHideFlags: 0

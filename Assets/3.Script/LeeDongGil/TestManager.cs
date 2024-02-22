@@ -16,12 +16,7 @@ public class TestManager : MonoBehaviour
     public InventorySystem housingInvenSys;
     public InventorySystem housingInvenSysWindow;
 
-    [Header("Housing System")]
-    public HousingObject[] invenHousing = new HousingObject[20];
-    public Dictionary<int, (HousingObject, Vector3)> localHousing = new Dictionary<int, (HousingObject, Vector3)>();
-    public List<Dictionary<int, (HousingObject, Vector3)>> saveLocal = new List<Dictionary<int, (HousingObject, Vector3)>>();
-    public int primaryKey = 0;
-    public List<int> tempKey = new List<int>();
+    
 
     public bool isEditMode = false;
     private void Awake()
@@ -82,10 +77,6 @@ public class TestManager : MonoBehaviour
             Debug.Log("Test4");
             housingInvenSys.GetHousingItem_test(testHousing[1], 1);
         }
-        else if (Input.GetKeyDown(KeyCode.Q))
-        {
-            LoadHousingChart();
-        }
     }
 
     public void LoadHousingChart()
@@ -103,10 +94,7 @@ public class TestManager : MonoBehaviour
         return ChartManager.instance.housingObjectDatas.FindIndex(listIndex => listIndex.index == indexNum);
     }
 
-    private void LocalInventoryData(HousingObject housing, Vector3 position)
-    {
-        
-    }
+    
 
     #region Test Button
     public void TestButton_Front()
@@ -191,39 +179,39 @@ public class TestManager : MonoBehaviour
     public void TestV2_AppleTree()
     {
         //housingInvenSys.GetHousingItem_test(testHousingV2[0], 1);
-        housingInvenSys.GetHousingItem(3001, 1);
+        housingInvenSys.GetHousingItem(4, 1);
     }
     public void TestV2_Fence()
     {
         //housingInvenSys.GetHousingItem_test(testHousingV2[1], 1);
-        housingInvenSys.GetHousingItem(3002, 1);
+        housingInvenSys.GetHousingItem(5, 1);
     }
     public void TestV2_Bush()
     {
         //housingInvenSys.GetHousingItem_test(testHousingV2[2], 1);
-        housingInvenSys.GetHousingItem(3003, 1);
+        housingInvenSys.GetHousingItem(6, 1);
     }
 
     public void TestV2_TwinTree()
     {
         //housingInvenSys.GetHousingItem_test(testHousingV2[3], 1);
-        housingInvenSys.GetHousingItem(1001, 1);
+        housingInvenSys.GetHousingItem(0, 1);
     }
     public void TestV2_Tree()
     {
         //housingInvenSys.GetHousingItem_test(testHousingV2[4], 1);
-        housingInvenSys.GetHousingItem(1002, 1);
+        housingInvenSys.GetHousingItem(1, 1);
     }
 
     public void TestV2_PullBuilding()
     {
         //housingInvenSys.GetHousingItem_test(testHousingV2[5], 1);
-        housingInvenSys.GetHousingItem(2001, 1);
+        housingInvenSys.GetHousingItem(2, 1);
     }
     public void TestV2_CraftBuilding()
     {
         //housingInvenSys.GetHousingItem_test(testHousingV2[6], 1);
-        housingInvenSys.GetHousingItem(2002, 1);
+        housingInvenSys.GetHousingItem(3, 1);
     }
     #endregion
 }

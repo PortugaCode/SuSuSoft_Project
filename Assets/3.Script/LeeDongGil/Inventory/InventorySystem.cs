@@ -72,8 +72,8 @@ public class InventorySystem : MonoBehaviour
     public void GetHousingItem(int housingIndex, int getCount)          //데이터 연동용
     {
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
-        int listIndex = TestManager.instance.GetIndex(housingIndex);
-        HousingObject housingObject = ChartManager.instance.housingObjectDatas[listIndex];
+        //int listIndex = TestManager.instance.GetIndex(housingIndex);
+        HousingObject housingObject = ChartManager.instance.housingObjectDatas[housingIndex];
         bool isChecked = false;
         int currentIndex = 0;
         int index = 0;

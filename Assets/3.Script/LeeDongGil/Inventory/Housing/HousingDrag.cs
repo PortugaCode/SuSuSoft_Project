@@ -18,8 +18,9 @@ public class HousingDrag : MonoBehaviour
     public HousingObject housingObject;
     public SpriteRenderer buildSprite;
     public GameObject space;
-    public float spaceX;
-    public float spaceY;
+
+    [HideInInspector] public float spaceX;
+    [HideInInspector] public float spaceY;
     public int id;
     public int primaryIndex;
 
@@ -31,13 +32,10 @@ public class HousingDrag : MonoBehaviour
     private BoxCollider boxCollider;
     private BoxCollider subCollider;
 
-    public float mouseX = 0;
-    public float mouseY = 0;
-
-    [SerializeField] private float moveX;
-    [SerializeField] private float moveY;
-    [SerializeField] private float clampX;
-    [SerializeField] private float clampY;
+    [HideInInspector] public float moveX;
+    [HideInInspector] public float moveY;
+    [HideInInspector] public float clampX;
+    [HideInInspector] public float clampY;
 
 
     #region Gizmos parameter
@@ -52,44 +50,31 @@ public class HousingDrag : MonoBehaviour
 
     private void Start()
     {
-        previousParent = transform.parent;
+        if (LoadHousing.instance.isLoading)
+        {
+            //housingObject = LoadHousing.instance.localHousing[primaryIndex].Item1;
+            //id = localHousing[i].Item1.index;
+            //buildSprite.sprite = SpriteManager.instance.sprites[localHousing[i].Item1.imageIndex];
+            //previousParent = nowBuilding;
+            //moveX = localHousing[i].Item2.x;
+            //moveY = localHousing[i].Item2.y;
+            //clampX = localHousing[i].Item2.x;
+            //clampY = localHousing[i].Item2.y;
+        }
+        else
+        {
+            previousParent = transform.parent;
+
+            primaryIndex = LoadHousing.instance.primaryKey;             //test해보기 2
+            LoadHousing.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
+            LoadHousing.instance.saveLocal.Add((gameObject, transform.position));
+
+            LoadHousing.instance.primaryKey += 1;
+        }
         //spaceX = data.housingWidth;
         //spaceY = data.housingHeight;
-        switch (housingObject.index)
-        {
-            case 1001:
-                spaceX = 4;
-                spaceY = 5;
-                break;
-            case 1002:
-                spaceX = 3;
-                spaceY = 5;
-                break;
-            case 2001:
-                spaceX = 4;
-                spaceY = 3;
-                break;
-            case 2002:
-                spaceX = 4;
-                spaceY = 3;
-                break;
-            case 3001:
-                spaceX = 3;
-                spaceY = 5;
-                break;
-            case 3002:
-                spaceX = 1;
-                spaceY = 1;
-                break;
-            case 3003:
-                spaceX = 1;
-                spaceY = 1;
-                break;
-            case 5001:
-                spaceX = 1;
-                spaceY = 1;
-                break;
-        }
+
+        SetWidthHeight();
 
         switch (housingObject.type)
         {
@@ -113,11 +98,7 @@ public class HousingDrag : MonoBehaviour
                 break;
         }
 
-        primaryIndex = TestManager.instance.primaryKey;             //test해보기 2
-        TestManager.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
-        TestManager.instance.saveLocal.Add(TestManager.instance.localHousing);
 
-        TestManager.instance.primaryKey += 1;
 
         #region Scriptable Object(연동 전)
         /*
@@ -155,7 +136,7 @@ public class HousingDrag : MonoBehaviour
 
 
 
-        //transform.position = new Vector3(transform.position.x, transform.position.y, -1);
+        transform.position = new Vector3(transform.position.x, transform.position.y, -1);
         space.transform.localScale = new Vector3(spaceX, spaceY, 1);
 
         check = transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -166,6 +147,7 @@ public class HousingDrag : MonoBehaviour
 
         boxCollider.size = new Vector3(spaceX, spaceY, 0.2f);
         subCollider.enabled = false;
+
     }
 
     private void Update()
@@ -238,7 +220,7 @@ public class HousingDrag : MonoBehaviour
                 int currentLayer = gameObject.layer;
                 if (isCanBuild)
                 {
-                    switch (currentLayer)         
+                    switch (currentLayer)
                     {
                         case 24:
                             transform.position = new Vector3(transform.position.x, transform.position.y, -0.6f);
@@ -262,9 +244,7 @@ public class HousingDrag : MonoBehaviour
                     transform.position = new Vector3(transform.position.x, transform.position.y, -0.9f);
                 }
 
-                TestManager.instance.localHousing[primaryIndex] = (housingObject, transform.position);      //test해보기 3
-                Debug.Log($"현재 오브젝트 : {TestManager.instance.localHousing[primaryIndex].Item1}");
-                Debug.Log($"현재 포지션 : {TestManager.instance.localHousing[primaryIndex].Item2}");
+
             }
 
             if (isDragging)
@@ -290,6 +270,11 @@ public class HousingDrag : MonoBehaviour
             else
             {
                 group.alpha = 1.0f;
+
+                LoadHousing.instance.localHousing[primaryIndex] = (housingObject, transform.position);      //test해보기 3
+                LoadHousing.instance.saveLocal[primaryIndex] = (gameObject, transform.position);
+                Debug.Log($"현재 오브젝트 : {LoadHousing.instance.localHousing[primaryIndex].Item1.name_k}");
+                Debug.Log($"현재 포지션 : {LoadHousing.instance.localHousing[primaryIndex].Item2}");
             }
         }
         else
@@ -384,13 +369,13 @@ public class HousingDrag : MonoBehaviour
              hit_Center.collider.gameObject.layer != currentLayer &&
              hit_Box.collider.gameObject.layer != currentLayer)
         {
-            if(currentLayer == LayerMask.NameToLayer("Building") && transform.position.y > grid.boundRB.y - (spaceY / 2))   //test해보기 1
-            {
-                check.color = new Color32(255, 0, 0, 100);
-                check.gameObject.SetActive(true);
-                transform.SetParent(previousParent);
-                isCanBuild = false;
-            }
+            //if(currentLayer == LayerMask.NameToLayer("Building") && transform.position.y > grid.boundRB.y - (spaceY / 2))   //test해보기 1
+            //{
+            //    check.color = new Color32(255, 0, 0, 100);
+            //    check.gameObject.SetActive(true);
+            //    transform.SetParent(previousParent);
+            //    isCanBuild = false;
+            //}
             check.color = new Color32(0, 255, 0, 100);
             transform.SetParent(hit_Center.collider.transform.parent);
             isCanBuild = true;
@@ -403,6 +388,50 @@ public class HousingDrag : MonoBehaviour
             isCanBuild = false;
         }
 
+    }
+
+    private void SetWidthHeight()
+    {
+        switch (housingObject.index)
+        {
+            case 0:
+                spaceX = 4;
+                spaceY = 5;
+                break;
+            case 1:
+                spaceX = 3;
+                spaceY = 5;
+                break;
+            case 2:
+                spaceX = 4;
+                spaceY = 3;
+                break;
+            case 3:
+                spaceX = 4;
+                spaceY = 3;
+                break;
+            case 4:
+                spaceX = 3;
+                spaceY = 5;
+                break;
+            case 5:
+                spaceX = 1;
+                spaceY = 1;
+                break;
+            case 6:
+                spaceX = 1;
+                spaceY = 1;
+                break;
+            case 7:
+                spaceX = 1;
+                spaceY = 1;
+                break;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        LoadHousing.instance.isLoading = false;
     }
 
     #region OnDrawGizmos
