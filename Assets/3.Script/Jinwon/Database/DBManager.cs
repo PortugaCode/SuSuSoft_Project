@@ -308,13 +308,13 @@ public class DBManager : MonoBehaviour
         }
 
         // [보상 획득 정보]
-        for (int i = 0; i < 10; i++)
+        /*for (int i = 0; i < 10; i++)
         {
             for (int j = 0; j < 3; j++)
             {
                 user.clearInfo[i, j] = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["ClearInfo"][i][j].ToString());
             }
-        }
+        }*/
 
         // [친구] (뒤끝 내장 친구 목록에서 불러오기)
         //CommunityManager.instance.GetFriendsList();
