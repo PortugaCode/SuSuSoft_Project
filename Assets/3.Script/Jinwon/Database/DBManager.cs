@@ -519,6 +519,7 @@ public class DBManager : MonoBehaviour
         Param param = new Param();
         param.Add("CurrentCharacterIndex", user.currentCharacterIndex);
         param.Add("Goods", user.goods);
+        param.Add("ClearInfo", user.clearInfo);
 
         Backend.PlayerData.UpdateMyLatestData("User", param);
     }
