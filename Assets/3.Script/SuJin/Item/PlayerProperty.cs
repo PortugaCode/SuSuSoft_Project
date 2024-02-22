@@ -51,10 +51,14 @@ public class PlayerProperty : MonoBehaviour
     #endregion
 
     [Header("GetStars")]
+    public int maxStar;
     public List<GameObject> stars = new List<GameObject>();
     Vector3 starsScale;
 
-    [SerializeField] int getStarCount;
+    public EventHandler onStarBar;
+
+
+    public int getStarCount;
     [SerializeField] GameObject starPrefebs;
     //private float getStarPercent;
 
@@ -112,6 +116,7 @@ public class PlayerProperty : MonoBehaviour
         {
             getStarCount++;
             Instantiate(starPrefebs, transform.position, Quaternion.identity);
+            onStarBar?.Invoke(this, EventArgs.Empty);
             Destroy(collision.gameObject);
             Debug.Log($" getStarCount : {getStarCount}");
         }
