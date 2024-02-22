@@ -4952,7 +4952,7 @@ GameObject:
   - component: {fileID: 4022180779462661498}
   - component: {fileID: 6005608910008866176}
   m_Layer: 5
-  m_Name: Character Select Popup
+  m_Name: Popup_CharacterSelect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
