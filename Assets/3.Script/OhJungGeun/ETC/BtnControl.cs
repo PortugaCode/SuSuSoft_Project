@@ -1,20 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BtnControl : MonoBehaviour
 {
+    [Header("Chat UI On / Off")]
     [SerializeField] private GameObject chatUI;
 
+
+    [Header("InterFace UI On / Off")]
     [SerializeField] private List<GameObject> allUI;
-
-
-
     [SerializeField] private GameObject characterUI;
     [SerializeField] private GameObject inventoryUI;
     [SerializeField] private GameObject testHousingButton;
     [SerializeField] private GameObject editModeButton;
     [SerializeField] private GameObject stageUI;
+
+    [Header("Select Button Color")]
+    [SerializeField] private List<Image> selectBtnList;
+    [SerializeField] private Color selectColor;
+
+
+
+    public void SelctBtn(Image me)
+    {
+        for(int i = 0; i < selectBtnList.Count; i++)
+        {
+            selectBtnList[i].color = Color.white;
+        }
+
+        me.color = selectColor;
+    }
+
+
 
 
     private void ResetUI()
@@ -66,4 +85,6 @@ public class BtnControl : MonoBehaviour
         ResetUI();
         stageUI.SetActive(value);
     }
+
+
 }
