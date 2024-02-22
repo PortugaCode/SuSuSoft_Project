@@ -50,53 +50,29 @@ public class HousingDrag : MonoBehaviour
 
     private void Start()
     {
-        if (LoadHousing.instance.isLoading)
+        if (!LoadHousing.instance.isLoading)
         {
-            //housingObject = LoadHousing.instance.localHousing[primaryIndex].Item1;
-            //id = localHousing[i].Item1.index;
-            //buildSprite.sprite = SpriteManager.instance.sprites[localHousing[i].Item1.imageIndex];
-            //previousParent = nowBuilding;
-            //moveX = localHousing[i].Item2.x;
-            //moveY = localHousing[i].Item2.y;
-            //clampX = localHousing[i].Item2.x;
-            //clampY = localHousing[i].Item2.y;
-        }
-        else
-        {
+            Debug.Log("순서 2");
             previousParent = transform.parent;
 
             primaryIndex = LoadHousing.instance.primaryKey;             //test해보기 2
             LoadHousing.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
-            LoadHousing.instance.saveLocal.Add((gameObject, transform.position));
 
             LoadHousing.instance.primaryKey += 1;
+
+            transform.position = new Vector3(transform.position.x, transform.position.y, -1);
         }
+        else
+        {
+            transform.position = LoadHousing.instance.localHousing[primaryIndex].Item2;
+        }
+        //LoadHousing.instance.isLoading = false;
         //spaceX = data.housingWidth;
         //spaceY = data.housingHeight;
 
         SetWidthHeight();
 
-        switch (housingObject.type)
-        {
-            case "전경":
-                int layer_Front = LayerMask.NameToLayer("Front");
-                gameObject.layer = layer_Front;
-                break;
-            case "후경":
-                int layer_Back = LayerMask.NameToLayer("Back");
-                gameObject.layer = layer_Back;
-                break;
-            case "건물":
-                int layer_Building = LayerMask.NameToLayer("Building");
-                gameObject.layer = layer_Building;
-                break;
-            case "상호작용":
-                int layer_Interactionable = LayerMask.NameToLayer("Interactionable");
-                gameObject.layer = layer_Interactionable;
-                break;
-            default:
-                break;
-        }
+        SetLayer();
 
 
 
@@ -136,7 +112,7 @@ public class HousingDrag : MonoBehaviour
 
 
 
-        transform.position = new Vector3(transform.position.x, transform.position.y, -1);
+        
         space.transform.localScale = new Vector3(spaceX, spaceY, 1);
 
         check = transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -272,7 +248,7 @@ public class HousingDrag : MonoBehaviour
                 group.alpha = 1.0f;
 
                 LoadHousing.instance.localHousing[primaryIndex] = (housingObject, transform.position);      //test해보기 3
-                LoadHousing.instance.saveLocal[primaryIndex] = (gameObject, transform.position);
+                //LoadHousing.instance.saveLocal[primaryIndex] = (gameObject, transform.position);
                 Debug.Log($"현재 오브젝트 : {LoadHousing.instance.localHousing[primaryIndex].Item1.name_k}");
                 Debug.Log($"현재 포지션 : {LoadHousing.instance.localHousing[primaryIndex].Item2}");
             }
@@ -429,9 +405,34 @@ public class HousingDrag : MonoBehaviour
         }
     }
 
+    private void SetLayer()
+    {
+        switch (housingObject.type)
+        {
+            case "전경":
+                int layer_Front = LayerMask.NameToLayer("Front");
+                gameObject.layer = layer_Front;
+                break;
+            case "후경":
+                int layer_Back = LayerMask.NameToLayer("Back");
+                gameObject.layer = layer_Back;
+                break;
+            case "건물":
+                int layer_Building = LayerMask.NameToLayer("Building");
+                gameObject.layer = layer_Building;
+                break;
+            case "상호작용":
+                int layer_Interactionable = LayerMask.NameToLayer("Interactionable");
+                gameObject.layer = layer_Interactionable;
+                break;
+            default:
+                break;
+        }
+    }
+
     private void OnDestroy()
     {
-        LoadHousing.instance.isLoading = false;
+        //LoadHousing.instance.isLoading = false;
     }
 
     #region OnDrawGizmos

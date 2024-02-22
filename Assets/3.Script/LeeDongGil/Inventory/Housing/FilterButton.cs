@@ -37,7 +37,7 @@ public class FilterButton : MonoBehaviour
             currentindexs[index] = slot.transform.GetSiblingIndex();
             if (slot.isSlotUse)
             {
-                if(slot.itemInfomation.housingType == HousingType.front)
+                if(slot.housingObject.Value.type.Equals("전경"))
                 {
                     slot.transform.SetSiblingIndex(setindex);
                     slot.housingInven.image.color = Color.white;
@@ -67,7 +67,7 @@ public class FilterButton : MonoBehaviour
             currentindexs[index] = slot.transform.GetSiblingIndex();
             if (slot.isSlotUse)
             {
-                if (slot.itemInfomation.housingType == HousingType.back)
+                if (slot.housingObject.Value.type.Equals("후경"))
                 {
                     slot.transform.SetSiblingIndex(setindex);
                     slot.housingInven.image.color = Color.white;
@@ -97,7 +97,7 @@ public class FilterButton : MonoBehaviour
             currentindexs[index] = slot.transform.GetSiblingIndex();
             if (slot.isSlotUse)
             {
-                if (slot.itemInfomation.housingType == HousingType.building)
+                if (slot.housingObject.Value.type.Equals("건물"))
                 {
                     slot.transform.SetSiblingIndex(setindex);
                     slot.housingInven.image.color = Color.white;
