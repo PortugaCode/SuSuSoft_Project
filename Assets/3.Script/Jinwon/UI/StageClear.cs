@@ -21,6 +21,7 @@ public class StageClear : MonoBehaviour
     [SerializeField] private GameObject rewardTab_1;
     [SerializeField] private GameObject rewardTab_2;
     [SerializeField] private GameObject rewardTab_3;
+    [SerializeField] private GameObject tokenTab;
     [SerializeField] private TMP_Text conditionText_2;
     [SerializeField] private TMP_Text conditionText_3;
     [SerializeField] private TMP_Text rewardText_gold;
@@ -54,8 +55,10 @@ public class StageClear : MonoBehaviour
         rewardText_1.text = $"{reward_1}";
         rewardText_2.text = $"{reward_2}";
         rewardText_3.text = $"1";
-        tokenRewardIcon.GetComponent<Image>().sprite = tokenImages[ChartManager.instance.stageInfos[stageIndex].reward_4];
+        tokenRewardIcon.GetComponent<Image>().sprite = tokenImages[ChartManager.instance.stageInfos[stageIndex].reward_3];
         rewardText_gold.text = $"{reward_gold}";
+
+        CheckReward(player.GetComponent<PlayerProperty>().stars.Count);
     }
 
     public void CheckReward(int starCount)
@@ -69,7 +72,7 @@ public class StageClear : MonoBehaviour
             if (DBManager.instance.user.clearInfo[stageIndex, 2] == 0)
             {
                 DBManager.instance.user.clearInfo[stageIndex, 2] = 1;
-                // 하우징 오브젝트 토큰 획득 구현 필요
+                DBManager.instance.user.tokens[stageIndex] += 1;
             }
             else
             {
@@ -111,6 +114,22 @@ public class StageClear : MonoBehaviour
 
         // 반복보상 추가
         DBManager.instance.user.goods["gold"] += ChartManager.instance.stageInfos[stageIndex].reward_repeat;
+
+        if (DBManager.instance.user.tokenInfo[stageIndex] == 0)
+        {
+            tokenTab.SetActive(true);
+            tokenTab.transform.GetChild(0).GetComponent<Image>().sprite = tokenImages[stageIndex];
+
+            DBManager.instance.user.tokenInfo[stageIndex] = 1;
+            DBManager.instance.user.tokens[stageIndex] += 1;
+        }
+
+        if (DBManager.instance.user.clearInfo[stageIndex, 3] == 0 && ChartManager.instance.stageInfos[stageIndex].reward_4 != -1)
+        {
+            DBManager.instance.user.clearInfo[stageIndex, 3] = 1;
+            // 건물 해금
+            DBManager.instance.user.housingObject[ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4)] += 1;
+        }
     }
 
     public void GoToHome()

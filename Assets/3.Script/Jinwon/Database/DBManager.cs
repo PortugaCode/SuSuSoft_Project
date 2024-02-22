@@ -121,12 +121,14 @@ public class User
     public List<Character> character { get; set; } // 보유한 캐릭터 리스트
     public int currentCharacterIndex { get; set; } // 현재 사용중인 캐릭터 인덱스
     public Dictionary<string, int> goods { get; set; } // 보유한 재화의 종류와 수량
-    public List<HousingObject> housingObject { get; set; } // 보유한 하우징 오브젝트 리스트
+    public Dictionary<string, int> housingObject { get; set; } // 보유한 하우징 오브젝트 (Key : 이름, Value : 보유수량)
+    public int[] tokens { get; set; } // 보유한 토큰 개수 배열
     public List<Friend> friend { get; set; } // 친구 리스트
     public List<int> guestBook { get; set; } // 방명록 리스트
     public List<Mail> mail { get; set; } // 우편 리스트
 
     public int[,] clearInfo { get; set; } // 최초 보상 획득 정보
+    public int[] tokenInfo { get; set; } // 해당 스테이지에서 토큰을 먹었는지 여부
 
     public User() // 생성자에서 초기화
     {
@@ -135,14 +137,14 @@ public class User
         userName = "";
         character = new List<Character>();
         goods = new Dictionary<string, int> { { "friendshipPoint", 0 }, { "ruby", 0 }, { "gold", 0 } };
-        housingObject = new List<HousingObject>();
+        housingObject = new Dictionary<string, int>();
+        tokens = new int[10];
         friend = new List<Friend>();
         guestBook = new List<int>();
         mail = new List<Mail>();
-        clearInfo = new int[10, 3];
+        clearInfo = new int[10, 4];
+        tokenInfo = new int[10];
     }
-
-    // + 스테이지 클리어 정보 추가 필요
 }
 
 public class DBManager : MonoBehaviour
@@ -164,124 +166,13 @@ public class DBManager : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        //InitializeServer();
-    }
-
     private void OnApplicationQuit()
     {
         // 게임 종료 시 user class값과 DB값 동기화
         SaveUserData();
     }
 
-    private void InitializeServer() // 초기 뒤끝 서버 접속
-    {
-        var bro = Backend.Initialize(true);
-
-        if (bro.IsSuccess())
-        {
-            Debug.Log($"서버 접속 성공 : {bro}");
-        }
-        else
-        {
-            Debug.LogError($"서버 접속 실패 : {bro}");
-        }
-    }
-
-    private void SaveDataExample() // DB에 데이터 저장하기 예시
-    {
-        Param param = new Param(); // DB에 저장할 데이터들
-
-        Dictionary<string, int> testDictionary = new Dictionary<string, int>
-        {
-            { "num1", 1 },
-            { "num2", 2 },
-            { "num3", 3 }
-        };
-
-        string[] testList = { "string1", "string2" };
-
-        Param doubleParam = new Param();
-        doubleParam.Add("내부1", 1234);
-        doubleParam.Add("내부2", "abcd");
-        doubleParam.Add("내부3", "내부 매개변수 테스트입니다.");
-
-        param.Add("이름", "테스트2");
-        param.Add("dictionary", testDictionary);
-        param.Add("list", testList);
-        param.Add("param", doubleParam);
-
-        // [ 동기 ]
-        Backend.GameData.Insert("dbTest", param); // '테이블명'에 삽입
-
-        // [ 비동기 ]
-        /*Backend.GameData.Insert("tableName", param, (callback) => {
-            // 콜백
-        });*/
-    }
-
-    private void LoadDataExample() // DB에서 데이터 불러오기 예시
-    {
-        // 1. 자신의 데이터만 조회 (select절의 유무와 상관없이 처리하는 데이터양은 동일)
-        // public BackendReturnObject GetMyData(string tableName, Where where, string[] select, int limit, string firstKey, TableSortOrder sortOrder);
-
-        // tableName : 테이블명
-        // where : 검색할 Where 절
-        // select : (Optional) row 내 존재하는 컬럼 중 포함 시키고자 하는 컬럼 (default = 모든 컬럼)
-        // limit : (Optional) 불러올 게임 정보 row 수. 최소 1, 최대 100. (default = 10)
-        // firstKey : (Optional) 데이터를 조회하기 위한 시작점 (default = 제일 마지막에 insert 된 데이터)
-        // sortOrder : (Optional) TableSortOrder.DESC(내림차순) or TableSortOrder.ASC(오름차순) (default = TableSortOrder.DESC(내림차순))
-        // * 조건 없이 데이터 조회 시 Where절을 new Where() 로 초기화 후 조회.
-
-        // 2. 전체 유저 데이터 조회
-        // public BackendReturnObject Get(string tableName, Where where, string[] select, int limit, string firstKey, TableSortOrder tableSortOrder);
-
-        // where.Equal("owner_inDate", "유저의 gamerInDate"); 로 특정 유저의 데이터 조회
-        // gamerIndate는 GetUserInfoByNickName 함수를 통해 확인하거나, 친구, 길드원 조회 등의 함수에서 리턴되는 유저의 정보에서 확인할 수 있습니다.
-
-        // -----------------------------------------------------------------------------------------------------------------
-
-        //데이터 추출 방법 1 : 검색한 데이터 중 첫번째 데이터의 name 컬럼 출력
-        //string name = bro.Rows()[0]["name"]["S"].ToString();
-        //int level = int.Parse(bro.Rows()[0]["level"]["N"].ToString());
-
-        //데이터 추출 방법 2(언마샬) : 검색한 데이터 중 첫번째 데이터의 name 컬럼 출력
-        //string name = bro.FlattenRows()[0]["name"].ToString();
-        //int level = int.Parse(bro.FlattenRows()[0]["level"].ToString());
-
-        // Where 메서드 목록 : https://docs.thebackend.io/sdk-docs/backend/base/game-information/clause-where/basic
-
-        Where where = new Where();
-        where.Equal("이름", "테스트2");
-
-        var bro = Backend.GameData.GetMyData("dbTest", where);
-
-        if (bro.IsSuccess() == false)
-        {
-            // 요청 실패 처리
-            Debug.LogError("데이터 불러오기 실패");
-            return;
-        }
-
-        if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
-        {
-            // 요청이 성공해도 where 조건에 부합하는 데이터가 없을 수 있기 때문에 데이터가 존재하는지 확인
-            // 위와 같은 new Where() 조건의 경우 테이블에 row가 하나도 없으면 Count가 0 이하 일 수 있다.  
-            Debug.Log("검색 조건에 해당하는 데이터가 존재하지 않음");
-            return;
-        }
-
-        Debug.Log("데이터 불러오기 성공");
-
-        // 0 번째 인덱스 데이터의 해당 컬럼 접근
-        // string 형식 접근 : bro.FlattenRows()[0]["이름"].ToString(); (0번째 인덱스 데이터의 "이름" 컬럼)
-        // list 형식 접근 : bro.FlattenRows()[0]["list"][0].ToString(); (0번째 인덱스 데이터의 "list" 컬럼의 0번째 인덱스 데이터)
-        // dictionary 형식 접근 : bro.FlattenRows()[0]["dictionary"]["num1"].ToString(); (0번째 인덱스 데이터의 "dictionary" 컬럼의 "num1" 키의 밸류값)
-        // param 형식 접근 : bro.FlattenRows()[0]["param"]["내부1"].ToString(); (0번째 인덱스 데이터의 "param" 컬럼의 "내부1" 파라미터의 값)
-    }
-
-    public void DB_Init(string idText, string pwText) // 로그인 시 DB 초기설정
+    public void DB_Load(string idText, string pwText) // 로그인 시 DB 초기설정
     {
         Where where = new Where();
         where.Equal("owner_inDate", Backend.UserInDate); // 로그인 한 유저의 owner_inDate로 User DB 조회
@@ -296,28 +187,49 @@ public class DBManager : MonoBehaviour
         JsonData json = bro.FlattenRows(); // 캐싱
 
         // [보유한 재화]
-        var keys = json[0]["Goods"].Keys; // JsonData를 딕셔너리 키로 변환하는 과정
+        var goods_keys = json[0]["Goods"].Keys; // JsonData를 딕셔너리 키로 변환하는 과정
 
-        string[] goodsArray = new string[keys.Count];
-        keys.CopyTo(goodsArray, 0);
+        string[] goodsArray = new string[goods_keys.Count];
+        goods_keys.CopyTo(goodsArray, 0);
 
-        for (var i = 0; i < keys.Count; i++)
+        for (var i = 0; i < goods_keys.Count; i++)
         {
             var key = goodsArray[i];
             user.goods[key] = int.Parse(json[0]["Goods"][key].ToString());
         }
 
-        // [보상 획득 정보]
-        /*for (int i = 0; i < 10; i++)
+        // [보유한 토큰]
+        for (int i = 0; i < 10; i++) // (총 토큰 개수 = 10)
         {
-            for (int j = 0; j < 3; j++)
-            {
-                user.clearInfo[i, j] = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["ClearInfo"][i][j].ToString());
-            }
-        }*/
+            user.tokens[i] = int.Parse(bro.FlattenRows()[0]["Tokens"][i].ToString());
+        }
 
-        // [친구] (뒤끝 내장 친구 목록에서 불러오기)
-        //CommunityManager.instance.GetFriendsList();
+        // [보상 획득 정보 (2차원 배열)]
+        for (int i = 0; i < 10; i++) // (총 스테이지 개수 = 10)
+        {
+            for (int j = 0; j < 4; j++) // (리워드 개수 = 4)
+            {
+                user.clearInfo[i, j] = int.Parse(bro.FlattenRows()[0]["ClearInfo"][i][j].ToString());
+            }
+        }
+
+        // [하우징 오브젝트 보유 정보]
+        var housing_keys = json[0]["HousingObject"].Keys; // JsonData를 딕셔너리 키로 변환하는 과정
+
+        string[] housingArray = new string[housing_keys.Count];
+        housing_keys.CopyTo(housingArray, 0);
+
+        for (var i = 0; i < housing_keys.Count; i++)
+        {
+            var key = housingArray[i];
+            user.housingObject[key] = int.Parse(json[0]["HousingObject"][key].ToString());
+        }
+
+        // [토큰 획득 정보]
+        for (int i = 0; i < 10; i++) // (총 스테이지 개수 = 10)
+        {
+            user.tokenInfo[i] = int.Parse(bro.FlattenRows()[0]["TokenInfo"][i].ToString());
+        }
 
         // [캐릭터] (Character 테이블에서 불러오기)
         var c_bro = Backend.GameData.GetMyData("Character", where);
@@ -353,8 +265,6 @@ public class DBManager : MonoBehaviour
         user.currentCharacterIndex = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString());
 
         Debug.Log("기존 유저 데이터 불러오기 완료");
-
-        //Utils.Instance.LoadScene(SceneNames.Chatting);
     }
 
     public void DB_Add(string idText, string pwText, string userName)
@@ -372,6 +282,9 @@ public class DBManager : MonoBehaviour
         param.Add("UserName", user.userName);
         param.Add("Goods", user.goods);
         param.Add("ClearInfo", user.clearInfo);
+        param.Add("TokenInfo", user.tokenInfo);
+        param.Add("Tokens", user.tokens);
+        param.Add("HousingObject", user.housingObject);
 
         AddCharacter(101);
 
@@ -389,8 +302,6 @@ public class DBManager : MonoBehaviour
         List<Character> characters = ChartManager.instance.characterDatas; // 캐싱
 
         Param characterParam = new Param(); // Character 정보
-
-        Debug.Log($"Count : {characters.Count}");
 
         for (int i = 0; i < characters.Count; i++)
         {
@@ -520,6 +431,9 @@ public class DBManager : MonoBehaviour
         param.Add("CurrentCharacterIndex", user.currentCharacterIndex);
         param.Add("Goods", user.goods);
         param.Add("ClearInfo", user.clearInfo);
+        param.Add("TokenInfo", user.tokenInfo);
+        param.Add("Tokens", user.tokens);
+        param.Add("HousingObject", user.housingObject);
 
         Backend.PlayerData.UpdateMyLatestData("User", param);
     }

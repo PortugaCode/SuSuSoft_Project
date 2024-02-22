@@ -135,4 +135,17 @@ public class ChartManager : MonoBehaviour
             return;
         }
     }
+
+    public string GetHousingObjectName(int index)
+    {
+        for (int i = 0; i < housingObjectDatas.Count; i++)
+        {
+            if (housingObjectDatas[i].index == index)
+            {
+                return housingObjectDatas[i].name_e;
+            }
+        }
+
+        return null;
+    }
 }
