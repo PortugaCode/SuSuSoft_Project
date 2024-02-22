@@ -15,12 +15,14 @@ public class HousingDrag : MonoBehaviour
 
     [Header("Build Setting")]
     public HousingItemData data;  //중근아 여기 참조해
+    public HousingObject housingObject;
     public SpriteRenderer buildSprite;
     public GameObject space;
-    public float spaceX;
-    public float spaceY;
-    public int id;
 
+    [HideInInspector] public float spaceX;
+    [HideInInspector] public float spaceY;
+    public int id;
+    public int primaryIndex;
 
     private int checkMinusY = 1;
     private int checkMinusX = 1;
@@ -30,8 +32,11 @@ public class HousingDrag : MonoBehaviour
     private BoxCollider boxCollider;
     private BoxCollider subCollider;
 
-    public float mouseX = 0;
-    public float mouseY = 0;
+    [HideInInspector] public float moveX;
+    [HideInInspector] public float moveY;
+    [HideInInspector] public float clampX;
+    [HideInInspector] public float clampY;
+
 
     #region Gizmos parameter
     /*
@@ -45,41 +50,47 @@ public class HousingDrag : MonoBehaviour
 
     private void Start()
     {
-        previousParent = transform.parent;
-        if (id == 5001)
+        if (LoadHousing.instance.isLoading)
         {
-            data = TestManager.instance.testHousing[13];
+            //housingObject = LoadHousing.instance.localHousing[primaryIndex].Item1;
+            //id = localHousing[i].Item1.index;
+            //buildSprite.sprite = SpriteManager.instance.sprites[localHousing[i].Item1.imageIndex];
+            //previousParent = nowBuilding;
+            //moveX = localHousing[i].Item2.x;
+            //moveY = localHousing[i].Item2.y;
+            //clampX = localHousing[i].Item2.x;
+            //clampY = localHousing[i].Item2.y;
         }
         else
         {
-            data = TestManager.instance.testHousing[id];
-        }
-        spaceX = data.housingWidth;
-        spaceY = data.housingHeight;
+            previousParent = transform.parent;
 
-        switch (data.housingType)
+            primaryIndex = LoadHousing.instance.primaryKey;             //test해보기 2
+            LoadHousing.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
+            LoadHousing.instance.saveLocal.Add((gameObject, transform.position));
+
+            LoadHousing.instance.primaryKey += 1;
+        }
+        //spaceX = data.housingWidth;
+        //spaceY = data.housingHeight;
+
+        SetWidthHeight();
+
+        switch (housingObject.type)
         {
-            case HousingType.front:
+            case "전경":
                 int layer_Front = LayerMask.NameToLayer("Front");
                 gameObject.layer = layer_Front;
                 break;
-            case HousingType.back:
+            case "후경":
                 int layer_Back = LayerMask.NameToLayer("Back");
                 gameObject.layer = layer_Back;
                 break;
-            case HousingType.building:
+            case "건물":
                 int layer_Building = LayerMask.NameToLayer("Building");
                 gameObject.layer = layer_Building;
                 break;
-            case HousingType.constellation:
-                int layer_Constellation = LayerMask.NameToLayer("Constellation");
-                gameObject.layer = layer_Constellation;
-                break;
-            case HousingType.special:
-                int layer_Special = LayerMask.NameToLayer("Special");
-                gameObject.layer = layer_Special;
-                break;
-            case HousingType.interactionable:
+            case "상호작용":
                 int layer_Interactionable = LayerMask.NameToLayer("Interactionable");
                 gameObject.layer = layer_Interactionable;
                 break;
@@ -88,7 +99,44 @@ public class HousingDrag : MonoBehaviour
         }
 
 
-        //transform.position = new Vector3(transform.position.x, transform.position.y, -1);
+
+        #region Scriptable Object(연동 전)
+        /*
+                switch (data.housingType)       //수정 1
+                {
+                    case HousingType.front:
+                        int layer_Front = LayerMask.NameToLayer("Front");
+                        gameObject.layer = layer_Front;
+                        break;
+                    case HousingType.back:
+                        int layer_Back = LayerMask.NameToLayer("Back");
+                        gameObject.layer = layer_Back;
+                        break;
+                    case HousingType.building:
+                        int layer_Building = LayerMask.NameToLayer("Building");
+                        gameObject.layer = layer_Building;
+                        break;
+                    case HousingType.constellation:
+                        int layer_Constellation = LayerMask.NameToLayer("Constellation");
+                        gameObject.layer = layer_Constellation;
+                        break;
+                    case HousingType.special:
+                        int layer_Special = LayerMask.NameToLayer("Special");
+                        gameObject.layer = layer_Special;
+                        break;
+                    case HousingType.interactionable:
+                        int layer_Interactionable = LayerMask.NameToLayer("Interactionable");
+                        gameObject.layer = layer_Interactionable;
+                        break;
+                    default:
+                        break;
+                }
+        */
+        #endregion
+
+
+
+        transform.position = new Vector3(transform.position.x, transform.position.y, -1);
         space.transform.localScale = new Vector3(spaceX, spaceY, 1);
 
         check = transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -99,6 +147,7 @@ public class HousingDrag : MonoBehaviour
 
         boxCollider.size = new Vector3(spaceX, spaceY, 0.2f);
         subCollider.enabled = false;
+
     }
 
     private void Update()
@@ -164,29 +213,25 @@ public class HousingDrag : MonoBehaviour
             {
                 //Debug.Log("End");
                 isDragging = false;
+                transform.position = new Vector3(clampX, clampY, transform.position.z);
                 subCollider.enabled = false;
                 isTouch = false;
                 touchTime = 0;
+                int currentLayer = gameObject.layer;
                 if (isCanBuild)
                 {
-                    switch (data.housingType)
+                    switch (currentLayer)
                     {
-                        case HousingType.front:
+                        case 24:
                             transform.position = new Vector3(transform.position.x, transform.position.y, -0.6f);
                             break;
-                        case HousingType.back:
+                        case 23:
                             transform.position = new Vector3(transform.position.x, transform.position.y, -0.4f);
                             break;
-                        case HousingType.building:
+                        case 25:
                             transform.position = new Vector3(transform.position.x, transform.position.y, -0.5f);
                             break;
-                        case HousingType.constellation:
-                            transform.position = new Vector3(transform.position.x, transform.position.y, -0.3f);
-                            break;
-                        case HousingType.special:
-                            transform.position = new Vector3(transform.position.x, transform.position.y, -0.7f);
-                            break;
-                        case HousingType.interactionable:
+                        case 22:
                             transform.position = new Vector3(transform.position.x, transform.position.y, -0.8f);
                             break;
                         default:
@@ -198,6 +243,8 @@ public class HousingDrag : MonoBehaviour
                 {
                     transform.position = new Vector3(transform.position.x, transform.position.y, -0.9f);
                 }
+
+
             }
 
             if (isDragging)
@@ -208,21 +255,26 @@ public class HousingDrag : MonoBehaviour
                 Vector3 newPosition = ray.GetPoint(offset.z);
                 checkMinusX = newPosition.x >= 0 ? 1 : -1;
                 checkMinusY = newPosition.y >= 0 ? 1 : -1;
-                float moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.x)) * checkMinusX : Mathf.FloorToInt(newPosition.x) + 0.5f;
-                float moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.y)) * checkMinusY : Mathf.FloorToInt(newPosition.y) + 0.5f;
+                moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.x)) * checkMinusX : Mathf.FloorToInt(newPosition.x) + 0.5f;
+                moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.y)) * checkMinusY : Mathf.FloorToInt(newPosition.y) + 0.5f;
 
-                float clampX = Mathf.Clamp(moveX, -(grid.boundX / 2) + (spaceX / 2) + grid.posX, (grid.boundX / 2) - (spaceX / 2) + grid.posX);
-                float clampY = Mathf.Clamp(moveY, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
+                clampX = Mathf.Clamp(moveX, -(grid.boundX / 2) + (spaceX / 2) + grid.posX, (grid.boundX / 2) - (spaceX / 2) + grid.posX);
+                clampY = Mathf.Clamp(moveY, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
 
                 //Debug.Log(-(grid.boundX / 2) + spaceX / 2);
                 //Debug.Log(-(grid.boundY / 2) + spaceY / 2);
+                transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
 
-                transform.position = new Vector3(clampX, clampY, transform.position.z);
                 group.alpha = 0;
             }
             else
             {
                 group.alpha = 1.0f;
+
+                LoadHousing.instance.localHousing[primaryIndex] = (housingObject, transform.position);      //test해보기 3
+                LoadHousing.instance.saveLocal[primaryIndex] = (gameObject, transform.position);
+                Debug.Log($"현재 오브젝트 : {LoadHousing.instance.localHousing[primaryIndex].Item1.name_k}");
+                Debug.Log($"현재 포지션 : {LoadHousing.instance.localHousing[primaryIndex].Item2}");
             }
         }
         else
@@ -317,6 +369,13 @@ public class HousingDrag : MonoBehaviour
              hit_Center.collider.gameObject.layer != currentLayer &&
              hit_Box.collider.gameObject.layer != currentLayer)
         {
+            //if(currentLayer == LayerMask.NameToLayer("Building") && transform.position.y > grid.boundRB.y - (spaceY / 2))   //test해보기 1
+            //{
+            //    check.color = new Color32(255, 0, 0, 100);
+            //    check.gameObject.SetActive(true);
+            //    transform.SetParent(previousParent);
+            //    isCanBuild = false;
+            //}
             check.color = new Color32(0, 255, 0, 100);
             transform.SetParent(hit_Center.collider.transform.parent);
             isCanBuild = true;
@@ -329,6 +388,50 @@ public class HousingDrag : MonoBehaviour
             isCanBuild = false;
         }
 
+    }
+
+    private void SetWidthHeight()
+    {
+        switch (housingObject.index)
+        {
+            case 0:
+                spaceX = 4;
+                spaceY = 5;
+                break;
+            case 1:
+                spaceX = 3;
+                spaceY = 5;
+                break;
+            case 2:
+                spaceX = 4;
+                spaceY = 3;
+                break;
+            case 3:
+                spaceX = 4;
+                spaceY = 3;
+                break;
+            case 4:
+                spaceX = 3;
+                spaceY = 5;
+                break;
+            case 5:
+                spaceX = 1;
+                spaceY = 1;
+                break;
+            case 6:
+                spaceX = 1;
+                spaceY = 1;
+                break;
+            case 7:
+                spaceX = 1;
+                spaceY = 1;
+                break;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        LoadHousing.instance.isLoading = false;
     }
 
     #region OnDrawGizmos
