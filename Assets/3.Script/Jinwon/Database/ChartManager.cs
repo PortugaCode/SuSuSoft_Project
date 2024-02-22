@@ -103,7 +103,7 @@ public class ChartManager : MonoBehaviour
             return;
         }
 
-        var s_bro = Backend.Chart.GetOneChartAndSave("109229", "StageInfo"); // Stage Info 차트
+        var s_bro = Backend.Chart.GetOneChartAndSave("109275", "StageInfo"); // Stage Info 차트
 
         if (s_bro.IsSuccess())
         {
@@ -122,6 +122,9 @@ public class ChartManager : MonoBehaviour
                 stageInfo.reward_3 = int.Parse(rows[i]["Reward_3"]["S"].ToString());
                 stageInfo.reward_4 = int.Parse(rows[i]["Reward_4"]["S"].ToString());
                 stageInfo.reward_repeat = int.Parse(rows[i]["Reward_Repeat"]["S"].ToString());
+                stageInfo.condition_1 = int.Parse(rows[i]["Condition_1"]["S"].ToString());
+                stageInfo.condition_2 = int.Parse(rows[i]["Condition_2"]["S"].ToString());
+                stageInfo.condition_3 = int.Parse(rows[i]["Condition_3"]["S"].ToString());
 
                 stageInfos.Add(stageInfo);
             }
