@@ -36,7 +36,11 @@ public class HousingDrag : MonoBehaviour
     [HideInInspector] public float moveY;
     [HideInInspector] public float clampX;
     [HideInInspector] public float clampY;
-
+    private float currentClampX = 0;
+    private float currentClampY = 0;
+    private Camera mainCam;
+    private float cameraMoveStartPos = 2.0f;
+    [SerializeField] private float camSpeed = 0.01f;
 
     #region Gizmos parameter
     /*
@@ -50,53 +54,30 @@ public class HousingDrag : MonoBehaviour
 
     private void Start()
     {
-        if (LoadHousing.instance.isLoading)
+        mainCam = Camera.main;
+        if (!LoadHousing.instance.isLoading)
         {
-            //housingObject = LoadHousing.instance.localHousing[primaryIndex].Item1;
-            //id = localHousing[i].Item1.index;
-            //buildSprite.sprite = SpriteManager.instance.sprites[localHousing[i].Item1.imageIndex];
-            //previousParent = nowBuilding;
-            //moveX = localHousing[i].Item2.x;
-            //moveY = localHousing[i].Item2.y;
-            //clampX = localHousing[i].Item2.x;
-            //clampY = localHousing[i].Item2.y;
-        }
-        else
-        {
+            Debug.Log("순서 2");
             previousParent = transform.parent;
 
             primaryIndex = LoadHousing.instance.primaryKey;             //test해보기 2
             LoadHousing.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
-            LoadHousing.instance.saveLocal.Add((gameObject, transform.position));
 
             LoadHousing.instance.primaryKey += 1;
+
+            transform.position = new Vector3(transform.position.x, transform.position.y, -1);
         }
+        else
+        {
+            transform.position = LoadHousing.instance.localHousing[primaryIndex].Item2;
+        }
+        //LoadHousing.instance.isLoading = false;
         //spaceX = data.housingWidth;
         //spaceY = data.housingHeight;
 
         SetWidthHeight();
 
-        switch (housingObject.type)
-        {
-            case "전경":
-                int layer_Front = LayerMask.NameToLayer("Front");
-                gameObject.layer = layer_Front;
-                break;
-            case "후경":
-                int layer_Back = LayerMask.NameToLayer("Back");
-                gameObject.layer = layer_Back;
-                break;
-            case "건물":
-                int layer_Building = LayerMask.NameToLayer("Building");
-                gameObject.layer = layer_Building;
-                break;
-            case "상호작용":
-                int layer_Interactionable = LayerMask.NameToLayer("Interactionable");
-                gameObject.layer = layer_Interactionable;
-                break;
-            default:
-                break;
-        }
+        SetLayer();
 
 
 
@@ -136,7 +117,7 @@ public class HousingDrag : MonoBehaviour
 
 
 
-        transform.position = new Vector3(transform.position.x, transform.position.y, -1);
+
         space.transform.localScale = new Vector3(spaceX, spaceY, 1);
 
         check = transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -250,11 +231,21 @@ public class HousingDrag : MonoBehaviour
             if (isDragging)
             {
                 transform.position = new Vector3(transform.position.x, transform.position.y, -1);
+                transform.SetParent(previousParent);
                 check.gameObject.SetActive(true);
                 subCollider.enabled = true;
                 Vector3 newPosition = ray.GetPoint(offset.z);
+
+                //카메라 각 꼭지점 좌표
+                Vector3 cam_RT = mainCam.ViewportToWorldPoint(new Vector3(1, 1, mainCam.nearClipPlane));
+                Vector3 cam_LT = mainCam.ViewportToWorldPoint(new Vector3(0, 1, mainCam.nearClipPlane));
+                Vector3 cam_LB = mainCam.ViewportToWorldPoint(new Vector3(0, 0, mainCam.nearClipPlane));
+                Vector3 cam_RB = mainCam.ViewportToWorldPoint(new Vector3(1, 0, mainCam.nearClipPlane));
+                Vector3 mainCamPos = mainCam.transform.position;
+
                 checkMinusX = newPosition.x >= 0 ? 1 : -1;
                 checkMinusY = newPosition.y >= 0 ? 1 : -1;
+
                 moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.x)) * checkMinusX : Mathf.FloorToInt(newPosition.x) + 0.5f;
                 moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.y)) * checkMinusY : Mathf.FloorToInt(newPosition.y) + 0.5f;
 
@@ -263,7 +254,89 @@ public class HousingDrag : MonoBehaviour
 
                 //Debug.Log(-(grid.boundX / 2) + spaceX / 2);
                 //Debug.Log(-(grid.boundY / 2) + spaceY / 2);
-                transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
+                currentClampX = Mathf.Clamp(newPosition.x, -(grid.boundX / 2) + (spaceX / 2) + grid.posX, (grid.boundX / 2) - (spaceX / 2) + grid.posX);
+                currentClampY = Mathf.Clamp(newPosition.y, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
+
+                #region 가장자리 이동시 카메라 이동
+                if (currentClampX > cam_RT.x - cameraMoveStartPos)
+                {
+                    if (currentClampY > cam_LT.y - cameraMoveStartPos)
+                    {
+                        Debug.Log("오른쪽 대각선 위쪽 이동");
+                        mainCam.transform.position = new Vector3(mainCamPos.x + camSpeed, mainCamPos.y + camSpeed, mainCamPos.z);
+                    }
+                    else if (currentClampY < cam_RB.y + cameraMoveStartPos)
+                    {
+                        Debug.Log("오른쪽 대각선 아래쪽 이동");
+                        mainCam.transform.position = new Vector3(mainCamPos.x + camSpeed, mainCamPos.y - camSpeed, mainCamPos.z);
+                    }
+                    else
+                    {
+                        Debug.Log("오른쪽 이동");
+                        mainCam.transform.position = new Vector3(mainCamPos.x + camSpeed, mainCamPos.y, mainCamPos.z);
+                    }
+                }
+
+                if (currentClampX < cam_LB.x + cameraMoveStartPos)
+                {
+                    if (currentClampY > cam_LT.y - cameraMoveStartPos)
+                    {
+                        Debug.Log("왼쪽 대각선 위쪽 이동");
+                        mainCam.transform.position = new Vector3(mainCamPos.x - camSpeed, mainCamPos.y + camSpeed, mainCamPos.z);
+                    }
+                    else if (currentClampY < cam_RB.y + cameraMoveStartPos)
+                    {
+                        Debug.Log("왼쪽 대각선 아래쪽 이동");
+                        mainCam.transform.position = new Vector3(mainCamPos.x - camSpeed, mainCamPos.y - camSpeed, mainCamPos.z);
+                    }
+                    else
+                    {
+                        Debug.Log("왼쪽 이동");
+                        mainCam.transform.position = new Vector3(mainCamPos.x - camSpeed, mainCamPos.y, mainCamPos.z);
+                    }
+                }
+
+                if (currentClampY > cam_LT.y - cameraMoveStartPos)
+                {
+                    if (currentClampX > cam_RT.x - cameraMoveStartPos)
+                    {
+                        Debug.Log("위쪽 대각선 오른쪽 이동");
+                        mainCam.transform.position = new Vector3(mainCamPos.x + camSpeed, mainCamPos.y + camSpeed, mainCamPos.z);
+                    }
+                    else if (currentClampX < cam_LB.x + cameraMoveStartPos)
+                    {
+                        Debug.Log("위쪽 대각선 왼쪽 이동");
+                        mainCam.transform.position = new Vector3(mainCamPos.x - camSpeed, mainCamPos.y + camSpeed, mainCamPos.z);
+                    }
+                    else
+                    {
+                        Debug.Log("위쪽 이동");
+                        mainCam.transform.position = new Vector3(mainCamPos.x, mainCamPos.y + camSpeed, mainCamPos.z);
+                    }
+                }
+
+                if (currentClampY < cam_RB.y + cameraMoveStartPos)
+                {
+                    if (currentClampX > cam_RT.x - cameraMoveStartPos)
+                    {
+                        Debug.Log("아래쪽 대각선 오른쪽 이동");
+                        mainCam.transform.position = new Vector3(mainCamPos.x + camSpeed, mainCamPos.y - camSpeed, mainCamPos.z);
+                    }
+                    else if (currentClampX < cam_LB.x + cameraMoveStartPos)
+                    {
+                        Debug.Log("아래쪽 대각선 왼쪽 이동");
+                        mainCam.transform.position = new Vector3(mainCamPos.x - camSpeed, mainCamPos.y - camSpeed, mainCamPos.z);
+                    }
+                    else
+                    {
+                        Debug.Log("아래쪽 이동");
+                        mainCam.transform.position = new Vector3(mainCamPos.x, mainCamPos.y - camSpeed, mainCamPos.z);
+                    }
+                }
+
+                #endregion
+
+                transform.position = new Vector3(currentClampX, currentClampY, transform.position.z);
 
                 group.alpha = 0;
             }
@@ -272,7 +345,7 @@ public class HousingDrag : MonoBehaviour
                 group.alpha = 1.0f;
 
                 LoadHousing.instance.localHousing[primaryIndex] = (housingObject, transform.position);      //test해보기 3
-                LoadHousing.instance.saveLocal[primaryIndex] = (gameObject, transform.position);
+                //LoadHousing.instance.saveLocal[primaryIndex] = (gameObject, transform.position);
                 Debug.Log($"현재 오브젝트 : {LoadHousing.instance.localHousing[primaryIndex].Item1.name_k}");
                 Debug.Log($"현재 포지션 : {LoadHousing.instance.localHousing[primaryIndex].Item2}");
             }
@@ -369,22 +442,28 @@ public class HousingDrag : MonoBehaviour
              hit_Center.collider.gameObject.layer != currentLayer &&
              hit_Box.collider.gameObject.layer != currentLayer)
         {
-            //if(currentLayer == LayerMask.NameToLayer("Building") && transform.position.y > grid.boundRB.y - (spaceY / 2))   //test해보기 1
-            //{
-            //    check.color = new Color32(255, 0, 0, 100);
-            //    check.gameObject.SetActive(true);
-            //    transform.SetParent(previousParent);
-            //    isCanBuild = false;
-            //}
-            check.color = new Color32(0, 255, 0, 100);
-            transform.SetParent(hit_Center.collider.transform.parent);
-            isCanBuild = true;
+            if (currentLayer == LayerMask.NameToLayer("Building") && transform.position.y > grid.boundRB.y + (spaceY / 2) + 0.5f)   //test해보기 1
+            {
+                check.color = new Color32(255, 0, 0, 100);
+                check.gameObject.SetActive(true);
+                transform.SetParent(previousParent);
+                isCanBuild = false;
+            }
+            else
+            {
+                check.color = new Color32(0, 255, 0, 100);
+                isCanBuild = true;
+                if (!isDragging)
+                {
+                    transform.SetParent(hit_Center.collider.transform.parent);
+                }
+            }
         }
         else
         {
             check.color = new Color32(255, 0, 0, 100);
             check.gameObject.SetActive(true);
-            transform.SetParent(previousParent);
+            //transform.SetParent(previousParent);
             isCanBuild = false;
         }
 
@@ -429,9 +508,34 @@ public class HousingDrag : MonoBehaviour
         }
     }
 
+    private void SetLayer()
+    {
+        switch (housingObject.type)
+        {
+            case "전경":
+                int layer_Front = LayerMask.NameToLayer("Front");
+                gameObject.layer = layer_Front;
+                break;
+            case "후경":
+                int layer_Back = LayerMask.NameToLayer("Back");
+                gameObject.layer = layer_Back;
+                break;
+            case "건물":
+                int layer_Building = LayerMask.NameToLayer("Building");
+                gameObject.layer = layer_Building;
+                break;
+            case "상호작용":
+                int layer_Interactionable = LayerMask.NameToLayer("Interactionable");
+                gameObject.layer = layer_Interactionable;
+                break;
+            default:
+                break;
+        }
+    }
+
     private void OnDestroy()
     {
-        LoadHousing.instance.isLoading = false;
+        //LoadHousing.instance.isLoading = false;
     }
 
     #region OnDrawGizmos

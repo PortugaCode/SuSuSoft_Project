@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grid : MonoBehaviour
+public class DrawingGrid : MonoBehaviour
 {
     private LineRenderer line;
     public float startX, startY;

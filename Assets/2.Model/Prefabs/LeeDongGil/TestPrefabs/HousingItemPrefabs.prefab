@@ -184,6 +184,11 @@ MonoBehaviour:
   id: 0
   primaryIndex: 0
   grid: {fileID: 0}
+  moveX: 0
+  moveY: 0
+  clampX: 0
+  clampY: 0
+  camSpeed: 0.01
 --- !u!65 &2554417741279338056
 BoxCollider:
   m_ObjectHideFlags: 0

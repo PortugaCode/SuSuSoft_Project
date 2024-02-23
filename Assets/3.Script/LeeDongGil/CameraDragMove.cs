@@ -7,6 +7,7 @@ public class CameraDragMove : MonoBehaviour
     public float camSpeed = 0.005f;
     public HousingGrid grid;
     private Camera mainCam = new Camera();
+    private CameraController camController;
 
     private enum Gesture
     {
@@ -17,6 +18,7 @@ public class CameraDragMove : MonoBehaviour
     private void Start()
     {
         grid = FindObjectOfType<HousingGrid>();
+        camController = GetComponent<CameraController>();
         mainCam = Camera.main;
     }
 
@@ -24,12 +26,14 @@ public class CameraDragMove : MonoBehaviour
     {
         if (TestManager.instance.isEditMode)
         {
-            mainCam.orthographicSize = 10.0f;
+            mainCam.orthographicSize = 7.0f;
+            camController.enabled = false;
             MoveCamera();
         }
         else
         {
             mainCam.orthographicSize = 7.0f;
+            camController.enabled = true;
         }
     }
 
