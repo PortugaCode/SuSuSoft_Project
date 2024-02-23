@@ -127,8 +127,18 @@ public class StageClear : MonoBehaviour
         if (DBManager.instance.user.clearInfo[stageIndex, 3] == 0 && ChartManager.instance.stageInfos[stageIndex].reward_4 != -1)
         {
             DBManager.instance.user.clearInfo[stageIndex, 3] = 1;
+
             // 건물 해금
-            DBManager.instance.user.housingObject[ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4)] += 1;
+            if (DBManager.instance.user.housingObject.ContainsKey(ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4)))
+            {
+                DBManager.instance.user.housingObject[ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4)] += 1;
+            }
+            else
+            {
+                // 없을 때 Add
+                DBManager.instance.user.housingObject.Add(ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4), 1);
+            }
+            
         }
     }
 

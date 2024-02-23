@@ -55,6 +55,17 @@ public class BackEndManager : MonoBehaviour
         };
     }
 
+    private void Start()
+    {
+        Backend.ErrorHandler.InitializePoll(true);
+        Backend.ErrorHandler.OnOtherDeviceLoginDetectedError = () => {
+            Debug.Log("중복 로그인 감지");
+            Backend.MultiCharacter.Account.LogoutAccount();
+            // Loading 씬으로 이동
+            Utils.Instance.LoadScene(SceneNames.Loading);
+        };
+    }
+
     private void Update()
     {
         if(Backend.IsInitialized)
@@ -64,8 +75,6 @@ public class BackEndManager : MonoBehaviour
 
             Backend.Match.Poll();
             matchSystem.SetTimer();
-
-
 
             Backend.Chat.Poll();
             chatManager.ReceiveChat();
