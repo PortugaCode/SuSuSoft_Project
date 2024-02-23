@@ -102,7 +102,6 @@ public class PlayerProperty : MonoBehaviour
             //Player Damage
             PassiveAttackNull();
             onHPSlider?.Invoke(this, EventArgs.Empty);
-            Destroy(collision.gameObject);
             Debug.Log($" currentHP: {currentHealth} ");
         }
 
@@ -198,6 +197,13 @@ public class PlayerProperty : MonoBehaviour
         }
     }
 
+    private void GameOver()
+    {
+        if(currentHealth < maxHealth)
+        {
+            
+        }
+    }
 
     #region [Attack nullified 공격 무효화]
     private void PassiveAttackNull()    //10% 확률로 데미지 무효화
