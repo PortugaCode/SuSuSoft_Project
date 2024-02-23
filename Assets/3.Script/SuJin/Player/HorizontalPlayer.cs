@@ -9,9 +9,6 @@ public class HorizontalPlayer : MonoBehaviour
     public EventHandler OnLaver;
 
 
-    [Header("PlyerFace")]
-    [SerializeField] private GameObject basicFace;
-    [SerializeField] private GameObject blinkFace;
 
     private Vector3 touchPosition;
     private Vector3 direction;
@@ -49,6 +46,9 @@ public class HorizontalPlayer : MonoBehaviour
     private int ActiveSkill;
     private int PassiveSkill;
 
+    [Header("Animator")]
+    [SerializeField] private Animator animator;
+
     private void Awake()
     {
         currentAcceleration = baseAcceleration;
@@ -57,7 +57,6 @@ public class HorizontalPlayer : MonoBehaviour
     private void Start()
     {
         //Invoke("StartGame", 3f);
-        StartCoroutine(BlinkFace());
         playerLight.pointLightOuterRadius = maxSightRange;
     }
     private void Update()
@@ -90,6 +89,8 @@ public class HorizontalPlayer : MonoBehaviour
     {
         if (Input.touchCount > 0)
         {
+            animator.SetBool("Move", true);
+
             Touch touch = Input.GetTouch(0);
 
             touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
@@ -104,14 +105,10 @@ public class HorizontalPlayer : MonoBehaviour
 
             //Player Rotation
             PlayerRotation();
-
-/*            if (touch.phase == TouchPhase.Ended && isSpeed == false)     //터치가 끝난 상태
-            {
-
-            }*/
         }
         else
         {
+            animator.SetBool("Move", false);
             // 속도 초기화
             currentSpeed = initialSpeed;
             rb2D.velocity = Vector2.zero;
@@ -195,19 +192,6 @@ public class HorizontalPlayer : MonoBehaviour
         }
     }
 
-    IEnumerator BlinkFace()
-    {
-        while (true)
-        {
-            basicFace.SetActive(true);
-            blinkFace.SetActive(false);
-            yield return new WaitForSeconds(4f);
-
-            basicFace.SetActive(false);
-            blinkFace.SetActive(true);
-            yield return new WaitForSeconds(0.5f);
-        }
-    }
 
     IEnumerator Speed_Co()
     {

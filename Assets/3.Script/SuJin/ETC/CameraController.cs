@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CameraController : MonoBehaviour
 {
@@ -9,7 +11,18 @@ public class CameraController : MonoBehaviour
     [SerializeField] Vector2 minCameraPos;
     [SerializeField] Vector2 maxCameraPos;
 
+    [SerializeField] private Animator animator;
 
+
+    private void Start()
+    {
+        player.gameObject.GetComponent<PlayerProperty>().onDamage = ShakeCamera;
+    }
+
+    private void ShakeCamera(object sender, EventArgs e)
+    {
+        animator.SetTrigger("Shake");
+    }
 
     public void SetPlayer(GameObject a)
     {
@@ -20,9 +33,27 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+        if (SceneManager.GetActiveScene().name == "CharacterTest") return;
         CameraPos();
     }
 
+    private void FixedUpdate()
+    {
+        if(SceneManager.GetActiveScene().name == "CharacterTest")
+        {
+            CameraPos_Stage();
+        }
+    }
+
+
+    private void CameraPos_Stage()
+    {
+        Vector3 targetPos = new Vector3(player.position.x, player.position.y, this.transform.position.z);
+        targetPos.y = Mathf.Clamp(targetPos.y, minCameraPos.y, maxCameraPos.y);
+        //targetPos.x = Mathf.Clamp(targetPos.x, minCameraPos.x, maxCameraPos.x);
+
+        transform.position = Vector3.Lerp(transform.position, targetPos, smothing * Time.deltaTime);
+    }
 
     private void CameraPos()
     {
