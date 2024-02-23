@@ -188,6 +188,7 @@ MonoBehaviour:
   moveY: 0
   clampX: 0
   clampY: 0
+  cameraMoveStartPos: 1.5
   camSpeed: 0.01
 --- !u!65 &2554417741279338056
 BoxCollider:
