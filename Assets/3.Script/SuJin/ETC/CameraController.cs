@@ -36,16 +36,14 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        if (SceneManager.GetActiveScene().name == "CharacterTest") return;
+        if (SceneManager.GetActiveScene().name == "CharacterTest" || SceneManager.GetActiveScene().name == "OnGame") return;
         CameraPos();
     }
 
     private void FixedUpdate()
     {
-        if(SceneManager.GetActiveScene().name == "CharacterTest")
-        {
-            CameraPos_Stage();
-        }
+
+        CameraPos_Stage();
     }
 
 
@@ -85,8 +83,6 @@ public class CameraController : MonoBehaviour
             
 
             transform.position = new Vector3(x, transform.position.y, transform.position.z);
-
-
         }
     }
 
