@@ -20,6 +20,16 @@ TagManager:
   - Token
   - Breaking
   - Lever
+  - BigStar
+  - BigHp
+  - ground
+  - Obstacle
+  - FxTemporaire
+  - BombPickup
+  - Enemy
+  - ExplosionFX
+  - Bullet
+  - HealthBar
   layers:
   - Default
   - TransparentFX
@@ -30,7 +40,7 @@ TagManager:
   - Player
   - Obstacles
   - Item
-  - 
+  - Obstacles_Child
   - 
   - 
   - 

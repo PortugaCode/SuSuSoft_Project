@@ -179,7 +179,7 @@ public class TestManager : MonoBehaviour
     public void TestV2_AppleTree()
     {
         //housingInvenSys.GetHousingItem_test(testHousingV2[0], 1);
-        housingInvenSys.GetHousingItem(4, 1);
+        housingInvenSys.GetHousingItem(7, 1);
     }
     public void TestV2_Fence()
     {

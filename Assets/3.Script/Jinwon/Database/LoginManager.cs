@@ -92,7 +92,7 @@ public class LoginManager : MonoBehaviour
                 {
                     Debug.Log("로그인 완료");
                     ChartManager.instance.GetChartData();
-                    DBManager.instance.DB_Init(idText, pwText);
+                    DBManager.instance.DB_Load(idText, pwText);
                     BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
                     BackEndManager.Instance.GetChatManager().GetChatStatus();
                 }
@@ -254,8 +254,6 @@ public class LoginManager : MonoBehaviour
 
             for (int i = 0; i < bro.GetReturnValuetoJSON()["rows"].Count; i++)
             {
-                Debug.Log($"{bro.GetReturnValuetoJSON()["rows"][i]["UserName"][0].ToString()}랑 Equals 체크");
-
                 if (bro.GetReturnValuetoJSON()["rows"][i]["UserName"][0].ToString().Equals(userNameText))
                 {
                     inputFieldUserName.text = "";
