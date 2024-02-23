@@ -38,8 +38,10 @@ public class HousingDrag : MonoBehaviour
     [HideInInspector] public float clampY;
     private float currentClampX = 0;
     private float currentClampY = 0;
+    private float cameraX = 0;
+    private float cameraY = 0;
     private Camera mainCam;
-    private float cameraMoveStartPos = 2.0f;
+    [SerializeField] private float cameraMoveStartPos = 1.6f;
     [SerializeField] private float camSpeed = 0.01f;
 
     #region Gizmos parameter
@@ -236,12 +238,7 @@ public class HousingDrag : MonoBehaviour
                 subCollider.enabled = true;
                 Vector3 newPosition = ray.GetPoint(offset.z);
 
-                //카메라 각 꼭지점 좌표
-                Vector3 cam_RT = mainCam.ViewportToWorldPoint(new Vector3(1, 1, mainCam.nearClipPlane));
-                Vector3 cam_LT = mainCam.ViewportToWorldPoint(new Vector3(0, 1, mainCam.nearClipPlane));
-                Vector3 cam_LB = mainCam.ViewportToWorldPoint(new Vector3(0, 0, mainCam.nearClipPlane));
-                Vector3 cam_RB = mainCam.ViewportToWorldPoint(new Vector3(1, 0, mainCam.nearClipPlane));
-                Vector3 mainCamPos = mainCam.transform.position;
+                
 
                 checkMinusX = newPosition.x >= 0 ? 1 : -1;
                 checkMinusY = newPosition.y >= 0 ? 1 : -1;
@@ -258,79 +255,93 @@ public class HousingDrag : MonoBehaviour
                 currentClampY = Mathf.Clamp(newPosition.y, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
 
                 #region 가장자리 이동시 카메라 이동
-                if (currentClampX > cam_RT.x - cameraMoveStartPos)
+
+                Vector3 mainCamPos = mainCam.transform.position;
+
+                //카메라 각 꼭지점 좌표
+                Vector3 cam_RT = mainCam.ViewportToWorldPoint(new Vector3(1, 1, mainCam.nearClipPlane));
+                Vector3 cam_LT = mainCam.ViewportToWorldPoint(new Vector3(0, 1, mainCam.nearClipPlane));
+                Vector3 cam_LB = mainCam.ViewportToWorldPoint(new Vector3(0, 0, mainCam.nearClipPlane));
+                Vector3 cam_RB = mainCam.ViewportToWorldPoint(new Vector3(1, 0, mainCam.nearClipPlane));
+
+                cameraX = Mathf.Clamp(mainCam.transform.position.x, -(grid.boundX / 2) + ((cam_RT.x - cam_LT.x) / 2) + grid.posX, (grid.boundX / 2) - ((cam_RT.x - cam_LT.x) / 2) + grid.posX);
+                cameraY = Mathf.Clamp(mainCam.transform.position.y, -(grid.boundY / 2) + ((cam_RT.y - cam_RB.y) / 2) + grid.posY, (grid.boundY / 2) - ((cam_RT.y - cam_RB.y) / 2) + grid.posY);
+
+
+
+                if (newPosition.x > cam_RT.x - cameraMoveStartPos)
                 {
-                    if (currentClampY > cam_LT.y - cameraMoveStartPos)
+                    if (newPosition.y > cam_LT.y - cameraMoveStartPos)
                     {
                         Debug.Log("오른쪽 대각선 위쪽 이동");
-                        mainCam.transform.position = new Vector3(mainCamPos.x + camSpeed, mainCamPos.y + camSpeed, mainCamPos.z);
+                        mainCam.transform.position = new Vector3(cameraX + camSpeed, cameraY + camSpeed, mainCamPos.z);
                     }
-                    else if (currentClampY < cam_RB.y + cameraMoveStartPos)
+                    else if (newPosition.y < cam_RB.y + cameraMoveStartPos)
                     {
                         Debug.Log("오른쪽 대각선 아래쪽 이동");
-                        mainCam.transform.position = new Vector3(mainCamPos.x + camSpeed, mainCamPos.y - camSpeed, mainCamPos.z);
+                        mainCam.transform.position = new Vector3(cameraX + camSpeed, cameraY - camSpeed, mainCamPos.z);
                     }
                     else
                     {
                         Debug.Log("오른쪽 이동");
-                        mainCam.transform.position = new Vector3(mainCamPos.x + camSpeed, mainCamPos.y, mainCamPos.z);
+                        mainCam.transform.position = new Vector3(cameraX + camSpeed, cameraY, mainCamPos.z);
                     }
                 }
 
-                if (currentClampX < cam_LB.x + cameraMoveStartPos)
+                if (newPosition.x < cam_LB.x + cameraMoveStartPos)
                 {
-                    if (currentClampY > cam_LT.y - cameraMoveStartPos)
+                    if (newPosition.y > cam_LT.y - cameraMoveStartPos)
                     {
                         Debug.Log("왼쪽 대각선 위쪽 이동");
-                        mainCam.transform.position = new Vector3(mainCamPos.x - camSpeed, mainCamPos.y + camSpeed, mainCamPos.z);
+                        mainCam.transform.position = new Vector3(cameraX - camSpeed, cameraY + camSpeed, mainCamPos.z);
                     }
-                    else if (currentClampY < cam_RB.y + cameraMoveStartPos)
+                    else if (newPosition.y < cam_RB.y + cameraMoveStartPos)
                     {
                         Debug.Log("왼쪽 대각선 아래쪽 이동");
-                        mainCam.transform.position = new Vector3(mainCamPos.x - camSpeed, mainCamPos.y - camSpeed, mainCamPos.z);
+                        mainCam.transform.position = new Vector3(cameraX - camSpeed, cameraY - camSpeed, mainCamPos.z);
                     }
                     else
                     {
                         Debug.Log("왼쪽 이동");
-                        mainCam.transform.position = new Vector3(mainCamPos.x - camSpeed, mainCamPos.y, mainCamPos.z);
+                        mainCam.transform.position = new Vector3(cameraX - camSpeed, cameraY, mainCamPos.z);
                     }
                 }
 
-                if (currentClampY > cam_LT.y - cameraMoveStartPos)
+                if (newPosition.y > cam_LT.y - cameraMoveStartPos)
                 {
-                    if (currentClampX > cam_RT.x - cameraMoveStartPos)
+                    if (newPosition.x > cam_RT.x - cameraMoveStartPos)
                     {
                         Debug.Log("위쪽 대각선 오른쪽 이동");
-                        mainCam.transform.position = new Vector3(mainCamPos.x + camSpeed, mainCamPos.y + camSpeed, mainCamPos.z);
+                        mainCam.transform.position = new Vector3(cameraX + camSpeed, cameraY + camSpeed, mainCamPos.z);
                     }
-                    else if (currentClampX < cam_LB.x + cameraMoveStartPos)
+                    else if (newPosition.x < cam_LB.x + cameraMoveStartPos)
                     {
                         Debug.Log("위쪽 대각선 왼쪽 이동");
-                        mainCam.transform.position = new Vector3(mainCamPos.x - camSpeed, mainCamPos.y + camSpeed, mainCamPos.z);
+                        mainCam.transform.position = new Vector3(cameraX - camSpeed, cameraY + camSpeed, mainCamPos.z);
                     }
                     else
                     {
                         Debug.Log("위쪽 이동");
-                        mainCam.transform.position = new Vector3(mainCamPos.x, mainCamPos.y + camSpeed, mainCamPos.z);
+                        mainCam.transform.position = new Vector3(cameraX, cameraY + camSpeed, mainCamPos.z);
                     }
                 }
 
-                if (currentClampY < cam_RB.y + cameraMoveStartPos)
+                if (newPosition.y < cam_RB.y + cameraMoveStartPos)
                 {
-                    if (currentClampX > cam_RT.x - cameraMoveStartPos)
+                    if (newPosition.x > cam_RT.x - cameraMoveStartPos)
                     {
                         Debug.Log("아래쪽 대각선 오른쪽 이동");
-                        mainCam.transform.position = new Vector3(mainCamPos.x + camSpeed, mainCamPos.y - camSpeed, mainCamPos.z);
+                        mainCam.transform.position = new Vector3(cameraX + camSpeed, cameraY - camSpeed, mainCamPos.z);
                     }
-                    else if (currentClampX < cam_LB.x + cameraMoveStartPos)
+                    else if (newPosition.x < cam_LB.x + cameraMoveStartPos)
                     {
                         Debug.Log("아래쪽 대각선 왼쪽 이동");
-                        mainCam.transform.position = new Vector3(mainCamPos.x - camSpeed, mainCamPos.y - camSpeed, mainCamPos.z);
+                        mainCam.transform.position = new Vector3(cameraX - camSpeed, cameraY - camSpeed, mainCamPos.z);
                     }
                     else
                     {
                         Debug.Log("아래쪽 이동");
-                        mainCam.transform.position = new Vector3(mainCamPos.x, mainCamPos.y - camSpeed, mainCamPos.z);
+                        mainCam.transform.position = new Vector3(cameraX, cameraY - camSpeed, mainCamPos.z);
                     }
                 }
 
