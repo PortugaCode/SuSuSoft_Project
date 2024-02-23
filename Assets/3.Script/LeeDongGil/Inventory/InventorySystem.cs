@@ -13,7 +13,9 @@ public class InventorySystem : MonoBehaviour
     public void GetItem(ItemData itemData, int getCount)
     {
         Slot[] slots = GetComponentsInChildren<Slot>();
+        bool isChecked = false;
         int currentIndex = 0;
+        int index = 0;
         foreach (Slot slot in slots)
         {
             if (slot.IsSlotUse)
@@ -24,15 +26,18 @@ public class InventorySystem : MonoBehaviour
                     slot.GetComponentInChildren<ItemInfo>()._itemCount += getCount;
                     break;
                 }
-                else
-                {
-                    currentIndex++;
-                }
             }
             else
             {
-                checkObjectEqual = false;
+                if (!isChecked)
+                {
+                    currentIndex = index;
+                    checkObjectEqual = false;
+                    isChecked = true;
+                    Debug.Log($"Current : {currentIndex}");
+                }
             }
+            index++;
         }
 
         if (!checkObjectEqual)
@@ -84,6 +89,7 @@ public class InventorySystem : MonoBehaviour
                 if (slot.slotItemName.Equals(housingObject.name_e))
                 {
                     checkObjectEqual = true;
+                    //DBManager.instance.user.housingObject[housingObject.name_e] += getCount;
                     slot.GetComponentInChildren<HousingInventory>().count += getCount;
                     break;
                 }
@@ -95,16 +101,17 @@ public class InventorySystem : MonoBehaviour
                     currentIndex = index;
                     checkObjectEqual = false;
                     isChecked = true;
-                    Debug.Log($"Current : {currentIndex}");
+                    //Debug.Log($"Current : {currentIndex}");
                 }
             }
             index++;
-            Debug.Log(index);
+            //Debug.Log(index);
         }
 
         if (!checkObjectEqual)
         {
             SetItemInfo(housingObject, slots[currentIndex]);
+            //DBManager.instance.user.housingObject.Add(housingObject.name_e, getCount);          //DB매니저에 추가
             slots[currentIndex].GetComponentInChildren<HousingInventory>().count = getCount;
         }
 

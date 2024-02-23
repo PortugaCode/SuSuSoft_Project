@@ -7,6 +7,8 @@ public class HousingDrag : MonoBehaviour
 {
     public bool isDragging = false;
     public bool isCanBuild = false;
+    public bool isSetBuild = false;
+    public bool isInsertInven = false;
     public Vector3 offset;
     public Transform previousParent;
     public CanvasGroup group;
@@ -19,6 +21,7 @@ public class HousingDrag : MonoBehaviour
     public SpriteRenderer buildSprite;
     public GameObject space;
 
+    [Header("HousingObject Data")]
     [HideInInspector] public float spaceX;
     [HideInInspector] public float spaceY;
     public int id;
@@ -26,7 +29,7 @@ public class HousingDrag : MonoBehaviour
 
     private int checkMinusY = 1;
     private int checkMinusX = 1;
-    public HousingGrid grid;
+    [HideInInspector] public HousingGrid grid;
 
     private SpriteRenderer check;
     private BoxCollider boxCollider;
@@ -43,7 +46,7 @@ public class HousingDrag : MonoBehaviour
     private Camera mainCam;
     [SerializeField] private float cameraMoveStartPos = 1.6f;
     [SerializeField] private float camSpeed = 0.01f;
-
+    SpriteRenderer[] sprender;
     #region Gizmos parameter
     /*
         private Vector3 gizmosPosition;
@@ -56,32 +59,44 @@ public class HousingDrag : MonoBehaviour
 
     private void Start()
     {
+        isInsertInven = false;
         mainCam = Camera.main;
         if (!LoadHousing.instance.isLoading)
         {
+            moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(mainCam.transform.position.x)) * checkMinusX : Mathf.FloorToInt(mainCam.transform.position.x) + 0.5f;
+            moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(mainCam.transform.position.y)) * checkMinusY : Mathf.FloorToInt(mainCam.transform.position.y) + 0.5f;
             Debug.Log("순서 2");
             previousParent = transform.parent;
 
             primaryIndex = LoadHousing.instance.primaryKey;             //test해보기 2
             LoadHousing.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
+            LoadHousing.instance.localHousingObject.Add(primaryIndex, housingObject);
 
             LoadHousing.instance.primaryKey += 1;
 
-            transform.position = new Vector3(transform.position.x, transform.position.y, -1);
+            transform.position = new Vector3(moveX, moveY, -1);
         }
         else
         {
             transform.position = LoadHousing.instance.localHousing[primaryIndex].Item2;
         }
-        //LoadHousing.instance.isLoading = false;
-        //spaceX = data.housingWidth;
-        //spaceY = data.housingHeight;
 
+        //하우징 오브젝트의 너비와 높이 조절
         SetWidthHeight();
 
+        //하우징 오브젝트의 레이어 설정
         SetLayer();
 
+        space.transform.localScale = new Vector3(spaceX, spaceY, 1);
 
+        check = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        boxCollider = GetComponent<BoxCollider>();
+        subCollider = transform.GetChild(1).GetComponent<BoxCollider>();
+        group = FindObjectOfType<EditModeButton>().GetComponent<CanvasGroup>();
+        grid = FindAnyObjectByType<HousingGrid>();
+
+        boxCollider.size = new Vector3(spaceX, spaceY, 0.2f);
+        subCollider.enabled = false;
 
         #region Scriptable Object(연동 전)
         /*
@@ -116,21 +131,6 @@ public class HousingDrag : MonoBehaviour
                 }
         */
         #endregion
-
-
-
-
-        space.transform.localScale = new Vector3(spaceX, spaceY, 1);
-
-        check = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        boxCollider = GetComponent<BoxCollider>();
-        subCollider = transform.GetChild(1).GetComponent<BoxCollider>();
-        group = FindObjectOfType<EditModeButton>().GetComponent<CanvasGroup>();
-        grid = FindAnyObjectByType<HousingGrid>();
-
-        boxCollider.size = new Vector3(spaceX, spaceY, 0.2f);
-        subCollider.enabled = false;
-
     }
 
     private void Update()
@@ -141,6 +141,12 @@ public class HousingDrag : MonoBehaviour
             CheckToBuild();
         }
         else
+        {
+            check.gameObject.SetActive(false);
+            subCollider.enabled = false;
+        }
+
+        if (isSetBuild)
         {
             check.gameObject.SetActive(false);
             subCollider.enabled = false;
@@ -232,13 +238,21 @@ public class HousingDrag : MonoBehaviour
 
             if (isDragging)
             {
+                isSetBuild = false;
                 transform.position = new Vector3(transform.position.x, transform.position.y, -1);
                 transform.SetParent(previousParent);
                 check.gameObject.SetActive(true);
                 subCollider.enabled = true;
                 Vector3 newPosition = ray.GetPoint(offset.z);
 
-                
+                sprender = FindObjectOfType<DrawingGrid>().GetComponentsInChildren<SpriteRenderer>();
+                foreach (SpriteRenderer sp in sprender)
+                {
+                    if (sp.CompareTag("Building"))
+                    {
+                        sp.color = new Color32(255, 255, 255, 100);
+                    }
+                }
 
                 checkMinusX = newPosition.x >= 0 ? 1 : -1;
                 checkMinusY = newPosition.y >= 0 ? 1 : -1;
@@ -246,11 +260,11 @@ public class HousingDrag : MonoBehaviour
                 moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.x)) * checkMinusX : Mathf.FloorToInt(newPosition.x) + 0.5f;
                 moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.y)) * checkMinusY : Mathf.FloorToInt(newPosition.y) + 0.5f;
 
+                //오브젝트 위치 제한
                 clampX = Mathf.Clamp(moveX, -(grid.boundX / 2) + (spaceX / 2) + grid.posX, (grid.boundX / 2) - (spaceX / 2) + grid.posX);
                 clampY = Mathf.Clamp(moveY, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
 
-                //Debug.Log(-(grid.boundX / 2) + spaceX / 2);
-                //Debug.Log(-(grid.boundY / 2) + spaceY / 2);
+                //카메라 위치 제한
                 currentClampX = Mathf.Clamp(newPosition.x, -(grid.boundX / 2) + (spaceX / 2) + grid.posX, (grid.boundX / 2) - (spaceX / 2) + grid.posX);
                 currentClampY = Mathf.Clamp(newPosition.y, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
 
@@ -353,8 +367,18 @@ public class HousingDrag : MonoBehaviour
             }
             else
             {
+                sprender = FindObjectOfType<DrawingGrid>().GetComponentsInChildren<SpriteRenderer>();
+                foreach (SpriteRenderer sp in sprender)
+                {
+                    if (sp.CompareTag("Building"))
+                    {
+                        sp.color = Color.white;
+                    }
+                }
+
                 group.alpha = 1.0f;
 
+                //드래그 끝날 때 Dictionary 수정
                 LoadHousing.instance.localHousing[primaryIndex] = (housingObject, transform.position);      //test해보기 3
                 //LoadHousing.instance.saveLocal[primaryIndex] = (gameObject, transform.position);
                 Debug.Log($"현재 오브젝트 : {LoadHousing.instance.localHousing[primaryIndex].Item1.name_k}");
@@ -453,21 +477,32 @@ public class HousingDrag : MonoBehaviour
              hit_Center.collider.gameObject.layer != currentLayer &&
              hit_Box.collider.gameObject.layer != currentLayer)
         {
-            if (currentLayer == LayerMask.NameToLayer("Building") && transform.position.y > grid.boundRB.y + (spaceY / 2) + 0.5f)   //test해보기 1
+            #region 건물을 바닥에만 설치할 수 있게 하려면 endregion아래의 코드를 주석처리 후 이 조건문을 활성화 하세요.
+            /*
+                        if (currentLayer == LayerMask.NameToLayer("Building") && transform.position.y > grid.boundRB.y + (spaceY / 2) + 0.5f)   //test해보기 1
+                        {
+                            check.color = new Color32(255, 0, 0, 100);
+                            check.gameObject.SetActive(true);
+                            transform.SetParent(previousParent);
+                            isCanBuild = false;
+                        }
+                        else
+                        {
+                            check.color = new Color32(0, 255, 0, 100);
+                            isCanBuild = true;
+                            if (!isDragging)
+                            {
+                                transform.SetParent(hit_Center.collider.transform.parent);
+                            }
+                        }
+            */
+            #endregion
+
+            check.color = new Color32(0, 255, 0, 100);
+            isCanBuild = true;
+            if (!isDragging)
             {
-                check.color = new Color32(255, 0, 0, 100);
-                check.gameObject.SetActive(true);
-                transform.SetParent(previousParent);
-                isCanBuild = false;
-            }
-            else
-            {
-                check.color = new Color32(0, 255, 0, 100);
-                isCanBuild = true;
-                if (!isDragging)
-                {
-                    transform.SetParent(hit_Center.collider.transform.parent);
-                }
+                transform.SetParent(hit_Center.collider.transform.parent);
             }
         }
         else
@@ -546,7 +581,15 @@ public class HousingDrag : MonoBehaviour
 
     private void OnDestroy()
     {
-        //LoadHousing.instance.isLoading = false;
+        if (isInsertInven)
+        {
+            Debug.Log("오브젝트 넣기를 누를때 여기 실행");
+            //LoadHousing.instance.localHousing.Remove(primaryIndex);
+        }
+        else
+        {
+            Debug.Log("평소의 OnDestroy 실행");
+        }
     }
 
     #region OnDrawGizmos

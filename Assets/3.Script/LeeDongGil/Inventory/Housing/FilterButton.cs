@@ -9,7 +9,19 @@ public class FilterButton : MonoBehaviour
     public Transform windowInventory;
     public bool isFilter = false;
     public Button btn;
-    //전체적으로 수정
+
+    private void OnEnable()
+    {
+        Debug.Log("필터 버튼이 활성화 될 때 이 디버그가 표시됨");
+        
+    }
+
+    private void OnDisable()
+    {
+        Debug.Log("필터 버튼이 비활성화 될 때 이 디버그가 표시됨");
+        
+    }
+
     public void AllButton()
     {
         isFilter = false;
