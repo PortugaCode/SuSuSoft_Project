@@ -105,11 +105,6 @@ public class HorizontalPlayer : MonoBehaviour
 
             //Player Rotation
             PlayerRotation();
-
-/*            if (touch.phase == TouchPhase.Ended && isSpeed == false)     //터치가 끝난 상태
-            {
-
-            }*/
         }
         else
         {
