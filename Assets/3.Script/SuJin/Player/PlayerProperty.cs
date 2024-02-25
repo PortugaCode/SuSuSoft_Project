@@ -15,6 +15,7 @@ public class PlayerProperty : MonoBehaviour
 
     [Header("Particle")]
     [SerializeField] private ParticleSystem hitAction;
+    [SerializeField] private ParticleSystem dieAction;
 
 
     [Header("Player")]
@@ -214,16 +215,35 @@ public class PlayerProperty : MonoBehaviour
             stars.RemoveAt(stars.Count - 1);
             Destroy(a);
         }
+        currentHealth -= damage;
         animator.SetTrigger("Hit");
         onDamage?.Invoke(this, EventArgs.Empty);
+
+        if(currentHealth <= 0)
+        {
+            currentHealth = 0;
+            Die();
+            return;
+        }
+
         hitAction.Play();
-        currentHealth -= damage;
     }
+
+    private void Die()
+    {
+        Destroy(gameObject);
+        hitAction.gameObject.transform.SetParent(null);
+        dieAction.gameObject.transform.SetParent(null);
+        hitAction.Play();
+        dieAction.Play();
+        
+    }
+
     #endregion //Attack nullified 공격 무효화
 
 
     #region  [IEnumerator]
-    
+
 
     private IEnumerator HitDelay_Co()
     {

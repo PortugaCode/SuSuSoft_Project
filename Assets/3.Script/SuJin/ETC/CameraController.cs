@@ -19,6 +19,7 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
+        //스테이지 씬이라면 조건 추가 해야함
         player.gameObject.GetComponent<PlayerProperty>().onDamage = ShakeCamera;
     }
 
@@ -49,6 +50,7 @@ public class CameraController : MonoBehaviour
 
     private void CameraPos_Stage()
     {
+        if (player == null) return;
         Vector3 targetPos = new Vector3(player.position.x, player.position.y, this.transform.position.z);
         targetPos.y = Mathf.Clamp(targetPos.y, minCameraPos.y, maxCameraPos.y);
         //targetPos.x = Mathf.Clamp(targetPos.x, minCameraPos.x, maxCameraPos.x);

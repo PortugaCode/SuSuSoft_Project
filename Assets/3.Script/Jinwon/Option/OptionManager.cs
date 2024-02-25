@@ -62,11 +62,13 @@ public class OptionManager : MonoBehaviour
     public void UpdateBackgroundVolume()
     {
         Debug.Log($"Background Volume : {backgroundScrollbar.value}");
+        backgroundScrollbar.onValueChanged.AddListener(AudioManager.Instance.SetBGMVolume);
     }
 
     public void UpdateEffectVolume()
     {
         Debug.Log($"Effect Volume : {effectScrollbar.value}");
+        effectScrollbar.onValueChanged.AddListener(AudioManager.Instance.SetSFXVolume);
     }
 
     public void ToggleAlarm(int index)

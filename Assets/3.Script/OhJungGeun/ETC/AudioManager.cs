@@ -55,10 +55,8 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        if (SceneManager.GetActiveScene().name == "CharacterTest")
-        {
-            PlayBGM(BGM_Name.Stage);
-        }
+        //Test
+        PlayBGM(BGM_Name.Main);
     }
 
     #region [Audio Play]
@@ -112,19 +110,32 @@ public class AudioManager : MonoBehaviour
     ///ex)  m_MusicMasterSlider.onValueChanged.AddListener(SetMasterVolume);
     public void SetMasterVolume(float volume)
     {
-
-
-        m_AudioMixer.SetFloat("Master", Mathf.Log10(volume) * 20);
+        if (volume <= 0)
+        {
+            m_AudioMixer.SetFloat("Master", -80f);
+            return;
+        }
+        m_AudioMixer.SetFloat("Master", Mathf.Log10(volume) * 40);
     }
 
     public void SetBGMVolume(float volume)
     {
-        m_AudioMixer.SetFloat("BGM", Mathf.Log10(volume) * 20);
+        if (volume <= 0)
+        {
+            m_AudioMixer.SetFloat("BGM", -80f);
+            return;
+        }
+        m_AudioMixer.SetFloat("BGM", Mathf.Log10(volume) * 40);
     }
 
     public void SetSFXVolume(float volume)
     {
-        m_AudioMixer.SetFloat("SFX", Mathf.Log10(volume) * 20);
+        if (volume <= 0)
+        {
+            m_AudioMixer.SetFloat("SFX", -80f);
+            return;
+        }
+        m_AudioMixer.SetFloat("SFX", Mathf.Log10(volume) * 40);
     }
 
     #endregion
