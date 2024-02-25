@@ -10,8 +10,8 @@ public class ExplosionForce : MonoBehaviour {
 
     private void Start()
     {
-        Physics2D.IgnoreLayerCollision(6, 31, true);
-        Physics2D.IgnoreLayerCollision(7, 31, true);
+        Physics2D.IgnoreLayerCollision(6, 9, true);
+        Physics2D.IgnoreLayerCollision(7, 9, true);
     }
 
     /// <summary>

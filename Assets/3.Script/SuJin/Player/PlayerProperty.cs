@@ -133,16 +133,15 @@ public class PlayerProperty : MonoBehaviour
             }
             onHPSlider?.Invoke(this, EventArgs.Empty);
             Destroy(collision.gameObject);
-            Debug.Log($" currentHP: {currentHealth} ");
         }
 
         //별
+        //Pooling 으로 바꾸기
         else if (collision.gameObject.CompareTag("Star"))
         {
             Instantiate(starPrefebs, transform.position, Quaternion.identity);
             onStarBar?.Invoke(this, EventArgs.Empty);
             Destroy(collision.gameObject);
-            Debug.Log($" getStarCount : {getStarCount}");
         }
         else if (collision.gameObject.CompareTag("BigStar"))
         {
@@ -151,7 +150,6 @@ public class PlayerProperty : MonoBehaviour
             Instantiate(starPrefebs, transform.position, Quaternion.identity);
             onStarBar?.Invoke(this, EventArgs.Empty);
             Destroy(collision.gameObject);
-            Debug.Log($" getStarCount : {getStarCount}");
         }
 
         //거대화, 최소화
@@ -196,15 +194,7 @@ public class PlayerProperty : MonoBehaviour
             Debug.Log($" currentHP: {currentHealth} ");
         }
     }
-
-    private void GameOver()
-    {
-        if(currentHealth < maxHealth)
-        {
-            
-        }
-    }
-
+   
     #region [Attack nullified 공격 무효화]
     private void PassiveAttackNull()    //10% 확률로 데미지 무효화
     {
