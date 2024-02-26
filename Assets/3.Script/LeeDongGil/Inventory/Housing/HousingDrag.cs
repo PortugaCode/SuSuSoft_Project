@@ -68,7 +68,7 @@ public class HousingDrag : MonoBehaviour
 
         isInsertInven = false;
         mainCam = Camera.main;
-        if (!LoadHousing.instance.isLoading)
+        if (!LoadHousing.instance.isLoading)        //새로 설치할 하우징 코드
         {
             moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(mainCam.transform.position.x)) * checkMinusX : Mathf.FloorToInt(mainCam.transform.position.x) + 0.5f;
             moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(mainCam.transform.position.y)) * checkMinusY : Mathf.FloorToInt(mainCam.transform.position.y) + 0.5f;
@@ -78,15 +78,23 @@ public class HousingDrag : MonoBehaviour
             Debug.Log("순서 2");
             previousParent = transform.parent;
 
-            primaryIndex = LoadHousing.instance.primaryKey;             //test해보기 2
+            if (LoadHousing.instance.tempKey.Count == 0)        //임시 키값이 없을 경우
+            {
+                primaryIndex = LoadHousing.instance.primaryKey;
+                LoadHousing.instance.primaryKey += 1;
+            }
+            else
+            {
+                primaryIndex = LoadHousing.instance.tempKey[0];
+                LoadHousing.instance.tempKey.RemoveAt(0);
+            }
             LoadHousing.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
             LoadHousing.instance.localHousingObject.Add(primaryIndex, housingObject);
 
-            LoadHousing.instance.primaryKey += 1;
 
             transform.position = new Vector3(clampX, clampY, -1);
         }
-        else
+        else            //기존에 설치된 하우징 위치
         {
             transform.position = LoadHousing.instance.localHousing[primaryIndex].Item2;
         }
@@ -602,6 +610,8 @@ public class HousingDrag : MonoBehaviour
             Debug.Log("오브젝트 넣기를 누를때 여기 실행");
             group.alpha = 1.0f;
             group.blocksRaycasts = true;
+            LoadHousing.instance.tempKey.Add(primaryIndex);
+            LoadHousing.instance.localHousing.Remove(primaryIndex);
         }
         else
         {

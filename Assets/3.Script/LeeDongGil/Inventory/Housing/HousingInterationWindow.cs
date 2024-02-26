@@ -147,7 +147,7 @@ public class HousingInterationWindow : MonoBehaviour
 
     public void InsertHousingInventory()
     {
-        housingInvenSys.GetHousingItem(housingObj.index, 1);
+        housingInvenSys.GetHousingItem_Local(housingObj.index, 1);
         housingObject.GetComponent<HousingDrag>().isInsertInven = true;
         Destroy(housingObject);
         transform.GetChild(0).gameObject.SetActive(false);

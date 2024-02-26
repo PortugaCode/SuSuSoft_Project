@@ -19,7 +19,7 @@ public class HousingInventory : MonoBehaviour
     [HideInInspector] public FilterButton filter;
 
     [Header("Inventory Info")]
-    public HousingItemData housingData;
+    public HousingItemData housingData;         //데이터 연동 이전
     public HousingObject housingObj;
     public string housingName;
     public int count = 0;
@@ -162,6 +162,7 @@ public class HousingInventory : MonoBehaviour
         if (!slot.isWindow)
         {
             image.color = new Color(1, 1, 1, 0);
+            //DBManager.instance.user.housingObject[]
             count--;
             Vector3 createPos = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, 0);
             thisBuilding = Instantiate(Building, createPos, Quaternion.identity, buildingSpace);
