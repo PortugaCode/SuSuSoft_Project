@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Character Info UI")]
     [SerializeField] GameObject characterInfoPopup; // 캐릭터 정보 팝업
-    private int index;
+    private int index = 0;
     [SerializeField] TMP_Text characterName;
     [SerializeField] Image body;
     [SerializeField] Image face;
@@ -69,9 +69,7 @@ public class UIManager : MonoBehaviour
         characterDatas = ChartManager.instance.characterDatas;
         UpdateCharacterButton();
 
-        // (Prototype)
-        SelectCharacter(0);
-        SelectTail(0);
+        UseCharacter();
     }
 
     public void UpdateGoods()
@@ -203,6 +201,49 @@ public class UIManager : MonoBehaviour
                 tailButtons[i].GetComponent<Image>().color = color;
                 color.a = 0.2f;
                 tailButtons[i].transform.GetChild(0).GetComponent<Image>().color = color;
+            }
+
+            // 보유한 꼬리 버튼 활성화
+            for (int i = 0; i < 30; i++)
+            {
+                if (DBManager.instance.user.tail[i] == 1)
+                {
+                    if (i >= 9 * tailTabIndex && i <= 8 + 9 * tailTabIndex)
+                    {
+                        int index = i - 9 * tailTabIndex;
+                        tailButtons[index].GetComponent<Button>().interactable = true;
+                        Color color = tailButtons[index].GetComponent<Image>().color;
+                        color.a = 1.0f;
+                        tailButtons[index].GetComponent<Image>().color = color;
+                        tailButtons[index].transform.GetChild(0).GetComponent<Image>().color = color;
+                    }
+                }
+            }
+        }
+        else
+        {
+            // 모든 꼬리 버튼 비활성화
+            for (int i = 0; i < 9; i++)
+            {
+                if (i < 3)
+                {
+                    tailButtons[i].GetComponent<Button>().interactable = false;
+                    tailButtons[i].transform.GetChild(0).GetComponent<Image>().sprite = tailImages[i + 9 * tailTabIndex];
+
+                    Color color = tailButtons[i].GetComponent<Image>().color;
+                    color.a = 150.0f / 255.0f;
+                    tailButtons[i].GetComponent<Image>().color = color;
+                    color.a = 0.2f;
+                    tailButtons[i].transform.GetChild(0).GetComponent<Image>().color = color;
+                }
+                else
+                {
+                    Color color = tailButtons[i].GetComponent<Image>().color;
+                    color.a = 0f;
+                    tailButtons[i].GetComponent<Button>().interactable = false;
+                    tailButtons[i].GetComponent<Image>().color = color;
+                    tailButtons[i].transform.GetChild(0).GetComponent<Image>().color = color;
+                }
             }
 
             // 보유한 꼬리 버튼 활성화
@@ -380,13 +421,15 @@ public class UIManager : MonoBehaviour
 
     public void OpenChracterSelectTab()
     {
-        characterSelectTab.SetActive(false);
-        tailTab.SetActive(true);
+        characterSelectTab.SetActive(true);
+        tailTab.SetActive(false);
     }
 
     public void OpenTailTab()
     {
-        characterSelectTab.SetActive(true);
-        tailTab.SetActive(false);
+        characterSelectTab.SetActive(false);
+        tailTab.SetActive(true);
+
+        UpdateTailButton();
     }
 }
