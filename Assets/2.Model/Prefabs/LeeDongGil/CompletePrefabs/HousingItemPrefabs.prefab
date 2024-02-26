@@ -157,6 +157,7 @@ MonoBehaviour:
   window: {fileID: 0}
   housingData: {fileID: 0}
   gameTime: 0
+  drag: {fileID: 0}
 --- !u!114 &9215071218758292209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,7 +171,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDragging: 0
-  isCanBuild: 0
+  isCanBuild: 1
+  isSetBuild: 1
+  isInsertInven: 0
   offset: {x: 0, y: 0, z: 0}
   previousParent: {fileID: 0}
   group: {fileID: 0}

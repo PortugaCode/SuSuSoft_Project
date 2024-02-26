@@ -20,7 +20,15 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         //스테이지 씬이라면 조건 추가 해야함
-        player.gameObject.GetComponent<PlayerProperty>().onDamage = ShakeCamera;
+        if (Utils.Instance.nowScene == SceneNames.OnGame)
+        {
+            player.gameObject.GetComponent<PlayerProperty>().onDamage = ShakeCamera;
+            AudioManager.Instance.PlayBGM(BGM_Name.Stage);
+        }
+        else
+        {
+            AudioManager.Instance.PlayBGM(BGM_Name.Main);
+        }
     }
 
     private void ShakeCamera(object sender, EventArgs e)

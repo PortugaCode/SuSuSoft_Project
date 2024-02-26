@@ -21,7 +21,6 @@ public class StageClear : MonoBehaviour
     [SerializeField] private GameObject rewardTab_1;
     [SerializeField] private GameObject rewardTab_2;
     [SerializeField] private GameObject rewardTab_3;
-    [SerializeField] private GameObject tokenTab;
     [SerializeField] private TMP_Text conditionText_2;
     [SerializeField] private TMP_Text conditionText_3;
     [SerializeField] private TMP_Text rewardText_gold;
@@ -117,9 +116,6 @@ public class StageClear : MonoBehaviour
 
         if (DBManager.instance.user.tokenInfo[stageIndex] == 0)
         {
-            tokenTab.SetActive(true);
-            tokenTab.transform.GetChild(0).GetComponent<Image>().sprite = tokenImages[stageIndex];
-
             DBManager.instance.user.tokenInfo[stageIndex] = 1;
             DBManager.instance.user.tokens[stageIndex] += 1;
         }

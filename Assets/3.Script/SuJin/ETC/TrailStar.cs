@@ -37,6 +37,11 @@ public class TrailStar : MonoBehaviour
 
     private void Update()
     {
+        if (player == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
         ItemRotate();
     }
     
@@ -57,6 +62,13 @@ public class TrailStar : MonoBehaviour
 
     private void ItemRotate()   // Rotation Star
     {
+        if (player == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+
         distance = Vector2.Distance(transform.position, player.transform.position);
         Vector2 direction = (player.transform.position - transform.position).normalized;
 

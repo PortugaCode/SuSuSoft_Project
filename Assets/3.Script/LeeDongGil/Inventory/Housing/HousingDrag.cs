@@ -6,8 +6,8 @@ using UnityEngine.EventSystems;
 public class HousingDrag : MonoBehaviour
 {
     public bool isDragging = false;
-    public bool isCanBuild = false;
-    public bool isSetBuild = false;
+    public bool isCanBuild = true;
+    public bool isSetBuild = true;
     public bool isInsertInven = false;
     public Vector3 offset;
     public Transform previousParent;

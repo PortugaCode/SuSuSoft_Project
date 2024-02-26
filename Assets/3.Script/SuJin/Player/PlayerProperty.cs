@@ -9,6 +9,7 @@ public class PlayerProperty : MonoBehaviour
     public EventHandler onGetHealthSlider;
     public EventHandler onStarBar;
     public EventHandler onDamage;
+    public EventHandler onChangeStar;
 
 
     public int level;
@@ -94,6 +95,7 @@ public class PlayerProperty : MonoBehaviour
         currentHealth = maxHealth;
     }
 
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //장애물
@@ -109,7 +111,7 @@ public class PlayerProperty : MonoBehaviour
         else if (collision.gameObject.CompareTag("Breaking"))
         {
             animator.SetTrigger("Hit");
-            Destroy(collision.gameObject);
+            //Destroy(collision.gameObject);
         }
 
         //HP
@@ -143,6 +145,7 @@ public class PlayerProperty : MonoBehaviour
             Instantiate(starPrefebs, transform.position, Quaternion.identity);
             onStarBar?.Invoke(this, EventArgs.Empty);
             Destroy(collision.gameObject);
+
         }
         else if (collision.gameObject.CompareTag("BigStar"))
         {
@@ -219,7 +222,7 @@ public class PlayerProperty : MonoBehaviour
         animator.SetTrigger("Hit");
         onDamage?.Invoke(this, EventArgs.Empty);
 
-        if(currentHealth <= 0)
+        if (currentHealth <= 0)
         {
             currentHealth = 0;
             Die();
@@ -231,6 +234,11 @@ public class PlayerProperty : MonoBehaviour
 
     private void Die()
     {
+        if(TryGetComponent<HorizontalPlayer>(out HorizontalPlayer horizontalPlayer))
+        {
+            horizontalPlayer.GameControl.ActiveOnEndUI();
+        }
+        
         Destroy(gameObject);
         hitAction.gameObject.transform.SetParent(null);
         dieAction.gameObject.transform.SetParent(null);
