@@ -21,7 +21,8 @@ public class TouchMove : MonoBehaviour
     private Vector3 direction = Vector3.zero;
     public Vector3 Direction => direction;
     Vector3 deceleration;
-
+    private bool isRight;
+    
     [Header("PlyerSpeed")]
     [SerializeField] private float speed;
     [SerializeField] private float rotationSpeed;
@@ -38,8 +39,6 @@ public class TouchMove : MonoBehaviour
 
 
 
-
-    private bool isRight;
 
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -84,12 +83,8 @@ public class TouchMove : MonoBehaviour
             MoveRotation();
             return;
         }
-        PlayerMove(direction);
 
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            interactionControl.doAnimatorArray[0].Invoke();
-        }
+        PlayerMove(direction);
 
 
 
@@ -158,13 +153,13 @@ public class TouchMove : MonoBehaviour
         }
     }
 
-    private void SetIsRight()
+    public void SetIsRight()
     {
         if (touchPosition.x < transform.position.x)
         {
             isRight = false;
         }
-        else if(touchPosition.x > transform.position.x)
+        else if (touchPosition.x > transform.position.x)
         {
             isRight = true;
         }
@@ -178,7 +173,7 @@ public class TouchMove : MonoBehaviour
 
     private void PlayerMove(Vector3 target)
     {
-        #region [Repeat BG] 
+        #region [Repeat BG]
         if (transform.position.x >= 12.80f && isRight)
         {
             transform.position = new Vector2(transform.position.x * -1f, transform.position.y);
@@ -203,9 +198,7 @@ public class TouchMove : MonoBehaviour
 
         if (Vector3.Distance(transform.position, touchPosition) > 0.3f)
         {
-            //transform.position += direction * speed * Time.deltaTime;
             transform.position = Vector3.Lerp(transform.position, touchPosition, speed * Time.deltaTime);
-            //rb2D.velocity = target * speed * Time.fixedDeltaTime;
 
             if (direction != Vector3.zero)
             {
@@ -221,6 +214,7 @@ public class TouchMove : MonoBehaviour
             rb2D.velocity = Vector3.zero;
         }
     }
+
 
     private void MoveRotation()
     {

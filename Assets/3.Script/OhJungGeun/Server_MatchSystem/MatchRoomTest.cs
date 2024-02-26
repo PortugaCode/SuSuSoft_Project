@@ -177,12 +177,14 @@ public class MatchRoomTest : MonoBehaviour
             return;
         }
 
-
+        //첫 번째 방법 => position과 move position이 너무 멀면 순간이동 시키기
+        //두 번째 방법 isRight bool값 지정해주기
 
         Vector3 movePosition = new Vector3(data.xPos, data.yPos, data.zPos);
         Vector3 moveDirection = new Vector3(data.xDir, data.yDir, data.zDir);
         players[data.playerSession].SetDirection(moveDirection);
         players[data.playerSession].SetPosition(movePosition);
+        players[data.playerSession].SetIsRight();
         Debug.Log("상대방 움직임");
     }
 
