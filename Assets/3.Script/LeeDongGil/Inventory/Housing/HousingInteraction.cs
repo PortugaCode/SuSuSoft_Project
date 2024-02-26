@@ -8,11 +8,14 @@ public class HousingInteraction : MonoBehaviour
 {
     public GameObject window;
     public HousingItemData housingData;
+    public HousingObject housingObject;
     public float gameTime = 0;
+    [SerializeField] private HousingDrag drag;
 
     private void Start()
     {
         window = FindObjectOfType<WindowCanvas>().transform.GetComponentInChildren<HousingInterationWindow>().gameObject;
+        drag = GetComponent<HousingDrag>();
     }
     private void Update()
     {
@@ -37,12 +40,17 @@ public class HousingInteraction : MonoBehaviour
                 {
                     if (hit.collider.gameObject.CompareTag("Building"))
                     {
-                        housingData = hit.collider.gameObject.GetComponent<HousingDrag>().data;
+                        //housingData = hit.collider.gameObject.GetComponent<HousingDrag>().data;
+                        Debug.Log("상호작용");
+                        housingObject = hit.collider.gameObject.GetComponent<HousingDrag>().housingObject;
+                        drag.isSetBuild = false;
                         window.transform.GetChild(0).gameObject.SetActive(true);
                     }
                 }
                 else if (!hit.collider.gameObject.CompareTag("Building") && EventSystem.current.IsPointerOverGameObject(0) == false)
                 {
+                    Debug.Log("여기가 실행됨?");
+                    drag.isSetBuild = true;
                     window.transform.GetChild(0).gameObject.SetActive(false);
                 }
                 /*gameTime += Time.deltaTime;

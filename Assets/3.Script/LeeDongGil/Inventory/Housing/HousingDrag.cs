@@ -59,12 +59,22 @@ public class HousingDrag : MonoBehaviour
 
     private void Start()
     {
+        check = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        boxCollider = GetComponent<BoxCollider>();
+        subCollider = transform.GetChild(1).GetComponent<BoxCollider>();
+        group = FindObjectOfType<EditModeButton>().GetComponent<CanvasGroup>();
+        grid = FindAnyObjectByType<HousingGrid>();
+
+
         isInsertInven = false;
         mainCam = Camera.main;
         if (!LoadHousing.instance.isLoading)
         {
             moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(mainCam.transform.position.x)) * checkMinusX : Mathf.FloorToInt(mainCam.transform.position.x) + 0.5f;
             moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(mainCam.transform.position.y)) * checkMinusY : Mathf.FloorToInt(mainCam.transform.position.y) + 0.5f;
+            clampX = Mathf.Clamp(moveX, -(grid.boundX / 2) + (spaceX / 2) + grid.posX, (grid.boundX / 2) - (spaceX / 2) + grid.posX);
+            clampY = Mathf.Clamp(moveY, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
+
             Debug.Log("순서 2");
             previousParent = transform.parent;
 
@@ -74,7 +84,7 @@ public class HousingDrag : MonoBehaviour
 
             LoadHousing.instance.primaryKey += 1;
 
-            transform.position = new Vector3(moveX, moveY, -1);
+            transform.position = new Vector3(clampX, clampY, -1);
         }
         else
         {
@@ -88,13 +98,6 @@ public class HousingDrag : MonoBehaviour
         SetLayer();
 
         space.transform.localScale = new Vector3(spaceX, spaceY, 1);
-
-        check = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        boxCollider = GetComponent<BoxCollider>();
-        subCollider = transform.GetChild(1).GetComponent<BoxCollider>();
-        group = FindObjectOfType<EditModeButton>().GetComponent<CanvasGroup>();
-        grid = FindAnyObjectByType<HousingGrid>();
-
         boxCollider.size = new Vector3(spaceX, spaceY, 0.2f);
         subCollider.enabled = false;
 
@@ -148,8 +151,23 @@ public class HousingDrag : MonoBehaviour
 
         if (isSetBuild)
         {
-            check.gameObject.SetActive(false);
-            subCollider.enabled = false;
+            if (isCanBuild)
+            {
+                check.gameObject.SetActive(false);
+                subCollider.enabled = false;
+            }
+            else
+            {
+                check.gameObject.SetActive(true);
+                subCollider.enabled = true;
+            }
+            group.alpha = 1.0f;
+            group.blocksRaycasts = true;
+        }
+        else
+        {
+            group.alpha = 0;
+            group.blocksRaycasts = false;
         }
 
         if (isTouch)
@@ -363,7 +381,7 @@ public class HousingDrag : MonoBehaviour
 
                 transform.position = new Vector3(currentClampX, currentClampY, transform.position.z);
 
-                group.alpha = 0;
+
             }
             else
             {
@@ -375,8 +393,6 @@ public class HousingDrag : MonoBehaviour
                         sp.color = Color.white;
                     }
                 }
-
-                group.alpha = 1.0f;
 
                 //드래그 끝날 때 Dictionary 수정
                 LoadHousing.instance.localHousing[primaryIndex] = (housingObject, transform.position);      //test해보기 3
@@ -584,7 +600,8 @@ public class HousingDrag : MonoBehaviour
         if (isInsertInven)
         {
             Debug.Log("오브젝트 넣기를 누를때 여기 실행");
-            //LoadHousing.instance.localHousing.Remove(primaryIndex);
+            group.alpha = 1.0f;
+            group.blocksRaycasts = true;
         }
         else
         {
