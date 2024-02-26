@@ -9,12 +9,14 @@ public class PlayerProperty : MonoBehaviour
     public EventHandler onGetHealthSlider;
     public EventHandler onStarBar;
     public EventHandler onDamage;
+    public EventHandler onChangeStar;
 
 
     public int level;
 
     [Header("Particle")]
     [SerializeField] private ParticleSystem hitAction;
+    [SerializeField] private ParticleSystem dieAction;
 
 
     [Header("Player")]
@@ -93,6 +95,7 @@ public class PlayerProperty : MonoBehaviour
         currentHealth = maxHealth;
     }
 
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //장애물
@@ -102,14 +105,13 @@ public class PlayerProperty : MonoBehaviour
             //Player Damage
             PassiveAttackNull();
             onHPSlider?.Invoke(this, EventArgs.Empty);
-            Destroy(collision.gameObject);
             Debug.Log($" currentHP: {currentHealth} ");
         }
 
         else if (collision.gameObject.CompareTag("Breaking"))
         {
             animator.SetTrigger("Hit");
-            Destroy(collision.gameObject);
+            //Destroy(collision.gameObject);
         }
 
         //HP
@@ -134,16 +136,16 @@ public class PlayerProperty : MonoBehaviour
             }
             onHPSlider?.Invoke(this, EventArgs.Empty);
             Destroy(collision.gameObject);
-            Debug.Log($" currentHP: {currentHealth} ");
         }
 
         //별
+        //Pooling 으로 바꾸기
         else if (collision.gameObject.CompareTag("Star"))
         {
             Instantiate(starPrefebs, transform.position, Quaternion.identity);
             onStarBar?.Invoke(this, EventArgs.Empty);
             Destroy(collision.gameObject);
-            Debug.Log($" getStarCount : {getStarCount}");
+
         }
         else if (collision.gameObject.CompareTag("BigStar"))
         {
@@ -152,7 +154,6 @@ public class PlayerProperty : MonoBehaviour
             Instantiate(starPrefebs, transform.position, Quaternion.identity);
             onStarBar?.Invoke(this, EventArgs.Empty);
             Destroy(collision.gameObject);
-            Debug.Log($" getStarCount : {getStarCount}");
         }
 
         //거대화, 최소화
@@ -197,8 +198,7 @@ public class PlayerProperty : MonoBehaviour
             Debug.Log($" currentHP: {currentHealth} ");
         }
     }
-
-
+   
     #region [Attack nullified 공격 무효화]
     private void PassiveAttackNull()    //10% 확률로 데미지 무효화
     {
@@ -218,16 +218,40 @@ public class PlayerProperty : MonoBehaviour
             stars.RemoveAt(stars.Count - 1);
             Destroy(a);
         }
+        currentHealth -= damage;
         animator.SetTrigger("Hit");
         onDamage?.Invoke(this, EventArgs.Empty);
+
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            Die();
+            return;
+        }
+
         hitAction.Play();
-        currentHealth -= damage;
     }
+
+    private void Die()
+    {
+        if(TryGetComponent<HorizontalPlayer>(out HorizontalPlayer horizontalPlayer))
+        {
+            horizontalPlayer.GameControl.ActiveOnEndUI();
+        }
+        
+        Destroy(gameObject);
+        hitAction.gameObject.transform.SetParent(null);
+        dieAction.gameObject.transform.SetParent(null);
+        hitAction.Play();
+        dieAction.Play();
+        
+    }
+
     #endregion //Attack nullified 공격 무효화
 
 
     #region  [IEnumerator]
-    
+
 
     private IEnumerator HitDelay_Co()
     {

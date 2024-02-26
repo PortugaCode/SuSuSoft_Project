@@ -18,17 +18,17 @@ public class HousingInterationWindow : MonoBehaviour
     public HousingObject housingObjWindow;
 
     [Header("PopUp")]
-    public GameObject PopupObject;
-    public Image P_housingImage;
-    public TextMeshProUGUI P_housingName;
-    public TextMeshProUGUI P_housingCount;
-    public int P_housingCountInt;
-    public TextMeshProUGUI P_housingInfo;
-    public TextMeshProUGUI P_housingSetName;
-    public TextMeshProUGUI P_housingSetItem;
+    public GameObject PopupObject;                                      //윈도우 오브젝트
+    public Image P_housingImage;                                        //하우징 스프라이트 이미지
+    public TextMeshProUGUI P_housingName;                               //하우징 이름
+    public TextMeshProUGUI P_housingCount;                              //하우징 개수 텍스트
+    public int P_housingCountInt;                                       //하우징 개수
+    public TextMeshProUGUI P_housingInfo;                               //하우징 설명
+    public TextMeshProUGUI P_housingSetName;                            //하우징 세트 이름
+    public TextMeshProUGUI P_housingSetItem;                            //하우징 세트 아이템 리스트
     public List<string> P_housingSetItemList = new List<string>();
-    public TextMeshProUGUI P_housingSetInfo;
-    public TextMeshProUGUI P_housingEnhanceInfo;
+    public TextMeshProUGUI P_housingSetInfo;                            //하우징 세트효과 설명
+    public TextMeshProUGUI P_housingEnhanceInfo;                        //하우징 세트 강화효과 정보
 
 
     private void Update()
@@ -75,34 +75,87 @@ public class HousingInterationWindow : MonoBehaviour
     public void UpdatePopUpText()           //수정
     {
         P_housingSetItemList.Clear();
-        foreach (HousingItemData data in TestManager.instance.testHousing)
+        foreach (HousingObject data in ChartManager.instance.housingObjectDatas)        //같은 세트 아이템 리스트 추가
         {
-            if (data.SetName.Equals(housingDataWindow.SetName))
+            if (data.setType.Equals(housingObjWindow.setType))
             {
-                P_housingSetItemList.Add(data.housingKRName);
+                if (data.setType == string.Empty) continue;
+                P_housingSetItemList.Add(data.name_k);
             }
         }
         StringBuilder listAdd = new StringBuilder();
 
-        P_housingImage.sprite = housingDataWindow.housingSprite;
-        P_housingName.text = string.Format("{0} +{1}", housingDataWindow.housingKRName, housingDataWindow.enhanceLevel);
+        P_housingImage.sprite = SpriteManager.instance.sprites[housingObjWindow.imageIndex];
+        P_housingName.text = string.Format("{0} +{1}", housingObjWindow.name_k, "임시");
+        //P_housingCount.text = string.Format("{0}", DBManager.instance.user.housingObject[housingObjWindow.name_e]);
         P_housingCount.text = string.Format("{0}", P_housingCountInt);
-        P_housingInfo.text = housingDataWindow.Info;
-        P_housingSetName.text = housingDataWindow.SetName;
+        P_housingInfo.text = housingObjWindow.text_k;
+
+        P_housingSetName.text = HousingSetNameToKR();
+
         for (int i = 0; i < P_housingSetItemList.Count; i++)
         {
-            listAdd.Append(P_housingSetItemList[i]).Append("\n");
+            listAdd.Append($"{P_housingSetItemList[i]} ");
+            if (DBManager.instance.user.housingObject.ContainsKey(housingObjWindow.name_e))
+            {
+                listAdd.Append("보유");
+            }
+            else if (LoadHousing.instance.localHousingObject.ContainsValue(housingObjWindow))
+            {
+                listAdd.Append("배치");
+            }
+            listAdd.Append("\n");
             P_housingSetItem.text = listAdd.ToString();
         }
-        P_housingSetInfo.text = string.Format("{0} 이/가 {1}만큼 증가합니다.", housingDataWindow.SetEffectName, housingDataWindow.SetEffectValue);
-        P_housingEnhanceInfo.text = string.Format("{0} 이/가 {0}만큼 증가합니다.", housingDataWindow.SetEffectName, housingDataWindow.enhanceValue);
+        if (housingObjWindow.setType != string.Empty)
+        {
+            P_housingSetInfo.text = string.Format("{0} 이/가 {1}만큼 증가합니다.", HousingSetEffectNameToKR(), "10(임시)");
+            P_housingEnhanceInfo.text = string.Format("{0} 이/가 {1}만큼 증가합니다.", HousingSetEffectNameToKR(), "10(임시)");
+        }
+        else
+        {
+            P_housingSetInfo.text = string.Empty;
+            P_housingEnhanceInfo.text = string.Empty;
+        }
+    }
+
+    public string HousingSetNameToKR()
+    {
+        switch (housingObjWindow.setType)
+        {
+            case "Wood":
+                return "나무 세트";
+            case "Sports":
+                return "스포츠 세트";
+            default:
+                return string.Empty;
+        }
+    }
+
+    public string HousingSetEffectNameToKR()
+    {
+        switch (housingObjWindow.setType)
+        {
+            case "Wood":
+                return "골드 획득량";
+            case "Sports":
+                return "최대 체력";
+            default:
+                return string.Empty;
+        }
     }
 
     public void InsertHousingInventory()
     {
         housingInvenSys.GetHousingItem(housingObj.index, 1);
+        housingObject.GetComponent<HousingDrag>().isInsertInven = true;
         Destroy(housingObject);
         transform.GetChild(0).gameObject.SetActive(false);
+    }
+
+    public void SetHousingPosition()
+    {
+        housingObject.GetComponent<HousingDrag>().isSetBuild = true;
     }
 
 }

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class HousingSlot : MonoBehaviour
 {
@@ -17,15 +19,17 @@ public class HousingSlot : MonoBehaviour
     public GameObject popUP;
     public float gameTime = 0;
     public bool isWindow = false;
-
+    public GraphicRaycaster gRay;
+    private PointerEventData eventData;
 
     private void Start()
     {
+        gRay = transform.root.GetComponent<GraphicRaycaster>();
         housingInven = GetComponentInChildren<HousingInventory>();
     }
     private void Update()
     {
-        if(housingInven.count >= 1)
+        if (housingInven.count >= 1)
         {
             isSlotUse = true;
         }
@@ -47,6 +51,11 @@ public class HousingSlot : MonoBehaviour
             itemInfomation = null;
             housingObject = null;
         }
+
+        //if (popUP.activeSelf)
+        //{
+        //    PopUpClose();
+        //}
     }
 
 
@@ -55,9 +64,28 @@ public class HousingSlot : MonoBehaviour
         if (isWindow)
         {
             popUP.transform.position = transform.position;
-            housingInterationWindow.housingDataWindow = itemInfomation;
+            housingInterationWindow.housingObjWindow = (HousingObject)housingObject;
             housingInterationWindow.P_housingCountInt = slotItemCount;
             popUP.SetActive(true);
+        }
+    }
+
+    private void PopUpClose()
+    {
+        if (Input.touchCount > 0)
+        {
+            Touch touch;
+            touch = Input.GetTouch(0);
+            Ray ray = Camera.main.ScreenPointToRay(touch.position);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (EventSystem.current.IsPointerOverGameObject(0) == false)
+                {
+                    popUP.SetActive(false);
+                }
+            }
         }
     }
 }

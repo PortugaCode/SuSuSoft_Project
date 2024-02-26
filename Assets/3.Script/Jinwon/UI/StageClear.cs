@@ -21,7 +21,6 @@ public class StageClear : MonoBehaviour
     [SerializeField] private GameObject rewardTab_1;
     [SerializeField] private GameObject rewardTab_2;
     [SerializeField] private GameObject rewardTab_3;
-    [SerializeField] private GameObject tokenTab;
     [SerializeField] private TMP_Text conditionText_2;
     [SerializeField] private TMP_Text conditionText_3;
     [SerializeField] private TMP_Text rewardText_gold;
@@ -117,9 +116,6 @@ public class StageClear : MonoBehaviour
 
         if (DBManager.instance.user.tokenInfo[stageIndex] == 0)
         {
-            tokenTab.SetActive(true);
-            tokenTab.transform.GetChild(0).GetComponent<Image>().sprite = tokenImages[stageIndex];
-
             DBManager.instance.user.tokenInfo[stageIndex] = 1;
             DBManager.instance.user.tokens[stageIndex] += 1;
         }
@@ -127,8 +123,18 @@ public class StageClear : MonoBehaviour
         if (DBManager.instance.user.clearInfo[stageIndex, 3] == 0 && ChartManager.instance.stageInfos[stageIndex].reward_4 != -1)
         {
             DBManager.instance.user.clearInfo[stageIndex, 3] = 1;
+
             // 건물 해금
-            DBManager.instance.user.housingObject[ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4)] += 1;
+            if (DBManager.instance.user.housingObject.ContainsKey(ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4)))
+            {
+                DBManager.instance.user.housingObject[ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4)] += 1;
+            }
+            else
+            {
+                // 없을 때 Add
+                DBManager.instance.user.housingObject.Add(ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4), 1);
+            }
+            
         }
     }
 

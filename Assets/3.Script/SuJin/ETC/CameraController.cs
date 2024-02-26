@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
+
+
 public class CameraController : MonoBehaviour
 {
     [SerializeField] Transform player;
@@ -16,7 +19,16 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
-        player.gameObject.GetComponent<PlayerProperty>().onDamage = ShakeCamera;
+        //스테이지 씬이라면 조건 추가 해야함
+        if (Utils.Instance.nowScene == SceneNames.OnGame)
+        {
+            player.gameObject.GetComponent<PlayerProperty>().onDamage = ShakeCamera;
+            AudioManager.Instance.PlayBGM(BGM_Name.Stage);
+        }
+        else
+        {
+            AudioManager.Instance.PlayBGM(BGM_Name.Main);
+        }
     }
 
     private void ShakeCamera(object sender, EventArgs e)
@@ -33,21 +45,20 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        if (SceneManager.GetActiveScene().name == "CharacterTest") return;
+        if (SceneManager.GetActiveScene().name == "CharacterTest" || SceneManager.GetActiveScene().name == "OnGame") return;
         CameraPos();
     }
 
     private void FixedUpdate()
     {
-        if(SceneManager.GetActiveScene().name == "CharacterTest")
-        {
-            CameraPos_Stage();
-        }
+
+        CameraPos_Stage();
     }
 
 
     private void CameraPos_Stage()
     {
+        if (player == null) return;
         Vector3 targetPos = new Vector3(player.position.x, player.position.y, this.transform.position.z);
         targetPos.y = Mathf.Clamp(targetPos.y, minCameraPos.y, maxCameraPos.y);
         //targetPos.x = Mathf.Clamp(targetPos.x, minCameraPos.x, maxCameraPos.x);
@@ -82,8 +93,6 @@ public class CameraController : MonoBehaviour
             
 
             transform.position = new Vector3(x, transform.position.y, transform.position.z);
-
-
         }
     }
 

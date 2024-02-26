@@ -120,6 +120,8 @@ public class User
     public string userName { get; set; } // 유저 이름
     public List<Character> character { get; set; } // 보유한 캐릭터 리스트
     public int currentCharacterIndex { get; set; } // 현재 사용중인 캐릭터 인덱스
+    public int[] tail { get; set; } // 보유한 꼬리 배열 (0:미보유, 1:보유)
+    public int currentTailIndex { get; set; } // 현재 사용중인 꼬리 인덱스
     public Dictionary<string, int> goods { get; set; } // 보유한 재화의 종류와 수량
     public Dictionary<string, int> housingObject { get; set; } // 보유한 하우징 오브젝트 (Key : 이름, Value : 보유수량)
     public int[] tokens { get; set; } // 보유한 토큰 개수 배열
@@ -136,6 +138,7 @@ public class User
         password = "";
         userName = "";
         character = new List<Character>();
+        tail = new int[30];
         goods = new Dictionary<string, int> { { "friendshipPoint", 0 }, { "ruby", 0 }, { "gold", 0 } };
         housingObject = new Dictionary<string, int>();
         tokens = new int[10];
@@ -261,8 +264,17 @@ public class DBManager : MonoBehaviour
             }
         }
 
+        // [꼬리]
+        for (int i = 0; i < 30; i++) // (총 꼬리 개수 = 30)
+        {
+            user.tail[i] = int.Parse(bro.FlattenRows()[0]["Tail"][i].ToString());
+        }
+
         // [사용중인 캐릭터 인덱스]
         user.currentCharacterIndex = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString());
+
+        // [사용중인 꼬리 인덱스]
+        user.currentTailIndex = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentTailIndex"][0].ToString());
 
         Debug.Log("기존 유저 데이터 불러오기 완료");
     }
@@ -288,7 +300,16 @@ public class DBManager : MonoBehaviour
 
         AddCharacter(101);
 
+        param.Add("Tail", user.tail);
+
+        // Prototype - 30개 모두 해금
+        for (int i = 0; i < 30; i++)
+        {
+            AddTail(i);
+        }
+
         param.Add("CurrentCharacterIndex", 101);
+        param.Add("CurrentTailIndex", 0);
 
         Backend.GameData.Insert("User", param); // User 테이블에 데이터 삽입
 
@@ -330,6 +351,11 @@ public class DBManager : MonoBehaviour
         Backend.GameData.Insert("Character", characterParam); // Character 테이블에 데이터 삽입
 
         Debug.Log("캐릭터 추가 완료");
+    }
+
+    public void AddTail(int index)
+    {
+        user.tail[index] = 1;
     }
 
     public int CharacterIndexMatching(int index)
@@ -429,11 +455,13 @@ public class DBManager : MonoBehaviour
     {
         Param param = new Param();
         param.Add("CurrentCharacterIndex", user.currentCharacterIndex);
+        param.Add("CurrentTailIndex", user.currentTailIndex);
         param.Add("Goods", user.goods);
         param.Add("ClearInfo", user.clearInfo);
         param.Add("TokenInfo", user.tokenInfo);
         param.Add("Tokens", user.tokens);
         param.Add("HousingObject", user.housingObject);
+        param.Add("Tail", user.tail);
 
         Backend.PlayerData.UpdateMyLatestData("User", param);
     }

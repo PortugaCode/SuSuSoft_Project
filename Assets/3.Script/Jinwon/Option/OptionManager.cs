@@ -25,6 +25,8 @@ public class OptionManager : MonoBehaviour
         // DB에 옵션 설정값 저장 후 불러오기 필요
         // 스크롤바 밸류 소리크기 연동 필요
         // 알람 on off 연동 필요
+        backgroundScrollbar.onValueChanged.AddListener(AudioManager.Instance.SetBGMVolume);
+        effectScrollbar.onValueChanged.AddListener(AudioManager.Instance.SetSFXVolume);
     }
 
     public void ToggleBackgroundVolume()

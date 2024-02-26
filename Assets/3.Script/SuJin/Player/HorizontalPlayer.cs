@@ -1,14 +1,16 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-
+using TMPro;
 public class HorizontalPlayer : MonoBehaviour
 {
     public EventHandler OnLaver;
 
-
+    [SerializeField] private GameManager gameManager;
+    public GameManager GameControl => gameManager;
+    [SerializeField] private PlayerProperty playerProperty;
+    [SerializeField] private TextMeshProUGUI starCountTmpPro;
 
     private Vector3 touchPosition;
     private Vector3 direction;
@@ -59,9 +61,11 @@ public class HorizontalPlayer : MonoBehaviour
         //Invoke("StartGame", 3f);
         playerLight.pointLightOuterRadius = maxSightRange;
     }
+
     private void Update()
     {
         StartGame();
+        starCountTmpPro.text = $"{playerProperty.stars.Count} / {playerProperty.maxStar}";
     }
 
     public void FixedUpdate()
@@ -72,6 +76,9 @@ public class HorizontalPlayer : MonoBehaviour
             PlayerLight();
         }
     }
+
+
+
 
     private void StartGame()
     {

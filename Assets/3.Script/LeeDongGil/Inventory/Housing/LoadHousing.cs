@@ -10,6 +10,7 @@ public class LoadHousing : MonoBehaviour
     public HousingObject[] invenHousing = new HousingObject[20];
     //key : primaryIndex   value : HousingObject 구조체, 좌표
     public Dictionary<int, (HousingObject, Vector3)> localHousing = new Dictionary<int, (HousingObject, Vector3)>();
+    public Dictionary<int, HousingObject> localHousingObject = new Dictionary<int, HousingObject>();
     public KeyValuePair<int, (HousingObject, Vector3)> keyValue = new KeyValuePair<int, (HousingObject, Vector3)>();
     public List<(GameObject, Vector3)> saveLocal = new List<(GameObject, Vector3)>();
     public int primaryKey = 0;
@@ -53,7 +54,7 @@ public class LoadHousing : MonoBehaviour
     {
         //isLoading = true;
         buildSpace = FindObjectOfType<DrawingGrid>().transform;
-        nowBuilding = FindObjectOfType<NowBuilding>().transform;      //나중에 머지할 때 NowBuilding에 스크립트 넣기
+        nowBuilding = FindObjectOfType<NowBuilding>().transform;
         
         /*for (int i = 0; i < localHousing.Count; i++)
         {
