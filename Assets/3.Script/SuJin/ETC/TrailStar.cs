@@ -7,11 +7,9 @@ public class TrailStar : MonoBehaviour
 {
     [SerializeField] GameObject player;
     [SerializeField] float fllowSpeed;
-    private float distance;
-
-    private Vector3 previousStarPosition;
     [SerializeField] private GameObject target;
 
+    private float distance;
     PlayerProperty playerProperty;
 
     private void Awake()

@@ -8,6 +8,7 @@ public class PlayerProperty : MonoBehaviour
     public EventHandler onHPSlider;
     public EventHandler onGetHealthSlider;
     public EventHandler onStarBar;
+    public EventHandler onStarShape;
     public EventHandler onDamage;
     public EventHandler onChangeStar;
 
@@ -105,13 +106,13 @@ public class PlayerProperty : MonoBehaviour
             //Player Damage
             PassiveAttackNull();
             onHPSlider?.Invoke(this, EventArgs.Empty);
-            Debug.Log($" currentHP: {currentHealth} ");
+            onStarBar?.Invoke(this, EventArgs.Empty);
+            onStarShape?.Invoke(this, EventArgs.Empty);
         }
 
         else if (collision.gameObject.CompareTag("Breaking"))
         {
             animator.SetTrigger("Hit");
-            //Destroy(collision.gameObject);
         }
 
         //HP
@@ -124,7 +125,6 @@ public class PlayerProperty : MonoBehaviour
             }
             onHPSlider?.Invoke(this, EventArgs.Empty);
             Destroy(collision.gameObject);
-            Debug.Log($" currentHP: {currentHealth} ");
         }
 
         else if(collision.gameObject.CompareTag("BigHp"))
@@ -144,6 +144,7 @@ public class PlayerProperty : MonoBehaviour
         {
             Instantiate(starPrefebs, transform.position, Quaternion.identity);
             onStarBar?.Invoke(this, EventArgs.Empty);
+            onStarShape?.Invoke(this, EventArgs.Empty);
             Destroy(collision.gameObject);
 
         }
@@ -153,6 +154,7 @@ public class PlayerProperty : MonoBehaviour
             Instantiate(starPrefebs, transform.position, Quaternion.identity);
             Instantiate(starPrefebs, transform.position, Quaternion.identity);
             onStarBar?.Invoke(this, EventArgs.Empty);
+            onStarShape?.Invoke(this, EventArgs.Empty);
             Destroy(collision.gameObject);
         }
 
@@ -195,7 +197,8 @@ public class PlayerProperty : MonoBehaviour
             StartCoroutine(HitDelay_Co());
             PassiveAttackNull();
             onHPSlider?.Invoke(this, EventArgs.Empty);
-            Debug.Log($" currentHP: {currentHealth} ");
+            onStarBar?.Invoke(this, EventArgs.Empty);
+            onStarShape?.Invoke(this, EventArgs.Empty);
         }
     }
    
@@ -221,6 +224,7 @@ public class PlayerProperty : MonoBehaviour
         currentHealth -= damage;
         animator.SetTrigger("Hit");
         onDamage?.Invoke(this, EventArgs.Empty);
+        onStarBar?.Invoke(this, EventArgs.Empty);
 
         if (currentHealth <= 0)
         {
