@@ -77,6 +77,26 @@ public class StageClear : MonoBehaviour
             {
                 rewardText_3.text = $"획득 완료";
             }
+
+            if (DBManager.instance.user.clearInfo[stageIndex, 1] == 0)
+            {
+                DBManager.instance.user.clearInfo[stageIndex, 1] = 1;
+                DBManager.instance.user.goods["ruby"] += ChartManager.instance.stageInfos[stageIndex].reward_2;
+            }
+            else
+            {
+                rewardText_2.text = $"획득 완료";
+            }
+
+            if (DBManager.instance.user.clearInfo[stageIndex, 0] == 0)
+            {
+                DBManager.instance.user.clearInfo[stageIndex, 0] = 1;
+                DBManager.instance.user.goods["gold"] += ChartManager.instance.stageInfos[stageIndex].reward_1;
+            }
+            else
+            {
+                rewardText_1.text = $"획득 완료";
+            }
         }
         else if (starCount >= ChartManager.instance.stageInfos[stageIndex].condition_2) // 2별 획득 조건 - 루비
         {
@@ -93,8 +113,18 @@ public class StageClear : MonoBehaviour
             {
                 rewardText_2.text = $"획득 완료";
             }
+
+            if (DBManager.instance.user.clearInfo[stageIndex, 0] == 0)
+            {
+                DBManager.instance.user.clearInfo[stageIndex, 0] = 1;
+                DBManager.instance.user.goods["gold"] += ChartManager.instance.stageInfos[stageIndex].reward_1;
+            }
+            else
+            {
+                rewardText_1.text = $"획득 완료";
+            }
         }
-        else // 1별 획득 조건 - 골드
+        else if (starCount >= ChartManager.instance.stageInfos[stageIndex].condition_1) // 1별 획득 조건 - 골드
         {
             rewardTab_1.SetActive(true);
             rewardTab_2.SetActive(false);
@@ -136,20 +166,5 @@ public class StageClear : MonoBehaviour
             }
             
         }
-    }
-
-    public void GoToHome()
-    {
-
-    }
-
-    public void GoNextStage()
-    {
-
-    }
-
-    public void Retry()
-    {
-
     }
 }
