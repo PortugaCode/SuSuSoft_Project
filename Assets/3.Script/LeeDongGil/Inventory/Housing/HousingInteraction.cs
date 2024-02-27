@@ -42,9 +42,13 @@ public class HousingInteraction : MonoBehaviour
                     {
                         //housingData = hit.collider.gameObject.GetComponent<HousingDrag>().data;
                         Debug.Log("상호작용");
+                        gameTime += Time.deltaTime;
                         housingObject = hit.collider.gameObject.GetComponent<HousingDrag>().housingObject;
-                        drag.isSetBuild = false;
-                        window.transform.GetChild(0).gameObject.SetActive(true);
+                        if (gameTime > 1.0f)
+                        {
+                            drag.isSetBuild = false;
+                            window.transform.GetChild(0).gameObject.SetActive(true);
+                        }
                     }
                 }
                 else if (!hit.collider.gameObject.CompareTag("Building") && EventSystem.current.IsPointerOverGameObject(0) == false)

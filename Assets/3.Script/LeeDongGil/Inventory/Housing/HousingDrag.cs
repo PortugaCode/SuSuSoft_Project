@@ -59,19 +59,26 @@ public class HousingDrag : MonoBehaviour
 
     private void Start()
     {
+        #region GetComponent
         check = transform.GetChild(0).GetComponent<SpriteRenderer>();
         boxCollider = GetComponent<BoxCollider>();
         subCollider = transform.GetChild(1).GetComponent<BoxCollider>();
         group = FindObjectOfType<EditModeButton>().GetComponent<CanvasGroup>();
         grid = FindAnyObjectByType<HousingGrid>();
+        #endregion
+        
+        //하우징 오브젝트의 너비와 높이 조절
+        SetWidthHeight();
 
+        //하우징 오브젝트의 레이어 설정
+        SetLayer();
 
         isInsertInven = false;
         mainCam = Camera.main;
         if (!LoadHousing.instance.isLoading)        //새로 설치할 하우징 코드
         {
-            moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(mainCam.transform.position.x)) * checkMinusX : Mathf.FloorToInt(mainCam.transform.position.x) + 0.5f;
-            moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(mainCam.transform.position.y)) * checkMinusY : Mathf.FloorToInt(mainCam.transform.position.y) + 0.5f;
+            moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(mainCam.transform.position.x) * checkMinusX : Mathf.FloorToInt(mainCam.transform.position.x) + 0.5f;
+            moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(mainCam.transform.position.y) * checkMinusY : Mathf.FloorToInt(mainCam.transform.position.y) + 0.5f;
             clampX = Mathf.Clamp(moveX, -(grid.boundX / 2) + (spaceX / 2) + grid.posX, (grid.boundX / 2) - (spaceX / 2) + grid.posX);
             clampY = Mathf.Clamp(moveY, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
 
@@ -91,7 +98,7 @@ public class HousingDrag : MonoBehaviour
             LoadHousing.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
             LoadHousing.instance.localHousingObject.Add(primaryIndex, housingObject);
 
-
+            Debug.Log($"{clampX}, {clampY}");
             transform.position = new Vector3(clampX, clampY, -1);
         }
         else            //기존에 설치된 하우징 위치
@@ -99,11 +106,6 @@ public class HousingDrag : MonoBehaviour
             transform.position = LoadHousing.instance.localHousing[primaryIndex].Item2;
         }
 
-        //하우징 오브젝트의 너비와 높이 조절
-        SetWidthHeight();
-
-        //하우징 오브젝트의 레이어 설정
-        SetLayer();
 
         space.transform.localScale = new Vector3(spaceX, spaceY, 1);
         boxCollider.size = new Vector3(spaceX, spaceY, 0.2f);
@@ -387,6 +389,8 @@ public class HousingDrag : MonoBehaviour
 
                 #endregion
 
+                
+
                 transform.position = new Vector3(currentClampX, currentClampY, transform.position.z);
 
 
@@ -612,6 +616,7 @@ public class HousingDrag : MonoBehaviour
             group.blocksRaycasts = true;
             LoadHousing.instance.tempKey.Add(primaryIndex);
             LoadHousing.instance.localHousing.Remove(primaryIndex);
+            LoadHousing.instance.localHousingObject.Remove(primaryIndex);
         }
         else
         {
