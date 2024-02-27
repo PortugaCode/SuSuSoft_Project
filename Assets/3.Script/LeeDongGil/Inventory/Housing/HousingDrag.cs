@@ -9,14 +9,17 @@ public class HousingDrag : MonoBehaviour
     public bool isCanBuild = true;
     public bool isSetBuild = true;
     public bool isInsertInven = false;
-    public Vector3 offset;
     public Transform previousParent;
-    public CanvasGroup group;
-    public bool isTouch = false;
-    public float touchTime = 0;
+    [HideInInspector] public bool isTouch = false;
+    [HideInInspector] public Vector3 offset;
+    [HideInInspector] public CanvasGroup group;
+    [HideInInspector] public float touchTime = 0;
+    private bool isCloneCreate = false;
+    public GameObject cloneObject;
+
 
     [Header("Build Setting")]
-    public HousingItemData data;  //중근아 여기 참조해
+    public HousingItemData data;
     public HousingObject housingObject;
     public SpriteRenderer buildSprite;
     public GameObject space;
@@ -66,7 +69,7 @@ public class HousingDrag : MonoBehaviour
         group = FindObjectOfType<EditModeButton>().GetComponent<CanvasGroup>();
         grid = FindAnyObjectByType<HousingGrid>();
         #endregion
-        
+
         //하우징 오브젝트의 너비와 높이 조절
         SetWidthHeight();
 
@@ -106,6 +109,12 @@ public class HousingDrag : MonoBehaviour
             transform.position = LoadHousing.instance.localHousing[primaryIndex].Item2;
         }
 
+        if (!isCloneCreate)
+        {
+            cloneObject = Instantiate(gameObject, new Vector3(-50, -50, -1), Quaternion.identity, previousParent);
+            isCloneCreate = true;
+            cloneObject.GetComponent<HousingDrag>().isCloneCreate = true;
+        }
 
         space.transform.localScale = new Vector3(spaceX, spaceY, 1);
         boxCollider.size = new Vector3(spaceX, spaceY, 0.2f);
@@ -254,7 +263,16 @@ public class HousingDrag : MonoBehaviour
                         default:
                             break;
                     }
+                    if (transform.position.x >= -18 && transform.position.x <= -8)
+                    {
+                        Vector3 clonePosition_LR = new Vector3(transform.position.x + 26, transform.position.y + 26, transform.position.z);
 
+                    }
+                    else if (transform.position.x >= 8 && transform.position.x <= 18)
+                    {
+                        Vector3 clonePosition_RL = new Vector3(transform.position.x - 26, transform.position.y - 26, transform.position.z);
+                        cloneObject = Instantiate(gameObject, clonePosition_RL, Quaternion.identity, previousParent);
+                    }
                 }
                 else
                 {
@@ -389,7 +407,8 @@ public class HousingDrag : MonoBehaviour
 
                 #endregion
 
-                
+
+
 
                 transform.position = new Vector3(currentClampX, currentClampY, transform.position.z);
 
@@ -405,6 +424,7 @@ public class HousingDrag : MonoBehaviour
                         sp.color = Color.white;
                     }
                 }
+
 
                 //드래그 끝날 때 Dictionary 수정
                 LoadHousing.instance.localHousing[primaryIndex] = (housingObject, transform.position);      //test해보기 3

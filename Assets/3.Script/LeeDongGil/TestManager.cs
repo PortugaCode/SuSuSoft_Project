@@ -18,6 +18,7 @@ public class TestManager : MonoBehaviour
     public bool isHousingInventoryLoad = false;
 
 
+
     public bool isEditMode = false;
     private void Awake()
     {
