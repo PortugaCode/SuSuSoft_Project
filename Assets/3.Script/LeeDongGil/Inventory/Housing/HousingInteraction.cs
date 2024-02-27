@@ -53,10 +53,6 @@ public class HousingInteraction : MonoBehaviour
                     drag.isSetBuild = true;
                     window.transform.GetChild(0).gameObject.SetActive(false);
                 }
-                /*gameTime += Time.deltaTime;
-                if(gameTime > 0.5f)
-                {
-                }*/
             }
         }
         else

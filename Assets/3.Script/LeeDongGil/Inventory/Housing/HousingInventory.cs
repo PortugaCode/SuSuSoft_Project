@@ -96,17 +96,6 @@ public class HousingInventory : MonoBehaviour
     private void Update()
     {
         ShowSlot();
-
-
-
-        /*if (TestManager.instance.isEditMode)
-        {
-            button.interactable = true;
-        }
-        else
-        {
-            button.interactable = false;
-        }*/
     }
 
     private void ShowSlot()
@@ -162,8 +151,12 @@ public class HousingInventory : MonoBehaviour
         if (!slot.isWindow)
         {
             image.color = new Color(1, 1, 1, 0);
-            //DBManager.instance.user.housingObject[]
+            DBManager.instance.user.housingObject[housingObj.name_e]--;
             count--;
+            if(DBManager.instance.user.housingObject[housingObj.name_e] == 0)
+            {
+                DBManager.instance.user.housingObject.Remove(housingObj.name_e);
+            }
             Vector3 createPos = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, 0);
             thisBuilding = Instantiate(Building, createPos, Quaternion.identity, buildingSpace);
             HousingDrag buildSetting = thisBuilding.GetComponent<HousingDrag>();

@@ -15,8 +15,8 @@ public class TestManager : MonoBehaviour
     public InventorySystem invenSys;
     public InventorySystem housingInvenSys;
     public InventorySystem housingInvenSysWindow;
+    public bool isHousingInventoryLoad = false;
 
-    
 
     public bool isEditMode = false;
     private void Awake()

@@ -7,8 +7,6 @@ using UnityEngine.UI;
 public class HousingSlot : MonoBehaviour
 {
     public HousingInventory housingInven;
-
-
     public bool isSlotUse;
     public string slotItemName = string.Empty;
     public int slotItemCount;
@@ -26,6 +24,15 @@ public class HousingSlot : MonoBehaviour
     {
         gRay = transform.root.GetComponent<GraphicRaycaster>();
         housingInven = GetComponentInChildren<HousingInventory>();
+
+        if (housingInven.count >= 1)
+        {
+            isSlotUse = true;
+        }
+        else
+        {
+            isSlotUse = false;
+        }
     }
     private void Update()
     {
@@ -40,14 +47,15 @@ public class HousingSlot : MonoBehaviour
 
         if (isSlotUse)
         {
-            slotItemName = GetComponentInChildren<HousingInventory>().housingName;
-            slotItemCount = GetComponentInChildren<HousingInventory>().count;
-            //itemInfomation = GetComponentInChildren<HousingInventory>().housingData;
-            housingObject = GetComponentInChildren<HousingInventory>().housingObj;
+            slotItemName = housingInven.housingName;
+            slotItemCount = housingInven.count;
+            //itemInfomation = housingInven.housingData;
+            housingObject = housingInven.housingObj;
         }
         else
         {
             slotItemName = string.Empty;
+            slotItemCount = housingInven.count;
             itemInfomation = null;
             housingObject = null;
         }

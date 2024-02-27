@@ -9,12 +9,12 @@ public class InventorySystem : MonoBehaviour
     public bool checkObjectEqual = false;
     public Transform inventoryWindow;
     public Transform inventoryScroll;
-    public bool isLoad = false;
+    
 
     private void OnEnable()
     {
         Debug.Log($"DB Count : {DBManager.instance.user.housingObject.Count}");
-        if (!isLoad)
+        if (!TestManager.instance.isHousingInventoryLoad)
         {
             if (DBManager.instance.user.housingObject.Count > 0)
             {
@@ -27,11 +27,12 @@ public class InventorySystem : MonoBehaviour
                             Debug.Log($"{i}번째 Key : {key}");
                             int housingIndex = ChartManager.instance.housingObjectDatas[i].index;
                             LoadHousingInventory(housingIndex, DBManager.instance.user.housingObject[key]);
+                            break;
                         }
                     }
                 }
             }
-            isLoad = true;
+            TestManager.instance.isHousingInventoryLoad = true;
         }
     }
 
@@ -45,6 +46,8 @@ public class InventorySystem : MonoBehaviour
             {
                 SetItemInfo(housingObject, slot);
                 slot.GetComponentInChildren<HousingInventory>().count = count;
+                slot.isSlotUse = true;
+                Debug.Log(slot.isSlotUse);
                 break;
             }
         }
@@ -220,7 +223,7 @@ public class InventorySystem : MonoBehaviour
 
     private void OnDestroy()
     {
-        isLoad = false;
+        TestManager.instance.isHousingInventoryLoad = false;
     }
 
     public void SetItemInfo(ItemData itemData, Slot _slot)      //공방 인벤토리에 이미지와 데이터 이름 넣기
