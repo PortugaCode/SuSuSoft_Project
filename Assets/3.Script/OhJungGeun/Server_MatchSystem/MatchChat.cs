@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,13 +6,22 @@ using TMPro;
 
 public class MatchChat : MonoBehaviour
 {
+    public Action<string> DoChat;
+
+
     [SerializeField] private GameObject chatBox;
     [SerializeField] private TextMeshPro chatInGame;
 
     [SerializeField] private SpriteRenderer chatBoxRenderer;
     [SerializeField] private TextMeshPro nickName;
 
+
+    [Header("isClone")]
+    [SerializeField] private bool isClone;
+
     private Coroutine chat;
+
+
 
     public void SetChatOrder(int a, int b)
     {
@@ -59,6 +69,8 @@ public class MatchChat : MonoBehaviour
             StopCoroutine(this.chat);
         }
         this.chat = StartCoroutine(ChatBoxActive_Co());
+
+        if (!isClone) DoChat?.Invoke(chat);
     }
 
 

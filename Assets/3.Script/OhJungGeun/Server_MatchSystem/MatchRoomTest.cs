@@ -16,15 +16,18 @@ public class MatchRoomTest : MonoBehaviour
     [SerializeField] private Dictionary<SessionId, TouchMove> players = new Dictionary<SessionId, TouchMove>();
     [SerializeField] private List<TouchMove> playerList = new List<TouchMove>();
 
-    [Header("User Prefeb")]
+    [Header("User Prefab")]
     [SerializeField] private TouchMove playerPrefab;
     [SerializeField] private GameObject chatBox;
     [SerializeField] private GameObject playerNickName;
 
+    [Header("User Clone Prefab")]
+    [SerializeField] private MatchClonePlayer matchClonePlayerPrefab;
 
 
 
 
+    [Header("ChatInput")]
     [SerializeField] private TMP_InputField textInput;
 
 
@@ -93,6 +96,7 @@ public class MatchRoomTest : MonoBehaviour
             players.Add(a, playerList[count]);
             if (isFirst)
             {
+                #region [메인 캐릭터 생성]
                 GameObject cloneChatBox = GameObject.Instantiate(chatBox, chatBox.transform.position, Quaternion.Euler(0f, 0f, -90f));
                 GameObject cloneNickName = GameObject.Instantiate(playerNickName, playerNickName.transform.position, Quaternion.identity);
 
@@ -100,6 +104,39 @@ public class MatchRoomTest : MonoBehaviour
                 players[a].gameObject.GetComponent<MatchChat>().SetChatOrder(order1, order2);
                 players[a].gameObject.GetComponent<MatchChat>().SetNickName(cloneNickName.GetComponent<TextMeshPro>());
                 players[a].gameObject.GetComponent<MatchChat>().SetNickName(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
+                #endregion
+
+                #region [클론 캐릭터 생성_Left Clone]
+
+                Vector2 clonePosition = new Vector2(players[a].gameObject.transform.position.x - 25.6f, players[a].gameObject.transform.position.y);
+
+                MatchClonePlayer matchClonePlayer_Left = MatchClonePlayer.Instantiate(matchClonePlayerPrefab, clonePosition, Quaternion.identity);
+                matchClonePlayer_Left.SetTargetPlayer(players[a].gameObject.transform, false);
+
+                GameObject cloneChatBox_Left = GameObject.Instantiate(chatBox, chatBox.transform.position, Quaternion.Euler(0f, 0f, -90f));
+                GameObject cloneNickName_Left = GameObject.Instantiate(playerNickName, playerNickName.transform.position, Quaternion.identity);
+
+                matchClonePlayer_Left.gameObject.GetComponent<MatchChat>().SetChatBox(cloneChatBox_Left);
+                matchClonePlayer_Left.gameObject.GetComponent<MatchChat>().SetChatOrder(order1, order2);
+                matchClonePlayer_Left.gameObject.GetComponent<MatchChat>().SetNickName(cloneNickName_Left.GetComponent<TextMeshPro>());
+                matchClonePlayer_Left.gameObject.GetComponent<MatchChat>().SetNickName(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
+                #endregion
+
+                #region [클론 캐릭터 생성_Right Clone]
+
+                clonePosition = new Vector2(players[a].gameObject.transform.position.x + 25.6f, players[a].gameObject.transform.position.y);
+
+                MatchClonePlayer matchClonePlayer_Right = MatchClonePlayer.Instantiate(matchClonePlayerPrefab, clonePosition, Quaternion.identity);
+                matchClonePlayer_Right.SetTargetPlayer(players[a].gameObject.transform, true);
+
+                GameObject cloneChatBox_Right = GameObject.Instantiate(chatBox, chatBox.transform.position, Quaternion.Euler(0f, 0f, -90f));
+                GameObject cloneNickName_Right = GameObject.Instantiate(playerNickName, playerNickName.transform.position, Quaternion.identity);
+
+                matchClonePlayer_Right.gameObject.GetComponent<MatchChat>().SetChatBox(cloneChatBox_Right);
+                matchClonePlayer_Right.gameObject.GetComponent<MatchChat>().SetChatOrder(order1, order2);
+                matchClonePlayer_Right.gameObject.GetComponent<MatchChat>().SetNickName(cloneNickName_Right.GetComponent<TextMeshPro>());
+                matchClonePlayer_Right.gameObject.GetComponent<MatchChat>().SetNickName(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
+                #endregion
 
 
                 order1 += 2;
@@ -177,12 +214,14 @@ public class MatchRoomTest : MonoBehaviour
             return;
         }
 
-
+        //첫 번째 방법 => position과 move position이 너무 멀면 순간이동 시키기
+        //두 번째 방법 isRight bool값 지정해주기
 
         Vector3 movePosition = new Vector3(data.xPos, data.yPos, data.zPos);
         Vector3 moveDirection = new Vector3(data.xDir, data.yDir, data.zDir);
         players[data.playerSession].SetDirection(moveDirection);
         players[data.playerSession].SetPosition(movePosition);
+        players[data.playerSession].SetIsRight();
         Debug.Log("상대방 움직임");
     }
 
