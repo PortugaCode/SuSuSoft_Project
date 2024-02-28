@@ -10,6 +10,7 @@ public class TestManager : MonoBehaviour
     public ItemData testData1;
     public List<HousingItemData> testHousing = new List<HousingItemData>();
     public List<HousingItemData> testHousingV2 = new List<HousingItemData>();
+    public GameObject player;
 
     [Header("Housing Inventory")]
     public InventorySystem invenSys;
@@ -55,31 +56,36 @@ public class TestManager : MonoBehaviour
         #endregion
     }
 
-/*
-    private void Update()
+    private void Start()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            Debug.Log("Test1");
-            invenSys.GetItem(testData, 10);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            Debug.Log("Test2");
-            invenSys.GetItem(testData1, 5);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            Debug.Log("Test3");
-            housingInvenSys.GetHousingItem_test(testHousing[0], 1);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            Debug.Log("Test4");
-            housingInvenSys.GetHousingItem_test(testHousing[1], 1);
-        }
+        player = FindObjectOfType<TouchMove>().gameObject;
     }
-*/
+
+    /*
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                Debug.Log("Test1");
+                invenSys.GetItem(testData, 10);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                Debug.Log("Test2");
+                invenSys.GetItem(testData1, 5);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha7))
+            {
+                Debug.Log("Test3");
+                housingInvenSys.GetHousingItem_test(testHousing[0], 1);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha8))
+            {
+                Debug.Log("Test4");
+                housingInvenSys.GetHousingItem_test(testHousing[1], 1);
+            }
+        }
+    */
     public void LoadHousingChart()
     {
         int listIndex = GetIndex(5002);

@@ -18,6 +18,7 @@ public class HousingDrag : MonoBehaviour
     [SerializeField] private bool isClone = false;
     [SerializeField] private bool isCloneCreate = false;
     public GameObject cloneObject;
+    public GameObject originalObject;
 
 
     [Header("Build Setting")]
@@ -54,7 +55,6 @@ public class HousingDrag : MonoBehaviour
     [SerializeField] private float cameraMoveStartPos = 1.6f;
     [SerializeField] private float camSpeed = 0.01f;
     SpriteRenderer[] sprender;
-    private HousingDrag[] housingObjs;
 
     #region Gizmos parameter
     /*
@@ -75,7 +75,7 @@ public class HousingDrag : MonoBehaviour
         group = FindObjectOfType<EditModeButton>().GetComponent<CanvasGroup>();
         grid = FindObjectOfType<HousingGrid>();
         buildSpaceParent = FindObjectOfType<DrawingGrid>().transform;
-        //player = FindObjectOfType<TouchMove>().gameObject;
+        player = TestManager.instance.player;
         #endregion
 
         //하우징 오브젝트의 너비와 높이 조절
@@ -93,7 +93,6 @@ public class HousingDrag : MonoBehaviour
             clampX = Mathf.Clamp(moveX, -(grid.boundX / 2) + (spaceX / 2) + grid.posX, (grid.boundX / 2) - (spaceX / 2) + grid.posX);
             clampY = Mathf.Clamp(moveY, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
 
-            Debug.Log("순서 2");
             previousParent = transform.parent;
 
             if (LoadHousing.instance.tempKey.Count == 0)        //임시 키값이 없을 경우
@@ -109,7 +108,6 @@ public class HousingDrag : MonoBehaviour
             LoadHousing.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
             LoadHousing.instance.localHousingObject.Add(primaryIndex, housingObject);
 
-            Debug.Log($"{clampX}, {clampY}");
             transform.position = new Vector3(clampX, clampY, -1);
         }
         else if (LoadHousing.instance.isLoading)           //기존에 설치된 하우징 위치
@@ -122,6 +120,7 @@ public class HousingDrag : MonoBehaviour
             cloneObject = Instantiate(gameObject, new Vector3(-50, -50, -1), Quaternion.identity, buildSpaceParent);
             cloneObject.GetComponent<HousingDrag>().isClone = true;
             cloneObject.GetComponent<HousingDrag>().isCloneCreate = true;
+            cloneObject.GetComponent<HousingDrag>().originalObject = gameObject;
             cloneObject.transform.GetChild(0).gameObject.SetActive(false);
             cloneObject.SetActive(false);
             if (!LoadHousing.instance.isLoading)
@@ -595,14 +594,32 @@ public class HousingDrag : MonoBehaviour
             cloneObject.SetActive(false);
         }
 
-        //if(player.transform.position.x >= 8)
-        //{
-        //    housingObjs = buildSpaceParent.GetComponentsInChildren<HousingDrag>();
-        //    foreach(HousingDrag housing in housingObjs)
-        //    {
-        //
-        //    }
-        //}
+        if(player.transform.position.x >= 8)
+        {
+            HousingDrag[] housingObjs = buildSpaceParent.GetComponentsInChildren<HousingDrag>();
+            foreach(HousingDrag housing in housingObjs)
+            {
+                if(housing.isClone && housing.gameObject.transform.position.x >= 8)
+                {
+                    Vector3 tempPosition = housing.gameObject.transform.position;
+                    housing.gameObject.transform.position = housing.originalObject.transform.position;
+                    housing.originalObject.transform.position = tempPosition;
+                }
+            }
+        }
+        else if(player.transform.position.x <= -8)
+        {
+            HousingDrag[] housingObjs = buildSpaceParent.GetComponentsInChildren<HousingDrag>();
+            foreach (HousingDrag housing in housingObjs)
+            {
+                if (housing.isClone && housing.gameObject.transform.position.x <= -8)
+                {
+                    Vector3 tempPosition = housing.gameObject.transform.position;
+                    housing.gameObject.transform.position = housing.originalObject.transform.position;
+                    housing.originalObject.transform.position = tempPosition;
+                }
+            }
+        }
     }
 
     private void SetWidthHeight()
