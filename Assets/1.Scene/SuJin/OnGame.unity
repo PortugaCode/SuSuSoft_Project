@@ -103274,7 +103274,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1000
+  m_text: "\uD68D\uB4DD \uC644\uB8CC"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d00ac7b3fa405c740a7ccb62dc6ff106, type: 2}
   m_sharedMaterial: {fileID: -8728319418528304450, guid: d00ac7b3fa405c740a7ccb62dc6ff106, type: 2}
@@ -103308,7 +103308,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -105223,8 +105223,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 906, y: -64}
-  m_SizeDelta: {x: 200, y: 128}
+  m_AnchoredPosition: {x: 956, y: -64}
+  m_SizeDelta: {x: 300, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &1340354267043814941
 Transform:
@@ -112457,8 +112457,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 669.58636, y: -64}
-  m_SizeDelta: {x: 1006, y: 128}
+  m_AnchoredPosition: {x: 720, y: -64}
+  m_SizeDelta: {x: 1106, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &2023375211906496191
 Transform:
@@ -124038,8 +124038,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 906, y: -64}
-  m_SizeDelta: {x: 200, y: 128}
+  m_AnchoredPosition: {x: 956, y: -64}
+  m_SizeDelta: {x: 300, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3088298706112295999
 GameObject:
@@ -132360,7 +132360,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 669.58636, y: -87.5}
+  m_AnchoredPosition: {x: 720, y: -87.5}
   m_SizeDelta: {x: 400, y: 175}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &4395108858976209021
@@ -132612,7 +132612,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1099.3105, y: -87.5}
+  m_AnchoredPosition: {x: 1183.3333, y: -87.5}
   m_SizeDelta: {x: 400, y: 175}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &4484062050854254278
@@ -141946,8 +141946,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 669.58636, y: -217}
-  m_SizeDelta: {x: 1006, y: 128}
+  m_AnchoredPosition: {x: 720, y: -217}
+  m_SizeDelta: {x: 1106, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5958400462355446358
 GameObject:
@@ -142371,8 +142371,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 906, y: -64}
-  m_SizeDelta: {x: 200, y: 128}
+  m_AnchoredPosition: {x: 956, y: -64}
+  m_SizeDelta: {x: 300, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6180455161256506896
 CanvasRenderer:
@@ -144663,8 +144663,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 669.58636, y: -370}
-  m_SizeDelta: {x: 1006, y: 128}
+  m_AnchoredPosition: {x: 720, y: -370}
+  m_SizeDelta: {x: 1106, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!58 &7036283960556864630
 CircleCollider2D:
@@ -145417,7 +145417,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -147648,7 +147648,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 239.86212, y: -87.5}
+  m_AnchoredPosition: {x: 256.66666, y: -87.5}
   m_SizeDelta: {x: 400, y: 175}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7879958016140582874
@@ -153264,7 +153264,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0

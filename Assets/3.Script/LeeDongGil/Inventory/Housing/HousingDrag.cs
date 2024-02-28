@@ -75,7 +75,7 @@ public class HousingDrag : MonoBehaviour
         group = FindObjectOfType<EditModeButton>().GetComponent<CanvasGroup>();
         grid = FindObjectOfType<HousingGrid>();
         buildSpaceParent = FindObjectOfType<DrawingGrid>().transform;
-        player = FindObjectOfType<TouchMove>().gameObject;
+        //player = FindObjectOfType<TouchMove>().gameObject;
         #endregion
 
         //하우징 오브젝트의 너비와 높이 조절
@@ -595,14 +595,14 @@ public class HousingDrag : MonoBehaviour
             cloneObject.SetActive(false);
         }
 
-        if(player.transform.position.x >= 8)
-        {
-            housingObjs = buildSpaceParent.GetComponentsInChildren<HousingDrag>();
-            foreach(HousingDrag housing in housingObjs)
-            {
-
-            }
-        }
+        //if(player.transform.position.x >= 8)
+        //{
+        //    housingObjs = buildSpaceParent.GetComponentsInChildren<HousingDrag>();
+        //    foreach(HousingDrag housing in housingObjs)
+        //    {
+        //
+        //    }
+        //}
     }
 
     private void SetWidthHeight()

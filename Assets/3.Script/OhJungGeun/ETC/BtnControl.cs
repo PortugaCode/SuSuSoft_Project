@@ -13,6 +13,7 @@ public class BtnControl : MonoBehaviour
     [SerializeField] private List<GameObject> allUI;
     [SerializeField] private GameObject characterUI;
     [SerializeField] private GameObject inventoryUI;
+    [SerializeField] private GameObject inventoryWindowUI;
     [SerializeField] private GameObject testHousingButton;
     [SerializeField] private GameObject editModeButton;
     [SerializeField] private GameObject stageUI;
@@ -21,11 +22,32 @@ public class BtnControl : MonoBehaviour
     [SerializeField] private List<Image> selectBtnList;
     [SerializeField] private Color selectColor;
 
-
+    private void OnEnable()
+    {
+        if (selectBtnList.Count > 0)
+        {
+            if (TestManager.instance.isAll)
+            {
+                SelctBtn(selectBtnList[0]);
+            }
+            else if (TestManager.instance.isFront)
+            {
+                SelctBtn(selectBtnList[1]);
+            }
+            else if (TestManager.instance.isBack)
+            {
+                SelctBtn(selectBtnList[2]);
+            }
+            else if (TestManager.instance.isBuilding)
+            {
+                SelctBtn(selectBtnList[3]);
+            }
+        }
+    }
 
     public void SelctBtn(Image me)
     {
-        for(int i = 0; i < selectBtnList.Count; i++)
+        for (int i = 0; i < selectBtnList.Count; i++)
         {
             selectBtnList[i].color = Color.white;
         }
@@ -58,7 +80,7 @@ public class BtnControl : MonoBehaviour
     public void SetInterfaceUI(GameObject a)
     {
         if (TestManager.instance.isEditMode) return;
-        for(int i = 0; i < allUI.Count; i++)
+        for (int i = 0; i < allUI.Count; i++)
         {
             allUI[i].SetActive(false);
         }
@@ -74,6 +96,12 @@ public class BtnControl : MonoBehaviour
     public void PopUp_InventoryUI(bool value)
     {
         if (TestManager.instance.isEditMode) return;
+        if (inventoryWindowUI.activeSelf)
+        {
+            inventoryWindowUI.transform.GetComponentInChildren<InventorySystem>().GotoScroll();
+            inventoryWindowUI.transform.GetChild(0).GetComponent<FilterButton>().ReturnButton();
+            inventoryWindowUI.SetActive(false);
+        }
         ResetUI();
         inventoryUI.SetActive(value);
         testHousingButton.SetActive(value);
