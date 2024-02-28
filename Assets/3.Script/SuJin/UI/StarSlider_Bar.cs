@@ -7,25 +7,30 @@ using UnityEngine.UI;
 public class StarSlider_Bar : MonoBehaviour
 {
     [SerializeField] Image fill;
-    [SerializeField] Image arrow;
     [SerializeField] PlayerProperty playerProperty;
-    private Vector2 arrpwPos;
 
-    
+    [SerializeField] RectTransform arrow;
+    private Vector2 arrowPos;
+    private float arrowPosX;   
 
     private void Start()
     {
         fill.fillAmount = 0;
-        arrpwPos = arrow.transform.position;
         playerProperty.onStarBar = GetStar;
+        arrowPos = arrow.transform.position;
+        arrowPosX = arrowPos.x;
     }
 
+    private void Update()
+    {
+        arrowPosX = fill.fillAmount;
+        arrowPosX = Mathf.Lerp(fill.fillAmount, playerProperty.getStarCount, arrowPos.x);
+    }
 
     private void GetStar(object sender, EventArgs args)
     {
-        if (playerProperty.getStarCount < 0) playerProperty.getStarCount = 0;
         fill.fillAmount = (float)playerProperty.stars.Count / playerProperty.maxStar;
-
-        //float fillAmout = Mathf.InverseLerp(fill.fillAmount, playerProperty.getStarCount, arrpwPos.x);
+       
+        Debug.Log($"{fill.fillAmount} :  ");
     }
 }
