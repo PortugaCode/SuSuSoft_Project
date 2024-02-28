@@ -98,5 +98,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  fllowSpeed: 10
+  followSpeed: 15
   target: {fileID: 0}

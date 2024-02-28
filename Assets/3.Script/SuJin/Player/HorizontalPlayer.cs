@@ -1,8 +1,12 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using UnityEngine.Rendering.Universal;
 using TMPro;
+using System.Collections.Generic;
+
 public class HorizontalPlayer : MonoBehaviour
 {
     public EventHandler OnLaver;
@@ -12,8 +16,16 @@ public class HorizontalPlayer : MonoBehaviour
     [SerializeField] private PlayerProperty playerProperty;
     [SerializeField] private TextMeshProUGUI starCountTmpPro;
 
+    //PlayerMove
     private Vector3 touchPosition;
     private Vector3 direction;
+
+    public bool isPlayerMove = false;
+
+    public Canvas canvas;
+    GraphicRaycaster graphicRay;
+    //PointerEventData pointEvent;
+
 
     [Header("PlyerSpeed")]
     [SerializeField] float currentSpeed;
@@ -58,8 +70,9 @@ public class HorizontalPlayer : MonoBehaviour
 
     private void Start()
     {
-        //Invoke("StartGame", 3f);
         playerLight.pointLightOuterRadius = maxSightRange;
+        graphicRay = canvas.GetComponent<GraphicRaycaster>();   
+        
     }
 
     private void Update()
@@ -76,9 +89,6 @@ public class HorizontalPlayer : MonoBehaviour
             PlayerLight();
         }
     }
-
-
-
 
     private void StartGame()
     {
@@ -100,18 +110,24 @@ public class HorizontalPlayer : MonoBehaviour
 
             Touch touch = Input.GetTouch(0);
 
-            touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
-            touchPosition.z = 0;
-            touchPosition.y = transform.position.y - 1;
-            direction = (touchPosition - transform.position).normalized;
+            //Player Skill Active Button
+            CheckUI(touch);
 
-            // 터치 했을 때 플레이어 속력 증가
-            currentSpeed += currentAcceleration * Time.deltaTime;
-            currentSpeed = Mathf.Clamp(currentSpeed, initialSpeed, maxSpeed);
-            rb2D.velocity = new Vector2(direction.x * currentSpeed, 0) * Time.deltaTime + Vector2.up * currentSpeed * Time.deltaTime;
+            if(isPlayerMove)
+            {
+                touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+                touchPosition.z = 0;
+                touchPosition.y = transform.position.y - 1;
+                direction = (touchPosition - transform.position).normalized;
 
-            //Player Rotation
-            PlayerRotation();
+                // 터치 했을 때 플레이어 속력 증가
+                currentSpeed += currentAcceleration * Time.deltaTime;
+                currentSpeed = Mathf.Clamp(currentSpeed, initialSpeed, maxSpeed);
+                rb2D.velocity = new Vector2(direction.x * currentSpeed, 0) * Time.deltaTime + Vector2.up * currentSpeed * Time.deltaTime;
+
+                //Player Rotation
+                PlayerRotation();
+            }
         }
         else
         {
@@ -123,6 +139,30 @@ public class HorizontalPlayer : MonoBehaviour
 
             //터치 끝났을 때 일정속도 유지
             rb2D.velocity = new Vector2(direction.x, 0) * currentSpeed * Time.deltaTime + Vector2.up * currentSpeed * Time.deltaTime;
+        }
+    }
+
+    //Skill Active UI 판단
+    //BG Image Alpha
+    //Item Image fill Amount
+    private void CheckUI(Touch touch)
+    {
+        var pointerevent = new PointerEventData(null);
+        pointerevent.position = touch.position;
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+        graphicRay.Raycast(pointerevent, raycastResults);
+
+        if (raycastResults.Count > 0)
+        {
+            GameObject obj = raycastResults[0].gameObject;
+            if (obj.CompareTag("UI"))
+            {
+                isPlayerMove = false;
+            }
+            else
+            {
+                isPlayerMove = true;
+            }
         }
     }
 
@@ -142,15 +182,18 @@ public class HorizontalPlayer : MonoBehaviour
 
     public void IncreaseSpeed()     //Player Speed Method
     {
-        isSpeed = true;
-        maxSpeed = maxSpeed * 2f;
-        currentAcceleration = baseAcceleration * 10f;
+        if(isSpeed)
+        {
+            maxSpeed = maxSpeed * 2f;
+            currentAcceleration = baseAcceleration * 10f;
+        }
     }
 
     public void PlayerRotation()
     {
         if (Input.touchCount > 0)
         {
+            isPlayerMove = true;
             Touch touch = Input.GetTouch(0);
 
             Vector3 touchPositionToRotate = Camera.main.ScreenToWorldPoint(touch.position);
@@ -179,6 +222,8 @@ public class HorizontalPlayer : MonoBehaviour
         }
     }
 
+
+    #region [IEnumerator]
     IEnumerator MaxSight_Co()
     {
         while (playerLight.pointLightOuterRadius < maxSightRange)
@@ -221,4 +266,5 @@ public class HorizontalPlayer : MonoBehaviour
         }
         gameStart = true;
     }
+    #endregion
 }

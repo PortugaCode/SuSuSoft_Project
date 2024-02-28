@@ -30,7 +30,5 @@ public class StarSlider_Bar : MonoBehaviour
     private void GetStar(object sender, EventArgs args)
     {
         fill.fillAmount = (float)playerProperty.stars.Count / playerProperty.maxStar;
-       
-        Debug.Log($"{fill.fillAmount} :  ");
     }
 }
