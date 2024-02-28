@@ -6,7 +6,7 @@ using UnityEngine;
 public class TrailStar : MonoBehaviour
 {
     [SerializeField] GameObject player;
-    [SerializeField] float fllowSpeed;
+    [SerializeField] float followSpeed;
     [SerializeField] private GameObject target;
 
     private float distance;
@@ -30,7 +30,7 @@ public class TrailStar : MonoBehaviour
 
     private void ChasePlayer()
     {
-        transform.position = Vector2.Lerp(this.transform.position, target.transform.position + Vector3.down * 0.3f, fllowSpeed * Time.deltaTime);
+        transform.position = Vector2.Lerp(this.transform.position, target.transform.position + Vector3.down * 0.3f, followSpeed * Time.deltaTime);
     }
 
     private void Update()
