@@ -179,10 +179,14 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   group: {fileID: 0}
   touchTime: 0
+  isClone: 0
+  isCloneCreate: 0
   cloneObject: {fileID: 0}
+  originalObject: {fileID: 0}
   data: {fileID: 0}
   buildSprite: {fileID: 6621264533684671820}
   space: {fileID: 9073170849238675846}
+  player: {fileID: 0}
   spaceX: 1
   spaceY: 1
   id: 0
@@ -193,7 +197,7 @@ MonoBehaviour:
   clampX: 0
   clampY: 0
   cameraMoveStartPos: 1.5
-  camSpeed: 0.01
+  camSpeed: 0.025
 --- !u!65 &2554417741279338056
 BoxCollider:
   m_ObjectHideFlags: 0

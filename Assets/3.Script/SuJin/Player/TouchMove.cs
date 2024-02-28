@@ -101,11 +101,13 @@ public class TouchMove : MonoBehaviour
     public void SetCanMove_true()
     {
         canMove = true;
+        TestManager.instance.isShowUI = true;
     }
 
     public void SetCanMove_false()
     {
         canMove = false;
+        TestManager.instance.isShowUI = false;
     }
 
     private void SetTouchPosition()

@@ -24948,7 +24948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a5bb603787bd9c4899d98ac92678f21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camSpeed: 0.1
+  camSpeed: 0.0055
   grid: {fileID: 0}
 --- !u!1 &1657638931
 GameObject:
@@ -38998,7 +38998,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 660, y: 0}
   m_SizeDelta: {x: 1000, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1827815505140586220
@@ -45952,7 +45952,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 644, y: 0}
   m_SizeDelta: {x: 1000, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &2881608021737024174
@@ -72693,6 +72693,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d76de30ef60b6404083d73c307c018c5, type: 2}
   - {fileID: 11400000, guid: 52825412b0668bd45b157339dd0d15e6, type: 2}
   testHousingV2: []
+  player: {fileID: 0}
   invenSys: {fileID: 0}
   housingInvenSys: {fileID: 3093567052042492828}
   housingInvenSysWindow: {fileID: 6931036427793136017}
@@ -72701,6 +72702,7 @@ MonoBehaviour:
   isFront: 0
   isBack: 0
   isBuilding: 0
+  canvasGroup: {fileID: 8386102214780063580}
   isEditMode: 0
 --- !u!1 &5523422983694764454
 GameObject:
@@ -76447,7 +76449,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.2}
-  m_LocalScale: {x: 60, y: 28, z: 1}
+  m_LocalScale: {x: 36, y: 28, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5397328282287035182}
@@ -80627,7 +80629,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8015996198198928477}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -84233,7 +84235,7 @@ GameObject:
   - component: {fileID: 4138610211593981892}
   - component: {fileID: 4429604873367788155}
   m_Layer: 30
-  m_Name: 60 x 28
+  m_Name: 36 x 28
   m_TagString: CanBuild
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88779,9 +88781,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7b224f4495ed8543a010295232883a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startX: -30
+  startX: -18
   startY: -14
-  rowCount: 60
+  rowCount: 36
   colCount: 28
   gridSize: 1
 --- !u!120 &8015996198198928479
@@ -91627,7 +91629,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 644, y: 0}
   m_SizeDelta: {x: 1000, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &8446310484253014967

@@ -157,6 +157,8 @@ public class HousingInterationWindow : MonoBehaviour
     public void SetHousingPosition()
     {
         housingObject.GetComponent<HousingDrag>().isSetBuild = true;
+        transform.GetChild(0).gameObject.SetActive(false);
+        TestManager.instance.isShowUI = true;
     }
 
 }

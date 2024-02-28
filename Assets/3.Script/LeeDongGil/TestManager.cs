@@ -17,7 +17,7 @@ public class TestManager : MonoBehaviour
     public InventorySystem housingInvenSys;
     public InventorySystem housingInvenSysWindow;
     public bool isHousingInventoryLoad = false;
-
+    public bool isShowUI = true;
 
     [Header("Housing Filter")]
     public bool isAll = true;
@@ -25,6 +25,8 @@ public class TestManager : MonoBehaviour
     public bool isBack = false;
     public bool isBuilding = false;
 
+    [Header("UI")]
+    public CanvasGroup canvasGroup;
 
     public bool isEditMode = false;
     private void Awake()
@@ -56,36 +58,64 @@ public class TestManager : MonoBehaviour
         #endregion
     }
 
+    public void SetUI(bool value)
+    {
+        if (value)
+        {
+            canvasGroup.alpha = 1.0f;
+            canvasGroup.blocksRaycasts = true;
+        }
+        else
+        {
+            canvasGroup.alpha = 0;
+            canvasGroup.blocksRaycasts = false;
+        }
+    }
+
     private void Start()
     {
+        /*
+        #if UNITY_ANDROID
+                Application.targetFrameRate = 60;
+        #else
+                QualitySettings.vSyncCount = 1;
+        #endif
+        */
         player = FindObjectOfType<TouchMove>().gameObject;
     }
 
-    /*
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                Debug.Log("Test1");
-                invenSys.GetItem(testData, 10);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                Debug.Log("Test2");
-                invenSys.GetItem(testData1, 5);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha7))
-            {
-                Debug.Log("Test3");
-                housingInvenSys.GetHousingItem_test(testHousing[0], 1);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha8))
-            {
-                Debug.Log("Test4");
-                housingInvenSys.GetHousingItem_test(testHousing[1], 1);
-            }
-        }
-    */
+
+    private void Update()
+    {
+        #region Develop Mode
+        /*
+                    if (Input.GetKeyDown(KeyCode.Alpha1))
+                    {
+                        Debug.Log("Test1");
+                        invenSys.GetItem(testData, 10);
+                    }
+                    else if (Input.GetKeyDown(KeyCode.Alpha2))
+                    {
+                        Debug.Log("Test2");
+                        invenSys.GetItem(testData1, 5);
+                    }
+                    else if (Input.GetKeyDown(KeyCode.Alpha7))
+                    {
+                        Debug.Log("Test3");
+                        housingInvenSys.GetHousingItem_test(testHousing[0], 1);
+                    }
+                    else if (Input.GetKeyDown(KeyCode.Alpha8))
+                    {
+                        Debug.Log("Test4");
+                        housingInvenSys.GetHousingItem_test(testHousing[1], 1);
+                    }
+        */
+        #endregion
+
+        SetUI(isShowUI);
+
+    }
+
     public void LoadHousingChart()
     {
         int listIndex = GetIndex(5002);
@@ -101,7 +131,7 @@ public class TestManager : MonoBehaviour
         return ChartManager.instance.housingObjectDatas.FindIndex(listIndex => listIndex.index == indexNum);
     }
 
-    
+
 
     #region Test Button
     public void TestButton_Front()

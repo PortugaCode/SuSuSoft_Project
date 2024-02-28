@@ -178,7 +178,7 @@ public class HousingDrag : MonoBehaviour
     {
         if (isClone) return;
 
-        if (TestManager.instance.isEditMode)
+        if (TestManager.instance.isEditMode)            //편집모드 일때
         {
             DragObject();
             CheckToBuild();
@@ -201,13 +201,17 @@ public class HousingDrag : MonoBehaviour
                 check.gameObject.SetActive(true);
                 subCollider.enabled = true;
             }
-            group.alpha = 1.0f;
-            group.blocksRaycasts = true;
+            if (isTouch)
+            {
+                TestManager.instance.isShowUI = true;
+            }
         }
         else
         {
-            group.alpha = 0;
-            group.blocksRaycasts = false;
+            if (isTouch)
+            {
+                TestManager.instance.isShowUI = false;
+            }
         }
 
         ClonePosition();
@@ -244,7 +248,6 @@ public class HousingDrag : MonoBehaviour
                     {
                         isTouch = true;
                         Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
-                        Debug.Log("Began 실행2");
                         offset = transform.position - ray.GetPoint(hit.distance);
                     }
 
@@ -287,7 +290,7 @@ public class HousingDrag : MonoBehaviour
                             break;
                     }
 
-                    
+
 
                 }
                 else
@@ -594,12 +597,12 @@ public class HousingDrag : MonoBehaviour
             cloneObject.SetActive(false);
         }
 
-        if(player.transform.position.x >= 8)
+        if (player.transform.position.x >= 8)
         {
             HousingDrag[] housingObjs = buildSpaceParent.GetComponentsInChildren<HousingDrag>();
-            foreach(HousingDrag housing in housingObjs)
+            foreach (HousingDrag housing in housingObjs)
             {
-                if(housing.isClone && housing.gameObject.transform.position.x >= 8)
+                if (housing.isClone && housing.gameObject.transform.position.x >= 8)
                 {
                     Vector3 tempPosition = housing.gameObject.transform.position;
                     housing.gameObject.transform.position = housing.originalObject.transform.position;
@@ -607,7 +610,7 @@ public class HousingDrag : MonoBehaviour
                 }
             }
         }
-        else if(player.transform.position.x <= -8)
+        else if (player.transform.position.x <= -8)
         {
             HousingDrag[] housingObjs = buildSpaceParent.GetComponentsInChildren<HousingDrag>();
             foreach (HousingDrag housing in housingObjs)
