@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class HousingDrag : MonoBehaviour
 {
+    [Header("Housing Object Status")]
     public bool isDragging = false;
     public bool isCanBuild = true;
     public bool isSetBuild = true;
@@ -14,15 +15,18 @@ public class HousingDrag : MonoBehaviour
     [HideInInspector] public Vector3 offset;
     [HideInInspector] public CanvasGroup group;
     [HideInInspector] public float touchTime = 0;
-    private bool isCloneCreate = false;
+    [SerializeField] private bool isClone = false;
+    [SerializeField] private bool isCloneCreate = false;
     public GameObject cloneObject;
 
 
     [Header("Build Setting")]
+    private Transform buildSpaceParent;
     public HousingItemData data;
     public HousingObject housingObject;
     public SpriteRenderer buildSprite;
     public GameObject space;
+    [SerializeField] private GameObject player;
 
     [Header("HousingObject Data")]
     [HideInInspector] public float spaceX;
@@ -50,6 +54,8 @@ public class HousingDrag : MonoBehaviour
     [SerializeField] private float cameraMoveStartPos = 1.6f;
     [SerializeField] private float camSpeed = 0.01f;
     SpriteRenderer[] sprender;
+    private HousingDrag[] housingObjs;
+
     #region Gizmos parameter
     /*
         private Vector3 gizmosPosition;
@@ -67,7 +73,9 @@ public class HousingDrag : MonoBehaviour
         boxCollider = GetComponent<BoxCollider>();
         subCollider = transform.GetChild(1).GetComponent<BoxCollider>();
         group = FindObjectOfType<EditModeButton>().GetComponent<CanvasGroup>();
-        grid = FindAnyObjectByType<HousingGrid>();
+        grid = FindObjectOfType<HousingGrid>();
+        buildSpaceParent = FindObjectOfType<DrawingGrid>().transform;
+        player = FindObjectOfType<TouchMove>().gameObject;
         #endregion
 
         //하우징 오브젝트의 너비와 높이 조절
@@ -78,7 +86,7 @@ public class HousingDrag : MonoBehaviour
 
         isInsertInven = false;
         mainCam = Camera.main;
-        if (!LoadHousing.instance.isLoading)        //새로 설치할 하우징 코드
+        if (!LoadHousing.instance.isLoading && !isClone)        //새로 설치할 하우징 코드
         {
             moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(mainCam.transform.position.x) * checkMinusX : Mathf.FloorToInt(mainCam.transform.position.x) + 0.5f;
             moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(mainCam.transform.position.y) * checkMinusY : Mathf.FloorToInt(mainCam.transform.position.y) + 0.5f;
@@ -104,16 +112,28 @@ public class HousingDrag : MonoBehaviour
             Debug.Log($"{clampX}, {clampY}");
             transform.position = new Vector3(clampX, clampY, -1);
         }
-        else            //기존에 설치된 하우징 위치
+        else if (LoadHousing.instance.isLoading)           //기존에 설치된 하우징 위치
         {
             transform.position = LoadHousing.instance.localHousing[primaryIndex].Item2;
         }
 
         if (!isCloneCreate)
         {
-            cloneObject = Instantiate(gameObject, new Vector3(-50, -50, -1), Quaternion.identity, previousParent);
-            isCloneCreate = true;
+            cloneObject = Instantiate(gameObject, new Vector3(-50, -50, -1), Quaternion.identity, buildSpaceParent);
+            cloneObject.GetComponent<HousingDrag>().isClone = true;
             cloneObject.GetComponent<HousingDrag>().isCloneCreate = true;
+            cloneObject.transform.GetChild(0).gameObject.SetActive(false);
+            cloneObject.SetActive(false);
+            if (!LoadHousing.instance.isLoading)
+            {
+                LoadHousing.instance.localCloneHousing.Add(primaryIndex, cloneObject.transform.position);
+            }
+            else
+            {
+                //Debug.Log(LoadHousing.instance.localCloneHousing[primaryIndex]);
+                cloneObject.transform.position = LoadHousing.instance.localCloneHousing[primaryIndex];
+                cloneObject.SetActive(true);
+            }
         }
 
         space.transform.localScale = new Vector3(spaceX, spaceY, 1);
@@ -157,6 +177,8 @@ public class HousingDrag : MonoBehaviour
 
     private void Update()
     {
+        if (isClone) return;
+
         if (TestManager.instance.isEditMode)
         {
             DragObject();
@@ -188,6 +210,8 @@ public class HousingDrag : MonoBehaviour
             group.alpha = 0;
             group.blocksRaycasts = false;
         }
+
+        ClonePosition();
 
         if (isTouch)
         {
@@ -263,16 +287,9 @@ public class HousingDrag : MonoBehaviour
                         default:
                             break;
                     }
-                    if (transform.position.x >= -18 && transform.position.x <= -8)
-                    {
-                        Vector3 clonePosition_LR = new Vector3(transform.position.x + 26, transform.position.y + 26, transform.position.z);
 
-                    }
-                    else if (transform.position.x >= 8 && transform.position.x <= 18)
-                    {
-                        Vector3 clonePosition_RL = new Vector3(transform.position.x - 26, transform.position.y - 26, transform.position.z);
-                        cloneObject = Instantiate(gameObject, clonePosition_RL, Quaternion.identity, previousParent);
-                    }
+                    
+
                 }
                 else
                 {
@@ -407,12 +424,7 @@ public class HousingDrag : MonoBehaviour
 
                 #endregion
 
-
-
-
                 transform.position = new Vector3(currentClampX, currentClampY, transform.position.z);
-
-
             }
             else
             {
@@ -427,17 +439,18 @@ public class HousingDrag : MonoBehaviour
 
 
                 //드래그 끝날 때 Dictionary 수정
-                LoadHousing.instance.localHousing[primaryIndex] = (housingObject, transform.position);      //test해보기 3
+                LoadHousing.instance.localHousing[primaryIndex] = (housingObject, transform.position);
+                LoadHousing.instance.localCloneHousing[primaryIndex] = cloneObject.transform.position;
                 //LoadHousing.instance.saveLocal[primaryIndex] = (gameObject, transform.position);
-                Debug.Log($"현재 오브젝트 : {LoadHousing.instance.localHousing[primaryIndex].Item1.name_k}");
-                Debug.Log($"현재 포지션 : {LoadHousing.instance.localHousing[primaryIndex].Item2}");
+                //Debug.Log($"현재 오브젝트 : {LoadHousing.instance.localHousing[primaryIndex].Item1.name_k}");
+                //Debug.Log($"현재 포지션 : {LoadHousing.instance.localHousing[primaryIndex].Item2}");
             }
         }
         else
         {
-            //Debug.Log("else End");
             isDragging = false;
             subCollider.enabled = false;
+            //Debug.Log($"클론 포지션 : {LoadHousing.instance.localCloneHousing[primaryIndex]}");
         }
     }
 
@@ -563,6 +576,35 @@ public class HousingDrag : MonoBehaviour
 
     }
 
+    private void ClonePosition()
+    {
+        if (transform.position.x >= -18 && transform.position.x <= -8)
+        {
+            cloneObject.SetActive(true);
+            Vector3 clonePosition_LR = new Vector3(transform.position.x + 26, transform.position.y, transform.position.z);
+            cloneObject.transform.position = clonePosition_LR;
+        }
+        else if (transform.position.x >= 8 && transform.position.x <= 18)
+        {
+            cloneObject.SetActive(true);
+            Vector3 clonePosition_RL = new Vector3(transform.position.x - 26, transform.position.y, transform.position.z);
+            cloneObject.transform.position = clonePosition_RL;
+        }
+        else
+        {
+            cloneObject.SetActive(false);
+        }
+
+        if(player.transform.position.x >= 8)
+        {
+            housingObjs = buildSpaceParent.GetComponentsInChildren<HousingDrag>();
+            foreach(HousingDrag housing in housingObjs)
+            {
+
+            }
+        }
+    }
+
     private void SetWidthHeight()
     {
         switch (housingObject.index)
@@ -636,7 +678,9 @@ public class HousingDrag : MonoBehaviour
             group.blocksRaycasts = true;
             LoadHousing.instance.tempKey.Add(primaryIndex);
             LoadHousing.instance.localHousing.Remove(primaryIndex);
+            LoadHousing.instance.localCloneHousing.Remove(primaryIndex);
             LoadHousing.instance.localHousingObject.Remove(primaryIndex);
+            Destroy(cloneObject);
         }
         else
         {

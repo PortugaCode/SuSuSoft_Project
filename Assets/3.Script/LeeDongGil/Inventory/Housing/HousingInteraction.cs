@@ -44,7 +44,7 @@ public class HousingInteraction : MonoBehaviour
                         Debug.Log("상호작용");
                         gameTime += Time.deltaTime;
                         housingObject = hit.collider.gameObject.GetComponent<HousingDrag>().housingObject;
-                        if (gameTime > 1.0f)
+                        if (gameTime > 0.5f)
                         {
                             drag.isSetBuild = false;
                             window.transform.GetChild(0).gameObject.SetActive(true);

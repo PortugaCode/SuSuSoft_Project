@@ -8,12 +8,30 @@ public class FilterButton : MonoBehaviour
     public Transform scrollInventory;
     public Transform windowInventory;
     public bool isFilter = false;
+
+
     public Button btn;
 
     private void OnEnable()
     {
         Debug.Log("필터 버튼이 활성화 될 때 이 디버그가 표시됨");
-        
+        if(TestManager.instance.isAll)
+        {
+            AllButton();
+        }
+        else if(TestManager.instance.isFront)
+        {
+            FrontButton();
+        }
+        else if (TestManager.instance.isBack)
+        {
+            BackButton();
+        }
+        else if (TestManager.instance.isBuilding)
+        {
+            BuildingButton();
+        }
+
     }
 
     private void OnDisable()
@@ -25,6 +43,10 @@ public class FilterButton : MonoBehaviour
     public void AllButton()
     {
         isFilter = false;
+        TestManager.instance.isAll = true;
+        TestManager.instance.isFront = false;
+        TestManager.instance.isBack = false;
+        TestManager.instance.isBuilding = false;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         foreach (HousingSlot slot in slots)
         {
@@ -39,7 +61,10 @@ public class FilterButton : MonoBehaviour
     public void FrontButton()
     {
         isFilter = true;
-
+        TestManager.instance.isAll = false;
+        TestManager.instance.isFront = true;
+        TestManager.instance.isBack = false;
+        TestManager.instance.isBuilding = false;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         int[] currentindexs = new int[20];
         int index = 0;
@@ -70,6 +95,10 @@ public class FilterButton : MonoBehaviour
     public void BackButton()
     {
         isFilter = true;
+        TestManager.instance.isAll = false;
+        TestManager.instance.isFront = false;
+        TestManager.instance.isBack = true;
+        TestManager.instance.isBuilding = false;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         int[] currentindexs = new int[20];
         int index = 0;
@@ -100,6 +129,10 @@ public class FilterButton : MonoBehaviour
     public void BuildingButton()
     {
         isFilter = true;
+        TestManager.instance.isAll = false;
+        TestManager.instance.isFront = false;
+        TestManager.instance.isBack = false;
+        TestManager.instance.isBuilding = true;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         int[] currentindexs = new int[20];
         int index = 0;

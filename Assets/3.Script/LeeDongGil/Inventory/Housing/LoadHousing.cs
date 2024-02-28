@@ -8,13 +8,21 @@ public class LoadHousing : MonoBehaviour
 
     [Header("Housing System")]
     public HousingObject[] invenHousing = new HousingObject[20];
-    //key : primaryIndex   value : HousingObject 구조체, 좌표
+    //key : primaryIndex    value : HousingObject 구조체, 좌표
     public Dictionary<int, (HousingObject, Vector3)> localHousing = new Dictionary<int, (HousingObject, Vector3)>();
+
+    //key : primaryIndex    value : 좌표   (클론)
+    public Dictionary<int, Vector3> localCloneHousing = new Dictionary<int, Vector3>();
+
+    //key : primaryIndex    value : HousingObject 구조체 (팝업 설명용)
     public Dictionary<int, HousingObject> localHousingObject = new Dictionary<int, HousingObject>();
+
+
     public KeyValuePair<int, (HousingObject, Vector3)> keyValue = new KeyValuePair<int, (HousingObject, Vector3)>();
-    public List<(GameObject, Vector3)> saveLocal = new List<(GameObject, Vector3)>();
-    public int primaryKey = 0;
-    public List<int> tempKey = new List<int>();
+    //public List<(GameObject, Vector3)> saveLocal = new List<(GameObject, Vector3)>();
+
+    public int primaryKey = 0;                      //Dictionary Key
+    public List<int> tempKey = new List<int>();     //오브젝트 넣을 때 임시 키값
     public Transform buildSpace;
     public Transform nowBuilding;
     public GameObject housingGameObj;
@@ -55,7 +63,8 @@ public class LoadHousing : MonoBehaviour
         //isLoading = true;
         buildSpace = FindObjectOfType<DrawingGrid>().transform;
         nowBuilding = FindObjectOfType<NowBuilding>().transform;
-        
+
+        #region 이전 작업물
         /*for (int i = 0; i < localHousing.Count; i++)
         {
             thisBuilding = Instantiate(housingGameObj, localHousing[i].Item2, Quaternion.identity, buildSpace);
@@ -70,7 +79,7 @@ public class LoadHousing : MonoBehaviour
             housing.clampX = localHousing[i].Item2.x;
             housing.clampY = localHousing[i].Item2.y;
         }*/
-
+        #endregion
 
         foreach (var housingDic in localHousing)
         {
@@ -85,7 +94,7 @@ public class LoadHousing : MonoBehaviour
             housing.moveY = housingDic.Value.Item2.y;
             housing.clampX = housingDic.Value.Item2.x;
             housing.clampY = housingDic.Value.Item2.y;
-            Debug.Log("순서 0");
+            //Debug.Log("순서 0");
         }
     }
 }

@@ -18,6 +18,12 @@ public class TestManager : MonoBehaviour
     public bool isHousingInventoryLoad = false;
 
 
+    [Header("Housing Filter")]
+    public bool isAll = true;
+    public bool isFront = false;
+    public bool isBack = false;
+    public bool isBuilding = false;
+
 
     public bool isEditMode = false;
     private void Awake()
@@ -49,13 +55,7 @@ public class TestManager : MonoBehaviour
         #endregion
     }
 
-    public Ray TouchRay()
-    {
-        Touch touch = Input.GetTouch(0);
-        Camera cam = Camera.main;
-        return cam.ScreenPointToRay(touch.position);
-    }
-
+/*
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -79,7 +79,7 @@ public class TestManager : MonoBehaviour
             housingInvenSys.GetHousingItem_test(testHousing[1], 1);
         }
     }
-
+*/
     public void LoadHousingChart()
     {
         int listIndex = GetIndex(5002);
