@@ -174,11 +174,12 @@ MonoBehaviour:
   isCanBuild: 1
   isSetBuild: 1
   isInsertInven: 0
-  offset: {x: 0, y: 0, z: 0}
   previousParent: {fileID: 0}
-  group: {fileID: 0}
   isTouch: 0
+  offset: {x: 0, y: 0, z: 0}
+  group: {fileID: 0}
   touchTime: 0
+  cloneObject: {fileID: 0}
   data: {fileID: 0}
   buildSprite: {fileID: 6621264533684671820}
   space: {fileID: 9073170849238675846}
