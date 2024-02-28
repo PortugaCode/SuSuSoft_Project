@@ -24948,7 +24948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a5bb603787bd9c4899d98ac92678f21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camSpeed: 0.005
+  camSpeed: 0.1
   grid: {fileID: 0}
 --- !u!1 &1657638931
 GameObject:
@@ -34042,8 +34042,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 412.18976, y: -50}
-  m_SizeDelta: {x: 274.79318, y: 100}
+  m_AnchoredPosition: {x: 450, y: -50}
+  m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &979159845148826849
 CanvasRenderer:
@@ -37377,7 +37377,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -37595,8 +37594,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 961.7761, y: -50}
-  m_SizeDelta: {x: 274.79318, y: 100}
+  m_AnchoredPosition: {x: 1050, y: -50}
+  m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1667097600547880699
 GameObject:
@@ -38997,9 +38996,9 @@ RectTransform:
   - {fileID: 8073511366426335157}
   m_Father: {fileID: 6403156106240364893}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 660, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1000, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1827815505140586220
@@ -42108,7 +42107,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2274300147843281630}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4795600902466980767}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!222 &2273784602974017506
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -45356,6 +45367,7 @@ MonoBehaviour:
   allUI: []
   characterUI: {fileID: 0}
   inventoryUI: {fileID: 0}
+  inventoryWindowUI: {fileID: 0}
   testHousingButton: {fileID: 0}
   editModeButton: {fileID: 0}
   stageUI: {fileID: 0}
@@ -45938,9 +45950,9 @@ RectTransform:
   - {fileID: 4145916867032201305}
   m_Father: {fileID: 7812743103174878440}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 644, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1000, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &2881608021737024174
@@ -46711,7 +46723,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 175}
+  m_AnchoredPosition: {x: 0, y: 181}
   m_SizeDelta: {x: 0, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &3014506773143248094
@@ -65123,6 +65135,7 @@ MonoBehaviour:
   allUI: []
   characterUI: {fileID: 0}
   inventoryUI: {fileID: 0}
+  inventoryWindowUI: {fileID: 0}
   testHousingButton: {fileID: 0}
   editModeButton: {fileID: 0}
   stageUI: {fileID: 0}
@@ -72169,8 +72182,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 686.983, y: -50}
-  m_SizeDelta: {x: 274.79318, y: 100}
+  m_AnchoredPosition: {x: 750, y: -50}
+  m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5461164452135319158
 MonoBehaviour:
@@ -72683,6 +72696,11 @@ MonoBehaviour:
   invenSys: {fileID: 0}
   housingInvenSys: {fileID: 3093567052042492828}
   housingInvenSysWindow: {fileID: 6931036427793136017}
+  isHousingInventoryLoad: 0
+  isAll: 1
+  isFront: 0
+  isBack: 0
+  isBuilding: 0
   isEditMode: 0
 --- !u!1 &5523422983694764454
 GameObject:
@@ -75457,6 +75475,7 @@ MonoBehaviour:
   allUI: []
   characterUI: {fileID: 0}
   inventoryUI: {fileID: 0}
+  inventoryWindowUI: {fileID: 0}
   testHousingButton: {fileID: 0}
   editModeButton: {fileID: 0}
   stageUI: {fileID: 0}
@@ -76724,7 +76743,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 16}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6210378760419718938
@@ -78951,6 +78970,7 @@ MonoBehaviour:
   - {fileID: 4073185947410880168}
   characterUI: {fileID: 5060792935212107020}
   inventoryUI: {fileID: 9114818438107065963}
+  inventoryWindowUI: {fileID: 6341631460120670660}
   testHousingButton: {fileID: 1368834476}
   editModeButton: {fileID: 7480795293525863311}
   stageUI: {fileID: 4360198934443522885}
@@ -86705,8 +86725,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 137.39659, y: -50}
-  m_SizeDelta: {x: 274.79318, y: 100}
+  m_AnchoredPosition: {x: 150, y: -50}
+  m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7740156269035160596
 Canvas:
@@ -91449,8 +91469,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: '04 : 28'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c1482dbce654844b9ba1c753cbea5d80, type: 2}
-  m_sharedMaterial: {fileID: 7374927986402738804, guid: c1482dbce654844b9ba1c753cbea5d80, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d00ac7b3fa405c740a7ccb62dc6ff106, type: 2}
+  m_sharedMaterial: {fileID: -8728319418528304450, guid: d00ac7b3fa405c740a7ccb62dc6ff106, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -91474,12 +91494,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 54
-  m_fontSizeBase: 54
+  m_fontSize: 40
+  m_fontSizeBase: 35
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 40
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -91605,9 +91625,9 @@ RectTransform:
   - {fileID: 1517805689657959297}
   m_Father: {fileID: 2260132255116594289}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 644, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1000, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &8446310484253014967
@@ -95067,6 +95087,7 @@ MonoBehaviour:
   allUI: []
   characterUI: {fileID: 0}
   inventoryUI: {fileID: 0}
+  inventoryWindowUI: {fileID: 0}
   testHousingButton: {fileID: 0}
   editModeButton: {fileID: 0}
   stageUI: {fileID: 0}

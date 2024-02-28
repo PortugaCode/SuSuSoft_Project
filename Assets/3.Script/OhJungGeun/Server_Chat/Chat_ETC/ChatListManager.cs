@@ -23,7 +23,7 @@ public class ChatListManager : MonoBehaviour
     public Queue<JoinUI> errorUIs = new Queue<JoinUI>();
 
 
-
+    [Header("ChatList Prefab")]
     public MyChatList myChatListPrefab;
     public LocalChatList localChatListPrefab;
     public MyChatList whisperChatListPrefab_My;
@@ -62,6 +62,7 @@ public class ChatListManager : MonoBehaviour
     {
         BackEndManager.Instance.GetChatManager().chatListManager = this;
         chatLineControl.GetChatUI().SetActive(true);
+        //여기에 조건 추가하기
         BackEndManager.Instance.GetChatManager().GetRecentChat();
         chatLineControl.GetChatUI().SetActive(false);
         BackEndManager.Instance.GetMatchSystem().OnMatchMakingRoomSomeoneInvited(SetMatchInvitedUI_True);

@@ -9,7 +9,51 @@ public class InventorySystem : MonoBehaviour
     public bool checkObjectEqual = false;
     public Transform inventoryWindow;
     public Transform inventoryScroll;
+    
 
+    private void OnEnable()
+    {
+        Debug.Log($"DB Count : {DBManager.instance.user.housingObject.Count}");
+        if (!TestManager.instance.isHousingInventoryLoad)
+        {
+            if (DBManager.instance.user.housingObject.Count > 0)
+            {
+                foreach (var key in DBManager.instance.user.housingObject.Keys)
+                {
+                    for (int i = 0; i < ChartManager.instance.housingObjectDatas.Count; i++)
+                    {
+                        if (ChartManager.instance.housingObjectDatas[i].name_e == key)
+                        {
+                            Debug.Log($"{i}번째 Key : {key}");
+                            int housingIndex = ChartManager.instance.housingObjectDatas[i].index;
+                            LoadHousingInventory(housingIndex, DBManager.instance.user.housingObject[key]);
+                            break;
+                        }
+                    }
+                }
+            }
+            TestManager.instance.isHousingInventoryLoad = true;
+        }
+    }
+
+    public void LoadHousingInventory(int housingIndex, int count)
+    {
+        HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
+        HousingObject housingObject = ChartManager.instance.housingObjectDatas[housingIndex];
+        foreach (HousingSlot slot in slots)
+        {
+            if (!slot.isSlotUse)
+            {
+                SetItemInfo(housingObject, slot);
+                slot.GetComponentInChildren<HousingInventory>().count = count;
+                slot.isSlotUse = true;
+                Debug.Log(slot.isSlotUse);
+                break;
+            }
+        }
+    }
+
+    //공방 인벤토리
     public void GetItem(ItemData itemData, int getCount)
     {
         Slot[] slots = GetComponentsInChildren<Slot>();
@@ -74,7 +118,7 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
-    public void GetHousingItem(int housingIndex, int getCount)          //데이터 연동용
+    public void GetHousingItem(int housingIndex, int getCount)          //데이터 연동용 테스트
     {
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         //int listIndex = TestManager.instance.GetIndex(housingIndex);
@@ -89,7 +133,7 @@ public class InventorySystem : MonoBehaviour
                 if (slot.slotItemName.Equals(housingObject.name_e))
                 {
                     checkObjectEqual = true;
-                    //DBManager.instance.user.housingObject[housingObject.name_e] += getCount;
+                    DBManager.instance.user.housingObject[housingObject.name_e] += getCount;
                     slot.GetComponentInChildren<HousingInventory>().count += getCount;
                     break;
                 }
@@ -111,7 +155,46 @@ public class InventorySystem : MonoBehaviour
         if (!checkObjectEqual)
         {
             SetItemInfo(housingObject, slots[currentIndex]);
-            //DBManager.instance.user.housingObject.Add(housingObject.name_e, getCount);          //DB매니저에 추가
+            DBManager.instance.user.housingObject.Add(housingObject.name_e, getCount);          //DB매니저에 추가
+            slots[currentIndex].GetComponentInChildren<HousingInventory>().count = getCount;
+        }
+
+        checkObjectEqual = false;
+    }
+
+    public void GetHousingItem_Local(int housingIndex, int getCount)          //DB에 안넣고 바로 인벤토리에 넣기
+    {
+        HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
+        HousingObject housingObject = ChartManager.instance.housingObjectDatas[housingIndex];
+        bool isChecked = false;
+        int currentIndex = 0;
+        int index = 0;
+        foreach (HousingSlot slot in slots)
+        {
+            if (slot.isSlotUse)
+            {
+                if (slot.slotItemName.Equals(housingObject.name_e))
+                {
+                    checkObjectEqual = true;
+                    slot.GetComponentInChildren<HousingInventory>().count += getCount;
+                    break;
+                }
+            }
+            else
+            {
+                if (!isChecked)
+                {
+                    currentIndex = index;
+                    checkObjectEqual = false;
+                    isChecked = true;
+                }
+            }
+            index++;
+        }
+
+        if (!checkObjectEqual)
+        {
+            SetItemInfo(housingObject, slots[currentIndex]);
             slots[currentIndex].GetComponentInChildren<HousingInventory>().count = getCount;
         }
 
@@ -138,6 +221,10 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        TestManager.instance.isHousingInventoryLoad = false;
+    }
 
     public void SetItemInfo(ItemData itemData, Slot _slot)      //공방 인벤토리에 이미지와 데이터 이름 넣기
     {

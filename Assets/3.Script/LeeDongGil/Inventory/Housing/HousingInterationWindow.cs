@@ -63,6 +63,7 @@ public class HousingInterationWindow : MonoBehaviour
                         housingObject = hit.collider.gameObject;
                         //housingData = housingObject.GetComponent<HousingDrag>().data;
                         housingObj = this.housingObject.GetComponent<HousingDrag>().housingObject;
+                        Debug.Log($"{housingObj.index}번 {housingObj.name_e}");
                         housingName.text = housingObj.name_k;
                     }
                 }
@@ -75,12 +76,12 @@ public class HousingInterationWindow : MonoBehaviour
     public void UpdatePopUpText()           //수정
     {
         P_housingSetItemList.Clear();
-        foreach (HousingObject data in ChartManager.instance.housingObjectDatas)        //같은 세트 아이템 리스트 추가
+        foreach (HousingObject housing in ChartManager.instance.housingObjectDatas)        //같은 세트 아이템 리스트 추가
         {
-            if (data.setType.Equals(housingObjWindow.setType))
+            if (housing.setType.Equals(housingObjWindow.setType))
             {
-                if (data.setType == string.Empty) continue;
-                P_housingSetItemList.Add(data.name_k);
+                if (housing.setType == string.Empty) continue;
+                P_housingSetItemList.Add(housing.name_k);
             }
         }
         StringBuilder listAdd = new StringBuilder();

@@ -148,7 +148,6 @@ public class TestTouchMove : MonoBehaviour
                 touchPosition.z = 0;
                 direction = (touchPosition - transform.position).normalized;
 
-
                 Debug.Log(direction);
                 if (Utils.Instance.nowScene == SceneNames.MatchRoom)
                 {
