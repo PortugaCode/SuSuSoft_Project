@@ -13,7 +13,9 @@ public class ChatManager
 
     public ChatListManager chatListManager;
 
-    // µÚ³¡Ãª È°¼ºÈ­ µÇ¾î ÀÖ´ÂÁö È®ÀÎ
+    //private List<string[]> a = new List<string[]>();
+
+    // ë’¤ëì±— í™œì„±í™” ë˜ì–´ ìˆëŠ”ì§€ í™•ì¸
     public void GetChatStatus()
     {
         Backend.Chat.GetChatStatus((callback) =>
@@ -33,7 +35,7 @@ public class ChatManager
         });
     }
 
-    // ¸Å°³º¯¼ö ±×·ì ¸í¿¡ Ã¤³Î ¸®½ºÆ® ºÒ·¯¿À±â
+    // ë§¤ê°œë³€ìˆ˜ ê·¸ë£¹ ëª…ì— ì±„ë„ ë¦¬ìŠ¤íŠ¸ ë¶ˆëŸ¬ì˜¤ê¸°
     public void GetGroupChannelList(string c)
     {
         string a = c;
@@ -42,13 +44,13 @@ public class ChatManager
 
         if (!callback.IsSuccess())
         {
-            Debug.LogError($"{a} Ã¤ÆÃ Ã¤³Î ºÒ·¯¿À±â ½ÇÆĞ : {callback.ToString()}");
+            Debug.LogError($"{a} ì±„íŒ… ì±„ë„ ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨ : {callback.ToString()}");
             return;
         }
 
         LitJson.JsonData groupListJson = callback.FlattenRows();
 
-        //ÃÊ±âÈ­
+        //ì´ˆê¸°í™”
         publicGroupsList.Clear();
 
         for (int i = 0; i < groupListJson.Count; i++)
@@ -75,14 +77,14 @@ public class ChatManager
     }
 
 
-    //Ã¤³Î Å¸ÀÔ public | GuildÀÇ ¼ÒÄÏ Á¢¼Ó ¿©ºÎ È®ÀÎ
+    //ì±„ë„ íƒ€ì… public | Guildì˜ ì†Œì¼“ ì ‘ì† ì—¬ë¶€ í™•ì¸
     public bool IsChatConnect(ChannelType channelType)
     {
         bool isConnect = Backend.Chat.IsChatConnect(channelType);
         return isConnect;
     }
 
-    //Ã¤³Î¿¡ ÀÔÀå ¿äÃ»
+    //ì±„ë„ì— ì…ì¥ ìš”ì²­
     public void JoinChannel()
     {
         ChatGroup joinGroupData = publicGroupsList[0];
@@ -98,14 +100,14 @@ public class ChatManager
         }
 
         ErrorInfo errorInfo;
-        //ÀÔÀå ¿äÃ»
+        //ì…ì¥ ìš”ì²­
         Backend.Chat.JoinChannel(ChannelType.Public, joinGroupData.serverAddress, joinGroupData.serverPort, joinGroupData.groupName, joinGroupData.inDate, out errorInfo);
 
         ReceiveJoin();
 
     }
 
-    //ÀÔÀåµÇ¾ú´ÂÁö ÀÌº¥Æ® È®ÀÎ
+    //ì…ì¥ë˜ì—ˆëŠ”ì§€ ì´ë²¤íŠ¸ í™•ì¸
     public void ReceiveJoin()
     {
         Backend.Chat.OnJoinChannel = (JoinChannelEventArgs args) =>
@@ -114,7 +116,7 @@ public class ChatManager
 
             if (args.ErrInfo == ErrorInfo.Success)
             {
-                // ³»°¡ Á¢¼ÓÇÑ °æ¿ì
+                // ë‚´ê°€ ì ‘ì†í•œ ê²½ìš°
                 if (!args.Session.IsRemote)
                 {
                     Utils.Instance.LoadScene(SceneNames.Chatting);
@@ -126,17 +128,17 @@ public class ChatManager
                         }
                     };
                 }
-                //´Ù¸¥ À¯Àú°¡ Á¢¼ÓÇÑ °æ¿ì
+                //ë‹¤ë¥¸ ìœ ì €ê°€ ì ‘ì†í•œ ê²½ìš°
                 else
                 {
                     chatListManager.SpawnJoinUI(args.Session.NickName);
-                    Debug.Log($"{args.Session.NickName}´ÔÀÌ Á¢¼ÓÇß½À´Ï´Ù");
+                    Debug.Log($"{args.Session.NickName}ë‹˜ì´ ì ‘ì†í–ˆìŠµë‹ˆë‹¤");
                 }
             }
             else
             {
-                //¿¡·¯°¡ ¹ß»ıÇßÀ» °æ¿ì
-                Debug.Log($"ÀÔÀå µµÁß ¿¡·¯°¡ ¹ß»ıÇß½À´Ï´Ù : {args.ErrInfo.Reason}");
+                //ì—ëŸ¬ê°€ ë°œìƒí–ˆì„ ê²½ìš°
+                Debug.Log($"ì…ì¥ ë„ì¤‘ ì—ëŸ¬ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤ : {args.ErrInfo.Reason}");
 
                 if(args.ErrInfo.Category == ErrorCode.Exception)
                 {
@@ -146,13 +148,13 @@ public class ChatManager
         };
     }
 
-    //ÇØ´ç Ã¤³Î¿¡ Ã¤ÆÃ Àü¼Û
+    //í•´ë‹¹ ì±„ë„ì— ì±„íŒ… ì „ì†¡
     public void ChatToChannel(string chat)
     {
         Backend.Chat.ChatToChannel(ChannelType.Public, chat);
     }
 
-    //Ã¤ÆÃ ¹Ş±â
+    //ì±„íŒ… ë°›ê¸°
     public void ReceiveChat()
     {
         Backend.Chat.OnChat = (ChatEventArgs args) =>
@@ -161,36 +163,36 @@ public class ChatManager
 
             if (args.ErrInfo == ErrorInfo.Success)
             {
-                // ÀÚ½ÅÀÇ ¸Ş½ÃÁöÀÏ °æ¿ì
+                // ìì‹ ì˜ ë©”ì‹œì§€ì¼ ê²½ìš°
                 if (!args.From.IsRemote)
                 {
                     chatListManager.SpawnMyChatList(Backend.UserNickName, args.Message);
-                    Debug.Log("³ª : " + args.Message);
+                    Debug.Log("ë‚˜ : " + args.Message);
                 }
-                // ´Ù¸¥ À¯ÀúÀÇ ¸Ş½ÃÁöÀÏ °æ¿ì
+                // ë‹¤ë¥¸ ìœ ì €ì˜ ë©”ì‹œì§€ì¼ ê²½ìš°
                 else
                 {
                     chatListManager.SpawnLocalChatList(args.From.NickName, args.Message);
-                    Debug.Log($"{args.From.NickName}ÀÌ {args.Message}¸¦ ÀÔ·ÂÇß½À´Ï´Ù.");
+                    Debug.Log($"{args.From.NickName}ì´ {args.Message}ë¥¼ ì…ë ¥í–ˆìŠµë‹ˆë‹¤.");
                 }
             }
             else if (args.ErrInfo.Category == ErrorCode.BannedChat)
             {
-                // µµ¹è¹æÁö ¸Ş¼¼Áö
+                // ë„ë°°ë°©ì§€ ë©”ì„¸ì§€
                 if (args.ErrInfo.Detail == ErrorCode.BannedChat)
                 {
-                    Debug.Log("¸Ş½ÃÁö¸¦ ³Ê¹« ¸¹ÀÌ ÀÔ·ÂÇÏ¿´½À´Ï´Ù. ÀÏÁ¤ ½Ã°£ ÈÄ¿¡ ´Ù½Ã ½ÃµµÇØ ÁÖ¼¼¿ä");
+                    Debug.Log("ë©”ì‹œì§€ë¥¼ ë„ˆë¬´ ë§ì´ ì…ë ¥í•˜ì˜€ìŠµë‹ˆë‹¤. ì¼ì • ì‹œê°„ í›„ì— ë‹¤ì‹œ ì‹œë„í•´ ì£¼ì„¸ìš”");
                 }
             }
         };
     }
 
-    //±Ó¼Ó¸» Ã¤ÆÃ Àü¼Û
+    //ê·“ì†ë§ ì±„íŒ… ì „ì†¡
     public void Whisper(string ToNickname, string Message)
     {
         if(ToNickname == Backend.UserNickName)
         {
-            chatListManager.SpawnErrorUI($"ÀÚ½ÅÇÑÅ× º¸³¾ ¼ö ¾ø½À´Ï´Ù.");
+            chatListManager.SpawnErrorUI($"ìì‹ í•œí…Œ ë³´ë‚¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
             return;
         }
         else if(!CheckUser(ToNickname))
@@ -204,7 +206,7 @@ public class ChatManager
 
     }
 
-    //±Ó¼Ó¸» ¹Ş±â
+    //ê·“ì†ë§ ë°›ê¸°
     public void ReceiveWhisperChat()
     {
         Backend.Chat.OnWhisper = (WhisperEventArgs args) =>
@@ -215,55 +217,55 @@ public class ChatManager
             {
                 //Debug.Log(string.Format("OnWhisper: from {0} to {1} : message {2}", args.From.NickName, args.To.NickName, args.Message));
 
-                // ³»°¡ º¸³½ ±Ó¼Ó¸»ÀÎ °æ¿ì
+                // ë‚´ê°€ ë³´ë‚¸ ê·“ì†ë§ì¸ ê²½ìš°
                 if (!args.From.IsRemote)
                 {
                     chatListManager.SpawnMyChatList_Whisper(Backend.UserNickName, args.Message);
-                    Debug.Log("³ª : " + args.Message);
+                    Debug.Log("ë‚˜ : " + args.Message);
                 }
-                // ³»°¡ ¹ŞÀº ±Ó¼Ó¸»ÀÎ °æ¿ì
+                // ë‚´ê°€ ë°›ì€ ê·“ì†ë§ì¸ ê²½ìš°
                 else
                 {
                     chatListManager.SpawnLocalChatList_Whisper(args.From.NickName, args.Message);
-                    Debug.Log(string.Format("{0}´Ô : {1}", args.From.NickName, args.Message));
+                    Debug.Log(string.Format("{0}ë‹˜ : {1}", args.From.NickName, args.Message));
                 }
             }
             else if (args.ErrInfo.Category == ErrorCode.BannedChat)
             {
-                // µµ¹è¹æÁö ¸Ş¼¼Áö
+                // ë„ë°°ë°©ì§€ ë©”ì„¸ì§€
                 if (args.ErrInfo.Detail == ErrorCode.BannedChat)
                 {
-                    Debug.Log("¸Ş½ÃÁö¸¦ ³Ê¹« ¸¹ÀÌ ÀÔ·ÂÇÏ¿´½À´Ï´Ù. ÀÏÁ¤ ½Ã°£ ÈÄ¿¡ ´Ù½Ã ½ÃµµÇØ ÁÖ¼¼¿ä");
+                    Debug.Log("ë©”ì‹œì§€ë¥¼ ë„ˆë¬´ ë§ì´ ì…ë ¥í•˜ì˜€ìŠµë‹ˆë‹¤. ì¼ì • ì‹œê°„ í›„ì— ë‹¤ì‹œ ì‹œë„í•´ ì£¼ì„¸ìš”");
                 }
             }
         };
     }
 
-    //À¯Àú »óÅÂ È®ÀÎ (1. ´Ğ³×ÀÓ È®ÀÎ 2. ÇØ´ç À¯Àú Á¢¼Ó È®ÀÎ)
+    //ìœ ì € ìƒíƒœ í™•ì¸ (1. ë‹‰ë„¤ì„ í™•ì¸ 2. í•´ë‹¹ ìœ ì € ì ‘ì† í™•ì¸)
     public bool CheckUser(string nickName)
     {
-        //½Ç½Ã°£ ¾Ë¸² ¼­¹ö¿¡ ¿¬°áÇÕ´Ï´Ù.  
+        //ì‹¤ì‹œê°„ ì•Œë¦¼ ì„œë²„ì— ì—°ê²°í•©ë‹ˆë‹¤.  
         Backend.Notification.Connect();
 
-        //"a1"ÀÇ ´Ğ³×ÀÓÀ» °¡Áø À¯ÀúÀÇ inDate¸¦ Ã£´Â´Ù
+        //"a1"ì˜ ë‹‰ë„¤ì„ì„ ê°€ì§„ ìœ ì €ì˜ inDateë¥¼ ì°¾ëŠ”ë‹¤
         BackendReturnObject bro = Backend.Social.GetUserInfoByNickName(nickName);
         if(bro.GetFlattenJSON() == null)
         {
             Backend.Notification.DisConnect();
-            Debug.Log("Á¸ÀçÇÏÁö ¾Ê´Â ´Ğ³×ÀÓÀÔ´Ï´Ù.");
-            chatListManager.SpawnErrorUI($"[{nickName}]´ÔÀº Á¸ÀçÇÏÁö ¾Ê´Â ´Ğ³×ÀÓÀÔ´Ï´Ù.");
+            Debug.Log("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ë‹‰ë„¤ì„ì…ë‹ˆë‹¤.");
+            chatListManager.SpawnErrorUI($"[{nickName}]ë‹˜ì€ ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ë‹‰ë„¤ì„ì…ë‹ˆë‹¤.");
             return false;
         }
         else
         {
             string gamerIndate = bro.GetFlattenJSON()["row"]["inDate"].ToString();
 
-            // UserIsConnectByIndate ÇÔ¼ö È£Ãâ ½Ã ¹İÀÀÇÏ´Â OnIsConnectUser ÇÚµé·¯¸¦ ¼³Á¤ÇÑ´Ù.  
+            // UserIsConnectByIndate í•¨ìˆ˜ í˜¸ì¶œ ì‹œ ë°˜ì‘í•˜ëŠ” OnIsConnectUser í•¸ë“¤ëŸ¬ë¥¼ ì„¤ì •í•œë‹¤.  
             Backend.Notification.OnIsConnectUser = (bool isConnect, string nickName, string gamerIndate) => {
-                Debug.Log($"{nickName} / {gamerIndate} Á¢¼Ó ¿©ºÎ È®ÀÎ : " + isConnect);
+                Debug.Log($"{nickName} / {gamerIndate} ì ‘ì† ì—¬ë¶€ í™•ì¸ : " + isConnect);
             };
 
-            // ÇÔ¼ö È£Ãâ ½Ã, À§¿¡¼­ ¼³Á¤ÇÑ OnIsConnectUser ÇÚµé·¯°¡ È£ÃâµÈ´Ù.  
+            // í•¨ìˆ˜ í˜¸ì¶œ ì‹œ, ìœ„ì—ì„œ ì„¤ì •í•œ OnIsConnectUser í•¸ë“¤ëŸ¬ê°€ í˜¸ì¶œëœë‹¤.  
             Backend.Notification.UserIsConnectByIndate(gamerIndate);
 
             Backend.Notification.DisConnect();
@@ -272,16 +274,16 @@ public class ChatManager
 
     }
 
-    //Ã¤ÆÃ ÃÖ±Ù ³»¿ª ºÒ·¯¿À±â
+    //ì±„íŒ… ìµœê·¼ ë‚´ì—­ ë¶ˆëŸ¬ì˜¤ê¸°
     public void GetRecentChat()
     {
-        //Ã¤ÆÃ Ã¤³Î ¸®½ºÆ® °¡Á®¿À±â
+        //ì±„íŒ… ì±„ë„ ë¦¬ìŠ¤íŠ¸ ê°€ì ¸ì˜¤ê¸°
         BackendReturnObject bro = Backend.Chat.GetGroupChannelList(normalChatList);
 
-        //Ã¤ÆÃ Ã¤³Î uuid ¹Ş¾Æ¿À±â
+        //ì±„íŒ… ì±„ë„ uuid ë°›ì•„ì˜¤ê¸°
         string channelIndate = bro.GetReturnValuetoJSON()["rows"][0]["inDate"].ToString();
 
-        //uuid¸¦ ÀÌ¿ëÇÏ¿© ÇØ´ç ÀÏ¹İ Ã¤³ÎÀÇ ÃÖ±Ù Ã¤ÆÃ ³»¿ª °¡Á®¿À±â(25°³¸¸)
+        //uuidë¥¼ ì´ìš©í•˜ì—¬ í•´ë‹¹ ì¼ë°˜ ì±„ë„ì˜ ìµœê·¼ ì±„íŒ… ë‚´ì—­ ê°€ì ¸ì˜¤ê¸°(25ê°œë§Œ)
         BackendReturnObject result = Backend.Chat.GetRecentChat(ChannelType.Public, channelIndate, 15);
 
 
@@ -292,12 +294,12 @@ public class ChatManager
 
             if (nickname.Equals(Backend.UserNickName))
             {
-                 Debug.Log("ÃÖ±Ù Ã¤ÆÃ ³»¿ª ºÒ·¯¿À±â");
+                 Debug.Log("ìµœê·¼ ì±„íŒ… ë‚´ì—­ ë¶ˆëŸ¬ì˜¤ê¸°");
                  chatListManager.SpawnMyChatList(nickname, message);
             }
             else
             {
-                Debug.Log("ÃÖ±Ù Ã¤ÆÃ ³»¿ª ºÒ·¯¿À±â");
+                Debug.Log("ìµœê·¼ ì±„íŒ… ë‚´ì—­ ë¶ˆëŸ¬ì˜¤ê¸°");
                 chatListManager.SpawnLocalChatList(nickname, message);
             }
         }
