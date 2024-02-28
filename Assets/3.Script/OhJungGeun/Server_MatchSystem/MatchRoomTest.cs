@@ -139,6 +139,20 @@ public class MatchRoomTest : MonoBehaviour
                 #endregion
 
 
+
+                if (BackEndManager.Instance.GetMatchSystem().userTeam[Backend.UserNickName] != BackEndManager.Instance.GetMatchSystem().userTeam[BackEndManager.Instance.GetMatchSystem().userNickName[a]])
+                {
+                    players[a].gameObject.SetActive(false);
+                    matchClonePlayer_Left.gameObject.SetActive(false);
+                    matchClonePlayer_Right.gameObject.SetActive(false);
+
+                    cloneNickName.SetActive(false);
+                    cloneNickName_Left.SetActive(false);
+                    cloneNickName_Right.SetActive(false);
+
+                    isMyteam = false;
+                }
+
                 order1 += 2;
                 order2 += 2;
             }
@@ -150,13 +164,10 @@ public class MatchRoomTest : MonoBehaviour
                 CameraController cameraController = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
                 cameraController.SetPlayer(playerList[count].gameObject);
             }
+
             Debug.Log(a.ToString());
 
-            if(BackEndManager.Instance.GetMatchSystem().userTeam[Backend.UserNickName] != BackEndManager.Instance.GetMatchSystem().userTeam[BackEndManager.Instance.GetMatchSystem().userNickName[a]])
-            {
-                players[a].gameObject.SetActive(false);
-                isMyteam = false;
-            }
+
 
             count++;
         }

@@ -40,13 +40,18 @@ public class MatchClonePlayer : MonoBehaviour
         isCanMove = true;
 
         targetPlayer.gameObject.GetComponent<MatchChat>().DoChat += matchChat.SetChatInGame;
+        targetPlayer.gameObject.GetComponent<MatchChat>().DoDie += DoDie;
+    }
+
+    private void DoDie()
+    {
+        Destroy(gameObject);
     }
 
     private void OnDestroy()
     {
         if (Utils.Instance.nowScene == SceneNames.MatchRoom)
         {
-            targetPlayer.gameObject.GetComponent<MatchChat>().DoChat -= matchChat.SetChatInGame;
             matchChat.DestroyChatBox();
         }
     }
