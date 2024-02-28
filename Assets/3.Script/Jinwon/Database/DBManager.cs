@@ -119,7 +119,7 @@ public class User
     public string password { get; set; } // 유저 비밀번호
     public string userName { get; set; } // 유저 이름
     public List<Character> character { get; set; } // 보유한 캐릭터 리스트
-    public int currentCharacterIndex { get; set; } // 현재 사용중인 캐릭터 인덱스
+    public int currentCharacterIndex { get; set; } // 현재 사용중인 캐릭터 인덱스 (0부터)
     public int[] tail { get; set; } // 보유한 꼬리 배열 (0:미보유, 1:보유)
     public int currentTailIndex { get; set; } // 현재 사용중인 꼬리 인덱스
     public Dictionary<string, int> goods { get; set; } // 보유한 재화의 종류와 수량
@@ -308,7 +308,7 @@ public class DBManager : MonoBehaviour
             AddTail(i);
         }
 
-        param.Add("CurrentCharacterIndex", 101);
+        param.Add("CurrentCharacterIndex", 0);
         param.Add("CurrentTailIndex", 0);
 
         Backend.GameData.Insert("User", param); // User 테이블에 데이터 삽입

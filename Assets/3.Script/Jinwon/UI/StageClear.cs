@@ -31,7 +31,7 @@ public class StageClear : MonoBehaviour
     [SerializeField] private GameObject player;
 
     [Header("Stage")]
-    public int stageIndex = 0;
+    public int stageIndex = 0; // 현재 클리어한 스테이지의 인덱스, 스테이지마다 연동 필요
 
     public void ShowClearUI()
     {
@@ -40,7 +40,7 @@ public class StageClear : MonoBehaviour
         string stageName = ChartManager.instance.stageInfos[stageIndex].name_k;
         stageInfoText.text = $"{chapter} - {stageLevel} {stageName}";
 
-        int characterIndex = 0; // 현재 사용중인 캐릭터의 인덱스 매칭 필요
+        int characterIndex = DBManager.instance.user.currentCharacterIndex;
         character.transform.GetChild(0).GetComponent<Image>().sprite = characterBodyImages[characterIndex];
         character.transform.GetChild(1).GetComponent<Image>().sprite = characterFaceImages[characterIndex];
 
@@ -54,7 +54,7 @@ public class StageClear : MonoBehaviour
         rewardText_1.text = $"{reward_1}";
         rewardText_2.text = $"{reward_2}";
         rewardText_3.text = $"1";
-        tokenRewardIcon.GetComponent<Image>().sprite = tokenImages[ChartManager.instance.stageInfos[stageIndex].reward_3];
+        tokenRewardIcon.GetComponent<Image>().sprite = tokenImages[stageIndex];
         rewardText_gold.text = $"{reward_gold}";
 
         CheckReward(player.GetComponent<PlayerProperty>().stars.Count);
