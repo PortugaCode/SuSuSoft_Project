@@ -23,12 +23,12 @@ public class MatchClonePlayer : MonoBehaviour
 
         if(isRightClone)
         {
-            transform.position = new Vector2(targetPlayer.position.x + 25.6f, targetPlayer.position.y);
+            transform.position = new Vector2(targetPlayer.position.x + 30.0f, targetPlayer.position.y);
             transform.rotation = targetPlayer.rotation;
         }
         else
         {
-            transform.position = new Vector2(targetPlayer.position.x - 25.6f, targetPlayer.position.y);
+            transform.position = new Vector2(targetPlayer.position.x - 30.0f, targetPlayer.position.y);
             transform.rotation = targetPlayer.rotation;
         }
     }
