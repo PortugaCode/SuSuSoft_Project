@@ -186,22 +186,22 @@ public class TouchMove : MonoBehaviour
     private void PlayerMove(Vector3 target)
     {
         #region [Repeat BG]
-        if (transform.position.x >= 12.80f && isRight)
+        if (transform.position.x >= 15.0f && isRight)
         {
             transform.position = new Vector2(transform.position.x * -1f, transform.position.y);
 
-            float a = touchPosition.x - 12.80f;
-            float b = -13f + a;
+            float a = touchPosition.x - 15.0f;
+            float b = -15f + a;
 
             touchPosition = new Vector2(b, touchPosition.y);
             return;
         }
-        else if (transform.position.x <= -12.80f && !isRight)
+        else if (transform.position.x <= -15.0f && !isRight)
         {
             transform.position = new Vector2(transform.position.x * -1f, transform.position.y);
 
-            float a = touchPosition.x + 12.80f;
-            float b = 13f - Mathf.Abs(a);
+            float a = touchPosition.x + 15.0f;
+            float b = 15f - Mathf.Abs(a);
 
             touchPosition = new Vector2(b, touchPosition.y);
             return;

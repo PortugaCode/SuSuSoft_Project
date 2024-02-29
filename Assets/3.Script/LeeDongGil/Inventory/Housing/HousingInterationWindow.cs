@@ -16,6 +16,8 @@ public class HousingInterationWindow : MonoBehaviour
     public HousingItemData housingDataWindow;
     public HousingObject housingObj;
     public HousingObject housingObjWindow;
+    public Button insertBTN;
+    public Button setBTN;
 
     [Header("PopUp")]
     public GameObject PopupObject;                                      //윈도우 오브젝트
@@ -60,11 +62,19 @@ public class HousingInterationWindow : MonoBehaviour
                 {
                     if (hit.collider.gameObject.CompareTag("Building"))
                     {
-                        housingObject = hit.collider.gameObject;
                         //housingData = housingObject.GetComponent<HousingDrag>().data;
-                        housingObj = this.housingObject.GetComponent<HousingDrag>().housingObject;
                         Debug.Log($"{housingObj.index}번 {housingObj.name_e}");
+                        housingObject = hit.collider.gameObject;
+                        housingObj = this.housingObject.GetComponent<HousingDrag>().housingObject;
                         housingName.text = housingObj.name_k;
+                        if (housingObject.GetComponent<HousingDrag>().isCanBuild)
+                        {
+                            setBTN.interactable = true;
+                        }
+                        else
+                        {
+                            setBTN.interactable = false;
+                        }
                     }
                 }
 

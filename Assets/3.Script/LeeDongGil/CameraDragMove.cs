@@ -26,13 +26,13 @@ public class CameraDragMove : MonoBehaviour
     {
         if (TestManager.instance.isEditMode)
         {
-            mainCam.orthographicSize = 7.0f;
+            mainCam.orthographicSize = 8.0f;
             camController.enabled = false;
             MoveCamera();
         }
         else
         {
-            mainCam.orthographicSize = 7.0f;
+            mainCam.orthographicSize = 8.0f;
             camController.enabled = true;
         }
     }
