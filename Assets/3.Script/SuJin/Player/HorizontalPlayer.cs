@@ -24,7 +24,7 @@ public class HorizontalPlayer : MonoBehaviour
 
     public Canvas canvas;
     GraphicRaycaster graphicRay;
-    //PointerEventData pointEvent;
+    public Coroutine coroutine;
 
 
     [Header("PlyerSpeed")]
@@ -57,8 +57,8 @@ public class HorizontalPlayer : MonoBehaviour
     private float sightRangeSpeed = 0.5f;
 
     //+
-    private int ActiveSkill;
-    private int PassiveSkill;
+    //private int ActiveSkill;
+    //private int PassiveSkill;
 
     [Header("Animator")]
     [SerializeField] private Animator animator;
@@ -71,14 +71,14 @@ public class HorizontalPlayer : MonoBehaviour
     private void Start()
     {
         playerLight.pointLightOuterRadius = maxSightRange;
-        graphicRay = canvas.GetComponent<GraphicRaycaster>();   
-        
+        graphicRay = canvas.GetComponent<GraphicRaycaster>();
     }
 
     private void Update()
     {
         StartGame();
         starCountTmpPro.text = $"{playerProperty.stars.Count} / {playerProperty.maxStar}";
+        
     }
 
     public void FixedUpdate()
@@ -92,6 +92,8 @@ public class HorizontalPlayer : MonoBehaviour
 
     private void StartGame()
     {
+        if (gameStart) return;
+
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -158,6 +160,14 @@ public class HorizontalPlayer : MonoBehaviour
             if (obj.CompareTag("UI"))
             {
                 isPlayerMove = false;
+                if(playerProperty.skillActive.isItemOn)
+                {
+
+                    Debug.Log("터치됨");
+                    playerProperty.ShieldMode();
+
+                    playerProperty.skillActive.itemFillImage.fillAmount = 1.0f;
+                }
             }
             else
             {
@@ -222,6 +232,10 @@ public class HorizontalPlayer : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        StopCoroutine(coroutine);
+    }
 
     #region [IEnumerator]
     IEnumerator MaxSight_Co()
@@ -265,6 +279,10 @@ public class HorizontalPlayer : MonoBehaviour
             yield return null;
         }
         gameStart = true;
+        if(gameStart)
+        {
+            this.coroutine = playerProperty.skillActive.StartCoroutine(playerProperty.skillActive.CoolTime_Co());
+        }
     }
     #endregion
 }

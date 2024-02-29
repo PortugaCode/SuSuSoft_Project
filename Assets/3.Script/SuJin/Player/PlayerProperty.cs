@@ -12,7 +12,6 @@ public class PlayerProperty : MonoBehaviour
     public EventHandler onDamage;
     public EventHandler onChangeStar;
 
-
     public int level;
 
     [Header("Particle")]
@@ -30,13 +29,14 @@ public class PlayerProperty : MonoBehaviour
     public int currentHealth;
     public int maxHealth;
     public int damage;
-    private int HealthIncreaseRate;   //+
+    //private int HealthIncreaseRate;   //+
 
-
+    private bool isCanShield;
 
     //Attack nullified 공격 무효화
     public float ignoreAttack = 0.1f;
-    //private bool GodMode = false;
+    public SkillActive skillActive;
+    private HorizontalPlayer horizontalPlayer;
 
     [Header("Giant")]
     [SerializeField] private GameObject GiantFace;
@@ -65,25 +65,19 @@ public class PlayerProperty : MonoBehaviour
     [Header("GetStars")]
     public int maxStar;
     public List<GameObject> stars = new List<GameObject>();
-    Vector3 starsScale;
-
-
-
+   // Vector3 starsScale;
 
     public int getStarCount;
     [SerializeField] GameObject starPrefebs;
-    //private float getStarPercent;
 
     [Header("Skill")]
-    [SerializeField]private float maxCoolTime = 30;     // 현재 남은 시간 
-    private float leftcoolTime;                         // 쿨타임 남은 시간
-    private bool coolGiant;                             // 자이언트 쿨타임
-
-
+    [SerializeField] GameObject ShieldOn;
+    [SerializeField] float skillDuration;
+    //private bool coolGiant;                             // 자이언트 쿨타임
+    
 
     [Header("Animator")]
     [SerializeField] private Animator animator;
-
 
 
     private bool canHit = true;
@@ -94,20 +88,24 @@ public class PlayerProperty : MonoBehaviour
     {
         level = 1;
         currentHealth = maxHealth;
+        horizontalPlayer = GetComponent<HorizontalPlayer>();
     }
-
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //장애물
         if (collision.gameObject.CompareTag("Obstacles") && canHit)
         {
-            StartCoroutine(HitDelay_Co());
-            //Player Damage
-            PassiveAttackNull();
-            onHPSlider?.Invoke(this, EventArgs.Empty);
-            onStarBar?.Invoke(this, EventArgs.Empty);
-            onStarShape?.Invoke(this, EventArgs.Empty);
+                StartCoroutine(HitDelay_Co());
+
+                //Player Damage
+                if(!skillActive.isItemOn)
+                {
+                    PassiveAttackNull();
+                    onHPSlider?.Invoke(this, EventArgs.Empty);
+                    onStarBar?.Invoke(this, EventArgs.Empty);
+                    onStarShape?.Invoke(this, EventArgs.Empty);
+                }
         }
 
         else if (collision.gameObject.CompareTag("Breaking"))
@@ -194,11 +192,11 @@ public class PlayerProperty : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Wall") && canHit)
         {
-            StartCoroutine(HitDelay_Co());
-            PassiveAttackNull();
-            onHPSlider?.Invoke(this, EventArgs.Empty);
-            onStarBar?.Invoke(this, EventArgs.Empty);
-            onStarShape?.Invoke(this, EventArgs.Empty);
+                StartCoroutine(HitDelay_Co());
+                PassiveAttackNull();
+                onHPSlider?.Invoke(this, EventArgs.Empty);
+                onStarBar?.Invoke(this, EventArgs.Empty);
+                onStarShape?.Invoke(this, EventArgs.Empty);
         }
     }
    
@@ -215,25 +213,44 @@ public class PlayerProperty : MonoBehaviour
 
     private void SetDamage()     //Damage 입는 메서드
     {
-        if(stars.Count > 0)
+        if(!isCanShield)
         {
-            GameObject a = stars[stars.Count-1];
-            stars.RemoveAt(stars.Count - 1);
-            Destroy(a);
-        }
-        currentHealth -= damage;
-        animator.SetTrigger("Hit");
-        onDamage?.Invoke(this, EventArgs.Empty);
-        onStarBar?.Invoke(this, EventArgs.Empty);
+            if (stars.Count > 0)
+            {
+                GameObject a = stars[stars.Count - 1];
+                stars.RemoveAt(stars.Count - 1);
+                Destroy(a);
+            }
 
-        if (currentHealth <= 0)
-        {
-            currentHealth = 0;
-            Die();
-            return;
-        }
+            currentHealth -= damage;
+            animator.SetTrigger("Hit");
+            onDamage?.Invoke(this, EventArgs.Empty);
+            onStarBar?.Invoke(this, EventArgs.Empty);
 
+            if (currentHealth <= 0)
+            {
+                currentHealth = 0;
+                Die();
+                return;
+            }
+        }
+        
         hitAction.Play();
+    }
+
+    public void ShieldMode()                    // Shield Mode
+    {
+        skillActive.isItemOn = false;
+        isCanShield = true;
+
+
+        Debug.Log("들어옴");
+
+        if(isCanShield)
+        {
+            ShieldOn.SetActive(true);
+            StartCoroutine(SkillDuration_Co());
+        }
     }
 
     private void Die()
@@ -248,7 +265,6 @@ public class PlayerProperty : MonoBehaviour
         dieAction.gameObject.transform.SetParent(null);
         hitAction.Play();
         dieAction.Play();
-        
     }
 
     #endregion //Attack nullified 공격 무효화
@@ -263,7 +279,6 @@ public class PlayerProperty : MonoBehaviour
         yield return new WaitForSeconds(hitTimer);
         canHit = true;
     }
-
 
     IEnumerator Giant_Co()
     {
@@ -309,17 +324,14 @@ public class PlayerProperty : MonoBehaviour
         }
     }
 
-    IEnumerator CoolTime_Co()
+    IEnumerator SkillDuration_Co()      // Skill 끝남
     {
-        while(leftcoolTime > 1)
-        {
-            maxCoolTime -= Time.deltaTime;
-            leftcoolTime = leftcoolTime / maxCoolTime;
-
-            Debug.Log($"{leftcoolTime} : ");
-
-            yield return new WaitForFixedUpdate();
-        }
+        yield return new WaitForSeconds(skillDuration);
+        isCanShield = false;
+        ShieldOn.SetActive(false);
+        this.horizontalPlayer.coroutine = StartCoroutine(skillActive.CoolTime_Co());
     }
+
+
     #endregion
 }

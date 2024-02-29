@@ -9,19 +9,23 @@ public class SkillActive : MonoBehaviour
 {
     [SerializeField] GameObject player;
     [SerializeField] float followSpeed;
-
     [SerializeField] Vector3 offset;
-    private float distanse;
 
     //Cool Time
-    private float coolTime; // 남은 CoolTime
     [SerializeField] private float coolTimeMax; //CoolTime
+    private float coolTime; // 남은 CoolTime
+
     [SerializeField] private Image skillBG;
-    [SerializeField] private Image itmeImage;
-    
+    public Image itemFillImage;   //남은 시간 표시 이미지
+
+    public bool isItemOn = false;
+    [SerializeField] PlayerProperty playerProperty;
 
 
-    HorizontalPlayer horizontalPlayer;
+    private void Start()
+    {
+        itemFillImage.fillAmount = 1;
+    }
 
     private void FixedUpdate()
     {
@@ -36,12 +40,37 @@ public class SkillActive : MonoBehaviour
         }
     }
 
-    IEnumerator coolTime_Co()
+    public IEnumerator CoolTime_Co()
     {
-        coolTime -= Time.deltaTime;
 
+        coolTime = coolTimeMax;
 
+        while(true)
+        {
+            if (!isItemOn)
+            {
+                if (coolTime >= 0)
+                {
+                    coolTime -= Time.deltaTime;
+                    itemFillImage.fillAmount = coolTime / coolTimeMax;
+                }
+                else
+                {
+                    isItemOn = true;
+                    coolTime = coolTimeMax;
+                }
+            }
+            else
+            {
+                Debug.Log("Break");
+                yield break;
+            }
+            Debug.Log("CoolTime on");
+            yield return null;
 
-        yield return new WaitForFixedUpdate();
+        }
     }
+
+    //fillAmount가 1이라면 다시 CoolTime_Co 실행
+    // CoolTime이 끝났디면, ActiveSkill On.
 }
