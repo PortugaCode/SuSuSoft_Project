@@ -23,12 +23,12 @@ public class MatchClonePlayer : MonoBehaviour
 
         if(isRightClone)
         {
-            transform.position = new Vector2(targetPlayer.position.x + 25.6f, targetPlayer.position.y);
+            transform.position = new Vector2(targetPlayer.position.x + 30.0f, targetPlayer.position.y);
             transform.rotation = targetPlayer.rotation;
         }
         else
         {
-            transform.position = new Vector2(targetPlayer.position.x - 25.6f, targetPlayer.position.y);
+            transform.position = new Vector2(targetPlayer.position.x - 30.0f, targetPlayer.position.y);
             transform.rotation = targetPlayer.rotation;
         }
     }
@@ -40,13 +40,18 @@ public class MatchClonePlayer : MonoBehaviour
         isCanMove = true;
 
         targetPlayer.gameObject.GetComponent<MatchChat>().DoChat += matchChat.SetChatInGame;
+        targetPlayer.gameObject.GetComponent<MatchChat>().DoDie += DoDie;
+    }
+
+    private void DoDie()
+    {
+        Destroy(gameObject);
     }
 
     private void OnDestroy()
     {
         if (Utils.Instance.nowScene == SceneNames.MatchRoom)
         {
-            targetPlayer.gameObject.GetComponent<MatchChat>().DoChat -= matchChat.SetChatInGame;
             matchChat.DestroyChatBox();
         }
     }
