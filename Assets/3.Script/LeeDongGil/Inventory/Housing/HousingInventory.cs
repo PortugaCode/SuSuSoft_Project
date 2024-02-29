@@ -108,7 +108,7 @@ public class HousingInventory : MonoBehaviour
             if (!TestManager.instance.isEditMode)
             {
                 transform.parent.SetAsLastSibling();
-                canvasGroup.alpha = 1.0f;
+                //canvasGroup.alpha = 1.0f;
             }
         }
         else
@@ -163,8 +163,6 @@ public class HousingInventory : MonoBehaviour
             buildSetting.housingObject = housingObj;
             buildSetting.id = housingObj.index;
             buildSetting.buildSprite.sprite = SpriteManager.instance.sprites[housingObj.imageIndex];
-
-
 
             TestManager.instance.isEditMode = true;
         }

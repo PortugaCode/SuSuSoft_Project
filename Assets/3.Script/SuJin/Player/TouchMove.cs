@@ -101,12 +101,22 @@ public class TouchMove : MonoBehaviour
     public void SetCanMove_true()
     {
         canMove = true;
-        TestManager.instance.isShowUI = true;
     }
 
     public void SetCanMove_false()
     {
         canMove = false;
+    }
+
+    public void SetShowUI()
+    {
+        Debug.Log("Show UI");
+        TestManager.instance.isShowUI = true;
+    }
+
+    public void SetHideUI()
+    {
+        Debug.Log("Hide UI");
         TestManager.instance.isShowUI = false;
     }
 

@@ -201,17 +201,6 @@ public class HousingDrag : MonoBehaviour
                 check.gameObject.SetActive(true);
                 subCollider.enabled = true;
             }
-            if (isTouch)
-            {
-                TestManager.instance.isShowUI = true;
-            }
-        }
-        else
-        {
-            if (isTouch)
-            {
-                TestManager.instance.isShowUI = false;
-            }
         }
 
         ClonePosition();
@@ -694,8 +683,6 @@ public class HousingDrag : MonoBehaviour
         if (isInsertInven)
         {
             Debug.Log("오브젝트 넣기를 누를때 여기 실행");
-            group.alpha = 1.0f;
-            group.blocksRaycasts = true;
             LoadHousing.instance.tempKey.Add(primaryIndex);
             LoadHousing.instance.localHousing.Remove(primaryIndex);
             LoadHousing.instance.localCloneHousing.Remove(primaryIndex);

@@ -17,7 +17,6 @@ public class TestManager : MonoBehaviour
     public InventorySystem housingInvenSys;
     public InventorySystem housingInvenSysWindow;
     public bool isHousingInventoryLoad = false;
-    public bool isShowUI = true;
 
     [Header("Housing Filter")]
     public bool isAll = true;
@@ -27,6 +26,7 @@ public class TestManager : MonoBehaviour
 
     [Header("UI")]
     public CanvasGroup canvasGroup;
+    public bool isShowUI = true;
 
     public bool isEditMode = false;
     private void Awake()

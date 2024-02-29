@@ -151,6 +151,7 @@ public class HousingInterationWindow : MonoBehaviour
         housingInvenSys.GetHousingItem(housingObj.index, 1);
         housingObject.GetComponent<HousingDrag>().isInsertInven = true;
         Destroy(housingObject);
+        TestManager.instance.isShowUI = true;
         transform.GetChild(0).gameObject.SetActive(false);
     }
 
