@@ -234,7 +234,10 @@ public class HorizontalPlayer : MonoBehaviour
 
     private void OnDestroy()
     {
-        StopCoroutine(coroutine);
+        if(coroutine != null)
+        {
+            StopCoroutine(coroutine);
+        }
     }
 
     #region [IEnumerator]

@@ -38,6 +38,15 @@ public class TouchMove : MonoBehaviour
     [SerializeField] private GameObject interactionObject;
 
 
+    [Header("FX Manager")]
+    [SerializeField] private EffectManager effectManager;
+
+    private void Start()
+    {
+        GameObject.FindGameObjectWithTag("EffectManager").TryGetComponent<EffectManager>(out effectManager);
+    }
+
+
 
 
 
@@ -148,10 +157,13 @@ public class TouchMove : MonoBehaviour
 
                 //========================================================================================================
 
+                
 
                 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
                 touchPosition.z = 0;
                 direction = (touchPosition - transform.position).normalized;
+
+                effectManager.PlayTouchFX(touchPosition);
 
                 SetIsRight();
 
@@ -194,6 +206,7 @@ public class TouchMove : MonoBehaviour
             float b = -15f + a;
 
             touchPosition = new Vector2(b, touchPosition.y);
+            effectManager.GetTouchFX().gameObject.transform.position = touchPosition;
             return;
         }
         else if (transform.position.x <= -15.0f && !isRight)
@@ -204,6 +217,7 @@ public class TouchMove : MonoBehaviour
             float b = 15f - Mathf.Abs(a);
 
             touchPosition = new Vector2(b, touchPosition.y);
+            effectManager.GetTouchFX().gameObject.transform.position = touchPosition;
             return;
         }
         #endregion

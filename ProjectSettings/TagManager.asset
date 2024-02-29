@@ -31,6 +31,8 @@ TagManager:
   - Bullet
   - HealthBar
   - UI
+  - Missile
+  - EffectManager
   layers:
   - Default
   - TransparentFX
