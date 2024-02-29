@@ -34684,6 +34684,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 2765844061586303885}
   countObject: {fileID: 592956041524866780}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!222 &1095436120920342675
@@ -35899,6 +35900,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 6573218372318849163}
   countObject: {fileID: 8788658737169215699}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!222 &1337882655278325467
@@ -35935,6 +35937,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 6422885167521853808}
   countObject: {fileID: 9146721940823036349}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!1 &1342333465945784267
@@ -36125,6 +36128,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 1017272779747655434}
   countObject: {fileID: 8510852168649313632}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!114 &1398989747084310397
@@ -38998,7 +39002,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 660, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1000, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1827815505140586220
@@ -43037,6 +43041,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 178908136635623565}
   countObject: {fileID: 234203585653435568}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!114 &2394597846642081289
@@ -43979,6 +43984,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 4090426178786432362}
   countObject: {fileID: 7920006568989896737}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!222 &2540057323142352155
@@ -45952,7 +45958,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 644, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1000, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &2881608021737024174
@@ -47961,6 +47967,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 773993276434499249}
   countObject: {fileID: 7767039868312701436}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!114 &3201514654198512789
@@ -48324,6 +48331,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 677994924349698938}
   countObject: {fileID: 2508458988197531450}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!222 &3240463834259017432
@@ -48462,6 +48470,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 3842891061697529751}
   countObject: {fileID: 1530884873799508035}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!114 &3265903588689234150
@@ -48986,6 +48995,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 850414166144332876}
   countObject: {fileID: 5484124126803740994}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!222 &3381163343391576420
@@ -57224,6 +57234,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 3107089873235193911}
   countObject: {fileID: 4001388206867500622}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!1 &3926701108739267246
@@ -57808,6 +57819,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 3130736099787523990}
   countObject: {fileID: 8428918198645123214}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!224 &3988825614064465016
@@ -70428,6 +70440,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 3426179194004915074}
   countObject: {fileID: 3128581368465054442}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!114 &5279517276688895405
@@ -70886,6 +70899,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 56562196509540006}
   countObject: {fileID: 3902869891758462985}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!224 &5335156400355156533
@@ -71380,6 +71394,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 8275873852361690500}
   countObject: {fileID: 1843910971481230564}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!1 &5383027184888372995
@@ -72063,6 +72078,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 2354162933253013471}
   countObject: {fileID: 4514847866435975470}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!1 &5444155281950490441
@@ -78182,6 +78198,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 1133807518791368432}
   countObject: {fileID: 3752235104455663877}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!114 &6412525182602548166
@@ -86627,6 +86644,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 8778774859594427709}
   countObject: {fileID: 2496773271900288051}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!114 &7720362228589000033
@@ -87096,6 +87114,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 1398989747084310397}
   countObject: {fileID: 7176324742961442624}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!1 &7793761653356658876
@@ -91630,7 +91649,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 644, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1000, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &8446310484253014967
@@ -94041,6 +94060,7 @@ MonoBehaviour:
   count: 0
   countText: {fileID: 6264366287777945857}
   countObject: {fileID: 9012482650776736925}
+  windowCanvas: {fileID: 2540467627935398808}
   Building: {fileID: 5572879100542003124, guid: aad0872a9a39f1d4d9631145f918ad05, type: 3}
   buildingSpace: {fileID: 1049560962960549577}
 --- !u!114 &8792787078056332643

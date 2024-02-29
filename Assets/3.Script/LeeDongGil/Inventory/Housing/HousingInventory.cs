@@ -25,6 +25,7 @@ public class HousingInventory : MonoBehaviour
     public int count = 0;
     public TextMeshProUGUI countText;
     public GameObject countObject;
+    [SerializeField] private Transform windowCanvas;
 
     [Header("Building Info")]
     public GameObject Building;
@@ -45,7 +46,6 @@ public class HousingInventory : MonoBehaviour
 
     private void Start()
     {
-        
         previousParent = transform.parent;
         if (Building == null)
         {
@@ -163,7 +163,14 @@ public class HousingInventory : MonoBehaviour
             buildSetting.housingObject = housingObj;
             buildSetting.id = housingObj.index;
             buildSetting.buildSprite.sprite = SpriteManager.instance.sprites[housingObj.imageIndex];
+            HousingInterationWindow interaction = windowCanvas.GetComponent<HousingInterationWindow>();
+            interaction.housingObject = thisBuilding;
+            interaction.housingObj = this.housingObj;
+            interaction.housingName.text = housingObj.name_k;
+            windowCanvas.GetChild(0).gameObject.SetActive(true);
 
+
+            TestManager.instance.isShowUI = false;
             TestManager.instance.isEditMode = true;
         }
     }

@@ -172,7 +172,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDragging: 0
   isCanBuild: 1
-  isSetBuild: 1
+  isSetBuild: 0
   isInsertInven: 0
   previousParent: {fileID: 0}
   isTouch: 0
