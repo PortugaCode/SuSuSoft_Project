@@ -18,6 +18,7 @@ public class HousingDrag : MonoBehaviour
     [SerializeField] private bool isClone = false;
     [SerializeField] private bool isCloneCreate = false;
     public GameObject cloneObject;
+    public GameObject originalObject;
 
 
     [Header("Build Setting")]
@@ -54,7 +55,6 @@ public class HousingDrag : MonoBehaviour
     [SerializeField] private float cameraMoveStartPos = 1.6f;
     [SerializeField] private float camSpeed = 0.01f;
     SpriteRenderer[] sprender;
-    private HousingDrag[] housingObjs;
 
     #region Gizmos parameter
     /*
@@ -75,7 +75,7 @@ public class HousingDrag : MonoBehaviour
         group = FindObjectOfType<EditModeButton>().GetComponent<CanvasGroup>();
         grid = FindObjectOfType<HousingGrid>();
         buildSpaceParent = FindObjectOfType<DrawingGrid>().transform;
-        //player = FindObjectOfType<TouchMove>().gameObject;
+        player = TestManager.instance.player;
         #endregion
 
         //하우징 오브젝트의 너비와 높이 조절
@@ -93,7 +93,6 @@ public class HousingDrag : MonoBehaviour
             clampX = Mathf.Clamp(moveX, -(grid.boundX / 2) + (spaceX / 2) + grid.posX, (grid.boundX / 2) - (spaceX / 2) + grid.posX);
             clampY = Mathf.Clamp(moveY, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
 
-            Debug.Log("순서 2");
             previousParent = transform.parent;
 
             if (LoadHousing.instance.tempKey.Count == 0)        //임시 키값이 없을 경우
@@ -109,7 +108,6 @@ public class HousingDrag : MonoBehaviour
             LoadHousing.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
             LoadHousing.instance.localHousingObject.Add(primaryIndex, housingObject);
 
-            Debug.Log($"{clampX}, {clampY}");
             transform.position = new Vector3(clampX, clampY, -1);
         }
         else if (LoadHousing.instance.isLoading)           //기존에 설치된 하우징 위치
@@ -122,6 +120,7 @@ public class HousingDrag : MonoBehaviour
             cloneObject = Instantiate(gameObject, new Vector3(-50, -50, -1), Quaternion.identity, buildSpaceParent);
             cloneObject.GetComponent<HousingDrag>().isClone = true;
             cloneObject.GetComponent<HousingDrag>().isCloneCreate = true;
+            cloneObject.GetComponent<HousingDrag>().originalObject = gameObject;
             cloneObject.transform.GetChild(0).gameObject.SetActive(false);
             cloneObject.SetActive(false);
             if (!LoadHousing.instance.isLoading)
@@ -179,7 +178,7 @@ public class HousingDrag : MonoBehaviour
     {
         if (isClone) return;
 
-        if (TestManager.instance.isEditMode)
+        if (TestManager.instance.isEditMode)            //편집모드 일때
         {
             DragObject();
             CheckToBuild();
@@ -202,13 +201,6 @@ public class HousingDrag : MonoBehaviour
                 check.gameObject.SetActive(true);
                 subCollider.enabled = true;
             }
-            group.alpha = 1.0f;
-            group.blocksRaycasts = true;
-        }
-        else
-        {
-            group.alpha = 0;
-            group.blocksRaycasts = false;
         }
 
         ClonePosition();
@@ -245,7 +237,6 @@ public class HousingDrag : MonoBehaviour
                     {
                         isTouch = true;
                         Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
-                        Debug.Log("Began 실행2");
                         offset = transform.position - ray.GetPoint(hit.distance);
                     }
 
@@ -288,7 +279,7 @@ public class HousingDrag : MonoBehaviour
                             break;
                     }
 
-                    
+
 
                 }
                 else
@@ -538,33 +529,41 @@ public class HousingDrag : MonoBehaviour
              hit_Center.collider.gameObject.layer != currentLayer &&
              hit_Box.collider.gameObject.layer != currentLayer)
         {
-            #region 건물을 바닥에만 설치할 수 있게 하려면 endregion아래의 코드를 주석처리 후 이 조건문을 활성화 하세요.
+            #region 건물을 바닥에만 설치할 수 있게 하려면 아래 region의 코드를 주석처리 후 이 조건문을 활성화 하세요.
+
+            if ((currentLayer == LayerMask.NameToLayer("Building") ||
+                currentLayer == LayerMask.NameToLayer("Front") ||
+                currentLayer == LayerMask.NameToLayer("Back")) &&
+                transform.position.y > Vector3.zero.y)                //배경의 절반 아래에만 설치 가능
+            {
+                check.color = new Color32(255, 0, 0, 100);
+                check.gameObject.SetActive(true);
+                transform.SetParent(previousParent);
+                isCanBuild = false;
+
+            }
+            else
+            {
+                check.color = new Color32(0, 255, 0, 100);
+                isCanBuild = true;
+                if (!isDragging)
+                {
+                    transform.SetParent(hit_Center.collider.transform.parent);
+                }
+            }
+
+            #endregion
+
+            #region 모든 공간에 하우징을 설치할 수 있게 하려면 이 코드의 주석을 해제 후 위 region의 코드를 주석처리 하세요.
             /*
-                        if (currentLayer == LayerMask.NameToLayer("Building") && transform.position.y > grid.boundRB.y + (spaceY / 2) + 0.5f)   //test해보기 1
+                        check.color = new Color32(0, 255, 0, 100);
+                        isCanBuild = true;
+                        if (!isDragging)
                         {
-                            check.color = new Color32(255, 0, 0, 100);
-                            check.gameObject.SetActive(true);
-                            transform.SetParent(previousParent);
-                            isCanBuild = false;
-                        }
-                        else
-                        {
-                            check.color = new Color32(0, 255, 0, 100);
-                            isCanBuild = true;
-                            if (!isDragging)
-                            {
-                                transform.SetParent(hit_Center.collider.transform.parent);
-                            }
+                            transform.SetParent(hit_Center.collider.transform.parent);
                         }
             */
             #endregion
-
-            check.color = new Color32(0, 255, 0, 100);
-            isCanBuild = true;
-            if (!isDragging)
-            {
-                transform.SetParent(hit_Center.collider.transform.parent);
-            }
         }
         else
         {
@@ -578,16 +577,16 @@ public class HousingDrag : MonoBehaviour
 
     private void ClonePosition()
     {
-        if (transform.position.x >= -18 && transform.position.x <= -8)
+        if (transform.position.x >= -(grid.boundX / 2) && transform.position.x <= -(grid.boundX / 2) + 10)
         {
             cloneObject.SetActive(true);
-            Vector3 clonePosition_LR = new Vector3(transform.position.x + 26, transform.position.y, transform.position.z);
+            Vector3 clonePosition_LR = new Vector3(transform.position.x + (grid.boundX - 10), transform.position.y, transform.position.z);
             cloneObject.transform.position = clonePosition_LR;
         }
-        else if (transform.position.x >= 8 && transform.position.x <= 18)
+        else if (transform.position.x >= (grid.boundX / 2) - 10 && transform.position.x <= (grid.boundX / 2))
         {
             cloneObject.SetActive(true);
-            Vector3 clonePosition_RL = new Vector3(transform.position.x - 26, transform.position.y, transform.position.z);
+            Vector3 clonePosition_RL = new Vector3(transform.position.x - (grid.boundX - 10), transform.position.y, transform.position.z);
             cloneObject.transform.position = clonePosition_RL;
         }
         else
@@ -595,14 +594,32 @@ public class HousingDrag : MonoBehaviour
             cloneObject.SetActive(false);
         }
 
-        //if(player.transform.position.x >= 8)
-        //{
-        //    housingObjs = buildSpaceParent.GetComponentsInChildren<HousingDrag>();
-        //    foreach(HousingDrag housing in housingObjs)
-        //    {
-        //
-        //    }
-        //}
+        if (player.transform.position.x >= (grid.boundX / 2) - 10)
+        {
+            HousingDrag[] housingObjs = buildSpaceParent.GetComponentsInChildren<HousingDrag>();
+            foreach (HousingDrag housing in housingObjs)
+            {
+                if (housing.isClone && housing.gameObject.transform.position.x >= (grid.boundX / 2) - 10)
+                {
+                    Vector3 tempPosition = housing.gameObject.transform.position;
+                    housing.gameObject.transform.position = housing.originalObject.transform.position;
+                    housing.originalObject.transform.position = tempPosition;
+                }
+            }
+        }
+        else if (player.transform.position.x <= -(grid.boundX / 2) + 10)
+        {
+            HousingDrag[] housingObjs = buildSpaceParent.GetComponentsInChildren<HousingDrag>();
+            foreach (HousingDrag housing in housingObjs)
+            {
+                if (housing.isClone && housing.gameObject.transform.position.x <= -(grid.boundX / 2) + 10)
+                {
+                    Vector3 tempPosition = housing.gameObject.transform.position;
+                    housing.gameObject.transform.position = housing.originalObject.transform.position;
+                    housing.originalObject.transform.position = tempPosition;
+                }
+            }
+        }
     }
 
     private void SetWidthHeight()
@@ -674,8 +691,6 @@ public class HousingDrag : MonoBehaviour
         if (isInsertInven)
         {
             Debug.Log("오브젝트 넣기를 누를때 여기 실행");
-            group.alpha = 1.0f;
-            group.blocksRaycasts = true;
             LoadHousing.instance.tempKey.Add(primaryIndex);
             LoadHousing.instance.localHousing.Remove(primaryIndex);
             LoadHousing.instance.localCloneHousing.Remove(primaryIndex);
