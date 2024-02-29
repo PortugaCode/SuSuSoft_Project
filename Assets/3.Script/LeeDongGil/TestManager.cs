@@ -74,13 +74,13 @@ public class TestManager : MonoBehaviour
 
     private void Start()
     {
-        /*
-        #if UNITY_ANDROID
-                Application.targetFrameRate = 60;
-        #else
+
+#if UNITY_ANDROID
+        Application.targetFrameRate = 60;
+#else
                 QualitySettings.vSyncCount = 1;
-        #endif
-        */
+#endif
+
         player = FindObjectOfType<TouchMove>().gameObject;
     }
 
