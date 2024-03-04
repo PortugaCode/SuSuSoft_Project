@@ -49,6 +49,12 @@ public class UIManager : MonoBehaviour
     [Header("Option")]
     [SerializeField] GameObject OptionPopup;
 
+    [Header("Friends UI")]
+    [SerializeField] GameObject friendsPopup;
+
+    [Header("Mail UI")]
+    [SerializeField] GameObject mailPopup;
+
     [Header("Goods UI - Lobby")]
     [SerializeField] TMP_Text friendshipPointText;
     [SerializeField] TMP_Text rubyText;
@@ -412,6 +418,16 @@ public class UIManager : MonoBehaviour
     public void OpenOptionPopup()
     {
         OptionPopup.SetActive(true);
+    }
+
+    public void OpenFriendsPopup()
+    {
+        friendsPopup.SetActive(true);
+    }
+
+    public void OpenMailPopup()
+    {
+        mailPopup.SetActive(true);
     }
 
     public void CloseInfoPopup()
