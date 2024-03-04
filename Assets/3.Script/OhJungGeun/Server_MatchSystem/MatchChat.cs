@@ -7,6 +7,7 @@ using TMPro;
 public class MatchChat : MonoBehaviour
 {
     public Action<string> DoChat;
+    public Action DoDie;
 
 
     [SerializeField] private GameObject chatBox;
@@ -44,6 +45,7 @@ public class MatchChat : MonoBehaviour
 
     public void DestroyChatBox()
     {
+        DoDie?.Invoke();
         Destroy(chatBox);
         Destroy(nickName.gameObject);
     }

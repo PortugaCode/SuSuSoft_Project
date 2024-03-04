@@ -27,7 +27,10 @@ public class OptionManager : MonoBehaviour
         // 알람 on off 연동 필요
         backgroundScrollbar.onValueChanged.AddListener(AudioManager.Instance.SetBGMVolume);
         effectScrollbar.onValueChanged.AddListener(AudioManager.Instance.SetSFXVolume);
+        backgroundScrollbar.value = AudioManager.Instance.bgmValue;
+        effectScrollbar.value = AudioManager.Instance.sfxValue;
     }
+
 
     public void ToggleBackgroundVolume()
     {
@@ -64,11 +67,13 @@ public class OptionManager : MonoBehaviour
     public void UpdateBackgroundVolume()
     {
         Debug.Log($"Background Volume : {backgroundScrollbar.value}");
+        AudioManager.Instance.bgmValue = backgroundScrollbar.value;
     }
 
     public void UpdateEffectVolume()
     {
         Debug.Log($"Effect Volume : {effectScrollbar.value}");
+        AudioManager.Instance.sfxValue = effectScrollbar.value;
     }
 
     public void ToggleAlarm(int index)

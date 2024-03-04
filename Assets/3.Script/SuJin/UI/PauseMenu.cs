@@ -14,6 +14,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Home()
     {
+        StopAllCoroutines();
         Utils.Instance.LoadScene(SceneNames.Chatting);
         Time.timeScale = 1;
     }
@@ -26,6 +27,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Restart()
     {
+        StopAllCoroutines();
         Utils.Instance.LoadScene(SceneNames.OnGame);
         Time.timeScale = 1;
     }

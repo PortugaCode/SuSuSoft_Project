@@ -21,6 +21,11 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance = null;
 
+
+    public float bgmValue = 0.6f;
+    public float sfxValue = 0.6f;
+
+
     [SerializeField] private AudioMixer m_AudioMixer;
     
 
@@ -100,6 +105,14 @@ public class AudioManager : MonoBehaviour
 
     #endregion
 
+
+
+
+
+    public AudioMixer GetAudioMixer()
+    {
+        return m_AudioMixer;
+    }
 
 
 

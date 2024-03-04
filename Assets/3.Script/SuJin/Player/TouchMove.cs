@@ -38,6 +38,15 @@ public class TouchMove : MonoBehaviour
     [SerializeField] private GameObject interactionObject;
 
 
+    [Header("FX Manager")]
+    [SerializeField] private EffectManager effectManager;
+
+    private void Start()
+    {
+        GameObject.FindGameObjectWithTag("EffectManager").TryGetComponent<EffectManager>(out effectManager);
+    }
+
+
 
 
 
@@ -108,6 +117,18 @@ public class TouchMove : MonoBehaviour
         canMove = false;
     }
 
+    public void SetShowUI()
+    {
+        Debug.Log("Show UI");
+        TestManager.instance.isShowUI = true;
+    }
+
+    public void SetHideUI()
+    {
+        Debug.Log("Hide UI");
+        TestManager.instance.isShowUI = false;
+    }
+
     private void SetTouchPosition()
     {
         if(Input.touchCount > 0)
@@ -136,10 +157,13 @@ public class TouchMove : MonoBehaviour
 
                 //========================================================================================================
 
+                
 
                 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
                 touchPosition.z = 0;
                 direction = (touchPosition - transform.position).normalized;
+
+                effectManager.PlayTouchFX(touchPosition);
 
                 SetIsRight();
 
@@ -174,24 +198,26 @@ public class TouchMove : MonoBehaviour
     private void PlayerMove(Vector3 target)
     {
         #region [Repeat BG]
-        if (transform.position.x >= 12.80f && isRight)
+        if (transform.position.x >= 15.00366f && isRight)
         {
             transform.position = new Vector2(transform.position.x * -1f, transform.position.y);
 
-            float a = touchPosition.x - 12.80f;
-            float b = -13f + a;
+            float a = touchPosition.x - 15.00366f;
+            float b = -15.2f + Mathf.Abs(a);
 
             touchPosition = new Vector2(b, touchPosition.y);
+            effectManager.GetTouchFX().gameObject.transform.position = touchPosition;
             return;
         }
-        else if (transform.position.x <= -12.80f && !isRight)
+        else if (transform.position.x <= -15.00366f && !isRight)
         {
             transform.position = new Vector2(transform.position.x * -1f, transform.position.y);
 
-            float a = touchPosition.x + 12.80f;
-            float b = 13f - Mathf.Abs(a);
+            float a = touchPosition.x + 15.00366f;
+            float b = 15.2f - Mathf.Abs(a);
 
             touchPosition = new Vector2(b, touchPosition.y);
+            effectManager.GetTouchFX().gameObject.transform.position = touchPosition;
             return;
         }
         #endregion

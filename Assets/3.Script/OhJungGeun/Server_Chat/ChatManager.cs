@@ -13,7 +13,7 @@ public class ChatManager
 
     public ChatListManager chatListManager;
 
-    //private List<string[]> a = new List<string[]>();
+    private List<string[]> lastChatList = new List<string[]>();
 
     // 뒤끝챗 활성화 되어 있는지 확인
     public void GetChatStatus()
@@ -167,12 +167,14 @@ public class ChatManager
                 if (!args.From.IsRemote)
                 {
                     chatListManager.SpawnMyChatList(Backend.UserNickName, args.Message);
+                    AddLastChatList(Backend.UserNickName, args.Message);
                     Debug.Log("나 : " + args.Message);
                 }
                 // 다른 유저의 메시지일 경우
                 else
                 {
                     chatListManager.SpawnLocalChatList(args.From.NickName, args.Message);
+                    AddLastChatList(args.From.NickName, args.Message);
                     Debug.Log($"{args.From.NickName}이 {args.Message}를 입력했습니다.");
                 }
             }
@@ -274,35 +276,70 @@ public class ChatManager
 
     }
 
+    public void AddLastChatList(string id, string msg)
+    {
+        Debug.Log("클라이언트 채팅 저장");
+        lastChatList.Add(new string[2]);
+        lastChatList[lastChatList.Count - 1][0] = id;
+        lastChatList[lastChatList.Count - 1][1] = msg;
+
+        if(lastChatList.Count >= 19)
+        {
+            lastChatList.RemoveAt(0);
+        }
+    }
+
+
     //채팅 최근 내역 불러오기
     public void GetRecentChat()
     {
-        //채팅 채널 리스트 가져오기
-        BackendReturnObject bro = Backend.Chat.GetGroupChannelList(normalChatList);
+        Debug.Log(lastChatList.Count);
+        if (lastChatList.Count <= 0)
+        {
+            //채팅 채널 리스트 가져오기
+            BackendReturnObject bro = Backend.Chat.GetGroupChannelList(normalChatList);
 
-        //채팅 채널 uuid 받아오기
-        string channelIndate = bro.GetReturnValuetoJSON()["rows"][0]["inDate"].ToString();
+            //채팅 채널 uuid 받아오기
+            string channelIndate = bro.GetReturnValuetoJSON()["rows"][0]["inDate"].ToString();
 
-        //uuid를 이용하여 해당 일반 채널의 최근 채팅 내역 가져오기(25개만)
-        BackendReturnObject result = Backend.Chat.GetRecentChat(ChannelType.Public, channelIndate, 15);
+            //uuid를 이용하여 해당 일반 채널의 최근 채팅 내역 가져오기(25개만)
+            BackendReturnObject result = Backend.Chat.GetRecentChat(ChannelType.Public, channelIndate, 15);
 
 
-         for (int i = 0; i < result.Rows().Count; i++)
-         {
-             string nickname = result.Rows()[i]["nickname"].ToString();
-             string message = result.Rows()[i]["message"].ToString();
-
-            if (nickname.Equals(Backend.UserNickName))
+            for (int i = 0; i < result.Rows().Count; i++)
             {
-                 Debug.Log("최근 채팅 내역 불러오기");
-                 chatListManager.SpawnMyChatList(nickname, message);
-            }
-            else
-            {
-                Debug.Log("최근 채팅 내역 불러오기");
-                chatListManager.SpawnLocalChatList(nickname, message);
+                string nickname = result.Rows()[i]["nickname"].ToString();
+                string message = result.Rows()[i]["message"].ToString();
+
+                if (nickname.Equals(Backend.UserNickName))
+                {
+                    Debug.Log("최근 채팅 내역 불러오기");
+                    chatListManager.SpawnMyChatList(nickname, message);
+                    AddLastChatList(nickname, message);
+                }
+                else
+                {
+                    Debug.Log("최근 채팅 내역 불러오기");
+                    chatListManager.SpawnLocalChatList(nickname, message);
+                    AddLastChatList(nickname, message);
+                }
             }
         }
+        else
+        {
+            for(int i = 0; i < lastChatList.Count; i++)
+            {
+                if (lastChatList[i][0].Equals(Backend.UserNickName))
+                {
+                    chatListManager.SpawnMyChatList(lastChatList[i][0], lastChatList[i][1]);
+                }
+                else
+                {
+                    chatListManager.SpawnLocalChatList(lastChatList[i][0], lastChatList[i][1]);
+                }
+            }
+        }
+
     }
 
 }

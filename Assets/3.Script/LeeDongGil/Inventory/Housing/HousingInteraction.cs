@@ -46,7 +46,7 @@ public class HousingInteraction : MonoBehaviour
                         housingObject = hit.collider.gameObject.GetComponent<HousingDrag>().housingObject;
                         if (gameTime > 0.5f)
                         {
-                            drag.isSetBuild = false;
+                            TestManager.instance.isShowUI = false;
                             window.transform.GetChild(0).gameObject.SetActive(true);
                         }
                     }
@@ -54,8 +54,8 @@ public class HousingInteraction : MonoBehaviour
                 else if (!hit.collider.gameObject.CompareTag("Building") && EventSystem.current.IsPointerOverGameObject(0) == false)
                 {
                     Debug.Log("여기가 실행됨?");
-                    drag.isSetBuild = true;
-                    window.transform.GetChild(0).gameObject.SetActive(false);
+                    //TestManager.instance.isShowUI = true;
+                    //window.transform.GetChild(0).gameObject.SetActive(false);
                 }
             }
         }
