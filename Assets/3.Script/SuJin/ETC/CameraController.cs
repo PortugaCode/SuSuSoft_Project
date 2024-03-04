@@ -19,6 +19,11 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
+        StartBGM();
+    }
+
+    private void StartBGM()
+    {
         //스테이지 씬이라면 조건 추가 해야함
         if (Utils.Instance.nowScene == SceneNames.OnGame)
         {
