@@ -347,6 +347,13 @@ MonoBehaviour:
   canMove: 1
   isInteraction: 0
   interactionObject: {fileID: 0}
+  effectManager: {fileID: 0}
+  mainCamera: {fileID: 0}
+  player: {fileID: 0}
+  smothing: 2
+  minCameraPos: {x: 0, y: -1.5}
+  maxCameraPos: {x: 100, y: 0}
+  animator: {fileID: 0}
 --- !u!114 &1755505748216239946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,6 +370,7 @@ MonoBehaviour:
   chatInGame: {fileID: 0}
   chatBoxRenderer: {fileID: 0}
   nickName: {fileID: 0}
+  isClone: 0
 --- !u!1 &2552551464671919243
 GameObject:
   m_ObjectHideFlags: 0

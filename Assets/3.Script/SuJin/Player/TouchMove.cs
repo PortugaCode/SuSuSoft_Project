@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BackEnd;
 using BackEnd.Tcp;
 using Protocol;
-using System;
+using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 
 public class TouchMove : MonoBehaviour
@@ -41,14 +42,21 @@ public class TouchMove : MonoBehaviour
     [Header("FX Manager")]
     [SerializeField] private EffectManager effectManager;
 
+    [Header("Camera Control")]
+    [SerializeField] private Camera mainCamera;
+    [SerializeField] Transform player;
+    [SerializeField] float smothing = 2f;
+    [SerializeField] Vector2 minCameraPos;
+    [SerializeField] Vector2 maxCameraPos;
+
+    [SerializeField] private Animator animator;
+
     private void Start()
     {
         GameObject.FindGameObjectWithTag("EffectManager").TryGetComponent<EffectManager>(out effectManager);
+        mainCamera = Camera.main;
+        StartBGM();
     }
-
-
-
-
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -74,24 +82,16 @@ public class TouchMove : MonoBehaviour
         }
     }
 
-    public void SetInteractionObject_true()
-    {
-        interactionObject.SetActive(true);
-    }
-
-    public void SetInteractionObject_false()
-    {
-        interactionObject.SetActive(false);
-    }
-
 
     private void Update()
     {
+
         if (!canMove)
         {
             MoveRotation();
             return;
         }
+
 
         PlayerMove(direction);
 
@@ -105,6 +105,79 @@ public class TouchMove : MonoBehaviour
         {
             InteractionPlayer();
         }
+    }
+
+    private void LateUpdate()
+    {
+        if (SceneManager.GetActiveScene().name != "CharacterTest" || SceneManager.GetActiveScene().name != "OnGame")
+        {
+            CameraPos();
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (SceneManager.GetActiveScene().name == "CharacterTest" || SceneManager.GetActiveScene().name == "OnGame")
+        {
+            CameraPos_Stage();
+        }
+    }
+
+    private void ShakeCamera(object sender, EventArgs e)
+    {
+        animator.SetTrigger("Shake");
+    }
+
+    public void SetPlayer(GameObject a)
+    {
+        player = a.transform;
+    }
+
+    private void StartBGM()
+    {
+        //스테이지 씬이라면 조건 추가 해야함
+        if (Utils.Instance.nowScene == SceneNames.OnGame)
+        {
+            player.gameObject.GetComponent<PlayerProperty>().onDamage = ShakeCamera;
+            AudioManager.Instance.PlayBGM(BGM_Name.Stage);
+        }
+        else
+        {
+            AudioManager.Instance.PlayBGM(BGM_Name.Main);
+        }
+    }
+
+
+
+    private void CameraPos_Stage()
+    {
+        if (player == null) return;
+        Vector3 targetPos = new Vector3(player.position.x, player.position.y, mainCamera.transform.position.z);
+        targetPos.y = Mathf.Clamp(targetPos.y, minCameraPos.y, maxCameraPos.y);
+        //targetPos.x = Mathf.Clamp(targetPos.x, minCameraPos.x, maxCameraPos.x);
+
+        mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, targetPos, smothing * Time.deltaTime);
+    }
+
+    private void CameraPos()
+    {
+        if (player == null) return;
+        Vector3 targetPos = new Vector3(player.position.x, player.position.y, mainCamera.transform.position.z);
+        targetPos.y = Mathf.Clamp(targetPos.y, minCameraPos.y, maxCameraPos.y);
+        mainCamera.transform.position = targetPos;
+    }
+
+
+
+
+    public void SetInteractionObject_true()
+    {
+        interactionObject.SetActive(true);
+    }
+
+    public void SetInteractionObject_false()
+    {
+        interactionObject.SetActive(false);
     }
 
     public void SetCanMove_true()
@@ -198,26 +271,28 @@ public class TouchMove : MonoBehaviour
     private void PlayerMove(Vector3 target)
     {
         #region [Repeat BG]
-        if (transform.position.x >= 15.00366f && isRight)
+        if (transform.position.x >= 14.97f && isRight)
         {
             transform.position = new Vector2(transform.position.x * -1f, transform.position.y);
 
-            float a = touchPosition.x - 15.00366f;
+            float a = touchPosition.x - 14.97f;
             float b = -15.2f + Mathf.Abs(a);
+            float c = -14.97f + Mathf.Abs(a);
 
             touchPosition = new Vector2(b, touchPosition.y);
-            effectManager.GetTouchFX().gameObject.transform.position = touchPosition;
+            effectManager.GetTouchFX().gameObject.transform.position = new Vector3(c, touchPosition.y);
             return;
         }
-        else if (transform.position.x <= -15.00366f && !isRight)
+        else if (transform.position.x <= -14.97f && !isRight)
         {
             transform.position = new Vector2(transform.position.x * -1f, transform.position.y);
 
-            float a = touchPosition.x + 15.00366f;
+            float a = touchPosition.x + 14.97f;
             float b = 15.2f - Mathf.Abs(a);
+            float c = 14.97f - Mathf.Abs(a);
 
             touchPosition = new Vector2(b, touchPosition.y);
-            effectManager.GetTouchFX().gameObject.transform.position = touchPosition;
+            effectManager.GetTouchFX().gameObject.transform.position = new Vector3(c, touchPosition.y);
             return;
         }
         #endregion
