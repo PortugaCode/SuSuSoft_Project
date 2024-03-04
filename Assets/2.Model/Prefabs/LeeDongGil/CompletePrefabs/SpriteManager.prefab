@@ -57,3 +57,14 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 95c6c8ce94b934f47a590e91f35f454a, type: 3}
   - {fileID: 21300000, guid: 05158afe0b4ce054fbecd80a3710c964, type: 3}
   - {fileID: 21300000, guid: 82aeb73d783d7de45a15d4c7d0359565, type: 3}
+  tokenSprites:
+  - {fileID: 21300000, guid: 37ec3af1697dd67419d2ced2858d92cb, type: 3}
+  - {fileID: 21300000, guid: 6c101d6ca6458ac4ca8523682e106118, type: 3}
+  - {fileID: 21300000, guid: be03fbe80066663458ae554a870bb77b, type: 3}
+  - {fileID: 21300000, guid: 1539b8e02eff44d49a16dd75775cb049, type: 3}
+  - {fileID: 21300000, guid: b2973565f9ccc5148a33d0f897102649, type: 3}
+  - {fileID: 21300000, guid: 20466ed5e1bc37b4c8ef13a50c8b27a1, type: 3}
+  - {fileID: 21300000, guid: 1ce85a32bebe7b044a3e860c98abd184, type: 3}
+  - {fileID: 21300000, guid: 92982ff2ce5abde44bca0640eb4af8a0, type: 3}
+  - {fileID: 21300000, guid: 9fa9c4a2ec35610469f22ef4bb732ce9, type: 3}
+  - {fileID: 21300000, guid: be01d90f83406244ea4acdcc76f6117b, type: 3}
