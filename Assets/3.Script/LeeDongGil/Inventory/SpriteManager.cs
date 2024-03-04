@@ -9,6 +9,9 @@ public class SpriteManager : MonoBehaviour
     [Header("Image Index  == SpriteManager List Index")]
     public List<Sprite> sprites = new List<Sprite>();
 
+    [Header("Stage Index  == SpriteManager List Index")]
+    public List<Sprite> tokenSprites = new List<Sprite>();
+
     private void Awake()
     {
         if(instance == null)

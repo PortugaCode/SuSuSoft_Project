@@ -122,4 +122,9 @@ public class MailManager : MonoBehaviour
             Destroy(content.GetChild(index).gameObject);
         }
     }
+
+    public void CloseMailPopup()
+    {
+        gameObject.SetActive(false);
+    }
 }
