@@ -5,9 +5,15 @@ using UnityEngine.UI;
 
 public class FilterButton : MonoBehaviour
 {
+    [Header("Housing Inventory")]
     public Transform scrollInventory;
     public Transform windowInventory;
     public bool isFilter = false;
+
+    [Header("Token Inventory")]
+    public Transform createInventory;
+    public Transform upgradeInventory;
+    public bool isWorkShopFilter = false;
 
 
     public Button btn;
@@ -39,6 +45,8 @@ public class FilterButton : MonoBehaviour
         Debug.Log("필터 버튼이 비활성화 될 때 이 디버그가 표시됨");
         
     }
+
+    #region Housing Filter
 
     public void AllButton()
     {
@@ -190,53 +198,102 @@ public class FilterButton : MonoBehaviour
         }
     }
 
-    public void SpecialButton()
+    #endregion
+
+    #region Token Filter
+
+    public void AllTokenButton()
     {
-        isFilter = true;
-        HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
-        int[] currentindexs = new int[20];
+        isWorkShopFilter = false;
+        TestManager.instance.isAllToken = true;
+        TestManager.instance.isSportsToken = false;
+        TestManager.instance.isFruitsToken = false;
+        Slot[] slots = GetComponentsInChildren<Slot>();
+        foreach (Slot slot in slots)
+        {
+            if (slot.isSlotUse)
+            {
+                slot.itemInfo.image.color = Color.white;
+                slot.itemInfo.countObject.SetActive(true);
+            }
+        }
+    }
+
+    public void SportsTokenButton()
+    {
+        isWorkShopFilter = true;
+        TestManager.instance.isAllToken = false;
+        TestManager.instance.isSportsToken = true;
+        TestManager.instance.isFruitsToken = false;
+        Slot[] slots = GetComponentsInChildren<Slot>();
+        int[] currentindexs = new int[12];
         int index = 0;
         int setindex = 0;
-        foreach (HousingSlot slot in slots)
+        foreach (Slot slot in slots)
         {
             currentindexs[index] = slot.transform.GetSiblingIndex();
             if (slot.isSlotUse)
             {
-                if (slot.itemInfomation.housingType == HousingType.special)
+                if ((slot.itemInfo._itemData.tokenType & TokenType.sports) != 0)
                 {
                     slot.transform.SetSiblingIndex(setindex);
-                    slot.housingInven.image.color = Color.white;
-                    slot.housingInven.countObject.SetActive(true);
-                    slot.housingInven.button.interactable = true;
+                    slot.itemInfo.image.color = Color.white;
+                    slot.itemInfo.countObject.SetActive(true);
+                    slot.itemInfo.button.interactable = true;
                     setindex++;
                 }
                 else
                 {
-                    slot.housingInven.image.color = new Color(1, 1, 1, 0.1f);
-                    slot.housingInven.countObject.SetActive(false);
-                    slot.housingInven.button.interactable = false;
+                    slot.itemInfo.image.color = new Color(1, 1, 1, 0.1f);
+                    slot.itemInfo.countObject.SetActive(false);
+                    slot.itemInfo.button.interactable = false;
                 }
             }
         }
     }
 
-    public void TokenButton()
+    public void FruitsTokenButton()
     {
-        isFilter = true;
-        HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
-        foreach (HousingSlot slot in slots)
+        isWorkShopFilter = true;
+        TestManager.instance.isAllToken = false;
+        TestManager.instance.isSportsToken = false;
+        TestManager.instance.isFruitsToken = true;
+        Slot[] slots = GetComponentsInChildren<Slot>();
+        int[] currentindexs = new int[12];
+        int index = 0;
+        int setindex = 0;
+        foreach (Slot slot in slots)
         {
+            currentindexs[index] = slot.transform.GetSiblingIndex();
             if (slot.isSlotUse)
             {
-                slot.housingInven.image.color = Color.white;
-                slot.housingInven.countObject.SetActive(true);
+                if ((slot.itemInfo._itemData.tokenType & TokenType.fruits) != 0)
+                {
+                    slot.transform.SetSiblingIndex(setindex);
+                    slot.itemInfo.image.color = Color.white;
+                    slot.itemInfo.countObject.SetActive(true);
+                    slot.itemInfo.button.interactable = true;
+                    setindex++;
+                }
+                else
+                {
+                    slot.itemInfo.image.color = new Color(1, 1, 1, 0.1f);
+                    slot.itemInfo.countObject.SetActive(false);
+                    slot.itemInfo.button.interactable = false;
+                }
             }
         }
     }
 
+    #endregion
+
     public void ReturnButton()
     {
         isFilter = false;
+        TestManager.instance.isAll = true;
+        TestManager.instance.isFront = false;
+        TestManager.instance.isBack = false;
+        TestManager.instance.isBuilding = false;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         foreach (HousingSlot slot in slots)
         {
@@ -244,6 +301,23 @@ public class FilterButton : MonoBehaviour
             {
                 slot.housingInven.image.color = Color.white;
                 slot.housingInven.button.interactable = true;
+            }
+        }
+    }
+
+    public void TokenReturnButton()
+    {
+        isFilter = false;
+        TestManager.instance.isAllToken = true;
+        TestManager.instance.isSportsToken = false;
+        TestManager.instance.isFruitsToken = false;
+        Slot[] slots = GetComponentsInChildren<Slot>();
+        foreach (Slot slot in slots)
+        {
+            if (slot.isSlotUse)
+            {
+                slot.itemInfo.image.color = Color.white;
+                slot.itemInfo.button.interactable = true;
             }
         }
     }

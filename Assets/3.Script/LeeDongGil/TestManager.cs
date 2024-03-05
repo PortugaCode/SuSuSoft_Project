@@ -10,6 +10,7 @@ public class TestManager : MonoBehaviour
     public ItemData testData1;
     public List<HousingItemData> testHousing = new List<HousingItemData>();
     public List<HousingItemData> testHousingV2 = new List<HousingItemData>();
+    public List<ItemData> tokenList = new List<ItemData>();
     public GameObject player;
 
     [Header("Housing Inventory")]
@@ -17,12 +18,18 @@ public class TestManager : MonoBehaviour
     public InventorySystem housingInvenSys;
     public InventorySystem housingInvenSysWindow;
     public bool isHousingInventoryLoad = false;
+    public bool isInventoryLoad = false;
 
     [Header("Housing Filter")]
     public bool isAll = true;
     public bool isFront = false;
     public bool isBack = false;
     public bool isBuilding = false;
+
+    [Header("Token Filter")]
+    public bool isAllToken = true;
+    public bool isSportsToken = false;
+    public bool isFruitsToken = false;
 
     [Header("UI")]
     public CanvasGroup canvasGroup;
@@ -251,18 +258,16 @@ public class TestManager : MonoBehaviour
         housingInvenSys.GetHousingItem(3, 1);
     }
     #endregion
-}
-public class TestItem
-{
-    public int itemCount;
-    public string itemName;
-    public ItemType type;
-}
 
+    public void TestV3_Basketball_Token()
+    {
+        housingInvenSys.GetHousingItem(7, 1);
+    }
+
+}
 public enum ItemType
 {
-    housing = 1,
-    material = 2
+    token = 1
 }
 public enum HousingType
 {

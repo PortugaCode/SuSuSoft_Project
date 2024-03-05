@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9fd740f00fefa4f4ab42d8f4f6cf5a52, type: 3}
-  m_Name: Gem00
+  m_Name: 04_TwinTreeToken
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 5deeb243067ca48feb0ece0b05e49b7f, type: 3}
-  itemName: "\uBCF4\uC11D1"
-  itemID: 0
+  type: 1
+  tokenType: 256
+  sprite: {fileID: 21300000, guid: b2973565f9ccc5148a33d0f897102649, type: 3}
+  itemName: TwinTree_Token
+  itemID: 4
