@@ -78,7 +78,6 @@ public class HorizontalPlayer : MonoBehaviour
     {
         StartGame();
         starCountTmpPro.text = $"{playerProperty.stars.Count} / {playerProperty.maxStar}";
-        
     }
 
     public void FixedUpdate()
@@ -99,6 +98,7 @@ public class HorizontalPlayer : MonoBehaviour
             Touch touch = Input.GetTouch(0);
             if (touch.phase == TouchPhase.Began)
             {
+                
                 StartCoroutine(StartCorutine_Co());
             }
         }
@@ -162,11 +162,10 @@ public class HorizontalPlayer : MonoBehaviour
                 isPlayerMove = false;
                 if(playerProperty.skillActive.isItemOn)
                 {
+                    playerProperty.SkillActive();
 
-                    Debug.Log("터치됨");
-                    playerProperty.ShieldMode();
-
-                    playerProperty.skillActive.itemFillImage.fillAmount = 1.0f;
+                    //CoolTime 초기화
+                    playerProperty.skillActive.shieldFillImage.fillAmount = 1.0f;
                 }
             }
             else
@@ -182,7 +181,7 @@ public class HorizontalPlayer : MonoBehaviour
         {
             IncreaseSpeed(); // 속도 증가
             Destroy(collision.gameObject);
-            StartCoroutine(Speed_Co());
+            //StartCoroutine(Speed_Co());
         }
         else if(collision.CompareTag("Lever"))
         {
@@ -192,10 +191,13 @@ public class HorizontalPlayer : MonoBehaviour
 
     public void IncreaseSpeed()     //Player Speed Method
     {
-        if(isSpeed)
+        playerProperty.skillActive.isItemOn = false;
+
+        if (isSpeed)
         {
             maxSpeed = maxSpeed * 2f;
             currentAcceleration = baseAcceleration * 10f;
+            StartCoroutine(Speed_Co());  // 안되면 주석처리에 넣기
         }
     }
 

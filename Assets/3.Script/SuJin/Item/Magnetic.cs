@@ -13,6 +13,7 @@ public class Magnetic : MonoBehaviour
     //public  float coolTime = 2f;
 
     Rigidbody2D rb;
+    PlayerProperty playerProperty;
 
     private bool isMagnetItem = false;
     private bool isMagnetPassive = false;
@@ -20,11 +21,12 @@ public class Magnetic : MonoBehaviour
     private void Start()
     {
         isMagnetPassive = true;
+        playerProperty = GetComponent<PlayerProperty>();
     }
 
     private void Update()
     {
-        if(isMagnetPassive)
+        if (isMagnetPassive)
         {
             PassiveMagnet();
         }
@@ -67,34 +69,43 @@ public class Magnetic : MonoBehaviour
             }
 
             // 자기력을 적용
-
-
             rb.AddForceAtPosition(direction, transform.position, ForceMode2D.Impulse);
             //rb.velocity = direction * Force * Time.deltaTime;
             rb.AddTorque(360, ForceMode2D.Force);
         }
     }
 
-    private void ActiveMagnet()
+    public void ActiveMagnet()
     {
+        playerProperty.skillActive.isItemOn = false;
+        playerProperty.isCanSkill = true;
+
         // 자기장 영역 안에 있는 collider 찾기
         // 박수진 Physics 쓰고 안된다고 함 => 2D 프로젝트인데...
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, Radius * 3, MagneticLayers);
 
-        foreach (Collider2D collider in colliders)
+        if(playerProperty.isCanSkill)
         {
-            rb = collider.GetComponent<Rigidbody2D>();
-            //rigidbody = (Rigidbody2D)collider.gameObject.GetComponent(typeof(Rigidbody2D));
-            if (rb == null)
-            {
-                continue;
-            }
-            Vector3 direction = (transform.position - collider.transform.position).normalized;
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, Radius * 3, MagneticLayers);
 
-            rb.velocity = direction * (Force * 10f) * Time.deltaTime;
-            // 자기력을 적용
-            //rigidbody.AddForceAtPosition(Force, transform.position);
+            foreach (Collider2D collider in colliders)
+            {
+                rb = collider.GetComponent<Rigidbody2D>();
+                //rigidbody = (Rigidbody2D)collider.gameObject.GetComponent(typeof(Rigidbody2D));
+                if (rb == null)
+                {
+                    continue;
+                }
+
+                Vector3 direction = (transform.position - collider.transform.position).normalized;
+              
+                rb.velocity = direction * (Force * 10f) * Time.deltaTime;
+                Debug.Log($"{Radius} ,{Force}");
+                // 자기력을 적용
+                //rigidbody.AddForceAtPosition(Force, transform.position);
+            }
         }
+            StartCoroutine(playerProperty.magneticSkillDuration_Co());
+       
     }
 
     IEnumerator Itemduration()

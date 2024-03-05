@@ -12,6 +12,11 @@ public class PlayerProperty : MonoBehaviour
     public EventHandler onDamage;
     public EventHandler onChangeStar;
 
+    //참조
+    public SkillActive skillActive;
+    private HorizontalPlayer horizontalPlayer;
+    public Magnetic magnetic;
+
     public int level;
 
     [Header("Particle")]
@@ -22,8 +27,8 @@ public class PlayerProperty : MonoBehaviour
     [Header("Player")]
     [SerializeField] private Transform player;
     public string PlayerColor;
-    public int activeSkill;
-    public int passiveSkill;
+    //public int activeSkill;
+    //public int passiveSkill;
 
     [Header("HP")]
     public int currentHealth;
@@ -31,12 +36,11 @@ public class PlayerProperty : MonoBehaviour
     public int damage;
     //private int HealthIncreaseRate;   //+
 
-    private bool isCanShield;
+    //private bool isCanShield;
+    public bool isCanSkill;
 
     //Attack nullified 공격 무효화
     public float ignoreAttack = 0.1f;
-    public SkillActive skillActive;
-    private HorizontalPlayer horizontalPlayer;
 
     [Header("Giant")]
     [SerializeField] private GameObject GiantFace;
@@ -72,6 +76,9 @@ public class PlayerProperty : MonoBehaviour
 
     [Header("Skill")]
     [SerializeField] GameObject ShieldOn;
+    [SerializeField] GameObject MagneticOn;
+    [SerializeField] GameObject RecoveryOn;
+    [SerializeField] GameObject SpeedUpOn;
     [SerializeField] float skillDuration;
     //private bool coolGiant;                             // 자이언트 쿨타임
     
@@ -79,9 +86,14 @@ public class PlayerProperty : MonoBehaviour
     [Header("Animator")]
     [SerializeField] private Animator animator;
 
-
     private bool canHit = true;
     private float hitTimer = 1f;
+
+
+    //Active Skills
+    public enum PlayerActiveSkill { Shield, Magnetic, Recovery, SpeedUp }
+    public PlayerActiveSkill playerActiveSkill;
+
 
 
     private void Start()
@@ -91,6 +103,7 @@ public class PlayerProperty : MonoBehaviour
         horizontalPlayer = GetComponent<HorizontalPlayer>();
     }
 
+    #region [OnTrigger]
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //장애물
@@ -199,6 +212,49 @@ public class PlayerProperty : MonoBehaviour
                 onStarShape?.Invoke(this, EventArgs.Empty);
         }
     }
+
+    #endregion
+    
+
+    public void SkillActive()
+    {
+        switch((int)playerActiveSkill)
+        {
+            case 0 :    //Shield
+                {
+                    skillDuration = 5f;
+                    ShieldMode();
+                    break;
+                }
+            case 1:     //Magnetic
+                {
+                    skillDuration = 5f;
+                    magnetic.ActiveMagnet();
+                    MagneticOn.SetActive(true);
+                    break;
+                }
+            case 2:     //Recovery
+                {
+                    skillDuration = 5f;
+                    RecoveryMode();
+                    RecoveryOn.SetActive(true);
+                    break;
+                }
+            case 3:     //SpeedUp
+                {
+                    horizontalPlayer.IncreaseSpeed();
+                    SpeedUpOn.SetActive(true);
+                    skillActive.shieldFillImage.fillAmount = 1.0f;
+                    break;
+                }
+
+            default:
+                {
+                    //모든 조건에 부합하지 않을 시
+                    break;
+                }
+        }
+    }
    
     #region [Attack nullified 공격 무효화]
     private void PassiveAttackNull()    //10% 확률로 데미지 무효화
@@ -213,7 +269,7 @@ public class PlayerProperty : MonoBehaviour
 
     private void SetDamage()     //Damage 입는 메서드
     {
-        if(!isCanShield)
+        if(!isCanSkill)
         {
             if (stars.Count > 0)
             {
@@ -241,15 +297,28 @@ public class PlayerProperty : MonoBehaviour
     public void ShieldMode()                    // Shield Mode
     {
         skillActive.isItemOn = false;
-        isCanShield = true;
+        isCanSkill = true;
 
-
-        Debug.Log("들어옴");
-
-        if(isCanShield)
+        if(isCanSkill)
         {
-            ShieldOn.SetActive(true);
-            StartCoroutine(SkillDuration_Co());
+            StartCoroutine(shieldSkillDuration_Co());
+        }
+    }
+    private void RecoveryMode()
+    {
+        skillActive.isItemOn = false;
+        isCanSkill = true;
+
+        currentHealth += 2;
+        /*if (currentHealth >= maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+        onHPSlider?.Invoke(this, EventArgs.Empty);*/
+
+        if(isCanSkill)
+        {
+            StartCoroutine(RecoverySkillDuration_Co());
         }
     }
 
@@ -269,6 +338,7 @@ public class PlayerProperty : MonoBehaviour
 
     #endregion //Attack nullified 공격 무효화
 
+    
 
     #region  [IEnumerator]
 
@@ -323,14 +393,38 @@ public class PlayerProperty : MonoBehaviour
             yield return null;
         }
     }
-
-    IEnumerator SkillDuration_Co()      // Skill 끝남
+    
+    
+    
+    // Skill 끝남
+    IEnumerator shieldSkillDuration_Co()      
     {
         yield return new WaitForSeconds(skillDuration);
-        isCanShield = false;
+
+        isCanSkill = false;
         ShieldOn.SetActive(false);
+        //skillActive.shieldFillImage.fillAmount = 1.0f;
         this.horizontalPlayer.coroutine = StartCoroutine(skillActive.CoolTime_Co());
     }
+
+     public IEnumerator magneticSkillDuration_Co()      
+     {
+        yield return new WaitForSeconds(skillDuration);
+
+        isCanSkill = false;
+        MagneticOn.SetActive(false);
+        this.horizontalPlayer.coroutine = StartCoroutine(skillActive.CoolTime_Co());
+     }
+
+    public IEnumerator RecoverySkillDuration_Co()
+    {
+        yield return new WaitForSeconds(skillDuration);
+
+        isCanSkill = false;
+        RecoveryOn.SetActive(false);
+        this.horizontalPlayer.coroutine = StartCoroutine(skillActive.CoolTime_Co());
+    }
+
 
 
     #endregion
