@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using BackEnd;
 using LitJson;
-using UnityEngine.SceneManagement;
 
 public struct Friend
 {
@@ -32,7 +31,7 @@ public struct Character
     public int passiveSkill; // 보유한 액티브 스킬 인덱스
 }
 
-public struct HousingObject
+public struct HousingObject // 하우징 오브젝트들의 정보
 {
     public int index; // 인덱스(식별번호)
     public string name_e; // 이름 (영문)
@@ -51,12 +50,11 @@ public struct HousingObject
     public string text_k; // 강화 시 출력 텍스트 (한글)
 }
 
-public struct GuestBook
+public struct MyHousingObject // 내가 설치한 (배치된) 하우징 오브젝트 정보
 {
-    int index; // 인덱스
-    string id; // 작성자 아이디
-    string name; // 작성자 이름
-    string content; // 내용
+    public int index; // 인덱스
+    public float x; // x 좌표
+    public float y; // y 좌표
 }
 
 public struct Mail
@@ -82,20 +80,6 @@ public struct Goods
     public int imageIndex;
     public string name;
     public int quantity;
-}
-
-public struct Skill
-{
-    int index; // 인덱스
-    int iconImageIndex; // 아이콘 이미지 인덱스
-    string name; // 이름
-    bool isActiveSkill; // 액티브스킬인지, 패시브스킬인지 bool
-    float cooldown; // 쿨타임
-    float count; // 횟수
-    float increaseRate; // 증가량
-    float percent; // 확률
-    float duration; // 지속 시간
-    float activation; // 발동 시간
 }
 
 public struct StageInfo
@@ -124,6 +108,7 @@ public class User
     public int currentTailIndex { get; set; } // 현재 사용중인 꼬리 인덱스
     public Dictionary<string, int> goods { get; set; } // 보유한 재화의 종류와 수량
     public Dictionary<string, int> housingObject { get; set; } // 보유한 하우징 오브젝트 (Key : 이름, Value : 보유수량)
+    public List<MyHousingObject> myHousingObject { get; set; } // 설치한 하우징 오브젝트 리스트
     public int[] tokens { get; set; } // 보유한 토큰 개수 배열
     public List<Friend> friend { get; set; } // 친구 리스트
     public List<int> guestBook { get; set; } // 방명록 리스트
@@ -141,6 +126,7 @@ public class User
         tail = new int[30];
         goods = new Dictionary<string, int> { { "friendshipPoint", 0 }, { "ruby", 0 }, { "gold", 0 } };
         housingObject = new Dictionary<string, int>();
+        myHousingObject = new List<MyHousingObject>();
         tokens = new int[10];
         friend = new List<Friend>();
         guestBook = new List<int>();
@@ -264,6 +250,25 @@ public class DBManager : MonoBehaviour
             }
         }
 
+        // [배치한 하우징] (Housing 테이블에서 불러오기)
+        var h_bro = Backend.GameData.GetMyData("Housing", where);
+
+        if (h_bro.GetReturnValuetoJSON()["rows"].Count > 0)
+        {
+            for (int i = 0; i < h_bro.FlattenRows().Count; i++)
+            {
+                MyHousingObject currentHousing = new MyHousingObject();
+
+                JsonData h_json = h_bro.GetReturnValuetoJSON()["rows"];
+
+                currentHousing.index = int.Parse(h_json[i]["Index"][0].ToString());
+                currentHousing.x = float.Parse(h_json[i]["X"][0].ToString());
+                currentHousing.y = float.Parse(h_json[i]["Y"][0].ToString());
+
+                user.myHousingObject.Add(currentHousing);
+            }
+        }
+
         // [꼬리]
         for (int i = 0; i < 30; i++) // (총 꼬리 개수 = 30)
         {
@@ -279,13 +284,11 @@ public class DBManager : MonoBehaviour
         Debug.Log("기존 유저 데이터 불러오기 완료");
     }
 
-    public void DB_Add(string idText, string pwText, string userName)
+    public void DB_Add(string idText, string pwText, string userName) // 회원 가입 시 데이터 초기값 삽입
     {
         user.userID = idText;
         user.password = pwText;
         user.userName = userName;
-
-        // 데이터 초기값 삽입
 
         Param param = new Param(); // DB에 저장할 데이터들
 
@@ -316,10 +319,8 @@ public class DBManager : MonoBehaviour
         Debug.Log("새로운 유저 데이터 초기값 설정 완료");
     }
     
-    public void AddCharacter(int index) // Character 테이블에 Chart에서 가져온 기본값을 입력 (Index로 구분)
+    public void AddCharacter(int index) // 캐릭터 획득 시 Character 테이블에 Chart에서 가져온 기본값을 입력 (Index로 구분)
     {
-        // Chart 불러오는 과정 추가 필요
-
         List<Character> characters = ChartManager.instance.characterDatas; // 캐싱
 
         Param characterParam = new Param(); // Character 정보
@@ -351,6 +352,45 @@ public class DBManager : MonoBehaviour
         Backend.GameData.Insert("Character", characterParam); // Character 테이블에 데이터 삽입
 
         Debug.Log("캐릭터 추가 완료");
+    }
+
+    public void AddMyHousingObject(int index, float x, float y) // 하우징 오브젝트를 아예 새로 배치할 때
+    {
+        MyHousingObject current = new MyHousingObject();
+        current.index = index;
+        current.x = x;
+        current.y = y;
+
+        // user 클래스의 리스트에 값 저장
+        user.myHousingObject.Add(current);
+    }
+
+    public void MoveMyHousingObject(int index, float original_x, float original_y, float new_x, float new_y) // 배치된 하우징 오브젝트를 이동시킬 때
+    {
+        for (int i = 0; i < user.myHousingObject.Count; i++)
+        {
+            if (user.myHousingObject[i].index == index && user.myHousingObject[i].x == original_x && user.myHousingObject[i].y == original_y)
+            {
+                MyHousingObject temp = user.myHousingObject[i];
+                temp.x = new_x;
+                temp.y = new_y;
+                user.myHousingObject[i] = temp;
+
+                return;
+            }
+        }
+    }
+
+    public void RemoveMyHousingObject(int index, float x, float y) // 배치된 하우징 오브젝트를 넣을 때
+    {
+        for (int i = 0; i < user.myHousingObject.Count; i++)
+        {
+            if (user.myHousingObject[i].index == index && user.myHousingObject[i].x == x && user.myHousingObject[i].y == y)
+            {
+                user.myHousingObject.RemoveAt(i);
+                return;
+            }
+        }
     }
 
     public void AddTail(int index)
@@ -453,6 +493,7 @@ public class DBManager : MonoBehaviour
 
     public void SaveUserData()
     {
+        // User 정보 갱신
         Param param = new Param();
         param.Add("CurrentCharacterIndex", user.currentCharacterIndex);
         param.Add("CurrentTailIndex", user.currentTailIndex);
@@ -464,5 +505,25 @@ public class DBManager : MonoBehaviour
         param.Add("Tail", user.tail);
 
         Backend.PlayerData.UpdateMyLatestData("User", param);
+
+        // Housing 정보 갱신
+        Where where = new Where();
+        where.Equal("owner_inDate", Backend.UserInDate);
+        var h_bro = Backend.GameData.GetMyData("Housing", where);
+        if (h_bro.GetReturnValuetoJSON()["rows"].Count > 0)
+        {
+            for (int i = 0; i < h_bro.FlattenRows().Count; i++)
+            {
+                Backend.PlayerData.DeleteMyLatestData("Housing");
+            }
+        }
+        for (int i = 0; i < user.myHousingObject.Count; i++)
+        {
+            Param h_Param = new Param(); // 하우징 오브젝트 정보
+            h_Param.Add("Index", user.myHousingObject[i].index);
+            h_Param.Add("X", user.myHousingObject[i].x);
+            h_Param.Add("Y", user.myHousingObject[i].y);
+            Backend.GameData.Insert("Housing", h_Param); // Housing 테이블에 데이터 삽입
+        }
     }
 }
