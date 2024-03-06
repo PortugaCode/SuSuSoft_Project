@@ -42,7 +42,7 @@ public class InventorySystem : MonoBehaviour
             }
             TestManager.instance.isHousingInventoryLoad = true;
         }
-
+/*
         if(!TestManager.instance.isInventoryLoad)
         {
             for(int i = 0; i < DBManager.instance.user.tokens.Length; i++)
@@ -53,6 +53,7 @@ public class InventorySystem : MonoBehaviour
                 }
             }
         }
+*/
     }
 
     public void LoadHousingInventory(int housingIndex, int count)
@@ -151,8 +152,6 @@ public class InventorySystem : MonoBehaviour
             }
         }
     }
-
-    
 
     public void GetHousingItem(int housingIndex, int getCount)          //데이터 연동용 테스트
     {
@@ -254,6 +253,26 @@ public class InventorySystem : MonoBehaviour
         {
             slot.transform.SetParent(inventoryScroll);
             slot.isWindow = false;
+        }
+    }
+
+    public void GotoCreate()
+    {
+        Slot[] slots = GetComponentsInChildren<Slot>();
+        foreach(Slot slot in slots)
+        {
+            slot.transform.SetParent(inventoryCreate);
+            slot.isUpgradeSlot = false;
+        }
+    }
+
+    public void GotoUpgrade()
+    {
+        Slot[] slots = GetComponentsInChildren<Slot>();
+        foreach (Slot slot in slots)
+        {
+            slot.transform.SetParent(inventoryUpgrade);
+            slot.isUpgradeSlot = true;
         }
     }
 

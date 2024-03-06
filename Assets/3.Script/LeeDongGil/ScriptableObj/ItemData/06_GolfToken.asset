@@ -17,3 +17,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 1ce85a32bebe7b044a3e860c98abd184, type: 3}
   itemName: Golf_Token
   itemID: 6
+  housingIndex: 9

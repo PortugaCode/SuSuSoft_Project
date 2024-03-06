@@ -305,7 +305,7 @@ public class HousingDrag : MonoBehaviour
                 {
                     if (sp.CompareTag("Building"))
                     {
-                        sp.color = new Color32(255, 255, 255, 100);
+                        sp.color = new Color32(255, 255, 255, 150);
                     }
                 }
 

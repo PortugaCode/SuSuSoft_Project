@@ -17,3 +17,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 37ec3af1697dd67419d2ced2858d92cb, type: 3}
   itemName: Baskenball_Token
   itemID: 0
+  housingIndex: 7

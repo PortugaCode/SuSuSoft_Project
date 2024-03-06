@@ -17,3 +17,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 20466ed5e1bc37b4c8ef13a50c8b27a1, type: 3}
   itemName: Tennis_Token
   itemID: 5
+  housingIndex: 8

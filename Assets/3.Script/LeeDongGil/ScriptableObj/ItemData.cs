@@ -10,6 +10,7 @@ public class ItemData : ScriptableObject
     public Sprite sprite;
     public string itemName;
     public int itemID;
+    public int housingIndex;
 }
 public enum TokenType
 {

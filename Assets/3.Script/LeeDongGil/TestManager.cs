@@ -138,7 +138,10 @@ public class TestManager : MonoBehaviour
         return ChartManager.instance.housingObjectDatas.FindIndex(listIndex => listIndex.index == indexNum);
     }
 
-
+    public void GetToken(int index, int getCount)
+    {
+        DBManager.instance.user.tokens[index] += getCount;
+    }
 
     #region Test Button
     public void TestButton_Front()
@@ -261,9 +264,18 @@ public class TestManager : MonoBehaviour
 
     public void TestV3_Basketball_Token()
     {
-        housingInvenSys.GetHousingItem(7, 1);
+        GetToken(0, 1);
     }
 
+    public void TestV3_Bush_Token()
+    {
+        GetToken(2, 1);
+    }
+
+    public void TestV3_Tree_Token()
+    {
+        GetToken(3, 1);
+    }
 }
 public enum ItemType
 {

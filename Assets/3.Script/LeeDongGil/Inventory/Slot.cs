@@ -17,31 +17,17 @@ public class Slot : MonoBehaviour
     public ItemData itemData;
     public ItemInfo itemInfo;
 
+    public int currentIndex = 0;
 
+    private void Start()
+    {
+        currentIndex = itemInfo._itemData.itemID;
+    }
 
 
     private void Update()
     {
-        if(itemInfo._itemCount > 0)
-        {
-            isSlotUse = true;
-        }
-        else
-        {
-            isSlotUse = false;
-        }
 
-        if (isSlotUse)
-        {
-            slotItemName = itemInfo._itemName;
-            slotItemCount = itemInfo._itemCount;
-            itemData = itemInfo._itemData;
-        }
-        else
-        {
-            slotItemName = string.Empty;
-            itemData = null;
-        }
     }
 
 

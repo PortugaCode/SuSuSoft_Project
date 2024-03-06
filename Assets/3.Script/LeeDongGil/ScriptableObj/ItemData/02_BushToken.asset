@@ -17,3 +17,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: be03fbe80066663458ae554a870bb77b, type: 3}
   itemName: Bush_Token
   itemID: 2
+  housingIndex: 6

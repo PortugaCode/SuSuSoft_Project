@@ -17,3 +17,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: be01d90f83406244ea4acdcc76f6117b, type: 3}
   itemName: Trophy_Token
   itemID: 9
+  housingIndex: 11

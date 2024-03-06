@@ -17,3 +17,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 1539b8e02eff44d49a16dd75775cb049, type: 3}
   itemName: Tree_Token
   itemID: 3
+  housingIndex: 1

@@ -17,3 +17,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 6c101d6ca6458ac4ca8523682e106118, type: 3}
   itemName: Fence_Token
   itemID: 1
+  housingIndex: 5

@@ -17,3 +17,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 92982ff2ce5abde44bca0640eb4af8a0, type: 3}
   itemName: Soccer_Token
   itemID: 7
+  housingIndex: 10
