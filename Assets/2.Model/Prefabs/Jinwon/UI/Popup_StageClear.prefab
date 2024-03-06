@@ -101,7 +101,6 @@ MonoBehaviour:
   rewardTab_1: {fileID: 4838519033481612486}
   rewardTab_2: {fileID: 7500140837181658424}
   rewardTab_3: {fileID: 2779588650013447654}
-  tokenTab: {fileID: 7413673714363224188}
   conditionText_2: {fileID: 1562859575503306804}
   conditionText_3: {fileID: 4719825541830210588}
   rewardText_gold: {fileID: 3156816988962768218}

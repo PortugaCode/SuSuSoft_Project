@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BackEnd;
 using LitJson;
+using System;
 
 public struct Friend
 {
@@ -31,7 +32,7 @@ public struct Character
     public int passiveSkill; // 보유한 액티브 스킬 인덱스
 }
 
-public struct HousingObject // 하우징 오브젝트들의 정보
+public struct HousingObject // 하우징 오브젝트들의 고유한 정보
 {
     public int index; // 인덱스(식별번호)
     public string name_e; // 이름 (영문)
@@ -55,6 +56,13 @@ public struct MyHousingObject // 내가 설치한 (배치된) 하우징 오브�
     public int index; // 인덱스
     public float x; // x 좌표
     public float y; // y 좌표
+}
+
+public struct Quest // 퀘스트 정보
+{
+    public int index; // 인덱스
+    public string name; // 퀘스트 정보
+    public int isDay; // 1 : 일일퀘스트, 0 : 주간퀘스트
 }
 
 public struct Mail
@@ -99,9 +107,9 @@ public struct StageInfo
 
 public class User
 {
-    public string userID { get; set; } // 유저 아이디
-    public string password { get; set; } // 유저 비밀번호
-    public string userName { get; set; } // 유저 이름
+    public string UserID { get; set; } // 유저 아이디
+    public string Password { get; set; } // 유저 비밀번호
+    public string UserName { get; set; } // 유저 이름
     public List<Character> character { get; set; } // 보유한 캐릭터 리스트
     public int currentCharacterIndex { get; set; } // 현재 사용중인 캐릭터 인덱스 (0부터)
     public int[] tail { get; set; } // 보유한 꼬리 배열 (0:미보유, 1:보유)
@@ -113,15 +121,18 @@ public class User
     public List<Friend> friend { get; set; } // 친구 리스트
     public List<int> guestBook { get; set; } // 방명록 리스트
     public List<Mail> mail { get; set; } // 우편 리스트
-
     public int[,] clearInfo { get; set; } // 최초 보상 획득 정보
     public int[] tokenInfo { get; set; } // 해당 스테이지에서 토큰을 먹었는지 여부
+    public int[] dayQuestInfo { get; set; } // 일일 퀘스트 수행 여부 (0: 진행중, 1: 수행 완료)
+    public int questRewardCount { get; set; } // 퀘스트 완료 횟수
+    public int[] questRewardInfo { get; set; } // 퀘스트 완료 보상 획득 여부
+    public string lastCheckTime { get; set; } // 최종 접속 시간 (접속중이라면 최종 상점 체크 시간)
 
     public User() // 생성자에서 초기화
     {
-        userID = "";
-        password = "";
-        userName = "";
+        UserID = "";
+        Password = "";
+        UserName = "";
         character = new List<Character>();
         tail = new int[30];
         goods = new Dictionary<string, int> { { "friendshipPoint", 0 }, { "ruby", 0 }, { "gold", 0 } };
@@ -133,6 +144,10 @@ public class User
         mail = new List<Mail>();
         clearInfo = new int[10, 4];
         tokenInfo = new int[10];
+        dayQuestInfo = new int[13];
+        questRewardCount = 0;
+        questRewardInfo = new int[5];
+        lastCheckTime = "";
     }
 }
 
@@ -168,9 +183,9 @@ public class DBManager : MonoBehaviour
 
         var bro = Backend.GameData.GetMyData("User", where);
 
-        user.userID = idText;
-        user.password = pwText;
-        user.userName = Backend.UserNickName;
+        user.UserID = idText;
+        user.Password = pwText;
+        user.UserName = Backend.UserNickName;
 
         // 저장된 데이터를 불러와 user 클래스에 할당
         JsonData json = bro.FlattenRows(); // 캐싱
@@ -281,20 +296,38 @@ public class DBManager : MonoBehaviour
         // [사용중인 꼬리 인덱스]
         user.currentTailIndex = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentTailIndex"][0].ToString());
 
+        // [일일 퀘스트 진행 정보]
+        for (int i = 0; i < 13; i++) // (총 스테이지 개수 = 13)
+        {
+            user.dayQuestInfo[i] = int.Parse(bro.FlattenRows()[0]["DayQuestInfo"][i].ToString());
+        }
+
+        // [퀘스트 완료 횟수]
+        user.questRewardCount = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["QuestRewardCount"][0].ToString());
+
+        // [퀘스트 완료 보상 획득 정보]
+        for (int i = 0; i < 5; i++)
+        {
+            user.questRewardInfo[i] = int.Parse(bro.FlattenRows()[0]["QuestRewardInfo"][i].ToString());
+        }
+
+        // [최종 접속 시간]
+        user.lastCheckTime = bro.GetReturnValuetoJSON()["rows"][0]["LastCheckTime"][0].ToString();
+
         Debug.Log("기존 유저 데이터 불러오기 완료");
     }
 
     public void DB_Add(string idText, string pwText, string userName) // 회원 가입 시 데이터 초기값 삽입
     {
-        user.userID = idText;
-        user.password = pwText;
-        user.userName = userName;
+        user.UserID = idText;
+        user.Password = pwText;
+        user.UserName = userName;
 
         Param param = new Param(); // DB에 저장할 데이터들
 
-        param.Add("UserID", user.userID);
-        param.Add("Password", user.password);
-        param.Add("UserName", user.userName);
+        param.Add("UserID", user.UserID);
+        param.Add("Password", user.Password);
+        param.Add("UserName", user.UserName);
         param.Add("Goods", user.goods);
         param.Add("ClearInfo", user.clearInfo);
         param.Add("TokenInfo", user.tokenInfo);
@@ -304,6 +337,10 @@ public class DBManager : MonoBehaviour
         AddCharacter(101);
 
         param.Add("Tail", user.tail);
+        param.Add("DayQuestInfo", user.dayQuestInfo);
+        param.Add("QuestRewardCount", user.questRewardCount);
+        param.Add("QuestRewardInfo", user.questRewardInfo);
+        param.Add("LastCheckTime", user.lastCheckTime);
 
         // Prototype - 30개 모두 해금
         for (int i = 0; i < 30; i++)
@@ -491,6 +528,31 @@ public class DBManager : MonoBehaviour
         return returnIndex;
     }
 
+    public void ResetDayQuest()
+    {
+        // 매일 오전 6:00 지나면
+
+        // 수행 여부 초기화
+        for (int i = 0; i < user.dayQuestInfo.Length; i++)
+        {
+            user.dayQuestInfo[i] = 0;
+        }
+    }
+
+    public void ResetQuestClearCount()
+    {
+        // 월요일 오전 6:00 지나면
+
+        // 퀘스트 완료 횟수 초기화
+        user.questRewardCount = 0;
+
+        // 퀘스트 보상 획득 여부 초기화
+        for (int i = 0; i < user.questRewardInfo.Length; i++)
+        {
+            user.questRewardInfo[i] = 0;
+        }
+    }
+
     public void SaveUserData()
     {
         // User 정보 갱신
@@ -503,6 +565,10 @@ public class DBManager : MonoBehaviour
         param.Add("Tokens", user.tokens);
         param.Add("HousingObject", user.housingObject);
         param.Add("Tail", user.tail);
+        param.Add("DayQuestInfo", user.dayQuestInfo);
+        param.Add("QuestRewardCount", user.questRewardCount);
+        param.Add("QuestRewardInfo", user.questRewardInfo);
+        param.Add("LastCheckTime", DateTime.Now.ToString());
 
         Backend.PlayerData.UpdateMyLatestData("User", param);
 

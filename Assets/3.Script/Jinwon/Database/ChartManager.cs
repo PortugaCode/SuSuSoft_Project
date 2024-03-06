@@ -9,13 +9,15 @@ public class ChartManager : MonoBehaviour
     public static ChartManager instance;
 
     // 차트로 관리할 데이터 목록
-    // 1. Character
-    // 2. Housing Object
+    // 1. Character (캐릭터 정보)
+    // 2. Housing Object (하우징 오브젝트 정보)
     // 3. Stage Info (스테이지 보상 획득 여부)
+    // 4. Quest (퀘스트 정보)
 
     public List<Character> characterDatas = new List<Character>();
     public List<HousingObject> housingObjectDatas = new List<HousingObject>();
     public List<StageInfo> stageInfos = new List<StageInfo>();
+    public List<Quest> quests = new List<Quest>();
 
     private void Awake()
     {
@@ -132,6 +134,30 @@ public class ChartManager : MonoBehaviour
         else
         {
             Debug.Log("스테이지 정보 차트 불러오기 실패");
+            return;
+        }
+
+        var q_bro = Backend.Chart.GetOneChartAndSave("110587", "Quest"); // Quest 차트
+
+        if (q_bro.IsSuccess())
+        {
+            JsonData chartJson = JsonMapper.ToObject(Backend.Chart.GetLocalChartData("Quest"));
+            var rows = chartJson["rows"];
+
+            for (int i = 0; i < rows.Count; i++)
+            {
+                Quest currentQuest = new Quest();
+
+                currentQuest.index = int.Parse(rows[i]["Index"]["S"].ToString());
+                currentQuest.name = rows[i]["Name"]["S"].ToString();
+                currentQuest.isDay = int.Parse(rows[i]["IsDay"]["S"].ToString());
+
+                quests.Add(currentQuest);
+            }
+        }
+        else
+        {
+            Debug.Log("퀘스트 차트 불러오기 실패");
             return;
         }
     }
