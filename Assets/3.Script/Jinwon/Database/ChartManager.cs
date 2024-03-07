@@ -51,6 +51,7 @@ public class ChartManager : MonoBehaviour
                 currentCharacter.name = rows[i]["Name"]["S"].ToString();
                 currentCharacter.color = rows[i]["Color"]["S"].ToString();
                 currentCharacter.level = int.Parse(rows[i]["Level"]["S"].ToString());
+                currentCharacter.count = 1;
                 currentCharacter.healthIncreaseRate = float.Parse(rows[i]["HealthIncreaseRate"]["S"].ToString());
                 currentCharacter.maxHealth = float.Parse(rows[i]["MaxHealth"]["S"].ToString());
                 currentCharacter.maxSpeed = float.Parse(rows[i]["MaxSpeed"]["S"].ToString());

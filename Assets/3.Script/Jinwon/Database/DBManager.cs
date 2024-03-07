@@ -21,7 +21,8 @@ public struct Character
     public int lookImageIndex; // 표정 이미지 인덱스 배열의 시작 인덱스
     public string name; // 이름
     public string color; // 색상
-    public int level; // 레벨
+    public int level; // 레벨 (강화단계)
+    public int count; // 보유 개수
     public float healthIncreaseRate; // 레벨 당 최대 체력 증가량
     public float maxHealth; // 최대 체력
     public float maxSpeed; // 최대 속도
@@ -252,6 +253,7 @@ public class DBManager : MonoBehaviour
                 currentCharacter.name = c_json[i]["Name"][0].ToString();
                 currentCharacter.color = c_json[i]["Color"][0].ToString();
                 currentCharacter.level = int.Parse(c_json[i]["Level"][0].ToString());
+                currentCharacter.count = int.Parse(c_json[i]["Count"][0].ToString());
                 currentCharacter.healthIncreaseRate = float.Parse(c_json[i]["HealthIncreaseRate"][0].ToString());
                 currentCharacter.maxHealth = float.Parse(c_json[i]["MaxHealth"][0].ToString());
                 currentCharacter.maxSpeed = float.Parse(c_json[i]["MaxSpeed"][0].ToString());
@@ -356,7 +358,7 @@ public class DBManager : MonoBehaviour
         Debug.Log("새로운 유저 데이터 초기값 설정 완료");
     }
     
-    public void AddCharacter(int index) // 캐릭터 획득 시 Character 테이블에 Chart에서 가져온 기본값을 입력 (Index로 구분)
+    public void AddCharacter(int index) // 최초 캐릭터 획득 시 호출
     {
         List<Character> characters = ChartManager.instance.characterDatas; // 캐싱
 
@@ -374,6 +376,7 @@ public class DBManager : MonoBehaviour
                 characterParam.Add("Name", characters[i].name);
                 characterParam.Add("Color", characters[i].color);
                 characterParam.Add("Level", characters[i].level);
+                characterParam.Add("Count", characters[i].count);
                 characterParam.Add("HealthIncreaseRate", characters[i].healthIncreaseRate);
                 characterParam.Add("MaxHealth", characters[i].maxHealth);
                 characterParam.Add("MaxSpeed", characters[i].maxSpeed);
@@ -389,6 +392,23 @@ public class DBManager : MonoBehaviour
         Backend.GameData.Insert("Character", characterParam); // Character 테이블에 데이터 삽입
 
         Debug.Log("캐릭터 추가 완료");
+    }
+
+    public void UpdateCharacter(int index) // 캐릭터 정보 수정 시 호출
+    {
+        // Character 정보 갱신
+        Param characterParam = new Param(); // Character 정보
+
+        characterParam.Add("Level", user.character[index].level);
+        characterParam.Add("Count", user.character[index].count);
+        characterParam.Add("HealthIncreaseRate", user.character[index].healthIncreaseRate);
+        characterParam.Add("MaxHealth", user.character[index].maxHealth);
+        characterParam.Add("MaxSpeed", user.character[index].maxSpeed);
+        characterParam.Add("MinSpeed", user.character[index].minSpeed);
+        characterParam.Add("MaxSightRange", user.character[index].maxSightRange);
+        characterParam.Add("MinSightRange", user.character[index].minSightRange);
+
+        Backend.PlayerData.UpdateMyLatestData("Character", characterParam);
     }
 
     public void AddMyHousingObject(int index, float x, float y) // 하우징 오브젝트를 아예 새로 배치할 때
@@ -528,29 +548,56 @@ public class DBManager : MonoBehaviour
         return returnIndex;
     }
 
-    public void ResetDayQuest()
+    public void ResetCheck()
     {
-        // 매일 오전 6:00 지나면
-
-        // 수행 여부 초기화
-        for (int i = 0; i < user.dayQuestInfo.Length; i++)
+        // 매일 6시마다 리셋
+        // 1. 날짜가 다른경우
+        // 2. 날짜는 같은데 6시 이전 / 6시 이후인 경우 리셋
+        if (int.Parse(user.lastCheckTime.Substring(8, 2)).Equals(int.Parse(DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd").Substring(8, 2))) || int.Parse(user.lastCheckTime.Substring(11, 2)) < 6 && int.Parse(DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd").Substring(11, 2)) >= 6)
         {
-            user.dayQuestInfo[i] = 0;
+            for (int i = 0; i < user.dayQuestInfo.Length; i++)
+            {
+                user.dayQuestInfo[i] = 0;
+            }
         }
-    }
 
-    public void ResetQuestClearCount()
-    {
-        // 월요일 오전 6:00 지나면
+        // 매주 월요일 6시마다 리셋
+        string last = user.lastCheckTime;
 
-        // 퀘스트 완료 횟수 초기화
-        user.questRewardCount = 0;
+        // 기준점(최근 월요일 6시)이 될 DateTime 선언
+        DateTime point = DateTime.Now;
 
-        // 퀘스트 보상 획득 여부 초기화
-        for (int i = 0; i < user.questRewardInfo.Length; i++)
+        // 현재 요일이 월요일이 아닌 경우, 가장 최근 월요일까지 날짜를 이동
+        while (point.DayOfWeek != DayOfWeek.Monday)
         {
-            user.questRewardInfo[i] = 0;
+            point = point.AddDays(-1);
         }
+
+        // Point를 가장 최근 월요일의 6시로 설정
+        DateTime nextMonday6AM = new DateTime(point.Year, point.Month, point.Day, 6, 0, 0);
+
+        if (DateTime.TryParseExact(last, "yyyy-MM-dd-HH-mm-dddd", null, System.Globalization.DateTimeStyles.None, out DateTime dt_last))
+        {
+            // 최종 접속 시간이 월요일 6시 이전이고, 현재 시간이 월요일 6시 이후인 경우 리셋
+            if (DateTime.Compare(dt_last, nextMonday6AM) == -1 && DateTime.Compare(DateTime.Now, nextMonday6AM) >= 0)
+            {
+                // 퀘스트 완료 횟수 초기화
+                user.questRewardCount = 0;
+
+                // 퀘스트 보상 획득 여부 초기화
+                for (int i = 0; i < user.questRewardInfo.Length; i++)
+                {
+                    user.questRewardInfo[i] = 0;
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("날짜를 변환할 수 없습니다.");
+        }
+
+        // 최종 체크 시간 갱신
+        user.lastCheckTime = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd");
     }
 
     public void SaveUserData()
@@ -568,7 +615,7 @@ public class DBManager : MonoBehaviour
         param.Add("DayQuestInfo", user.dayQuestInfo);
         param.Add("QuestRewardCount", user.questRewardCount);
         param.Add("QuestRewardInfo", user.questRewardInfo);
-        param.Add("LastCheckTime", DateTime.Now.ToString());
+        param.Add("LastCheckTime", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd"));
 
         Backend.PlayerData.UpdateMyLatestData("User", param);
 

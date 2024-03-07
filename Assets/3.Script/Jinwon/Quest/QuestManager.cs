@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class QuestManager : MonoBehaviour
 {
@@ -22,26 +23,20 @@ public class QuestManager : MonoBehaviour
     [SerializeField] private GameObject questPrefab;
     [SerializeField] private Transform content;
 
-    private bool isDayTab = true;
-
     public void OpenDayTab()
     {
-        isDayTab = true;
         dayTabButton.interactable = false;
         weekTabButton.interactable = true;
 
-        ShowDayQuestList();
+        DBManager.instance.ResetCheck();
 
-        UpdateTimeLeftText();
+        ShowDayQuestList();
     }
 
     public void OpenWeekTab()
     {
-        isDayTab = false;
         dayTabButton.interactable = true;
         weekTabButton.interactable = false;
-
-        UpdateTimeLeftText();
     }
 
     public void ShowDayQuestList()
@@ -54,7 +49,11 @@ public class QuestManager : MonoBehaviour
 
                 if (i < 4)
                 {
-                    DBManager.instance.user.goods["gold"] += rewards[i];
+                    if (DBManager.instance.user.questRewardInfo[i] == 0)
+                    {
+                        DBManager.instance.user.questRewardInfo[i] = 1;
+                        DBManager.instance.user.goods["gold"] += rewards[i];
+                    }
                 }
                 else
                 {
@@ -105,16 +104,8 @@ public class QuestManager : MonoBehaviour
 
     public void UpdateTimeLeftText()
     {
-        if (isDayTab)
-        {
-            // 남은시간 = 내일 오전 6시 - 현재 시간
-            timeLeftText.text = $"갱신까지 0일 0시간 00분";
-        }
-        else
-        {
-            // 남은시간 = 월요일 오전 6시 - 현재 시간
-            timeLeftText.text = $"갱신까지 0일 0시간 00분";
-        }
+        // 남은시간 = 내일 오전 6시 - 현재 시간
+        timeLeftText.text = $"갱신까지 0일 0시간 00분";
     }
 
     public void CloseQuestPopup()
