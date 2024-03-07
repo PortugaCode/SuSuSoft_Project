@@ -30,6 +30,11 @@ public class ItemInfo : MonoBehaviour
     public Image targetHousing;
     public CreateHousing createHousing;
 
+    [Header("Housing Sell")]
+    public GameObject sell;
+    public Image sellImage;
+    public SellItem sellItem;
+
     private void Update()
     {
         if (!upgradeSlot)
@@ -143,6 +148,14 @@ public class ItemInfo : MonoBehaviour
             }
         }
         inventory.SetActive(false);
+    }
+
+    public void SetSellItem()
+    {
+        sell.SetActive(true);
+        sellItem.popupImage.sprite = image.sprite;
+        sellItem.itemData = _itemData;
+        sellItem.isHousing = false;
     }
 
 

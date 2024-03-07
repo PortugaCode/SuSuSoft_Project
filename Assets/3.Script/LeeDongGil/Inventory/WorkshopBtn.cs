@@ -10,18 +10,23 @@ public class WorkshopBtn : MonoBehaviour
 
     [Header("Filter")]
     public List<Image> filterButtons = new List<Image>();
+    public List<Image> sellFilterButtons = new List<Image>();
 
     [Header("Workshop UI Object")]
     public GameObject filterBTN;
     public GameObject createInventory;
     public GameObject upgradeInventory;
     public GameObject sellInventory;
+    public GameObject createWindow;
+    public GameObject upgradeWindow;
+    public GameObject workShop;
 
     public Color selectedColor = new Color();
+    public bool isLoadingSell = false;
 
     private void Start()
     {
-        for(int i = 0; i < topButtons.Count; i++)
+        for (int i = 0; i < topButtons.Count; i++)
         {
             topButtons[i].color = Color.white;
         }
@@ -32,6 +37,7 @@ public class WorkshopBtn : MonoBehaviour
 
         topButtons[0].color = selectedColor;
         filterButtons[0].color = selectedColor;
+        sellFilterButtons[0].color = selectedColor;
 
         createInventory.SetActive(true);
         filterBTN.SetActive(true);
@@ -45,10 +51,12 @@ public class WorkshopBtn : MonoBehaviour
         }
         image.color = selectedColor;
 
-        upgradeInventory.SetActive(false);
         createInventory.SetActive(true);
         filterBTN.SetActive(true);
+        upgradeInventory.SetActive(false);
         sellInventory.SetActive(false);
+        createWindow.SetActive(false);
+        upgradeWindow.SetActive(false);
     }
 
     public void OpenUpgradeInventory(Image image)
@@ -59,10 +67,12 @@ public class WorkshopBtn : MonoBehaviour
         }
         image.color = selectedColor;
 
-        createInventory.SetActive(false);
         upgradeInventory.SetActive(true);
+        createInventory.SetActive(false);
         filterBTN.SetActive(false);
         sellInventory.SetActive(false);
+        createWindow.SetActive(false);
+        upgradeWindow.SetActive(false);
     }
 
     public void OpenSellInventory(Image image)
@@ -72,18 +82,128 @@ public class WorkshopBtn : MonoBehaviour
             topButtons[i].color = Color.white;
         }
         image.color = selectedColor;
-
+        sellInventory.SetActive(true);
         createInventory.SetActive(false);
         upgradeInventory.SetActive(false);
         filterBTN.SetActive(false);
+        createWindow.SetActive(false);
+        upgradeWindow.SetActive(false);
+        if (!isLoadingSell)
+        {
+            TestManager.instance.isHousingInventoryLoad = false;
+            isLoadingSell = true;
+        }
+    }
+
+    private void OpenCreateInven()
+    {
+        for (int i = 0; i < topButtons.Count; i++)
+        {
+            topButtons[i].color = Color.white;
+        }
+        topButtons[0].color = selectedColor;
+
+        createInventory.SetActive(true);
+        filterBTN.SetActive(true);
+        upgradeInventory.SetActive(false);
+        sellInventory.SetActive(false);
+        createWindow.SetActive(false);
+        upgradeWindow.SetActive(false);
+    }
+
+    private void OpenUpgradeInven()
+    {
+        for (int i = 0; i < topButtons.Count; i++)
+        {
+            topButtons[i].color = Color.white;
+        }
+        topButtons[1].color = selectedColor;
+
+        upgradeInventory.SetActive(true);
+        createInventory.SetActive(false);
+        filterBTN.SetActive(false);
+        sellInventory.SetActive(false);
+        createWindow.SetActive(false);
+        upgradeWindow.SetActive(false);
+    }
+
+    private void OpenSellInven()
+    {
+        for (int i = 0; i < topButtons.Count; i++)
+        {
+            topButtons[i].color = Color.white;
+        }
+        topButtons[2].color = selectedColor; 
         sellInventory.SetActive(true);
+        createInventory.SetActive(false);
+        upgradeInventory.SetActive(false);
+        filterBTN.SetActive(false);
+        createWindow.SetActive(false);
+        upgradeWindow.SetActive(false);
+        if (!isLoadingSell)
+        {
+            TestManager.instance.isHousingInventoryLoad = false;
+            isLoadingSell = true;
+        }
+    }
+
+    public void CloseButton()
+    {
+        createInventory.SetActive(false);
+        upgradeInventory.SetActive(false);
+        filterBTN.SetActive(false);
+        sellInventory.SetActive(false);
+        createWindow.SetActive(false);
+        upgradeWindow.SetActive(false);
+        workShop.SetActive(false);
+    }
+
+    public void LeftButton()
+    {
+        if (createInventory.activeSelf || createWindow.activeSelf)
+        {
+            return;
+        }
+        else if (upgradeInventory.activeSelf || upgradeWindow.activeSelf)
+        {
+            OpenCreateInven();
+        }
+        else if (sellInventory.activeSelf)
+        {
+            OpenUpgradeInven();
+        }
+    }
+
+    public void RightButton()
+    {
+        if (createInventory.activeSelf || createWindow.activeSelf)
+        {
+            OpenUpgradeInven();
+        }
+        else if (upgradeInventory.activeSelf || upgradeWindow.activeSelf)
+        {
+            OpenSellInven();
+        }
+        else if (sellInventory.activeSelf)
+        {
+            return;
+        }
     }
 
     public void SelectedBTN(Image image)
     {
-        for(int i = 0; i < filterButtons.Count; i++)
+        for (int i = 0; i < filterButtons.Count; i++)
         {
             filterButtons[i].color = Color.white;
+        }
+        image.color = selectedColor;
+    }
+
+    public void SellFilterBTN(Image image)
+    {
+        for (int i = 0; i < sellFilterButtons.Count; i++)
+        {
+            sellFilterButtons[i].color = Color.white;
         }
         image.color = selectedColor;
     }

@@ -42,18 +42,19 @@ public class InventorySystem : MonoBehaviour
             }
             TestManager.instance.isHousingInventoryLoad = true;
         }
-/*
-        if(!TestManager.instance.isInventoryLoad)
+
+        if (!TestManager.instance.isInventoryLoad)
         {
-            for(int i = 0; i < DBManager.instance.user.tokens.Length; i++)
+            for (int i = 0; i < DBManager.instance.user.tokens.Length; i++)
             {
-                if(DBManager.instance.user.tokens[i] != 0)
+                if (DBManager.instance.user.tokens[i] != 0)
                 {
                     LoadTokenItem(i, DBManager.instance.user.tokens[i]);
                 }
             }
+            TestManager.instance.isInventoryLoad = true;
         }
-*/
+
     }
 
     public void LoadHousingInventory(int housingIndex, int count)
