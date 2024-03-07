@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using BackEnd;
+using System;
 
 public class UIManager : MonoBehaviour
 {
@@ -61,12 +62,22 @@ public class UIManager : MonoBehaviour
     [SerializeField] TMP_Text goldText_1;
 
     [Header("Goods UI - StageSelect")]
-    [SerializeField] TMP_Text activePointText;
+    [SerializeField] TMP_Text activePointCountText;
+    [SerializeField] TMP_Text activePointTimeText;
     [SerializeField] TMP_Text goldText_2;
+
+    private Coroutine timerCoroutine = null;
 
     private void OnEnable()
     {
         UpdateGoods();
+        DBManager.instance.CheckActivePoint();
+        timerCoroutine = StartCoroutine(UpdateTimeLeftText_co());
+    }
+
+    private void OnDestroy()
+    {
+        StopCoroutine(timerCoroutine);
     }
 
     private void Start()
@@ -80,12 +91,52 @@ public class UIManager : MonoBehaviour
 
     public void UpdateGoods()
     {
-        friendshipPointText.text = DBManager.instance.user.goods["friendshipPoint"].ToString();
-        rubyText.text = DBManager.instance.user.goods["ruby"].ToString();
-        goldText_1.text = DBManager.instance.user.goods["gold"].ToString();
+        // Friendship Point
+        if (DBManager.instance.user.goods["friendshipPoint"] >= 10000000)
+        {
+            friendshipPointText.text = String.Format("{0:0,0}M", DBManager.instance.user.goods["friendshipPoint"] / 1000000);
+        }
+        else if (DBManager.instance.user.goods["friendshipPoint"] >= 10000)
+        {
+            friendshipPointText.text = String.Format("{0:0,0}K", DBManager.instance.user.goods["friendshipPoint"] / 1000);
+        }
+        else
+        {
+            friendshipPointText.text = DBManager.instance.user.goods["friendshipPoint"].ToString();
+        }
 
-        activePointText.text = $"임시"; // DB에 값 넣고 수정 필요
-        goldText_2.text = DBManager.instance.user.goods["gold"].ToString();
+        // Ruby
+        if (DBManager.instance.user.goods["ruby"] >= 10000000)
+        {
+            rubyText.text = String.Format("{0:0,0}M", DBManager.instance.user.goods["ruby"] / 1000000);
+        }
+        else if (DBManager.instance.user.goods["ruby"] >= 10000)
+        {
+            rubyText.text = String.Format("{0:0,0}K", DBManager.instance.user.goods["ruby"] / 1000);
+        }
+        else
+        {
+            rubyText.text = DBManager.instance.user.goods["ruby"].ToString();
+        }
+
+        // Gold
+        if (DBManager.instance.user.goods["gold"] >= 10000000)
+        {
+            goldText_1.text = String.Format("{0:0,0}M", DBManager.instance.user.goods["gold"] / 1000000);
+            goldText_2.text = String.Format("{0:0,0}M", DBManager.instance.user.goods["gold"] / 1000000);
+        }
+        else if (DBManager.instance.user.goods["gold"] >= 10000)
+        {
+            goldText_1.text = String.Format("{0:0,0}K", DBManager.instance.user.goods["gold"] / 1000);
+            goldText_2.text = String.Format("{0:0,0}K", DBManager.instance.user.goods["gold"] / 1000);
+        }
+        else
+        {
+            goldText_1.text = DBManager.instance.user.goods["ruby"].ToString();
+            goldText_2.text = DBManager.instance.user.goods["ruby"].ToString();
+        }
+
+        activePointCountText.text = $"{DBManager.instance.user.activePoint}";
     }
 
     public void NextTab()
@@ -447,5 +498,38 @@ public class UIManager : MonoBehaviour
         tailTab.SetActive(true);
 
         UpdateTailButton();
+    }
+
+    public IEnumerator UpdateTimeLeftText_co()
+    {
+        TimeSpan timeDiff = TimeSpan.Zero;
+
+        DateTime dt_apTime;
+
+        WaitForSeconds wfs = new WaitForSeconds(1.0f);
+
+        for (int i = 0; i < DBManager.instance.user.activePointTime.Length; i++)
+        {
+            dt_apTime = DateTime.Parse(DBManager.instance.user.activePointTime[i]);
+
+            if (DateTime.Compare(dt_apTime, DateTime.Now) == 1)
+            {
+                timeDiff = dt_apTime - DateTime.Now;
+            }
+        }
+
+        while (true)
+        {
+            if (DBManager.instance.user.activePoint < 5)
+            {
+                activePointTimeText.text = $"{timeDiff.Minutes} : {timeDiff.Seconds}";
+            }
+            else
+            {
+                activePointTimeText.text = $"충전 완료!";
+            }
+
+            yield return wfs;
+        }
     }
 }

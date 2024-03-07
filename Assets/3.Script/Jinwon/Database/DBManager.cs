@@ -128,6 +128,8 @@ public class User
     public int questRewardCount { get; set; } // 퀘스트 완료 횟수
     public int[] questRewardInfo { get; set; } // 퀘스트 완료 보상 획득 여부
     public string lastCheckTime { get; set; } // 최종 접속 시간 (접속중이라면 최종 상점 체크 시간)
+    public int activePoint { get; set; } // 스테이지 진입 시 필요한 재화 (별)
+    public string[] activePointTime { get; set; } // 다음 스타 획득 가능 시간
 
     public User() // 생성자에서 초기화
     {
@@ -149,6 +151,8 @@ public class User
         questRewardCount = 0;
         questRewardInfo = new int[5];
         lastCheckTime = "";
+        activePoint = 0;
+        activePointTime = new string[5];
     }
 }
 
@@ -316,6 +320,17 @@ public class DBManager : MonoBehaviour
         // [최종 접속 시간]
         user.lastCheckTime = bro.GetReturnValuetoJSON()["rows"][0]["LastCheckTime"][0].ToString();
 
+        // [스타 재화 (활동 포인트)]
+        user.activePoint = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["ActivePoint"][0].ToString());
+
+        // [다음 스타 재화 획득 시간]
+        for (int i = 0; i < 5; i++)
+        {
+            user.activePointTime[i] = bro.GetReturnValuetoJSON()["rows"][0]["ActivePointTime"][i].ToString();
+        }
+
+        CheckActivePoint();
+
         Debug.Log("기존 유저 데이터 불러오기 완료");
     }
 
@@ -343,6 +358,9 @@ public class DBManager : MonoBehaviour
         param.Add("QuestRewardCount", user.questRewardCount);
         param.Add("QuestRewardInfo", user.questRewardInfo);
         param.Add("LastCheckTime", user.lastCheckTime);
+        user.activePoint = 5;
+        param.Add("ActivePoint", user.activePoint);
+        param.Add("ActivePointTime", user.activePointTime);
 
         // Prototype - 30개 모두 해금
         for (int i = 0; i < 30; i++)
@@ -600,6 +618,36 @@ public class DBManager : MonoBehaviour
         user.lastCheckTime = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd");
     }
 
+    public void UseActivePoint()
+    {
+        user.activePoint -= 1;
+
+        for (int i = 0; i < 5; i++)
+        {
+            user.activePointTime[i] = DateTime.Now.AddSeconds(300 * (i + 1)).ToString();
+        }
+    }
+
+    public void CheckActivePoint()
+    {
+        DateTime dt_apTime;
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (user.activePoint >= 5)
+            {
+                return;
+            }
+
+            dt_apTime = DateTime.Parse(user.activePointTime[i]);
+
+            if (DateTime.Compare(dt_apTime, DateTime.Now) == -1)
+            {
+                user.activePoint += 1;
+            }
+        }
+    }
+
     public void SaveUserData()
     {
         // User 정보 갱신
@@ -616,6 +664,8 @@ public class DBManager : MonoBehaviour
         param.Add("QuestRewardCount", user.questRewardCount);
         param.Add("QuestRewardInfo", user.questRewardInfo);
         param.Add("LastCheckTime", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd"));
+        param.Add("ActivePoint", user.activePoint);
+        param.Add("ActivePointTime", user.activePointTime);
 
         Backend.PlayerData.UpdateMyLatestData("User", param);
 

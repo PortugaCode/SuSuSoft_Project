@@ -28,4 +28,9 @@ public class StageSelectControl : MonoBehaviour
             }
         }
     }
+
+    public void UseActivePoint()
+    {
+        DBManager.instance.UseActivePoint();
+    }
 }
