@@ -18,12 +18,8 @@ public class MailManager : MonoBehaviour
 
     Coroutine timerCoroutine = null;
 
-    private void Start()
+    private void OnEnable()
     {
-        // For Test
-        var bro = Backend.Initialize(true);
-        Backend.BMember.CustomLogin("jinwon", "1234");
-
         GetMailData();
         ShowMailData();
         timerCoroutine = StartCoroutine(UpdateExpDate_co());
