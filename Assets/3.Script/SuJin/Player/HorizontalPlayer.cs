@@ -29,7 +29,7 @@ public class HorizontalPlayer : MonoBehaviour
 
     [Header("PlyerSpeed")]
     [SerializeField] float currentSpeed;
-    [SerializeField] float maxSpeed;
+    public float maxSpeed;
     [SerializeField] float minSpeed;
 
     public float initialSpeed;
@@ -189,15 +189,26 @@ public class HorizontalPlayer : MonoBehaviour
         }
     }
 
-    public void IncreaseSpeed()     //Player Speed Method
+    private void IncreaseSpeed()     //Player Speed Method
     {
-        playerProperty.skillActive.isItemOn = false;
-
         if (isSpeed)
         {
             maxSpeed = maxSpeed * 2f;
             currentAcceleration = baseAcceleration * 10f;
             StartCoroutine(Speed_Co());  // 안되면 주석처리에 넣기
+        }
+    }
+
+    public void ActiveSpeedUp()
+    {
+        playerProperty.skillActive.isItemOn = false;
+        playerProperty.isCanSkill = true;
+
+        if(playerProperty.isCanSkill)
+        {
+            maxSpeed = maxSpeed * 2f;
+            currentAcceleration = baseAcceleration * 10f;
+            StartCoroutine(playerProperty.SpeedUpSkillDuration_Co());
         }
     }
 

@@ -109,10 +109,9 @@ public class PlayerProperty : MonoBehaviour
         //장애물
         if (collision.gameObject.CompareTag("Obstacles") && canHit)
         {
-                StartCoroutine(HitDelay_Co());
-
-                //Player Damage
-                if(!skillActive.isItemOn)
+            StartCoroutine(HitDelay_Co());
+            //Player Damage
+            if (!skillActive.isItemOn)
                 {
                     PassiveAttackNull();
                     onHPSlider?.Invoke(this, EventArgs.Empty);
@@ -124,11 +123,17 @@ public class PlayerProperty : MonoBehaviour
         else if (collision.gameObject.CompareTag("Breaking"))
         {
             animator.SetTrigger("Hit");
+
+            //Audio
+            AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
         }
 
         //HP
         else if (collision.gameObject.CompareTag("HPItem"))
         {
+            //Audio
+            AudioManager.Instance.PlaySFX(SFX_Name.GetHeart);
+
             currentHealth += 2;
             if (currentHealth >= maxHealth)
             {
@@ -140,6 +145,9 @@ public class PlayerProperty : MonoBehaviour
 
         else if(collision.gameObject.CompareTag("BigHp"))
         {
+            //Audio
+            AudioManager.Instance.PlaySFX(SFX_Name.GetHeart);
+
             currentHealth += 8;
             if (currentHealth >= maxHealth)
             {
@@ -150,9 +158,11 @@ public class PlayerProperty : MonoBehaviour
         }
 
         //별
-        //Pooling 으로 바꾸기
         else if (collision.gameObject.CompareTag("Star"))
         {
+            //Audio
+            AudioManager.Instance.PlaySFX(SFX_Name.GetStar);
+
             Instantiate(starPrefebs, transform.position, Quaternion.identity);
             onStarBar?.Invoke(this, EventArgs.Empty);
             onStarShape?.Invoke(this, EventArgs.Empty);
@@ -161,6 +171,9 @@ public class PlayerProperty : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("BigStar"))
         {
+            //Audio
+            AudioManager.Instance.PlaySFX(SFX_Name.GetStar);
+
             Instantiate(starPrefebs, transform.position, Quaternion.identity);
             Instantiate(starPrefebs, transform.position, Quaternion.identity);
             Instantiate(starPrefebs, transform.position, Quaternion.identity);
@@ -177,8 +190,8 @@ public class PlayerProperty : MonoBehaviour
 
             if (isGiant)
             {
-                // transform.localScale = new Vector2(player.localScale.x * 2f, player.localScale.y * 2f);
-                // ignoreAttack = 1f;
+                AudioManager.Instance.PlaySFX(SFX_Name.BigBuff);
+
                 StartCoroutine(Giant_Co());
                 Destroy(collision.gameObject);
             }
@@ -188,7 +201,7 @@ public class PlayerProperty : MonoBehaviour
 
             if (isSmaller)
             {
-                //transform.localScale = new Vector2(player.localScale.x / (float) 1.3f, player.localScale.y / (float)1.3f);
+                AudioManager.Instance.PlaySFX(SFX_Name.SmallBuff);
                 StartCoroutine(Smaller_Co());
                 Destroy(collision.gameObject);
             }
@@ -197,6 +210,9 @@ public class PlayerProperty : MonoBehaviour
         //Token
         else if (collision.gameObject.CompareTag("Token"))
         {
+           //Audio
+           AudioManager.Instance.PlaySFX(SFX_Name.GetToken);
+           
             Destroy(collision.gameObject);
         }
     }
@@ -205,6 +221,9 @@ public class PlayerProperty : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Wall") && canHit)
         {
+                //Audio
+                AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
+                
                 StartCoroutine(HitDelay_Co());
                 PassiveAttackNull();
                 onHPSlider?.Invoke(this, EventArgs.Empty);
@@ -228,6 +247,9 @@ public class PlayerProperty : MonoBehaviour
                 }
             case 1:     //Magnetic
                 {
+                    //Audio
+                    AudioManager.Instance.PlaySFX(SFX_Name.SkillSound);
+
                     skillDuration = 5f;
                     magnetic.ActiveMagnet();
                     MagneticOn.SetActive(true);
@@ -242,9 +264,8 @@ public class PlayerProperty : MonoBehaviour
                 }
             case 3:     //SpeedUp
                 {
-                    horizontalPlayer.IncreaseSpeed();
+                    horizontalPlayer.ActiveSpeedUp();
                     SpeedUpOn.SetActive(true);
-                    skillActive.shieldFillImage.fillAmount = 1.0f;
                     break;
                 }
 
@@ -280,6 +301,7 @@ public class PlayerProperty : MonoBehaviour
 
             currentHealth -= damage;
             animator.SetTrigger("Hit");
+
             onDamage?.Invoke(this, EventArgs.Empty);
             onStarBar?.Invoke(this, EventArgs.Empty);
 
@@ -299,6 +321,8 @@ public class PlayerProperty : MonoBehaviour
         skillActive.isItemOn = false;
         isCanSkill = true;
 
+        AudioManager.Instance.PlaySFX(SFX_Name.ShieldBuff);
+
         if(isCanSkill)
         {
             StartCoroutine(shieldSkillDuration_Co());
@@ -309,15 +333,18 @@ public class PlayerProperty : MonoBehaviour
         skillActive.isItemOn = false;
         isCanSkill = true;
 
-        currentHealth += 2;
-        /*if (currentHealth >= maxHealth)
-        {
-            currentHealth = maxHealth;
-        }
-        onHPSlider?.Invoke(this, EventArgs.Empty);*/
 
-        if(isCanSkill)
+
+        if (isCanSkill)
         {
+            currentHealth += 10;
+            Debug.Log($"HP: {currentHealth}");
+            if (currentHealth >= maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
+            onHPSlider?.Invoke(this, EventArgs.Empty);
+
             StartCoroutine(RecoverySkillDuration_Co());
         }
     }
@@ -407,12 +434,15 @@ public class PlayerProperty : MonoBehaviour
         this.horizontalPlayer.coroutine = StartCoroutine(skillActive.CoolTime_Co());
     }
 
-     public IEnumerator magneticSkillDuration_Co()      
+     public IEnumerator magneticSkillDuration_Co()
      {
         yield return new WaitForSeconds(skillDuration);
 
+
+
         isCanSkill = false;
         MagneticOn.SetActive(false);
+        magnetic.Radius = magnetic.Radius / 2;
         this.horizontalPlayer.coroutine = StartCoroutine(skillActive.CoolTime_Co());
      }
 
@@ -422,6 +452,19 @@ public class PlayerProperty : MonoBehaviour
 
         isCanSkill = false;
         RecoveryOn.SetActive(false);
+        this.horizontalPlayer.coroutine = StartCoroutine(skillActive.CoolTime_Co());
+    }
+
+    public IEnumerator SpeedUpSkillDuration_Co()
+    {
+        yield return new WaitForSeconds(skillDuration);
+
+        isCanSkill = false;
+        SpeedUpOn.SetActive(false);
+
+        horizontalPlayer.maxSpeed = horizontalPlayer.maxSpeed / 2f;
+        horizontalPlayer.currentAcceleration = horizontalPlayer.baseAcceleration;
+
         this.horizontalPlayer.coroutine = StartCoroutine(skillActive.CoolTime_Co());
     }
 
