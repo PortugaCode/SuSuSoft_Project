@@ -7,14 +7,18 @@ using UnityEngine.UI;
 public class StarSlider_Bar : MonoBehaviour
 {
     [SerializeField] Image fill;
-    [SerializeField] PlayerProperty playerProperty;
+     PlayerProperty playerProperty;
+     
 
     [SerializeField] RectTransform arrow;
     private Vector2 arrowPos;
-    private float arrowPosX;   
+    private float arrowPosX;
+
 
     private void Start()
     {
+        playerProperty = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerProperty>();
+
         fill.fillAmount = 0;
         playerProperty.onStarBar = GetStar;
         arrowPos = arrow.transform.position;

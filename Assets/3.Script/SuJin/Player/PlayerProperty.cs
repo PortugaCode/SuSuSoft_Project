@@ -86,7 +86,7 @@ public class PlayerProperty : MonoBehaviour
     [Header("Animator")]
     [SerializeField] private Animator animator;
 
-    private bool canHit = true;
+    private bool isCanHit = true;
     private float hitTimer = 1f;
 
 
@@ -107,17 +107,26 @@ public class PlayerProperty : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //장애물
-        if (collision.gameObject.CompareTag("Obstacles") && canHit)
+        if (collision.gameObject.CompareTag("Obstacles") && isCanHit)
         {
+            //Audio
+            AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
+
             StartCoroutine(HitDelay_Co());
+
+            PassiveAttackNull();
+            onHPSlider?.Invoke(this, EventArgs.Empty);
+            onStarBar?.Invoke(this, EventArgs.Empty);
+            onStarShape?.Invoke(this, EventArgs.Empty);
+
             //Player Damage
             if (!skillActive.isItemOn)
-                {
+            {
                     PassiveAttackNull();
                     onHPSlider?.Invoke(this, EventArgs.Empty);
                     onStarBar?.Invoke(this, EventArgs.Empty);
                     onStarShape?.Invoke(this, EventArgs.Empty);
-                }
+            }
         }
 
         else if (collision.gameObject.CompareTag("Breaking"))
@@ -219,7 +228,7 @@ public class PlayerProperty : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Wall") && canHit)
+        if (collision.gameObject.CompareTag("Wall") && isCanHit)
         {
                 //Audio
                 AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
@@ -243,6 +252,7 @@ public class PlayerProperty : MonoBehaviour
                 {
                     skillDuration = 5f;
                     ShieldMode();
+                    ShieldOn.SetActive(true);
                     break;
                 }
             case 1:     //Magnetic
@@ -372,9 +382,9 @@ public class PlayerProperty : MonoBehaviour
 
     private IEnumerator HitDelay_Co()
     {
-        canHit = false;
+        isCanHit = false;
         yield return new WaitForSeconds(hitTimer);
-        canHit = true;
+        isCanHit = true;
     }
 
     IEnumerator Giant_Co()

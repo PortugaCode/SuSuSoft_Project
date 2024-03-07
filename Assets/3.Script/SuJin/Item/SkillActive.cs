@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class SkillActive : MonoBehaviour
 {
-    [SerializeField] GameObject player;
+    GameObject player;
     [SerializeField] float followSpeed;
     [SerializeField] Vector3 offset;
 
@@ -24,11 +24,14 @@ public class SkillActive : MonoBehaviour
     public Image speedUpFillImage;   
 
     public bool isItemOn = false;
-    [SerializeField] PlayerProperty playerProperty;
+    PlayerProperty playerProperty;
 
 
     private void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
+        playerProperty = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerProperty>();
+
         shieldFillImage.fillAmount = 1;
 
         // 지금 어떤스킬쓰는지
