@@ -571,54 +571,59 @@ public class DBManager : MonoBehaviour
 
     public void ResetCheck()
     {
-        // 매일 6시마다 리셋
-        // 1. 날짜가 다른경우
-        // 2. 날짜는 같은데 6시 이전 / 6시 이후인 경우 리셋
-        /*if (int.Parse(user.lastCheckTime.Substring(8, 2)).Equals(int.Parse(DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd").Substring(8, 2))) || int.Parse(user.lastCheckTime.Substring(11, 2)) < 6 && int.Parse(DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd").Substring(11, 2)) >= 6)
+        string last = user.lastCheckTime;
+        DateTime dt_last = DateTime.Parse(last);
+
+        // # 매일 6시마다 리셋
+        // 기준점(내일 6시)이 될 DateTime 선언
+        DateTime point_Day = DateTime.Now;
+        
+        // 6시 이후면 기준점을 다음날로 설정
+        if (point_Day.Hour >= 6)
+        {
+            point_Day = point_Day.AddDays(1);
+        }
+
+        // Point를 내일 6시로 설정
+        DateTime next6AM = new DateTime(point_Day.Year, point_Day.Month, point_Day.Day, 6, 0, 0);
+
+        // 최종 접속 시간이 6시 이전이고, 현재 시간이 6시 이후인 경우 리셋
+        if (DateTime.Compare(dt_last, next6AM) == -1 && DateTime.Compare(DateTime.Now, next6AM) >= 0)
         {
             for (int i = 0; i < user.dayQuestInfo.Length; i++)
             {
                 user.dayQuestInfo[i] = 0;
             }
-        }*/
+        }
 
-        // 매주 월요일 6시마다 리셋
-        string last = user.lastCheckTime;
-
+        // # 매주 월요일 6시마다 리셋
         // 기준점(최근 월요일 6시)이 될 DateTime 선언
-        DateTime point = DateTime.Now;
+        DateTime point_Week = DateTime.Now;
 
         // 현재 요일이 월요일이 아닌 경우, 가장 최근 월요일까지 날짜를 이동
-        while (point.DayOfWeek != DayOfWeek.Monday)
+        while (point_Week.DayOfWeek != DayOfWeek.Monday)
         {
-            point = point.AddDays(-1);
+            point_Week = point_Week.AddDays(-1);
         }
 
         // Point를 가장 최근 월요일의 6시로 설정
-        DateTime nextMonday6AM = new DateTime(point.Year, point.Month, point.Day, 6, 0, 0);
+        DateTime nextMonday6AM = new DateTime(point_Week.Year, point_Week.Month, point_Week.Day, 6, 0, 0);
 
-        if (DateTime.TryParseExact(last, "yyyy-MM-dd-HH-mm-dddd", null, System.Globalization.DateTimeStyles.None, out DateTime dt_last))
+        // 최종 접속 시간이 월요일 6시 이전이고, 현재 시간이 월요일 6시 이후인 경우 리셋
+        if (DateTime.Compare(dt_last, nextMonday6AM) == -1 && DateTime.Compare(DateTime.Now, nextMonday6AM) >= 0)
         {
-            // 최종 접속 시간이 월요일 6시 이전이고, 현재 시간이 월요일 6시 이후인 경우 리셋
-            if (DateTime.Compare(dt_last, nextMonday6AM) == -1 && DateTime.Compare(DateTime.Now, nextMonday6AM) >= 0)
+            // 퀘스트 완료 횟수 초기화
+            user.questRewardCount = 0;
+
+            // 퀘스트 보상 획득 여부 초기화
+            for (int i = 0; i < user.questRewardInfo.Length; i++)
             {
-                // 퀘스트 완료 횟수 초기화
-                user.questRewardCount = 0;
-
-                // 퀘스트 보상 획득 여부 초기화
-                for (int i = 0; i < user.questRewardInfo.Length; i++)
-                {
-                    user.questRewardInfo[i] = 0;
-                }
+                user.questRewardInfo[i] = 0;
             }
-        }
-        else
-        {
-            Debug.Log("날짜를 변환할 수 없습니다.");
         }
 
         // 최종 체크 시간 갱신
-        user.lastCheckTime = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd");
+        user.lastCheckTime = DateTime.Now.ToString();
     }
 
     public void UseActivePoint()
@@ -666,7 +671,7 @@ public class DBManager : MonoBehaviour
         param.Add("DayQuestInfo", user.dayQuestInfo);
         param.Add("QuestRewardCount", user.questRewardCount);
         param.Add("QuestRewardInfo", user.questRewardInfo);
-        param.Add("LastCheckTime", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd"));
+        param.Add("LastCheckTime", DateTime.Now.ToString());
         param.Add("ActivePoint", user.activePoint);
         param.Add("ActivePointTime", user.activePointTime);
 
