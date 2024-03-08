@@ -103,6 +103,7 @@ public class LoadHousing : MonoBehaviour
 
         foreach (var myhousing in DBManager.instance.user.myHousingObject)
         {
+            Debug.Log($"({myhousing.x}, {myhousing.y})");
             thisBuilding = Instantiate(housingGameObj, new Vector3(myhousing.x, myhousing.y, 0), Quaternion.identity, buildSpace);
             HousingDrag housing = thisBuilding.GetComponent<HousingDrag>();
             housing.housingObject = ChartManager.instance.housingObjectDatas[myhousing.index];

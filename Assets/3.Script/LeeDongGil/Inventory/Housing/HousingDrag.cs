@@ -120,10 +120,6 @@ public class HousingDrag : MonoBehaviour
 
             transform.position = new Vector3(clampX, clampY, -1);
         }
-        else if (LoadHousing.instance.isLoading)           //기존에 설치된 하우징 위치
-        {
-            //transform.position = LoadHousing.instance.localHousing[primaryIndex].Item2;
-        }
 
         if (!isCloneCreate)
         {
@@ -702,10 +698,11 @@ public class HousingDrag : MonoBehaviour
         if (isInsertInven)
         {
             Debug.Log("오브젝트 넣기를 누를때 여기 실행");
-            LoadHousing.instance.tempKey.Add(primaryIndex);
-            LoadHousing.instance.localHousing.Remove(primaryIndex);
-            LoadHousing.instance.localCloneHousing.Remove(primaryIndex);
-            LoadHousing.instance.localHousingObject.Remove(primaryIndex);
+            //LoadHousing.instance.tempKey.Add(primaryIndex);
+            //LoadHousing.instance.localHousing.Remove(primaryIndex);
+            //LoadHousing.instance.localCloneHousing.Remove(primaryIndex);
+            //LoadHousing.instance.localHousingObject.Remove(primaryIndex);
+            DBManager.instance.RemoveMyHousingObject(id, new_x, new_y);
             Destroy(cloneObject);
         }
         else

@@ -20,6 +20,7 @@ public class WorkshopBtn : MonoBehaviour
     public GameObject createWindow;
     public GameObject upgradeWindow;
     public GameObject workShop;
+    public GameObject inventory;
 
     public Color selectedColor = new Color();
     public bool isLoadingSell = false;
@@ -38,7 +39,7 @@ public class WorkshopBtn : MonoBehaviour
         topButtons[0].color = selectedColor;
         filterButtons[0].color = selectedColor;
         sellFilterButtons[0].color = selectedColor;
-
+        inventory.SetActive(true);
         createInventory.SetActive(true);
         filterBTN.SetActive(true);
     }
@@ -82,17 +83,13 @@ public class WorkshopBtn : MonoBehaviour
             topButtons[i].color = Color.white;
         }
         image.color = selectedColor;
+
         sellInventory.SetActive(true);
         createInventory.SetActive(false);
         upgradeInventory.SetActive(false);
         filterBTN.SetActive(false);
         createWindow.SetActive(false);
         upgradeWindow.SetActive(false);
-        if (!isLoadingSell)
-        {
-            TestManager.instance.isHousingInventoryLoad = false;
-            isLoadingSell = true;
-        }
     }
 
     private void OpenCreateInven()
@@ -103,6 +100,7 @@ public class WorkshopBtn : MonoBehaviour
         }
         topButtons[0].color = selectedColor;
 
+        inventory.SetActive(true);
         createInventory.SetActive(true);
         filterBTN.SetActive(true);
         upgradeInventory.SetActive(false);
@@ -119,6 +117,7 @@ public class WorkshopBtn : MonoBehaviour
         }
         topButtons[1].color = selectedColor;
 
+        inventory.SetActive(true);
         upgradeInventory.SetActive(true);
         createInventory.SetActive(false);
         filterBTN.SetActive(false);
@@ -134,27 +133,21 @@ public class WorkshopBtn : MonoBehaviour
             topButtons[i].color = Color.white;
         }
         topButtons[2].color = selectedColor; 
+
+        inventory.SetActive(true);
         sellInventory.SetActive(true);
         createInventory.SetActive(false);
         upgradeInventory.SetActive(false);
         filterBTN.SetActive(false);
         createWindow.SetActive(false);
         upgradeWindow.SetActive(false);
-        if (!isLoadingSell)
-        {
-            TestManager.instance.isHousingInventoryLoad = false;
-            isLoadingSell = true;
-        }
     }
 
     public void CloseButton()
     {
-        createInventory.SetActive(false);
-        upgradeInventory.SetActive(false);
-        filterBTN.SetActive(false);
-        sellInventory.SetActive(false);
         createWindow.SetActive(false);
         upgradeWindow.SetActive(false);
+        inventory.SetActive(true);
         workShop.SetActive(false);
     }
 

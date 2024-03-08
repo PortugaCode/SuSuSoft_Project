@@ -4,15 +4,40 @@ using UnityEngine;
 
 public class BossControll : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] HorizontalPlayer horizontalPlayer;
+    [SerializeField] Rigidbody2D rb;
+
+    [SerializeField] Vector2 screenBound;
+
+
+    private void Start()
     {
-        
+        horizontalPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<HorizontalPlayer>();
+        rb = GetComponent<Rigidbody2D>();
+
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        
+        FollowPlayer();
+    }
+
+    private void LateUpdate()
+    {
+        ClampScreen();
+    }
+
+    private void ClampScreen()
+    {
+        screenBound = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
+        Vector3 objectPos = transform.position;
+        objectPos.y = Mathf.Clamp(objectPos.y, screenBound.y * -1, screenBound.y - 0.65f);
+        transform.position = objectPos;
+    }
+
+    private void FollowPlayer()
+    {
+        rb.velocity = horizontalPlayer.GetRigidbody2D().velocity;
     }
 }
+

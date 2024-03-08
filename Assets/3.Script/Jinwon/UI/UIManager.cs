@@ -133,8 +133,8 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            goldText_1.text = DBManager.instance.user.goods["ruby"].ToString();
-            goldText_2.text = DBManager.instance.user.goods["ruby"].ToString();
+            goldText_1.text = DBManager.instance.user.goods["gold"].ToString();
+            goldText_2.text = DBManager.instance.user.goods["gold"].ToString();
         }
 
         activePointCountText.text = $"{DBManager.instance.user.activePoint}";
@@ -501,18 +501,33 @@ public class UIManager : MonoBehaviour
         UpdateTailButton();
     }
 
-    public IEnumerator UpdateTimeLeftText_co()
+    public DateTime SetAPPoint()
     {
-        TimeSpan timeDiff = TimeSpan.Zero;
-
         DateTime dt_apTime = DateTime.Now;
-
-        WaitForSeconds wfs = new WaitForSeconds(1.0f);
 
         for (int i = 0; i < DBManager.instance.user.activePointTime.Length; i++)
         {
             dt_apTime = DateTime.ParseExact(DBManager.instance.user.activePointTime[i], "yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
+
+            if (DateTime.Compare(dt_apTime, DateTime.Now) == 1)
+            {
+                Debug.Log($"새 AP : {dt_apTime}");
+                return dt_apTime;
+            }
         }
+
+        return dt_apTime;
+    }
+
+    public IEnumerator UpdateTimeLeftText_co()
+    {
+        TimeSpan timeDiff = TimeSpan.Zero;
+
+        DateTime dt_apTime = SetAPPoint();
+
+        WaitForSeconds wfs = new WaitForSeconds(1.0f);
+
+        activePointTimeText.text = $"충전 완료!";
 
         while (true)
         {
@@ -523,11 +538,22 @@ public class UIManager : MonoBehaviour
                     timeDiff = dt_apTime - DateTime.Now;
                 }
 
-                activePointTimeText.text = $"{timeDiff.Minutes} : {timeDiff.Seconds}";
-            }
-            else
-            {
-                activePointTimeText.text = $"충전 완료!";
+                if (timeDiff.Seconds < 10)
+                {
+                    activePointTimeText.text = $"{timeDiff.Minutes} : 0{timeDiff.Seconds}";
+                }
+                else
+                {
+                    activePointTimeText.text = $"{timeDiff.Minutes} : {timeDiff.Seconds}";
+                }
+
+                if (timeDiff.Minutes == 0 && timeDiff.Seconds == 0)
+                {
+                    DBManager.instance.user.activePoint += 1;
+                    activePointTimeText.text = $"충전 완료!";
+                    activePointCountText.text = $"{DBManager.instance.user.activePoint}";
+                    dt_apTime = SetAPPoint();
+                }
             }
 
             yield return wfs;

@@ -19,6 +19,7 @@ public class HorizontalPlayer : MonoBehaviour
     //PlayerMove
     private Vector3 touchPosition;
     private Vector3 direction;
+    public Vector3 playerPosition;
 
     public bool isPlayerMove = false;
 
@@ -104,7 +105,7 @@ public class HorizontalPlayer : MonoBehaviour
         }
     }
 
-    private void PlayerUp()         //플레이어 위로 이동
+    public void PlayerUp()         //플레이어 위로 이동
     {
         if (Input.touchCount > 0)
         {
@@ -127,6 +128,8 @@ public class HorizontalPlayer : MonoBehaviour
                 currentSpeed = Mathf.Clamp(currentSpeed, initialSpeed, maxSpeed);
                 rb2D.velocity = new Vector2(direction.x * currentSpeed, 0) * Time.deltaTime + Vector2.up * currentSpeed * Time.deltaTime;
 
+                playerPosition = transform.position;
+
                 //Player Rotation
                 PlayerRotation();
             }
@@ -143,6 +146,12 @@ public class HorizontalPlayer : MonoBehaviour
             rb2D.velocity = new Vector2(direction.x, 0) * currentSpeed * Time.deltaTime + Vector2.up * currentSpeed * Time.deltaTime;
         }
     }
+
+    public Rigidbody2D GetRigidbody2D()
+    {
+        return rb2D;
+    }
+
 
     //Skill Active UI 판단
     //BG Image Alpha
@@ -174,6 +183,7 @@ public class HorizontalPlayer : MonoBehaviour
             }
         }
     }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
