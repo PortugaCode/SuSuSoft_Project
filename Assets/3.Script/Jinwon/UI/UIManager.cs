@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using BackEnd;
 using System;
+using System.Globalization;
 
 public class UIManager : MonoBehaviour
 {
@@ -504,24 +505,24 @@ public class UIManager : MonoBehaviour
     {
         TimeSpan timeDiff = TimeSpan.Zero;
 
-        DateTime dt_apTime;
+        DateTime dt_apTime = DateTime.Now;
 
         WaitForSeconds wfs = new WaitForSeconds(1.0f);
 
         for (int i = 0; i < DBManager.instance.user.activePointTime.Length; i++)
         {
-            dt_apTime = DateTime.Parse(DBManager.instance.user.activePointTime[i]);
-
-            if (DateTime.Compare(dt_apTime, DateTime.Now) == 1)
-            {
-                timeDiff = dt_apTime - DateTime.Now;
-            }
+            dt_apTime = DateTime.ParseExact(DBManager.instance.user.activePointTime[i], "yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
         }
 
         while (true)
         {
             if (DBManager.instance.user.activePoint < 5)
             {
+                if (DateTime.Compare(dt_apTime, DateTime.Now) == 1)
+                {
+                    timeDiff = dt_apTime - DateTime.Now;
+                }
+
                 activePointTimeText.text = $"{timeDiff.Minutes} : {timeDiff.Seconds}";
             }
             else

@@ -4,6 +4,7 @@ using UnityEngine;
 using BackEnd;
 using LitJson;
 using System;
+using System.Globalization;
 
 public struct Friend
 {
@@ -324,12 +325,9 @@ public class DBManager : MonoBehaviour
         user.activePoint = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["ActivePoint"][0].ToString());
 
         // [다음 스타 재화 획득 시간]
-        if (bro.GetReturnValuetoJSON()["rows"][0]["ActivePointTime"].Count == 5)
+        for (int i = 0; i < bro.GetReturnValuetoJSON()["rows"][0]["ActivePointTime"].Count; i++)
         {
-            for (int i = 0; i < 5; i++)
-            {
-                user.activePointTime[i] = bro.GetReturnValuetoJSON()["rows"][0]["ActivePointTime"][i].ToString();
-            }
+            user.activePointTime[i] = bro.FlattenRows()[0]["ActivePointTime"][i].ToString();
         }
 
         CheckActivePoint();
@@ -363,6 +361,12 @@ public class DBManager : MonoBehaviour
         param.Add("LastCheckTime", user.lastCheckTime);
         user.activePoint = 5;
         param.Add("ActivePoint", user.activePoint);
+
+        for (int i = 0; i < 5; i++)
+        {
+            user.activePointTime[i] = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        }
+
         param.Add("ActivePointTime", user.activePointTime);
 
         // Prototype - 30개 모두 해금
@@ -572,7 +576,7 @@ public class DBManager : MonoBehaviour
     public void ResetCheck()
     {
         string last = user.lastCheckTime;
-        DateTime dt_last = DateTime.Parse(last);
+        DateTime dt_last = DateTime.ParseExact(last, "yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
 
         // # 매일 6시마다 리셋
         // 기준점(내일 6시)이 될 DateTime 선언
@@ -584,7 +588,7 @@ public class DBManager : MonoBehaviour
             point_Day = point_Day.AddDays(1);
         }
 
-        // Point를 내일 6시로 설정
+        // Point를 6시로 설정
         DateTime next6AM = new DateTime(point_Day.Year, point_Day.Month, point_Day.Day, 6, 0, 0);
 
         // 최종 접속 시간이 6시 이전이고, 현재 시간이 6시 이후인 경우 리셋
@@ -623,7 +627,7 @@ public class DBManager : MonoBehaviour
         }
 
         // 최종 체크 시간 갱신
-        user.lastCheckTime = DateTime.Now.ToString();
+        user.lastCheckTime = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
     }
 
     public void UseActivePoint()
@@ -632,12 +636,20 @@ public class DBManager : MonoBehaviour
 
         for (int i = 0; i < 5; i++)
         {
-            user.activePointTime[i] = DateTime.Now.AddSeconds(300 * (i + 1)).ToString();
+            user.activePointTime[i] = DateTime.Now.AddSeconds(300 * (i + 1)).ToString("yyyy-MM-dd-HH-mm-ss");
         }
     }
 
     public void CheckActivePoint()
     {
+        for (int i = 0; i < user.activePointTime.Length; i++)
+        {
+            if (user.activePointTime[i] == null)
+            {
+                return;
+            }
+        }
+        
         DateTime dt_apTime;
 
         for (int i = 0; i < 5; i++)
@@ -647,7 +659,7 @@ public class DBManager : MonoBehaviour
                 return;
             }
 
-            dt_apTime = DateTime.Parse(user.activePointTime[i]);
+            dt_apTime = DateTime.ParseExact(user.activePointTime[i], "yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
 
             if (DateTime.Compare(dt_apTime, DateTime.Now) == -1)
             {
@@ -671,7 +683,7 @@ public class DBManager : MonoBehaviour
         param.Add("DayQuestInfo", user.dayQuestInfo);
         param.Add("QuestRewardCount", user.questRewardCount);
         param.Add("QuestRewardInfo", user.questRewardInfo);
-        param.Add("LastCheckTime", DateTime.Now.ToString());
+        param.Add("LastCheckTime", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
         param.Add("ActivePoint", user.activePoint);
         param.Add("ActivePointTime", user.activePointTime);
 
