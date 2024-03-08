@@ -138,6 +138,11 @@ public class QuestManager : MonoBehaviour
         }
     }
 
+    public void OpenQuestPopup()
+    {
+        gameObject.SetActive(true);
+    }
+
     public void CloseQuestPopup()
     {
         gameObject.SetActive(false);

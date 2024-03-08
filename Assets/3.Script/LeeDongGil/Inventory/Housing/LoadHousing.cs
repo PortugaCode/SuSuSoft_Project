@@ -63,7 +63,7 @@ public class LoadHousing : MonoBehaviour
         //isLoading = true;
         buildSpace = FindObjectOfType<DrawingGrid>().transform;
         nowBuilding = FindObjectOfType<NowBuilding>().transform;
-
+        
         #region 이전 작업물
         /*for (int i = 0; i < localHousing.Count; i++)
         {
@@ -81,19 +81,38 @@ public class LoadHousing : MonoBehaviour
         }*/
         #endregion
 
-        foreach (var housingDic in localHousing)
+        #region 이전 작업물 2
+        /*
+                foreach (var housingDic in localHousing)
+                {
+                    thisBuilding = Instantiate(housingGameObj, housingDic.Value.Item2, Quaternion.identity, buildSpace);
+                    HousingDrag housing = thisBuilding.GetComponent<HousingDrag>();
+                    housing.housingObject = housingDic.Value.Item1;
+                    housing.id = housingDic.Value.Item1.index;
+                    housing.primaryIndex = housingDic.Key;
+                    housing.buildSprite.sprite = SpriteManager.instance.sprites[housingDic.Value.Item1.imageIndex];
+                    housing.previousParent = nowBuilding;
+                    housing.moveX = housingDic.Value.Item2.x;
+                    housing.moveY = housingDic.Value.Item2.y;
+                    housing.clampX = housingDic.Value.Item2.x;
+                    housing.clampY = housingDic.Value.Item2.y;
+                    //Debug.Log("순서 0");
+                }
+        */
+        #endregion
+
+        foreach (var myhousing in DBManager.instance.user.myHousingObject)
         {
-            thisBuilding = Instantiate(housingGameObj, housingDic.Value.Item2, Quaternion.identity, buildSpace);
+            thisBuilding = Instantiate(housingGameObj, new Vector3(myhousing.x, myhousing.y, 0), Quaternion.identity, buildSpace);
             HousingDrag housing = thisBuilding.GetComponent<HousingDrag>();
-            housing.housingObject = housingDic.Value.Item1;
-            housing.id = housingDic.Value.Item1.index;
-            housing.primaryIndex = housingDic.Key;
-            housing.buildSprite.sprite = SpriteManager.instance.sprites[housingDic.Value.Item1.imageIndex];
+            housing.housingObject = ChartManager.instance.housingObjectDatas[myhousing.index];
+            housing.id = myhousing.index;
+            housing.buildSprite.sprite = SpriteManager.instance.sprites[ChartManager.instance.housingObjectDatas[myhousing.index].imageIndex];
             housing.previousParent = nowBuilding;
-            housing.moveX = housingDic.Value.Item2.x;
-            housing.moveY = housingDic.Value.Item2.y;
-            housing.clampX = housingDic.Value.Item2.x;
-            housing.clampY = housingDic.Value.Item2.y;
+            housing.moveX = myhousing.x;
+            housing.moveY = myhousing.y;
+            housing.clampX = myhousing.x;
+            housing.clampY = myhousing.y;
             //Debug.Log("순서 0");
         }
     }
