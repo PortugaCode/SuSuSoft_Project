@@ -33,7 +33,12 @@ public class ItemInfo : MonoBehaviour
     [Header("Housing Sell")]
     public GameObject sell;
     public Image sellImage;
-    public SellItem sellItem;
+    public SellPopUP sellPopUP;
+
+    private void Start()
+    {
+        requireToken = createHousing.require;
+    }
 
     private void Update()
     {
@@ -49,6 +54,10 @@ public class ItemInfo : MonoBehaviour
                 countObject.SetActive(false);
                 UpgradeButton();
             }
+        }
+        else
+        {
+            countObject.SetActive(false);
         }
     }
     private void ButtonInteraction()
@@ -108,23 +117,26 @@ public class ItemInfo : MonoBehaviour
 
     public void SetTokenCreate()
     {
-        create.SetActive(true);
         createHousing.require = requireToken;
         createHousing.resultSlot.sprite = image.sprite;
+        createHousing.resultSlot.color = Color.white;
         createHousing.tokenID = _itemData.itemID;
         createHousing.housingObject = ChartManager.instance.housingObjectDatas[_itemData.housingIndex];
-        if (DBManager.instance.user.tokens[_itemData.itemID] < 5)
+        create.SetActive(true);
+        if (DBManager.instance.user.tokens[_itemData.itemID] < requireToken)
         {
             for (int i = 0; i < DBManager.instance.user.tokens[_itemData.itemID]; i++)
             {
                 createHousing.stuff[i].sprite = _itemData.sprite;
+                createHousing.stuff[i].color = Color.white;
             }
         }
         else
         {
-            for (int i = 0; i < DBManager.instance.user.tokens[_itemData.itemID]; i++)
+            for (int i = 0; i < requireToken; i++)
             {
                 createHousing.stuff[i].sprite = _itemData.sprite;
+                createHousing.stuff[i].color = Color.white;
             }
         }
         inventory.SetActive(false);
@@ -135,19 +147,22 @@ public class ItemInfo : MonoBehaviour
         upgrade.SetActive(true);
         createHousing.require = requireToken;
         createHousing.resultSlot.sprite = image.sprite;
+        createHousing.resultSlot.color = Color.white;
         createHousing.housingObject = ChartManager.instance.housingObjectDatas[_itemData.housingIndex];
-        if (DBManager.instance.user.tokens[_itemData.itemID] < 5)
+        if (DBManager.instance.user.tokens[_itemData.itemID] < requireToken)
         {
             for (int i = 0; i < DBManager.instance.user.tokens[_itemData.itemID]; i++)
             {
                 createHousing.stuff[i].sprite = _itemData.sprite;
+                createHousing.stuff[i].color = Color.white;
             }
         }
         else
         {
-            for (int i = 0; i < DBManager.instance.user.tokens[_itemData.itemID]; i++)
+            for (int i = 0; i < requireToken; i++)
             {
                 createHousing.stuff[i].sprite = _itemData.sprite;
+                createHousing.stuff[i].color = Color.white;
             }
         }
         inventory.SetActive(false);
@@ -156,9 +171,9 @@ public class ItemInfo : MonoBehaviour
     public void SetSellItem()
     {
         sell.SetActive(true);
-        sellItem.popupImage.sprite = image.sprite;
-        sellItem.itemData = _itemData;
-        sellItem.isHousing = false;
+        sellPopUP.popupImage.sprite = image.sprite;
+        sellPopUP.itemData = _itemData;
+        sellPopUP.isHousing = false;
     }
 
 

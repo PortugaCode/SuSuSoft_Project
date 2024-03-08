@@ -21,6 +21,17 @@ public class CreateHousing : MonoBehaviour
     public TextMeshProUGUI price;
     public Image resultSlot;
 
+    [Header("Check PopUP")]
+    public GameObject checkPopUp;
+    public Image checkImage;
+    public TextMeshProUGUI checkEN_KRName;
+    public TextMeshProUGUI checkStuff;
+    public TextMeshProUGUI checkPrice;
+    public TextMeshProUGUI checkNoStuff;
+    public Image checkStuffImage;
+    public Image checkGoldImage;
+    public TextMeshProUGUI checkUpgrade;
+
     [Header("Create Success")]
     public GameObject background;           //팝업 시 불투명 배경
     public GameObject successPopUp;
@@ -46,6 +57,7 @@ public class CreateHousing : MonoBehaviour
 
     private void OnEnable()
     {
+        enName.text = string.Format("{0}", housingObject.name_e);
         price.text = string.Format("{0:#,###}", priceInt);
         if (DBManager.instance.user.tokens[tokenID] < require)
         {
@@ -59,17 +71,42 @@ public class CreateHousing : MonoBehaviour
         }
     }
 
+    public void CheckCreate()
+    {
+        checkPopUp.SetActive(true);
+        background.SetActive(true);
+        checkImage.sprite = resultSlot.sprite;
+        checkEN_KRName.text = string.Format("{0} : {1}", housingObject.name_e, housingObject.name_k);
+        if (require > 0)
+        {
+            checkStuff.text = string.Format("x {0}", require);
+            checkPrice.text = string.Format("{0:#,###}", priceInt);
+            checkNoStuff.text = string.Empty;
+            checkStuffImage.color = Color.white;
+            checkStuffImage.sprite = stuff[0].sprite;
+        }
+        else
+        {
+            checkStuff.text = string.Empty;
+            checkPrice.text = string.Empty;
+            checkNoStuff.text = "없음";
+            checkStuffImage.color = new Color32(255, 255, 255, 0);
+            checkGoldImage.color = new Color32(255, 255, 255, 0);
+        }
+    }
+
     public void CreateHousingObject()
     {
         DBManager.instance.user.tokens[tokenID] -= require;
-        if(DBManager.instance.user.tokens[tokenID] < require)
+        //골드 빼세요
+        if (DBManager.instance.user.tokens[tokenID] < require)
         {
-            for(int i = 0; i < stuff.Count; i++)
+            for (int i = 0; i < stuff.Count; i++)
             {
                 stuff[i].sprite = null;
             }
 
-            for(int i = 0; i < DBManager.instance.user.tokens[tokenID]; i++)
+            for (int i = 0; i < DBManager.instance.user.tokens[tokenID]; i++)
             {
                 stuff[i].sprite = SpriteManager.instance.tokenSprites[tokenID];
             }
@@ -77,9 +114,35 @@ public class CreateHousing : MonoBehaviour
         PopUpSuccess();
     }
 
+    public void CheckUpgrade()
+    {
+        checkPopUp.SetActive(true);
+        background.SetActive(true);
+        checkImage.sprite = resultSlot.sprite;
+        checkEN_KRName.text = string.Format("{0} : {1}", housingObject.name_e, housingObject.name_k);
+        checkUpgrade.text = string.Format("{0} → {1}", 0, 1);
+        if (require > 0)
+        {
+            checkStuff.text = string.Format("x {0}", require);
+            checkPrice.text = string.Format("{0:#,###}", priceInt);
+            checkNoStuff.text = string.Empty;
+            checkStuffImage.color = Color.white;
+            checkStuffImage.sprite = stuff[0].sprite;
+        }
+        else
+        {
+            checkStuff.text = string.Empty;
+            checkPrice.text = string.Empty;
+            checkNoStuff.text = "없음";
+            checkStuffImage.color = new Color32(255, 255, 255, 0);
+            checkGoldImage.color = new Color32(255, 255, 255, 0);
+        }
+    }
+
     public void UpgradeHousingObject()
     {
         DBManager.instance.user.tokens[tokenID] -= require;
+        //골드 빼세요
         if (DBManager.instance.user.tokens[tokenID] < require)
         {
             for (int i = 0; i < stuff.Count; i++)
@@ -97,9 +160,8 @@ public class CreateHousing : MonoBehaviour
 
     private void PopUpSuccess()
     {
-        background.SetActive(true);
         successPopUp.SetActive(true);
-        if(DBManager.instance.user.housingObject.ContainsKey(housingObject.name_e))
+        if (DBManager.instance.user.housingObject.ContainsKey(housingObject.name_e))
         {
             DBManager.instance.user.housingObject[housingObject.name_e] += 1;
         }
@@ -134,7 +196,9 @@ public class CreateHousing : MonoBehaviour
         for (int i = 0; i < stuff.Count; i++)
         {
             stuff[i].sprite = null;
+            stuff[i].color = new Color32(255, 255, 255, 0);
         }
+        resultSlot.color = new Color32(255, 255, 255, 0);
     }
 
     public void SaveButton()
@@ -143,9 +207,15 @@ public class CreateHousing : MonoBehaviour
         successPopUp.SetActive(false);
     }
 
-    public void ShowList()
+    public void ShowList_cr()
     {
         inventory.SetActive(true);
         create.SetActive(false);
+    }
+
+    public void ShowList_up()
+    {
+        inventory.SetActive(true);
+        upgrade.SetActive(false);
     }
 }

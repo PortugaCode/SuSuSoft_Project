@@ -11,7 +11,7 @@ public class InventorySystem : MonoBehaviour
     [Header("Housing Inventory")]
     public Transform inventoryWindow;
     public Transform inventoryScroll;
-    
+
     [Header("Token Inventory")]
     public Transform inventoryCreate;
     public Transform inventoryUpgrade;
@@ -40,7 +40,7 @@ public class InventorySystem : MonoBehaviour
                     }
                 }
             }
-            TestManager.instance.isHousingInventoryLoad = true;
+            //TestManager.instance.isHousingInventoryLoad = true;
         }
 
         if (!TestManager.instance.isInventoryLoad)
@@ -52,7 +52,7 @@ public class InventorySystem : MonoBehaviour
                     LoadTokenItem(i, DBManager.instance.user.tokens[i]);
                 }
             }
-            TestManager.instance.isInventoryLoad = true;
+            //TestManager.instance.isInventoryLoad = true;
         }
 
     }
@@ -70,6 +70,15 @@ public class InventorySystem : MonoBehaviour
                 slot.isSlotUse = true;
                 Debug.Log(slot.isSlotUse);
                 break;
+
+            }
+            else
+            {
+                if (slot.housingObject.GetValueOrDefault().index == housingObject.index)
+                {
+                    Debug.Log("여기로 들어오면 그냥 넘어가");
+                    break;
+                }
             }
         }
     }
@@ -85,6 +94,10 @@ public class InventorySystem : MonoBehaviour
                 slot.itemInfo._itemCount = count;
                 slot.isSlotUse = true;
                 break;
+            }
+            else
+            {
+                if (slot.itemData.itemID == tokenIndex) break;
             }
         }
     }
@@ -260,7 +273,7 @@ public class InventorySystem : MonoBehaviour
     public void GotoCreate()
     {
         Slot[] slots = GetComponentsInChildren<Slot>();
-        foreach(Slot slot in slots)
+        foreach (Slot slot in slots)
         {
             slot.transform.SetParent(inventoryCreate);
             slot.isUpgradeSlot = false;
