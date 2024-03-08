@@ -33,6 +33,7 @@ TagManager:
   - UI
   - Missile
   - EffectManager
+  - Boss
   layers:
   - Default
   - TransparentFX
