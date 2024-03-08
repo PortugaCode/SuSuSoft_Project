@@ -7,13 +7,21 @@ using UnityEngine.UI;
 public class InventorySystem : MonoBehaviour
 {
     public bool checkObjectEqual = false;
+
+    [Header("Housing Inventory")]
     public Transform inventoryWindow;
     public Transform inventoryScroll;
     
+    [Header("Token Inventory")]
+    public Transform inventoryCreate;
+    public Transform inventoryUpgrade;
 
     private void OnEnable()
     {
+        //유저 정보 로드
+        if (DBManager.instance == null) return;
         Debug.Log($"DB Count : {DBManager.instance.user.housingObject.Count}");
+
         if (!TestManager.instance.isHousingInventoryLoad)
         {
             if (DBManager.instance.user.housingObject.Count > 0)
@@ -34,6 +42,19 @@ public class InventorySystem : MonoBehaviour
             }
             TestManager.instance.isHousingInventoryLoad = true;
         }
+
+        if (!TestManager.instance.isInventoryLoad)
+        {
+            for (int i = 0; i < DBManager.instance.user.tokens.Length; i++)
+            {
+                if (DBManager.instance.user.tokens[i] != 0)
+                {
+                    LoadTokenItem(i, DBManager.instance.user.tokens[i]);
+                }
+            }
+            TestManager.instance.isInventoryLoad = true;
+        }
+
     }
 
     public void LoadHousingInventory(int housingIndex, int count)
@@ -53,6 +74,21 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
+    public void LoadTokenItem(int tokenIndex, int count)
+    {
+        Slot[] slots = GetComponentsInChildren<Slot>();
+        foreach (Slot slot in slots)
+        {
+            if (!slot.isSlotUse)
+            {
+                SetItemInfo(tokenIndex, slot);
+                slot.itemInfo._itemCount = count;
+                slot.isSlotUse = true;
+                break;
+            }
+        }
+    }
+
     //공방 인벤토리
     public void GetItem(ItemData itemData, int getCount)
     {
@@ -62,7 +98,7 @@ public class InventorySystem : MonoBehaviour
         int index = 0;
         foreach (Slot slot in slots)
         {
-            if (slot.IsSlotUse)
+            if (slot.isSlotUse)
             {
                 if (slot.slotItemName.Equals(itemData.itemName))
                 {
@@ -221,6 +257,26 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
+    public void GotoCreate()
+    {
+        Slot[] slots = GetComponentsInChildren<Slot>();
+        foreach(Slot slot in slots)
+        {
+            slot.transform.SetParent(inventoryCreate);
+            slot.isUpgradeSlot = false;
+        }
+    }
+
+    public void GotoUpgrade()
+    {
+        Slot[] slots = GetComponentsInChildren<Slot>();
+        foreach (Slot slot in slots)
+        {
+            slot.transform.SetParent(inventoryUpgrade);
+            slot.isUpgradeSlot = true;
+        }
+    }
+
     private void OnDestroy()
     {
         TestManager.instance.isHousingInventoryLoad = false;
@@ -245,5 +301,12 @@ public class InventorySystem : MonoBehaviour
         _slot.transform.GetChild(0).GetComponent<Image>().sprite = SpriteManager.instance.sprites[housing.imageIndex];
         _slot.transform.GetComponentInChildren<HousingInventory>().housingObj = housing;
         _slot.transform.GetComponentInChildren<HousingInventory>().housingName = housing.name_e;
+    }
+
+    public void SetItemInfo(int tokenIndex, Slot _slot)      //공방 인벤토리에 토큰이미지와 데이터 이름 넣기
+    {
+        _slot.transform.GetChild(0).GetComponent<Image>().sprite = TestManager.instance.tokenList[tokenIndex].sprite;
+        _slot.transform.GetComponentInChildren<ItemInfo>()._itemData = TestManager.instance.tokenList[tokenIndex];
+        _slot.transform.GetComponentInChildren<ItemInfo>()._itemName = TestManager.instance.tokenList[tokenIndex].itemName;
     }
 }

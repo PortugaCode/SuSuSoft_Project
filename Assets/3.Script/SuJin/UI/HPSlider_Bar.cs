@@ -9,12 +9,15 @@ public class HPSlider_Bar : MonoBehaviour
     [SerializeField] Image fill;
     [SerializeField] Image end;
 
-    [SerializeField] PlayerProperty playerProperty;
+    PlayerProperty playerProperty;
     private int maxValue = 1;
     private float currentValue;
 
+
     private void Start()
     {
+        playerProperty = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerProperty>();
+
         currentValue = maxValue;
         fill.fillAmount = 1;
         playerProperty.onHPSlider = DamageHealth;

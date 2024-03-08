@@ -33,8 +33,8 @@ public class HousingInventory : MonoBehaviour
 
     private GameObject thisBuilding;
 
-    [Space(30f)]
-    public PointerEventData EventData;
+    [Header("Sell Housing")]
+    public SellItem sellItem;
 
     private void Awake()
     {
@@ -173,5 +173,11 @@ public class HousingInventory : MonoBehaviour
             TestManager.instance.isShowUI = false;
             TestManager.instance.isEditMode = true;
         }
+    }
+
+    public void SetSellHousing()
+    {
+        sellItem.isHousing = true;
+        sellItem.housingObject = housingObj;
     }
 }
