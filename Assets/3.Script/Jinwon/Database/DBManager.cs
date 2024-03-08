@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BackEnd;
 using LitJson;
-using UnityEngine.SceneManagement;
+using System;
 
 public struct Friend
 {
@@ -21,7 +21,8 @@ public struct Character
     public int lookImageIndex; // 표정 이미지 인덱스 배열의 시작 인덱스
     public string name; // 이름
     public string color; // 색상
-    public int level; // 레벨
+    public int level; // 레벨 (강화단계)
+    public int count; // 보유 개수
     public float healthIncreaseRate; // 레벨 당 최대 체력 증가량
     public float maxHealth; // 최대 체력
     public float maxSpeed; // 최대 속도
@@ -32,7 +33,7 @@ public struct Character
     public int passiveSkill; // 보유한 액티브 스킬 인덱스
 }
 
-public struct HousingObject
+public struct HousingObject // 하우징 오브젝트들의 고유한 정보
 {
     public int index; // 인덱스(식별번호)
     public string name_e; // 이름 (영문)
@@ -51,12 +52,18 @@ public struct HousingObject
     public string text_k; // 강화 시 출력 텍스트 (한글)
 }
 
-public struct GuestBook
+public struct MyHousingObject // 내가 설치한 (배치된) 하우징 오브젝트 정보
 {
-    int index; // 인덱스
-    string id; // 작성자 아이디
-    string name; // 작성자 이름
-    string content; // 내용
+    public int index; // 인덱스
+    public float x; // x 좌표
+    public float y; // y 좌표
+}
+
+public struct Quest // 퀘스트 정보
+{
+    public int index; // 인덱스
+    public string name; // 퀘스트 정보
+    public int isDay; // 1 : 일일퀘스트, 0 : 주간퀘스트
 }
 
 public struct Mail
@@ -84,20 +91,6 @@ public struct Goods
     public int quantity;
 }
 
-public struct Skill
-{
-    int index; // 인덱스
-    int iconImageIndex; // 아이콘 이미지 인덱스
-    string name; // 이름
-    bool isActiveSkill; // 액티브스킬인지, 패시브스킬인지 bool
-    float cooldown; // 쿨타임
-    float count; // 횟수
-    float increaseRate; // 증가량
-    float percent; // 확률
-    float duration; // 지속 시간
-    float activation; // 발동 시간
-}
-
 public struct StageInfo
 {
     public int index;
@@ -115,38 +108,51 @@ public struct StageInfo
 
 public class User
 {
-    public string userID { get; set; } // 유저 아이디
-    public string password { get; set; } // 유저 비밀번호
-    public string userName { get; set; } // 유저 이름
+    public string UserID { get; set; } // 유저 아이디
+    public string Password { get; set; } // 유저 비밀번호
+    public string UserName { get; set; } // 유저 이름
     public List<Character> character { get; set; } // 보유한 캐릭터 리스트
     public int currentCharacterIndex { get; set; } // 현재 사용중인 캐릭터 인덱스 (0부터)
     public int[] tail { get; set; } // 보유한 꼬리 배열 (0:미보유, 1:보유)
     public int currentTailIndex { get; set; } // 현재 사용중인 꼬리 인덱스
     public Dictionary<string, int> goods { get; set; } // 보유한 재화의 종류와 수량
     public Dictionary<string, int> housingObject { get; set; } // 보유한 하우징 오브젝트 (Key : 이름, Value : 보유수량)
+    public List<MyHousingObject> myHousingObject { get; set; } // 설치한 하우징 오브젝트 리스트
     public int[] tokens { get; set; } // 보유한 토큰 개수 배열
     public List<Friend> friend { get; set; } // 친구 리스트
     public List<int> guestBook { get; set; } // 방명록 리스트
     public List<Mail> mail { get; set; } // 우편 리스트
-
     public int[,] clearInfo { get; set; } // 최초 보상 획득 정보
     public int[] tokenInfo { get; set; } // 해당 스테이지에서 토큰을 먹었는지 여부
+    public int[] dayQuestInfo { get; set; } // 일일 퀘스트 수행 여부 (0: 진행중, 1: 수행 완료)
+    public int questRewardCount { get; set; } // 퀘스트 완료 횟수
+    public int[] questRewardInfo { get; set; } // 퀘스트 완료 보상 획득 여부
+    public string lastCheckTime { get; set; } // 최종 접속 시간 (접속중이라면 최종 상점 체크 시간)
+    public int activePoint { get; set; } // 스테이지 진입 시 필요한 재화 (별)
+    public string[] activePointTime { get; set; } // 다음 스타 획득 가능 시간
 
     public User() // 생성자에서 초기화
     {
-        userID = "";
-        password = "";
-        userName = "";
+        UserID = "";
+        Password = "";
+        UserName = "";
         character = new List<Character>();
         tail = new int[30];
         goods = new Dictionary<string, int> { { "friendshipPoint", 0 }, { "ruby", 0 }, { "gold", 0 } };
         housingObject = new Dictionary<string, int>();
+        myHousingObject = new List<MyHousingObject>();
         tokens = new int[10];
         friend = new List<Friend>();
         guestBook = new List<int>();
         mail = new List<Mail>();
         clearInfo = new int[10, 4];
         tokenInfo = new int[10];
+        dayQuestInfo = new int[13];
+        questRewardCount = 0;
+        questRewardInfo = new int[5];
+        lastCheckTime = "";
+        activePoint = 0;
+        activePointTime = new string[5];
     }
 }
 
@@ -182,9 +188,9 @@ public class DBManager : MonoBehaviour
 
         var bro = Backend.GameData.GetMyData("User", where);
 
-        user.userID = idText;
-        user.password = pwText;
-        user.userName = Backend.UserNickName;
+        user.UserID = idText;
+        user.Password = pwText;
+        user.UserName = Backend.UserNickName;
 
         // 저장된 데이터를 불러와 user 클래스에 할당
         JsonData json = bro.FlattenRows(); // 캐싱
@@ -251,6 +257,7 @@ public class DBManager : MonoBehaviour
                 currentCharacter.name = c_json[i]["Name"][0].ToString();
                 currentCharacter.color = c_json[i]["Color"][0].ToString();
                 currentCharacter.level = int.Parse(c_json[i]["Level"][0].ToString());
+                currentCharacter.count = int.Parse(c_json[i]["Count"][0].ToString());
                 currentCharacter.healthIncreaseRate = float.Parse(c_json[i]["HealthIncreaseRate"][0].ToString());
                 currentCharacter.maxHealth = float.Parse(c_json[i]["MaxHealth"][0].ToString());
                 currentCharacter.maxSpeed = float.Parse(c_json[i]["MaxSpeed"][0].ToString());
@@ -261,6 +268,25 @@ public class DBManager : MonoBehaviour
                 currentCharacter.passiveSkill = int.Parse(c_json[i]["PassiveSkill"][0].ToString());
 
                 user.character.Add(currentCharacter);
+            }
+        }
+
+        // [배치한 하우징] (Housing 테이블에서 불러오기)
+        var h_bro = Backend.GameData.GetMyData("Housing", where);
+
+        if (h_bro.GetReturnValuetoJSON()["rows"].Count > 0)
+        {
+            for (int i = 0; i < h_bro.FlattenRows().Count; i++)
+            {
+                MyHousingObject currentHousing = new MyHousingObject();
+
+                JsonData h_json = h_bro.GetReturnValuetoJSON()["rows"];
+
+                currentHousing.index = int.Parse(h_json[i]["Index"][0].ToString());
+                currentHousing.x = float.Parse(h_json[i]["X"][0].ToString());
+                currentHousing.y = float.Parse(h_json[i]["Y"][0].ToString());
+
+                user.myHousingObject.Add(currentHousing);
             }
         }
 
@@ -276,22 +302,49 @@ public class DBManager : MonoBehaviour
         // [사용중인 꼬리 인덱스]
         user.currentTailIndex = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentTailIndex"][0].ToString());
 
+        // [일일 퀘스트 진행 정보]
+        for (int i = 0; i < 13; i++) // (총 스테이지 개수 = 13)
+        {
+            user.dayQuestInfo[i] = int.Parse(bro.FlattenRows()[0]["DayQuestInfo"][i].ToString());
+        }
+
+        // [퀘스트 완료 횟수]
+        user.questRewardCount = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["QuestRewardCount"][0].ToString());
+
+        // [퀘스트 완료 보상 획득 정보]
+        for (int i = 0; i < 5; i++)
+        {
+            user.questRewardInfo[i] = int.Parse(bro.FlattenRows()[0]["QuestRewardInfo"][i].ToString());
+        }
+
+        // [최종 접속 시간]
+        user.lastCheckTime = bro.GetReturnValuetoJSON()["rows"][0]["LastCheckTime"][0].ToString();
+
+        // [스타 재화 (활동 포인트)]
+        user.activePoint = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["ActivePoint"][0].ToString());
+
+        // [다음 스타 재화 획득 시간]
+        for (int i = 0; i < 5; i++)
+        {
+            user.activePointTime[i] = bro.GetReturnValuetoJSON()["rows"][0]["ActivePointTime"][i].ToString();
+        }
+
+        CheckActivePoint();
+
         Debug.Log("기존 유저 데이터 불러오기 완료");
     }
 
-    public void DB_Add(string idText, string pwText, string userName)
+    public void DB_Add(string idText, string pwText, string userName) // 회원 가입 시 데이터 초기값 삽입
     {
-        user.userID = idText;
-        user.password = pwText;
-        user.userName = userName;
-
-        // 데이터 초기값 삽입
+        user.UserID = idText;
+        user.Password = pwText;
+        user.UserName = userName;
 
         Param param = new Param(); // DB에 저장할 데이터들
 
-        param.Add("UserID", user.userID);
-        param.Add("Password", user.password);
-        param.Add("UserName", user.userName);
+        param.Add("UserID", user.UserID);
+        param.Add("Password", user.Password);
+        param.Add("UserName", user.UserName);
         param.Add("Goods", user.goods);
         param.Add("ClearInfo", user.clearInfo);
         param.Add("TokenInfo", user.tokenInfo);
@@ -301,6 +354,13 @@ public class DBManager : MonoBehaviour
         AddCharacter(101);
 
         param.Add("Tail", user.tail);
+        param.Add("DayQuestInfo", user.dayQuestInfo);
+        param.Add("QuestRewardCount", user.questRewardCount);
+        param.Add("QuestRewardInfo", user.questRewardInfo);
+        param.Add("LastCheckTime", user.lastCheckTime);
+        user.activePoint = 5;
+        param.Add("ActivePoint", user.activePoint);
+        param.Add("ActivePointTime", user.activePointTime);
 
         // Prototype - 30개 모두 해금
         for (int i = 0; i < 30; i++)
@@ -316,10 +376,8 @@ public class DBManager : MonoBehaviour
         Debug.Log("새로운 유저 데이터 초기값 설정 완료");
     }
     
-    public void AddCharacter(int index) // Character 테이블에 Chart에서 가져온 기본값을 입력 (Index로 구분)
+    public void AddCharacter(int index) // 최초 캐릭터 획득 시 호출
     {
-        // Chart 불러오는 과정 추가 필요
-
         List<Character> characters = ChartManager.instance.characterDatas; // 캐싱
 
         Param characterParam = new Param(); // Character 정보
@@ -336,6 +394,7 @@ public class DBManager : MonoBehaviour
                 characterParam.Add("Name", characters[i].name);
                 characterParam.Add("Color", characters[i].color);
                 characterParam.Add("Level", characters[i].level);
+                characterParam.Add("Count", characters[i].count);
                 characterParam.Add("HealthIncreaseRate", characters[i].healthIncreaseRate);
                 characterParam.Add("MaxHealth", characters[i].maxHealth);
                 characterParam.Add("MaxSpeed", characters[i].maxSpeed);
@@ -351,6 +410,62 @@ public class DBManager : MonoBehaviour
         Backend.GameData.Insert("Character", characterParam); // Character 테이블에 데이터 삽입
 
         Debug.Log("캐릭터 추가 완료");
+    }
+
+    public void UpdateCharacter(int index) // 캐릭터 정보 수정 시 호출
+    {
+        // Character 정보 갱신
+        Param characterParam = new Param(); // Character 정보
+
+        characterParam.Add("Level", user.character[index].level);
+        characterParam.Add("Count", user.character[index].count);
+        characterParam.Add("HealthIncreaseRate", user.character[index].healthIncreaseRate);
+        characterParam.Add("MaxHealth", user.character[index].maxHealth);
+        characterParam.Add("MaxSpeed", user.character[index].maxSpeed);
+        characterParam.Add("MinSpeed", user.character[index].minSpeed);
+        characterParam.Add("MaxSightRange", user.character[index].maxSightRange);
+        characterParam.Add("MinSightRange", user.character[index].minSightRange);
+
+        Backend.PlayerData.UpdateMyLatestData("Character", characterParam);
+    }
+
+    public void AddMyHousingObject(int index, float x, float y) // 하우징 오브젝트를 아예 새로 배치할 때
+    {
+        MyHousingObject current = new MyHousingObject();
+        current.index = index;
+        current.x = x;
+        current.y = y;
+
+        // user 클래스의 리스트에 값 저장
+        user.myHousingObject.Add(current);
+    }
+
+    public void MoveMyHousingObject(int index, float original_x, float original_y, float new_x, float new_y) // 배치된 하우징 오브젝트를 이동시킬 때
+    {
+        for (int i = 0; i < user.myHousingObject.Count; i++)
+        {
+            if (user.myHousingObject[i].index == index && user.myHousingObject[i].x == original_x && user.myHousingObject[i].y == original_y)
+            {
+                MyHousingObject temp = user.myHousingObject[i];
+                temp.x = new_x;
+                temp.y = new_y;
+                user.myHousingObject[i] = temp;
+
+                return;
+            }
+        }
+    }
+
+    public void RemoveMyHousingObject(int index, float x, float y) // 배치된 하우징 오브젝트를 넣을 때
+    {
+        for (int i = 0; i < user.myHousingObject.Count; i++)
+        {
+            if (user.myHousingObject[i].index == index && user.myHousingObject[i].x == x && user.myHousingObject[i].y == y)
+            {
+                user.myHousingObject.RemoveAt(i);
+                return;
+            }
+        }
     }
 
     public void AddTail(int index)
@@ -451,8 +566,91 @@ public class DBManager : MonoBehaviour
         return returnIndex;
     }
 
+    public void ResetCheck()
+    {
+        // 매일 6시마다 리셋
+        // 1. 날짜가 다른경우
+        // 2. 날짜는 같은데 6시 이전 / 6시 이후인 경우 리셋
+        if (int.Parse(user.lastCheckTime.Substring(8, 2)).Equals(int.Parse(DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd").Substring(8, 2))) || int.Parse(user.lastCheckTime.Substring(11, 2)) < 6 && int.Parse(DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd").Substring(11, 2)) >= 6)
+        {
+            for (int i = 0; i < user.dayQuestInfo.Length; i++)
+            {
+                user.dayQuestInfo[i] = 0;
+            }
+        }
+
+        // 매주 월요일 6시마다 리셋
+        string last = user.lastCheckTime;
+
+        // 기준점(최근 월요일 6시)이 될 DateTime 선언
+        DateTime point = DateTime.Now;
+
+        // 현재 요일이 월요일이 아닌 경우, 가장 최근 월요일까지 날짜를 이동
+        while (point.DayOfWeek != DayOfWeek.Monday)
+        {
+            point = point.AddDays(-1);
+        }
+
+        // Point를 가장 최근 월요일의 6시로 설정
+        DateTime nextMonday6AM = new DateTime(point.Year, point.Month, point.Day, 6, 0, 0);
+
+        if (DateTime.TryParseExact(last, "yyyy-MM-dd-HH-mm-dddd", null, System.Globalization.DateTimeStyles.None, out DateTime dt_last))
+        {
+            // 최종 접속 시간이 월요일 6시 이전이고, 현재 시간이 월요일 6시 이후인 경우 리셋
+            if (DateTime.Compare(dt_last, nextMonday6AM) == -1 && DateTime.Compare(DateTime.Now, nextMonday6AM) >= 0)
+            {
+                // 퀘스트 완료 횟수 초기화
+                user.questRewardCount = 0;
+
+                // 퀘스트 보상 획득 여부 초기화
+                for (int i = 0; i < user.questRewardInfo.Length; i++)
+                {
+                    user.questRewardInfo[i] = 0;
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("날짜를 변환할 수 없습니다.");
+        }
+
+        // 최종 체크 시간 갱신
+        user.lastCheckTime = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd");
+    }
+
+    public void UseActivePoint()
+    {
+        user.activePoint -= 1;
+
+        for (int i = 0; i < 5; i++)
+        {
+            user.activePointTime[i] = DateTime.Now.AddSeconds(300 * (i + 1)).ToString();
+        }
+    }
+
+    public void CheckActivePoint()
+    {
+        DateTime dt_apTime;
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (user.activePoint >= 5)
+            {
+                return;
+            }
+
+            dt_apTime = DateTime.Parse(user.activePointTime[i]);
+
+            if (DateTime.Compare(dt_apTime, DateTime.Now) == -1)
+            {
+                user.activePoint += 1;
+            }
+        }
+    }
+
     public void SaveUserData()
     {
+        // User 정보 갱신
         Param param = new Param();
         param.Add("CurrentCharacterIndex", user.currentCharacterIndex);
         param.Add("CurrentTailIndex", user.currentTailIndex);
@@ -462,7 +660,33 @@ public class DBManager : MonoBehaviour
         param.Add("Tokens", user.tokens);
         param.Add("HousingObject", user.housingObject);
         param.Add("Tail", user.tail);
+        param.Add("DayQuestInfo", user.dayQuestInfo);
+        param.Add("QuestRewardCount", user.questRewardCount);
+        param.Add("QuestRewardInfo", user.questRewardInfo);
+        param.Add("LastCheckTime", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd"));
+        param.Add("ActivePoint", user.activePoint);
+        param.Add("ActivePointTime", user.activePointTime);
 
         Backend.PlayerData.UpdateMyLatestData("User", param);
+
+        // Housing 정보 갱신
+        Where where = new Where();
+        where.Equal("owner_inDate", Backend.UserInDate);
+        var h_bro = Backend.GameData.GetMyData("Housing", where);
+        if (h_bro.GetReturnValuetoJSON()["rows"].Count > 0)
+        {
+            for (int i = 0; i < h_bro.FlattenRows().Count; i++)
+            {
+                Backend.PlayerData.DeleteMyLatestData("Housing");
+            }
+        }
+        for (int i = 0; i < user.myHousingObject.Count; i++)
+        {
+            Param h_Param = new Param(); // 하우징 오브젝트 정보
+            h_Param.Add("Index", user.myHousingObject[i].index);
+            h_Param.Add("X", user.myHousingObject[i].x);
+            h_Param.Add("Y", user.myHousingObject[i].y);
+            Backend.GameData.Insert("Housing", h_Param); // Housing 테이블에 데이터 삽입
+        }
     }
 }
