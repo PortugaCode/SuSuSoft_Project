@@ -31,6 +31,7 @@ public class StageSelectControl : MonoBehaviour
 
     public void UseActivePoint()
     {
-        DBManager.instance.UseActivePoint();
+        // 입장시가 아닌 클리어시에 사용하는것으로 변경
+        //DBManager.instance.UseActivePoint();
     }
 }

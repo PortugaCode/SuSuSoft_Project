@@ -28,13 +28,25 @@ public class StageClear : MonoBehaviour
     [SerializeField] private GameObject tokenRewardIcon;
 
     [Header("Player")]
-    [SerializeField] private GameObject player;
+    private GameObject player;
 
     [Header("Stage")]
     public int stageIndex = 0; // 현재 클리어한 스테이지의 인덱스, 스테이지마다 연동 필요
 
+    private void OnEnable()
+    {
+        player = GameObject.FindGameObjectWithTag("Player");
+    }
+
     public void ShowClearUI()
     {
+        if (player == null)
+        {
+            player = GameObject.FindGameObjectWithTag("Player");
+        }
+
+        DBManager.instance.UseActivePoint();
+
         int chapter = 1;
         int stageLevel = ChartManager.instance.stageInfos[stageIndex].index + 1;
         string stageName = ChartManager.instance.stageInfos[stageIndex].name_k;
