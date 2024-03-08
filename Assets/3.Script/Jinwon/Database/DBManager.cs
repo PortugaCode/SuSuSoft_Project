@@ -324,9 +324,12 @@ public class DBManager : MonoBehaviour
         user.activePoint = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["ActivePoint"][0].ToString());
 
         // [다음 스타 재화 획득 시간]
-        for (int i = 0; i < 5; i++)
+        if (bro.GetReturnValuetoJSON()["rows"][0]["ActivePointTime"].Count == 5)
         {
-            user.activePointTime[i] = bro.GetReturnValuetoJSON()["rows"][0]["ActivePointTime"][i].ToString();
+            for (int i = 0; i < 5; i++)
+            {
+                user.activePointTime[i] = bro.GetReturnValuetoJSON()["rows"][0]["ActivePointTime"][i].ToString();
+            }
         }
 
         CheckActivePoint();
@@ -571,13 +574,13 @@ public class DBManager : MonoBehaviour
         // 매일 6시마다 리셋
         // 1. 날짜가 다른경우
         // 2. 날짜는 같은데 6시 이전 / 6시 이후인 경우 리셋
-        if (int.Parse(user.lastCheckTime.Substring(8, 2)).Equals(int.Parse(DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd").Substring(8, 2))) || int.Parse(user.lastCheckTime.Substring(11, 2)) < 6 && int.Parse(DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd").Substring(11, 2)) >= 6)
+        /*if (int.Parse(user.lastCheckTime.Substring(8, 2)).Equals(int.Parse(DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd").Substring(8, 2))) || int.Parse(user.lastCheckTime.Substring(11, 2)) < 6 && int.Parse(DateTime.Now.ToString("yyyy-MM-dd-HH-mm-dddd").Substring(11, 2)) >= 6)
         {
             for (int i = 0; i < user.dayQuestInfo.Length; i++)
             {
                 user.dayQuestInfo[i] = 0;
             }
-        }
+        }*/
 
         // 매주 월요일 6시마다 리셋
         string last = user.lastCheckTime;
