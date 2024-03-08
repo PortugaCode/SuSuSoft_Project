@@ -6,64 +6,48 @@ using TMPro;
 
 public class SellItem : MonoBehaviour
 {
+    public Image bodyCharater;
     public Image smileCharater;
-    public bool isHousing = false;
     public GameObject sellPopUP;
 
-    [Header("Sell Popup")]
-    public TextMeshProUGUI enName;
-    public Image popupImage;
-    public TextMeshProUGUI en_krName;
-    public Slider housingCountbar;
-    public TextMeshProUGUI housingCountText;
-    public int housingCount;
-    public TextMeshProUGUI price;
-
-
-    [Header("Sell ItemData")]
-    public ItemData itemData;
-    public HousingObject housingObject;
+    [SerializeField] Sprite[] characterBodyImages;
+    [SerializeField] Sprite[] characterSmileImages;
 
     private void OnEnable()
     {
-        if (DBManager.instance == null) return;
-
-        if (isHousing)
+        bodyCharater.sprite = characterBodyImages[DBManager.instance.user.currentCharacterIndex];
+        switch(DBManager.instance.user.currentCharacterIndex)
         {
-            SetItemInfo_Housing();
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                smileCharater.sprite = characterSmileImages[0];
+                return;
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                smileCharater.sprite = characterSmileImages[1];
+                return;
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+                smileCharater.sprite = characterSmileImages[2];
+                return;
+            case 12:
+            case 13:
+            case 14:
+            case 15:
+                smileCharater.sprite = characterSmileImages[3];
+                return;
+            case 16:
+            case 17:
+            case 18:
+            case 19:
+                smileCharater.sprite = characterSmileImages[4];
+                return;
         }
-    }
-
-    private void SetItemInfo_Housing()
-    {
-        enName.text = string.Format("{0}", housingObject.name_e);
-        popupImage.sprite = SpriteManager.instance.sprites[housingObject.imageIndex];
-        en_krName.text = string.Format("{0} : {1}", housingObject.name_e, housingObject.name_k);
-        housingCount = DBManager.instance.user.housingObject[housingObject.name_e];
-        housingCountText.text = string.Format("{0}", housingCountbar.value);
-        housingCountbar.maxValue = housingCount;
-        price.text = string.Format("{0:#,###}", housingObject.price);
-    }
-
-    public void CountPlus()
-    {
-        if (housingCountbar.value < housingCountbar.maxValue)
-        {
-            housingCountbar.value += 1;
-        }
-    }
-
-    public void CountMinus()
-    {
-        if (housingCountbar.value > housingCountbar.minValue)
-        {
-            housingCountbar.value -= 1;
-        }
-    }
-
-    public void SellItemButton()
-    {
-        DBManager.instance.user.housingObject[housingObject.name_e] -= (int)housingCountbar.value;
-        DBManager.instance.user.goods["gold"] += housingObject.price * (int)housingCountbar.value;
     }
 }

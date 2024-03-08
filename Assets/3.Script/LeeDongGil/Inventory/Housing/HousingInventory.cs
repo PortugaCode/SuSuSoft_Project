@@ -35,6 +35,8 @@ public class HousingInventory : MonoBehaviour
 
     [Header("Sell Housing")]
     public SellItem sellItem;
+    public SellPopUP sellPopUPScript;
+    public GameObject sellPopUp;
     [SerializeField] private bool isSellInven = false;
 
     private void Awake()
@@ -217,7 +219,8 @@ public class HousingInventory : MonoBehaviour
 
     public void SetSellHousing()
     {
-        sellItem.isHousing = true;
-        sellItem.housingObject = housingObj;
+        sellPopUPScript.isHousing = true;
+        sellPopUPScript.housingObject = housingObj;
+        sellPopUp.SetActive(true);
     }
 }
