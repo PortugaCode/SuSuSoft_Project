@@ -25,6 +25,9 @@ public class MoveRockObstacle : MonoBehaviour
         if(collision.gameObject.CompareTag("Player") && !nowDestroy)
         {
             Onexploable();
+
+            //Audio
+            AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
         }
     }
 

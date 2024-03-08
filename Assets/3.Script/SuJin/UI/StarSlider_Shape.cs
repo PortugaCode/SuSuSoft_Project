@@ -7,10 +7,12 @@ using UnityEngine.UI;
 public class StarSlider_Shape : MonoBehaviour
 {
     [SerializeField] Image fill;
-    [SerializeField] PlayerProperty playerProperty;
+    PlayerProperty playerProperty;
 
     private void Start()
     {
+        playerProperty = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerProperty>();
+
         fill.fillAmount = 0;
         playerProperty.onStarShape = GetStarShape;
     }
