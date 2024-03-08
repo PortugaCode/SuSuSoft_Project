@@ -7,16 +7,16 @@ using TMPro;
 
 public class HousingInventory : MonoBehaviour
 {
-
-    [HideInInspector] public Transform canvas;
-    [HideInInspector] public Transform previousParent;
-    [HideInInspector] public RectTransform rect;
-    [HideInInspector] public CanvasGroup canvasGroup;
-    [HideInInspector] public Image image;
-    [HideInInspector] public Button button;
-    [HideInInspector] public HousingDrag drag;
-    [HideInInspector] public HousingSlot slot;
-    [HideInInspector] public FilterButton filter;
+    [Header("Housing Drag")]
+    public Transform canvas;
+    public Transform previousParent;
+    public RectTransform rect;
+    public CanvasGroup canvasGroup;
+    public Image image;
+    public Button button;
+    public HousingDrag drag;
+    public HousingSlot slot;
+    public FilterButton filter;
 
     [Header("Inventory Info")]
     public HousingItemData housingData;         //데이터 연동 이전
@@ -35,6 +35,7 @@ public class HousingInventory : MonoBehaviour
 
     [Header("Sell Housing")]
     public SellItem sellItem;
+    [SerializeField] private bool isSellInven = false;
 
     private void Awake()
     {
@@ -95,7 +96,14 @@ public class HousingInventory : MonoBehaviour
 
     private void Update()
     {
-        ShowSlot();
+        if (!isSellInven)
+        {
+            ShowSlot();
+        }
+        else
+        {
+            ShowSellSlot();
+        }
     }
 
     private void ShowSlot()
@@ -146,6 +154,38 @@ public class HousingInventory : MonoBehaviour
         }
     }
 
+    private void ShowSellSlot()
+    {
+        if (image.color.a <= 0)             //슬롯 알파값이 0보다 작으면 아이템이 없으므로
+        {
+            button.interactable = false;    //비활성화
+            transform.parent.SetAsLastSibling();
+        }
+        else
+        {
+            button.interactable = true;
+        }
+
+        if (count < 100)
+        {
+            if (count <= 0)
+            {
+                image.color = new Color(1, 1, 1, 0);
+                countObject.SetActive(false);
+            }
+            else
+            {
+                image.color = Color.white;
+                countObject.SetActive(true);
+            }
+            countText.text = string.Format("{0}", count);
+        }
+        else
+        {
+            countText.text = "99+";
+        }
+    }
+
     public void BuildSet()
     {
         if (!slot.isWindow)
@@ -153,7 +193,7 @@ public class HousingInventory : MonoBehaviour
             image.color = new Color(1, 1, 1, 0);
             DBManager.instance.user.housingObject[housingObj.name_e]--;
             count--;
-            if(DBManager.instance.user.housingObject[housingObj.name_e] == 0)
+            if (DBManager.instance.user.housingObject[housingObj.name_e] == 0)
             {
                 DBManager.instance.user.housingObject.Remove(housingObj.name_e);
             }

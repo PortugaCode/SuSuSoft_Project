@@ -21,15 +21,10 @@ public class Slot : MonoBehaviour
 
     private void Start()
     {
-        currentIndex = itemInfo._itemData.itemID;
+        if (itemData != null)
+        {
+            currentIndex = itemInfo._itemData.itemID;
+        }
     }
-
-
-    private void Update()
-    {
-
-    }
-
-
 
 }

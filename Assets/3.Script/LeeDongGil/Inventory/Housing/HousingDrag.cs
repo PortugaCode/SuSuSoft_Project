@@ -27,6 +27,11 @@ public class HousingDrag : MonoBehaviour
     public HousingObject housingObject;
     public SpriteRenderer buildSprite;
     public GameObject space;
+    public float original_x = 0;
+    public float original_y = 0;
+    public float new_x = 0;
+    public float new_y = 0;
+
     [SerializeField] private GameObject player;
 
     [Header("HousingObject Data")]
@@ -84,6 +89,9 @@ public class HousingDrag : MonoBehaviour
         //하우징 오브젝트의 레이어 설정
         SetLayer();
 
+        //하우징 오브젝트 레이어 설정
+        SetZ(gameObject.layer);
+
         isInsertInven = false;
         mainCam = Camera.main;
         if (!LoadHousing.instance.isLoading && !isClone)        //새로 설치할 하우징 코드
@@ -106,14 +114,15 @@ public class HousingDrag : MonoBehaviour
                 LoadHousing.instance.tempKey.RemoveAt(0);
             }
             //조만간 DBManager로 바꿔야 함
-            LoadHousing.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
-            LoadHousing.instance.localHousingObject.Add(primaryIndex, housingObject);
+            //LoadHousing.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
+            //LoadHousing.instance.localHousingObject.Add(primaryIndex, housingObject);
+            DBManager.instance.AddMyHousingObject(housingObject.index, transform.position.x, transform.position.y);
 
             transform.position = new Vector3(clampX, clampY, -1);
         }
         else if (LoadHousing.instance.isLoading)           //기존에 설치된 하우징 위치
         {
-            transform.position = LoadHousing.instance.localHousing[primaryIndex].Item2;
+            //transform.position = LoadHousing.instance.localHousing[primaryIndex].Item2;
         }
 
         if (!isCloneCreate)
@@ -124,14 +133,10 @@ public class HousingDrag : MonoBehaviour
             cloneObject.GetComponent<HousingDrag>().originalObject = gameObject;
             cloneObject.transform.GetChild(0).gameObject.SetActive(false);
             cloneObject.SetActive(false);
-            if (!LoadHousing.instance.isLoading)
-            {
-                LoadHousing.instance.localCloneHousing.Add(primaryIndex, cloneObject.transform.position);
-            }
-            else
+            if (LoadHousing.instance.isLoading)
             {
                 //Debug.Log(LoadHousing.instance.localCloneHousing[primaryIndex]);
-                cloneObject.transform.position = LoadHousing.instance.localCloneHousing[primaryIndex];
+                ClonePosition();
                 cloneObject.SetActive(true);
             }
         }
@@ -236,6 +241,8 @@ public class HousingDrag : MonoBehaviour
                 {
                     if (EventSystem.current.IsPointerOverGameObject(0) == false && hit.collider.gameObject == gameObject)
                     {
+                        original_x = transform.position.x;
+                        original_y = transform.position.y;
                         isTouch = true;
                         Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
                         offset = transform.position - ray.GetPoint(hit.distance);
@@ -256,39 +263,20 @@ public class HousingDrag : MonoBehaviour
                 //Debug.Log("End");
                 isDragging = false;
                 transform.position = new Vector3(clampX, clampY, transform.position.z);
+                new_x = clampX;
+                new_y = clampY;
                 subCollider.enabled = false;
                 isTouch = false;
                 touchTime = 0;
                 int currentLayer = gameObject.layer;
                 if (isCanBuild)
                 {
-                    switch (currentLayer)
-                    {
-                        case 24:
-                            transform.position = new Vector3(transform.position.x, transform.position.y, -0.6f);
-                            break;
-                        case 23:
-                            transform.position = new Vector3(transform.position.x, transform.position.y, -0.4f);
-                            break;
-                        case 25:
-                            transform.position = new Vector3(transform.position.x, transform.position.y, -0.5f);
-                            break;
-                        case 22:
-                            transform.position = new Vector3(transform.position.x, transform.position.y, -0.8f);
-                            break;
-                        default:
-                            break;
-                    }
-
-
-
+                    SetZ(currentLayer);
                 }
                 else
                 {
                     transform.position = new Vector3(transform.position.x, transform.position.y, -0.9f);
                 }
-
-
             }
 
             if (isDragging)
@@ -312,6 +300,7 @@ public class HousingDrag : MonoBehaviour
                 checkMinusX = newPosition.x >= 0 ? 1 : -1;
                 checkMinusY = newPosition.y >= 0 ? 1 : -1;
 
+                //오브젝트가 그리드에 맞게 배치
                 moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.x)) * checkMinusX : Mathf.FloorToInt(newPosition.x) + 0.5f;
                 moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(Mathf.Abs(newPosition.y)) * checkMinusY : Mathf.FloorToInt(newPosition.y) + 0.5f;
 
@@ -432,11 +421,9 @@ public class HousingDrag : MonoBehaviour
 
                 //드래그 끝날 때 Dictionary 수정
                 //조만간 DBManager로 바꿔야 함
-                LoadHousing.instance.localHousing[primaryIndex] = (housingObject, transform.position);
-                LoadHousing.instance.localCloneHousing[primaryIndex] = cloneObject.transform.position;
-                //LoadHousing.instance.saveLocal[primaryIndex] = (gameObject, transform.position);
-                //Debug.Log($"현재 오브젝트 : {LoadHousing.instance.localHousing[primaryIndex].Item1.name_k}");
-                //Debug.Log($"현재 포지션 : {LoadHousing.instance.localHousing[primaryIndex].Item2}");
+                //LoadHousing.instance.localHousing[primaryIndex] = (housingObject, transform.position);
+                //LoadHousing.instance.localCloneHousing[primaryIndex] = cloneObject.transform.position;
+                DBManager.instance.MoveMyHousingObject(id, original_x, original_y, new_x, new_y);
             }
         }
         else
@@ -579,6 +566,7 @@ public class HousingDrag : MonoBehaviour
 
     private void ClonePosition()
     {
+
         if (transform.position.x >= -(grid.boundX / 2) && transform.position.x <= -(grid.boundX / 2) + 10)
         {
             cloneObject.SetActive(true);
@@ -682,6 +670,27 @@ public class HousingDrag : MonoBehaviour
             case "상호작용":
                 int layer_Interactionable = LayerMask.NameToLayer("Interactionable");
                 gameObject.layer = layer_Interactionable;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void SetZ(int layer)
+    {
+        switch (layer)
+        {
+            case 24:
+                transform.position = new Vector3(transform.position.x, transform.position.y, -0.6f);
+                break;
+            case 23:
+                transform.position = new Vector3(transform.position.x, transform.position.y, -0.4f);
+                break;
+            case 25:
+                transform.position = new Vector3(transform.position.x, transform.position.y, -0.5f);
+                break;
+            case 22:
+                transform.position = new Vector3(transform.position.x, transform.position.y, -0.8f);
                 break;
             default:
                 break;

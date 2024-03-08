@@ -8,7 +8,7 @@ public class ItemInfo : MonoBehaviour
 {
     public bool upgradeSlot = false;
     public Button button;
-    
+
     [Header("Create Item Data")]
     public ItemData _itemData;
     public int _itemCount;
@@ -37,15 +37,18 @@ public class ItemInfo : MonoBehaviour
 
     private void Update()
     {
-        if (!upgradeSlot)
+        if (_itemData != null)
         {
-            _itemCount = DBManager.instance.user.tokens[_itemData.itemID];
-            ButtonInteraction();
-        }
-        else
-        {
-            countObject.SetActive(false);
-            UpgradeButton();
+            if (!upgradeSlot)
+            {
+                _itemCount = DBManager.instance.user.tokens[_itemData.itemID];
+                ButtonInteraction();
+            }
+            else
+            {
+                countObject.SetActive(false);
+                UpgradeButton();
+            }
         }
     }
     private void ButtonInteraction()
@@ -89,15 +92,15 @@ public class ItemInfo : MonoBehaviour
         }
         else
         {
-            if (DBManager.instance.user.housingObject[ChartManager.instance.housingObjectDatas[_itemData.housingIndex].name_e] == 0)
-            {
-                image.color = new Color32(255, 255, 255, 120);
-                button.interactable = false;
-            }
-            else
+            if (DBManager.instance.user.housingObject.ContainsKey(ChartManager.instance.housingObjectDatas[_itemData.housingIndex].name_e))
             {
                 image.color = Color.white;
                 button.interactable = true;
+            }
+            else
+            {
+                image.color = new Color32(255, 255, 255, 120);
+                button.interactable = false;
             }
         }
 
@@ -112,7 +115,7 @@ public class ItemInfo : MonoBehaviour
         createHousing.housingObject = ChartManager.instance.housingObjectDatas[_itemData.housingIndex];
         if (DBManager.instance.user.tokens[_itemData.itemID] < 5)
         {
-            for(int i = 0; i < DBManager.instance.user.tokens[_itemData.itemID]; i++)
+            for (int i = 0; i < DBManager.instance.user.tokens[_itemData.itemID]; i++)
             {
                 createHousing.stuff[i].sprite = _itemData.sprite;
             }

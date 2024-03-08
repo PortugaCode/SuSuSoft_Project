@@ -12,6 +12,7 @@ public class BtnControl : MonoBehaviour
     [Header("InterFace UI On / Off")]
     [SerializeField] private List<GameObject> allUI;
     [SerializeField] private GameObject characterUI;
+    [SerializeField] private GameObject workShopUI;
     [SerializeField] private GameObject inventoryUI;
     [SerializeField] private GameObject inventoryWindowUI;
     [SerializeField] private GameObject testHousingButton;
@@ -62,9 +63,11 @@ public class BtnControl : MonoBehaviour
     {
         characterUI.SetActive(false);
         inventoryUI.SetActive(false);
+        inventoryWindowUI.SetActive(false);
         testHousingButton.SetActive(false);
         editModeButton.SetActive(false);
         stageUI.SetActive(false);
+        workShopUI.SetActive(false);
     }
 
     public void SetChatUI(bool value)
@@ -106,6 +109,12 @@ public class BtnControl : MonoBehaviour
         inventoryUI.SetActive(value);
         testHousingButton.SetActive(value);
         editModeButton.SetActive(value);
+    }
+
+    public void PopUp_WorkshopUI(bool value)
+    {
+        ResetUI();
+        workShopUI.SetActive(value);
     }
 
     public void PopUp_StageUI(bool value)
