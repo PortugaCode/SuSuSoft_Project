@@ -111,7 +111,7 @@ public class HousingInterationWindow : MonoBehaviour
             {
                 listAdd.Append("보유");
             }
-            else if (LoadHousing.instance.localHousingObject.ContainsValue(housingObjWindow))
+            else if (LoadHousing.instance.localHousingObject.ContainsValue(housingObjWindow))       //여기 DBManager로 바꿔야함
             {
                 listAdd.Append("배치");
             }
