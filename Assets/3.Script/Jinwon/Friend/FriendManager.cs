@@ -355,7 +355,10 @@ public class FriendManager : MonoBehaviour
         string n_inDate = n_bro.GetReturnValuetoJSON()["row"]["inDate"].ToString();
         var bro = Backend.PlayerData.GetOtherData("User", n_inDate);
 
-        int index = DBManager.instance.CharacterIndexMatching(int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString()));
+        //int index = DBManager.instance.CharacterIndexMatching(int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString()));
+        int index = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString());
+
+        // Debug.Log($"Original Index : {int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString())} / Return Index : {index}");
 
         // 닉네임 & InDate로 유저 조회 후 표시 구현 필요
         searchTab.transform.GetChild(1).GetComponent<Image>().sprite = characterBodyImages[index]; // 해당 친구가 사용중인 캐릭터로 매칭 필요

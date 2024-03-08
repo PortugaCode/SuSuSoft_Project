@@ -40,7 +40,7 @@ public class QuestManager : MonoBehaviour
         dayTabButton.interactable = false;
         weekTabButton.interactable = true;
 
-        DBManager.instance.ResetCheck();
+        DBManager.instance.QuestResetCheck();
 
         ShowDayQuestList();
     }
@@ -132,7 +132,7 @@ public class QuestManager : MonoBehaviour
             dateDiff = next6AM - DateTime.Now;
             timeLeftText.text = $"갱신까지 {dateDiff.Hours}시간 {dateDiff.Minutes}분";
 
-            DBManager.instance.ResetCheck();
+            DBManager.instance.QuestResetCheck();
 
             yield return wfs;
         }

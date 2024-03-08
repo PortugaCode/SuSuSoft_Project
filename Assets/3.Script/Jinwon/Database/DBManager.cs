@@ -131,6 +131,8 @@ public class User
     public string lastCheckTime { get; set; } // 최종 접속 시간 (접속중이라면 최종 상점 체크 시간)
     public int activePoint { get; set; } // 스테이지 진입 시 필요한 재화 (별)
     public string[] activePointTime { get; set; } // 다음 스타 획득 가능 시간
+    public int[,] dailyShopInfo { get; set; } // 일일 상점 3개 품목 정보 ([인덱스, 살수있는 개수])
+    public int[,] tokenShopInfo { get; set; } // 토큰 상점 6개 품목 정보 ([인덱스, 살수있는 개수])
 
     public User() // 생성자에서 초기화
     {
@@ -154,6 +156,8 @@ public class User
         lastCheckTime = "";
         activePoint = 0;
         activePointTime = new string[5];
+        dailyShopInfo = new int[3, 2];
+        tokenShopInfo = new int[6, 2];
     }
 }
 
@@ -330,6 +334,24 @@ public class DBManager : MonoBehaviour
             user.activePointTime[i] = bro.FlattenRows()[0]["ActivePointTime"][i].ToString();
         }
 
+        // [일일 상점 정보 (2차원 배열)]
+        for (int i = 0; i < 3; i++) // (총 품목 개수 = 3)
+        {
+            for (int j = 0; j < 2; j++) // (인덱스, 살수있는 개수)
+            {
+                user.dailyShopInfo[i, j] = int.Parse(bro.FlattenRows()[0]["DailyShopInfo"][i][j].ToString());
+            }
+        }
+
+        // [토큰 상점 정보 (2차원 배열)]
+        for (int i = 0; i < 6; i++) // (총 품목 개수 = 6)
+        {
+            for (int j = 0; j < 2; j++) // (인덱스, 살수있는 개수)
+            {
+                user.tokenShopInfo[i, j] = int.Parse(bro.FlattenRows()[0]["TokenShopInfo"][i][j].ToString());
+            }
+        }
+
         CheckActivePoint();
 
         Debug.Log("기존 유저 데이터 불러오기 완료");
@@ -358,9 +380,12 @@ public class DBManager : MonoBehaviour
         param.Add("DayQuestInfo", user.dayQuestInfo);
         param.Add("QuestRewardCount", user.questRewardCount);
         param.Add("QuestRewardInfo", user.questRewardInfo);
+        user.lastCheckTime = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
         param.Add("LastCheckTime", user.lastCheckTime);
         user.activePoint = 5;
         param.Add("ActivePoint", user.activePoint);
+        param.Add("DailyShopInfo", user.dailyShopInfo);
+        param.Add("TokenShopInfo", user.tokenShopInfo);
 
         for (int i = 0; i < 5; i++)
         {
@@ -573,7 +598,7 @@ public class DBManager : MonoBehaviour
         return returnIndex;
     }
 
-    public void ResetCheck()
+    public bool DailyReset() // 6시 기준으로 지났는가 안지났는가
     {
         string last = user.lastCheckTime;
         DateTime dt_last = DateTime.ParseExact(last, "yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
@@ -581,7 +606,7 @@ public class DBManager : MonoBehaviour
         // # 매일 6시마다 리셋
         // 기준점(내일 6시)이 될 DateTime 선언
         DateTime point_Day = DateTime.Now;
-        
+
         // 6시 이후면 기준점을 다음날로 설정
         if (point_Day.Hour >= 6)
         {
@@ -591,14 +616,21 @@ public class DBManager : MonoBehaviour
         // Point를 6시로 설정
         DateTime next6AM = new DateTime(point_Day.Year, point_Day.Month, point_Day.Day, 6, 0, 0);
 
-        // 최종 접속 시간이 6시 이전이고, 현재 시간이 6시 이후인 경우 리셋
+        // 최종 접속 시간이 6시 이전이고, 현재 시간이 6시 이후인 경우 True 반환
         if (DateTime.Compare(dt_last, next6AM) == -1 && DateTime.Compare(DateTime.Now, next6AM) >= 0)
         {
-            for (int i = 0; i < user.dayQuestInfo.Length; i++)
-            {
-                user.dayQuestInfo[i] = 0;
-            }
+            return true;
         }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool WeeklyReset() // 월요일 6시 기준으로 지났는가 안지났는가
+    {
+        string last = user.lastCheckTime;
+        DateTime dt_last = DateTime.ParseExact(last, "yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
 
         // # 매주 월요일 6시마다 리셋
         // 기준점(최근 월요일 6시)이 될 DateTime 선언
@@ -613,8 +645,30 @@ public class DBManager : MonoBehaviour
         // Point를 가장 최근 월요일의 6시로 설정
         DateTime nextMonday6AM = new DateTime(point_Week.Year, point_Week.Month, point_Week.Day, 6, 0, 0);
 
-        // 최종 접속 시간이 월요일 6시 이전이고, 현재 시간이 월요일 6시 이후인 경우 리셋
+        // 최종 접속 시간이 월요일 6시 이전이고, 현재 시간이 월요일 6시 이후인 경우 True 반환
         if (DateTime.Compare(dt_last, nextMonday6AM) == -1 && DateTime.Compare(DateTime.Now, nextMonday6AM) >= 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void QuestResetCheck()
+    {
+        // # 매일 6시마다 리셋
+        if (DailyReset())
+        {
+            for (int i = 0; i < user.dayQuestInfo.Length; i++)
+            {
+                user.dayQuestInfo[i] = 0;
+            }
+        }
+
+        // # 매주 월요일 6시마다 리셋
+        if (WeeklyReset())
         {
             // 퀘스트 완료 횟수 초기화
             user.questRewardCount = 0;
@@ -686,6 +740,8 @@ public class DBManager : MonoBehaviour
         param.Add("LastCheckTime", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
         param.Add("ActivePoint", user.activePoint);
         param.Add("ActivePointTime", user.activePointTime);
+        param.Add("DailyShopInfo", user.dailyShopInfo);
+        param.Add("TokenShopInfo", user.tokenShopInfo);
 
         Backend.PlayerData.UpdateMyLatestData("User", param);
 
