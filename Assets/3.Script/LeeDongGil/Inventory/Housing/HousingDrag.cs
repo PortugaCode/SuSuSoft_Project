@@ -105,6 +105,7 @@ public class HousingDrag : MonoBehaviour
                 primaryIndex = LoadHousing.instance.tempKey[0];
                 LoadHousing.instance.tempKey.RemoveAt(0);
             }
+            //조만간 DBManager로 바꿔야 함
             LoadHousing.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
             LoadHousing.instance.localHousingObject.Add(primaryIndex, housingObject);
 
@@ -304,7 +305,7 @@ public class HousingDrag : MonoBehaviour
                 {
                     if (sp.CompareTag("Building"))
                     {
-                        sp.color = new Color32(255, 255, 255, 100);
+                        sp.color = new Color32(255, 255, 255, 150);
                     }
                 }
 
@@ -430,6 +431,7 @@ public class HousingDrag : MonoBehaviour
 
 
                 //드래그 끝날 때 Dictionary 수정
+                //조만간 DBManager로 바꿔야 함
                 LoadHousing.instance.localHousing[primaryIndex] = (housingObject, transform.position);
                 LoadHousing.instance.localCloneHousing[primaryIndex] = cloneObject.transform.position;
                 //LoadHousing.instance.saveLocal[primaryIndex] = (gameObject, transform.position);

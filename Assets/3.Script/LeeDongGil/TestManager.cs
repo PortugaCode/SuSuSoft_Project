@@ -10,6 +10,7 @@ public class TestManager : MonoBehaviour
     public ItemData testData1;
     public List<HousingItemData> testHousing = new List<HousingItemData>();
     public List<HousingItemData> testHousingV2 = new List<HousingItemData>();
+    public List<ItemData> tokenList = new List<ItemData>();
     public GameObject player;
 
     [Header("Housing Inventory")]
@@ -17,12 +18,18 @@ public class TestManager : MonoBehaviour
     public InventorySystem housingInvenSys;
     public InventorySystem housingInvenSysWindow;
     public bool isHousingInventoryLoad = false;
+    public bool isInventoryLoad = false;
 
     [Header("Housing Filter")]
     public bool isAll = true;
     public bool isFront = false;
     public bool isBack = false;
     public bool isBuilding = false;
+
+    [Header("Token Filter")]
+    public bool isAllToken = true;
+    public bool isSportsToken = false;
+    public bool isFruitsToken = false;
 
     [Header("UI")]
     public CanvasGroup canvasGroup;
@@ -131,7 +138,10 @@ public class TestManager : MonoBehaviour
         return ChartManager.instance.housingObjectDatas.FindIndex(listIndex => listIndex.index == indexNum);
     }
 
-
+    public void GetToken(int index, int getCount)
+    {
+        DBManager.instance.user.tokens[index] += getCount;
+    }
 
     #region Test Button
     public void TestButton_Front()
@@ -251,18 +261,25 @@ public class TestManager : MonoBehaviour
         housingInvenSys.GetHousingItem(3, 1);
     }
     #endregion
-}
-public class TestItem
-{
-    public int itemCount;
-    public string itemName;
-    public ItemType type;
-}
 
+    public void TestV3_Basketball_Token()
+    {
+        GetToken(0, 1);
+    }
+
+    public void TestV3_Bush_Token()
+    {
+        GetToken(2, 1);
+    }
+
+    public void TestV3_Tree_Token()
+    {
+        GetToken(3, 1);
+    }
+}
 public enum ItemType
 {
-    housing = 1,
-    material = 2
+    token = 1
 }
 public enum HousingType
 {

@@ -15,12 +15,12 @@ public class TestUpgradeRecipe : MonoBehaviour
 
     public void Upgrade()
     {
-        Slot[] upSlots = GetComponentsInChildren<Slot>();
+        /*Slot[] upSlots = GetComponentsInChildren<Slot>();
         foreach (Slot upSlot in upSlots)
         {
             if (upSlot.itemInfomation != null)
             {
-                if (upSlot.slotItemCount >= 10 && upSlot.slotItemName.Equals("∫∏ºÆ1"))
+                if (upSlot.slotItemCount >= 10 && upSlot.slotItemName.Equals("Î≥¥ÏÑù1"))
                 {
                     int result = upSlot.slotItemCount / 10;
                     invenSys.GetItem(tier2Item, 1 * result);
@@ -32,6 +32,6 @@ public class TestUpgradeRecipe : MonoBehaviour
             {
                 continue;
             }
-        }
+        }*/
     }
 }

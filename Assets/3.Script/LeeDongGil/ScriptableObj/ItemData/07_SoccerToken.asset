@@ -10,8 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9fd740f00fefa4f4ab42d8f4f6cf5a52, type: 3}
-  m_Name: Gem02
+  m_Name: 07_SoccerToken
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 0a3d05ad0128046b38d3ba4a8dac46ea, type: 3}
-  itemName: "\uBCF4\uC11D3"
-  itemID: 1
+  type: 1
+  tokenType: 1
+  sprite: {fileID: 21300000, guid: 92982ff2ce5abde44bca0640eb4af8a0, type: 3}
+  itemName: Soccer_Token
+  itemID: 7
+  housingIndex: 10
