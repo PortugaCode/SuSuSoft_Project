@@ -17,6 +17,8 @@ public class HousingInventory : MonoBehaviour
     public HousingDrag drag;
     public HousingSlot slot;
     public FilterButton filter;
+    public GameObject housingInven;
+    public RectTransform editRectPos;
 
     [Header("Inventory Info")]
     public HousingItemData housingData;         //데이터 연동 이전
@@ -197,6 +199,7 @@ public class HousingInventory : MonoBehaviour
             if (DBManager.instance.user.housingObject[housingObj.name_e] == 0)
             {
                 image.color = new Color(1, 1, 1, 0);
+                count = 0;
                 DBManager.instance.user.housingObject.Remove(housingObj.name_e);
             }
             else
@@ -218,6 +221,8 @@ public class HousingInventory : MonoBehaviour
 
             TestManager.instance.isShowUI = false;
             TestManager.instance.isEditMode = true;
+            //housingInven.SetActive(true);
+            //editRectPos.anchoredPosition = new Vector2(200, 200);
         }
     }
 

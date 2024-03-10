@@ -74,6 +74,7 @@ public class SellPopUP : MonoBehaviour
         DBManager.instance.user.housingObject[housingObject.name_e] -= (int)housingCountbar.value;
         if(DBManager.instance.user.housingObject[housingObject.name_e] == 0)
         {
+            //sellHousingInven.LoadHousingInventory(); 참고해서 바꿔
             DBManager.instance.user.housingObject.Remove(housingObject.name_e);
         }
         DBManager.instance.user.goods["gold"] += housingObject.price * (int)housingCountbar.value;

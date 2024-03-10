@@ -536,7 +536,7 @@ public class HousingDrag : MonoBehaviour
                 Debug.Log("여기도 실행이 되는건가?");
                 check.color = new Color32(0, 255, 0, 100);
                 isCanBuild = true;
-                if (!isDragging)
+                if (isSetBuild)
                 {
                     transform.SetParent(hit_Center.collider.transform.parent);
                 }
