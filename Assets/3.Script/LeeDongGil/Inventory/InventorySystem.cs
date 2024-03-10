@@ -24,22 +24,7 @@ public class InventorySystem : MonoBehaviour
 
         if (!TestManager.instance.isHousingInventoryLoad)
         {
-            if (DBManager.instance.user.housingObject.Count > 0)
-            {
-                foreach (var key in DBManager.instance.user.housingObject.Keys)
-                {
-                    for (int i = 0; i < ChartManager.instance.housingObjectDatas.Count; i++)
-                    {
-                        if (ChartManager.instance.housingObjectDatas[i].name_e == key)
-                        {
-                            Debug.Log($"{i}번째 Key : {key}");
-                            int housingIndex = ChartManager.instance.housingObjectDatas[i].index;
-                            LoadHousingInventory(housingIndex, DBManager.instance.user.housingObject[key]);
-                            break;
-                        }
-                    }
-                }
-            }
+            LoadInventory();
             //TestManager.instance.isHousingInventoryLoad = true;
         }
 
@@ -55,6 +40,26 @@ public class InventorySystem : MonoBehaviour
             //TestManager.instance.isInventoryLoad = true;
         }
 
+    }
+
+    public void LoadInventory()
+    {
+        if (DBManager.instance.user.housingObject.Count > 0)
+        {
+            foreach (var key in DBManager.instance.user.housingObject.Keys)
+            {
+                for (int i = 0; i < ChartManager.instance.housingObjectDatas.Count; i++)
+                {
+                    if (ChartManager.instance.housingObjectDatas[i].name_e == key)
+                    {
+                        Debug.Log($"{i}번째 Key : {key}");
+                        int housingIndex = ChartManager.instance.housingObjectDatas[i].index;
+                        LoadHousingInventory(housingIndex, DBManager.instance.user.housingObject[key]);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public void LoadHousingInventory(int housingIndex, int count)
@@ -76,6 +81,7 @@ public class InventorySystem : MonoBehaviour
             {
                 if (slot.housingObject.GetValueOrDefault().index == housingObject.index)
                 {
+                    slot.GetComponentInChildren<HousingInventory>().count = count;
                     Debug.Log("여기로 들어오면 그냥 넘어가");
                     break;
                 }

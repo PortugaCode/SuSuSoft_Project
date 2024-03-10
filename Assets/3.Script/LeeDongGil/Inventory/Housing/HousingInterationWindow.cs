@@ -158,7 +158,9 @@ public class HousingInterationWindow : MonoBehaviour
 
     public void InsertHousingInventory()
     {
-        housingInvenSys.GetHousingItem(housingObj.index, 1);
+        DBManager.instance.user.housingObject[housingObj.name_e] += 1;
+        housingInvenSys.LoadHousingInventory(housingObj.index, DBManager.instance.user.housingObject[housingObj.name_e]);
+        //housingInvenSys.GetHousingItem(housingObj.index, 1);
         housingObject.GetComponent<HousingDrag>().isInsertInven = true;
         Destroy(housingObject);
         TestManager.instance.isShowUI = true;

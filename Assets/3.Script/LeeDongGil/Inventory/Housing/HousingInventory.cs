@@ -221,6 +221,7 @@ public class HousingInventory : MonoBehaviour
     {
         sellPopUPScript.isHousing = true;
         sellPopUPScript.housingObject = housingObj;
+        sellPopUPScript.background.SetActive(true);
         sellPopUp.SetActive(true);
     }
 }

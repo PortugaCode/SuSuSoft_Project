@@ -9,6 +9,8 @@ public class SellItem : MonoBehaviour
     public Image bodyCharater;
     public Image smileCharater;
     public GameObject sellPopUP;
+    public GameObject smithSpeech;
+    public bool isSellItem = false;
 
     [SerializeField] Sprite[] characterBodyImages;
     [SerializeField] Sprite[] characterSmileImages;
@@ -49,5 +51,22 @@ public class SellItem : MonoBehaviour
                 smileCharater.sprite = characterSmileImages[4];
                 return;
         }
+    }
+
+    private void Update()
+    {
+        if(isSellItem)
+        {
+            StartCoroutine(SmithTalk());
+            isSellItem = false;
+        }
+    }
+
+
+    private IEnumerator SmithTalk()
+    {
+        smithSpeech.SetActive(true);
+        yield return new WaitForSeconds(3.0f);
+        smithSpeech.SetActive(false);
     }
 }
