@@ -21,11 +21,11 @@ public class FilterButton : MonoBehaviour
     private void OnEnable()
     {
         Debug.Log("필터 버튼이 활성화 될 때 이 디버그가 표시됨");
-        if(TestManager.instance.isAll)
+        if (TestManager.instance.isAll)
         {
             AllButton();
         }
-        else if(TestManager.instance.isFront)
+        else if (TestManager.instance.isFront)
         {
             FrontButton();
         }
@@ -37,13 +37,17 @@ public class FilterButton : MonoBehaviour
         {
             BuildingButton();
         }
+        else if (TestManager.instance.isInteration)
+        {
+            InteractionButton();
+        }
 
     }
 
     private void OnDisable()
     {
         Debug.Log("필터 버튼이 비활성화 될 때 이 디버그가 표시됨");
-        
+
     }
 
     #region Housing Filter
@@ -55,6 +59,7 @@ public class FilterButton : MonoBehaviour
         TestManager.instance.isFront = false;
         TestManager.instance.isBack = false;
         TestManager.instance.isBuilding = false;
+        TestManager.instance.isInteration = false;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         foreach (HousingSlot slot in slots)
         {
@@ -73,6 +78,7 @@ public class FilterButton : MonoBehaviour
         TestManager.instance.isFront = true;
         TestManager.instance.isBack = false;
         TestManager.instance.isBuilding = false;
+        TestManager.instance.isInteration = false;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         int[] currentindexs = new int[20];
         int index = 0;
@@ -82,7 +88,7 @@ public class FilterButton : MonoBehaviour
             currentindexs[index] = slot.transform.GetSiblingIndex();
             if (slot.isSlotUse)
             {
-                if(slot.housingObject.Value.type.Equals("전경"))
+                if (slot.housingObject.Value.type.Equals("전경"))
                 {
                     slot.transform.SetSiblingIndex(setindex);
                     slot.housingInven.image.color = Color.white;
@@ -107,6 +113,7 @@ public class FilterButton : MonoBehaviour
         TestManager.instance.isFront = false;
         TestManager.instance.isBack = true;
         TestManager.instance.isBuilding = false;
+        TestManager.instance.isInteration = false;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         int[] currentindexs = new int[20];
         int index = 0;
@@ -141,6 +148,7 @@ public class FilterButton : MonoBehaviour
         TestManager.instance.isFront = false;
         TestManager.instance.isBack = false;
         TestManager.instance.isBuilding = true;
+        TestManager.instance.isInteration = false;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         int[] currentindexs = new int[20];
         int index = 0;
@@ -181,6 +189,41 @@ public class FilterButton : MonoBehaviour
             if (slot.isSlotUse)
             {
                 if (slot.itemInfomation.housingType == HousingType.constellation)
+                {
+                    slot.transform.SetSiblingIndex(setindex);
+                    slot.housingInven.image.color = Color.white;
+                    slot.housingInven.countObject.SetActive(true);
+                    slot.housingInven.button.interactable = true;
+                    setindex++;
+                }
+                else
+                {
+                    slot.housingInven.image.color = new Color(1, 1, 1, 0.1f);
+                    slot.housingInven.countObject.SetActive(false);
+                    slot.housingInven.button.interactable = false;
+                }
+            }
+        }
+    }
+
+    public void InteractionButton()
+    {
+        isFilter = true;
+        TestManager.instance.isAll = false;
+        TestManager.instance.isFront = false;
+        TestManager.instance.isBack = false;
+        TestManager.instance.isBuilding = false;
+        TestManager.instance.isInteration = true;
+        HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
+        int[] currentindexs = new int[20];
+        int index = 0;
+        int setindex = 0;
+        foreach (HousingSlot slot in slots)
+        {
+            currentindexs[index] = slot.transform.GetSiblingIndex();
+            if (slot.isSlotUse)
+            {
+                if (slot.housingObject.Value.type.Equals("상호작용"))
                 {
                     slot.transform.SetSiblingIndex(setindex);
                     slot.housingInven.image.color = Color.white;

@@ -15,6 +15,9 @@ public class EditModeButton : MonoBehaviour
 
     [SerializeField] private GameObject lobyPlayer;
 
+    [Header("Housing Inventory")]
+    public RectTransform housingRect;
+
     private void Start()
     {
         button = editModeBtn.GetComponent<Button>();
@@ -24,6 +27,11 @@ public class EditModeButton : MonoBehaviour
     {
         if (TestManager.instance.isEditMode)
         {
+            TestManager.instance.isShowUI = false;
+            while(housingRect.anchoredPosition.y > 0)
+            {
+                housingRect.anchoredPosition -= new Vector2(0, 2);
+            }
             if (cannotBuild.childCount > 0)
             {
                 button.interactable = false;
@@ -41,6 +49,12 @@ public class EditModeButton : MonoBehaviour
         }
         else
         {
+            Debug.Log(housingRect.anchoredPosition);
+            TestManager.instance.isShowUI = true;
+            while (housingRect.anchoredPosition.y < 350)
+            {
+                housingRect.anchoredPosition += new Vector2(0, 2);
+            }
             isEdit = false;
             btnTxt.text = "편집모드 시작";
             if (lobyPlayer != null)

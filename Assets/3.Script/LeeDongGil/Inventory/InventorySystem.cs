@@ -20,7 +20,8 @@ public class InventorySystem : MonoBehaviour
     {
         //유저 정보 로드
         if (DBManager.instance == null) return;
-        Debug.Log($"DB Count : {DBManager.instance.user.housingObject.Count}");
+        //Debug.Log($"DB Count : {DBManager.instance.user.housingObject.Count}");
+        Debug.Log("인벤토리 로드중?");
 
         if (!TestManager.instance.isHousingInventoryLoad)
         {

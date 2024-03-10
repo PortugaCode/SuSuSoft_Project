@@ -111,7 +111,6 @@ public class HousingInventory : MonoBehaviour
     private void ShowSlot()
     {
         filter = GetComponentInParent<FilterButton>();
-
         if (image.color.a <= 0)             //슬롯 알파값이 0보다 작으면 아이템이 없으므로
         {
             button.interactable = false;    //비활성화
@@ -125,6 +124,7 @@ public class HousingInventory : MonoBehaviour
         {
             if (!filter.isFilter)
             {
+                count = DBManager.instance.user.housingObject[housingObj.name_e];
                 button.interactable = true;
             }
         }
@@ -165,6 +165,7 @@ public class HousingInventory : MonoBehaviour
         }
         else
         {
+            count = DBManager.instance.user.housingObject[housingObj.name_e];
             button.interactable = true;
         }
 
@@ -192,12 +193,15 @@ public class HousingInventory : MonoBehaviour
     {
         if (!slot.isWindow)
         {
-            image.color = new Color(1, 1, 1, 0);
             DBManager.instance.user.housingObject[housingObj.name_e]--;
-            count--;
             if (DBManager.instance.user.housingObject[housingObj.name_e] == 0)
             {
+                image.color = new Color(1, 1, 1, 0);
                 DBManager.instance.user.housingObject.Remove(housingObj.name_e);
+            }
+            else
+            {
+                image.color = Color.white;
             }
             Vector3 createPos = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, 0);
             thisBuilding = Instantiate(Building, createPos, Quaternion.identity, buildingSpace);

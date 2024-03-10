@@ -11,6 +11,8 @@ public class SellItem : MonoBehaviour
     public GameObject sellPopUP;
     public GameObject smithSpeech;
     public bool isSellItem = false;
+    [SerializeField] private InventorySystem sellHousingInven;
+    [SerializeField] private InventorySystem sellTokenInven;
 
     [SerializeField] Sprite[] characterBodyImages;
     [SerializeField] Sprite[] characterSmileImages;

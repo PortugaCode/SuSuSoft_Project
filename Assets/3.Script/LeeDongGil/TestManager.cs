@@ -25,6 +25,7 @@ public class TestManager : MonoBehaviour
     public bool isFront = false;
     public bool isBack = false;
     public bool isBuilding = false;
+    public bool isInteration = false;
 
     [Header("Token Filter")]
     public bool isAllToken = true;

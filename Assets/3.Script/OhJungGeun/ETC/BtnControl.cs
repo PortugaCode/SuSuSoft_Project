@@ -23,6 +23,9 @@ public class BtnControl : MonoBehaviour
     [SerializeField] private List<Image> selectBtnList;
     [SerializeField] private Color selectColor;
 
+    [Header("Transparency Background")]
+    [SerializeField] private GameObject transparency;           //투명 배경화면
+
     private void OnEnable()
     {
         if (selectBtnList.Count > 0)
@@ -42,6 +45,10 @@ public class BtnControl : MonoBehaviour
             else if (TestManager.instance.isBuilding)
             {
                 SelctBtn(selectBtnList[3]);
+            }
+            else if (TestManager.instance.isInteration)
+            {
+                SelctBtn(selectBtnList[4]);
             }
         }
     }
@@ -93,11 +100,13 @@ public class BtnControl : MonoBehaviour
     public void PopUp_CharacterUI(bool value)
     {
         ResetUI();
+        transparency.SetActive(value);
         characterUI.SetActive(value);
     }
 
     public void PopUp_InventoryUI(bool value)
     {
+        transparency.SetActive(false);
         if (TestManager.instance.isEditMode) return;
         if (inventoryWindowUI.activeSelf)
         {
@@ -113,12 +122,14 @@ public class BtnControl : MonoBehaviour
 
     public void PopUp_WorkshopUI(bool value)
     {
+        transparency.SetActive(false);
         ResetUI();
         workShopUI.SetActive(value);
     }
 
     public void PopUp_StageUI(bool value)
     {
+        transparency.SetActive(false);
         ResetUI();
         stageUI.SetActive(value);
     }

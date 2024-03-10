@@ -65,21 +65,24 @@ public class HousingInterationWindow : MonoBehaviour
                         //housingData = housingObject.GetComponent<HousingDrag>().data;
                         Debug.Log($"{housingObj.index}번 {housingObj.name_e}");
                         housingObject = hit.collider.gameObject;
-                        housingObj = this.housingObject.GetComponent<HousingDrag>().housingObject;
+                        housingObj = housingObject.GetComponent<HousingDrag>().housingObject;
                         housingName.text = housingObj.name_k;
-                        if (housingObject.GetComponent<HousingDrag>().isCanBuild)
-                        {
-                            setBTN.interactable = true;
-                        }
-                        else
-                        {
-                            setBTN.interactable = false;
-                        }
                     }
                 }
 
             }
 
+        }
+        if (housingObject != null)
+        {
+            if (housingObject.GetComponent<HousingDrag>().isCanBuild)
+            {
+                setBTN.interactable = true;
+            }
+            else
+            {
+                setBTN.interactable = false;
+            }
         }
     }
 
@@ -158,8 +161,15 @@ public class HousingInterationWindow : MonoBehaviour
 
     public void InsertHousingInventory()
     {
-        DBManager.instance.user.housingObject[housingObj.name_e] += 1;
-        housingInvenSys.LoadHousingInventory(housingObj.index, DBManager.instance.user.housingObject[housingObj.name_e]);
+        if (DBManager.instance.user.housingObject.ContainsKey(housingObj.name_e))
+        {
+            DBManager.instance.user.housingObject[housingObj.name_e] += 1;
+        }
+        else
+        {
+            DBManager.instance.user.housingObject.Add(housingObj.name_e, 1);
+        }
+        housingInvenSys.LoadInventory();
         //housingInvenSys.GetHousingItem(housingObj.index, 1);
         housingObject.GetComponent<HousingDrag>().isInsertInven = true;
         Destroy(housingObject);

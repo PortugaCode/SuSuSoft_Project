@@ -183,9 +183,14 @@ MonoBehaviour:
   isCloneCreate: 0
   cloneObject: {fileID: 0}
   originalObject: {fileID: 0}
+  currentLayer_: 0
   data: {fileID: 0}
   buildSprite: {fileID: 6621264533684671820}
   space: {fileID: 9073170849238675846}
+  original_x: 0
+  original_y: 0
+  new_x: 0
+  new_y: 0
   player: {fileID: 0}
   spaceX: 1
   spaceY: 1
