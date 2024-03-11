@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using BackEnd;
 using BackEnd.Tcp;
 using TMPro;
@@ -9,7 +10,15 @@ using System;
 
 public class MatchRoomTest : MonoBehaviour
 {
-    public static MatchRoomTest Instance = null; 
+    public static MatchRoomTest Instance = null;
+
+    [Header("Body & Face Sprite")]
+    public Sprite[] bodys;
+    public Sprite[] faces;
+
+
+
+
 
     [Header("User Info")]
     [SerializeField] private TextMeshProUGUI[] textMeshProList;
@@ -29,6 +38,13 @@ public class MatchRoomTest : MonoBehaviour
 
     [Header("ChatInput")]
     [SerializeField] private TMP_InputField textInput;
+
+
+
+    [Header("MasterInfo")]
+    [SerializeField] private TextMeshProUGUI master_NickName;
+    [SerializeField] private Image master_Body;
+    [SerializeField] private Image master_Face;
 
 
 
@@ -68,6 +84,14 @@ public class MatchRoomTest : MonoBehaviour
 
         SetRoomInfo(true);
     }
+
+
+
+    private void SetMasterInfo()
+    {
+        //마스터_인포 세팅하기
+    }
+
 
     public void LeaveIDObjectDestory(SessionId sessionId)
     {
@@ -189,7 +213,6 @@ public class MatchRoomTest : MonoBehaviour
         if (textInput.text.Length <= 0)
         {
             textInput.text = "";
-            textInput.ActivateInputField();
             return;
         }
 
@@ -198,7 +221,6 @@ public class MatchRoomTest : MonoBehaviour
         BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerChatMessage>(msg);
 
         textInput.text = "";
-        textInput.ActivateInputField();
     }
 
 
