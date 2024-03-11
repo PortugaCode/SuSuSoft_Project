@@ -20,29 +20,29 @@ public class TrailStar : MonoBehaviour
 
     private void Start()
     {
-        SetTarget();
+        //SetTarget();
     }
 
     private void FixedUpdate()
     {
-        ChasePlayer();
+       // ChasePlayer();
     }
 
+
+    private void Update()
+    {
+       // if (player == null)
+       // {
+       //     Destroy(gameObject);
+       //     return;
+       // }
+       // ItemRotate();
+    }
+    
     private void ChasePlayer()
     {
         transform.position = Vector2.Lerp(this.transform.position, target.transform.position + Vector3.down * 0.3f, followSpeed * Time.deltaTime);
     }
-
-    private void Update()
-    {
-        if (player == null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        ItemRotate();
-    }
-    
     public void SetTarget()   // Follow Player
     {
         //transform.position = Vector2.Lerp(this.transform.position, player.transform.position + Vector3.down * 0.8f, fllowSpeed * Time.deltaTime);
