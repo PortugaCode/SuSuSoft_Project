@@ -492,14 +492,20 @@ public class DBManager : MonoBehaviour
 
     public void MoveMyHousingObject(int index, float original_x, float original_y, float new_x, float new_y) // 배치된 하우징 오브젝트를 이동시킬 때
     {
+        //Debug.Log($"index = {index}, original_x,y = {original_x}, {original_y}");
+
         for (int i = 0; i < user.myHousingObject.Count; i++)
         {
+            //Debug.Log($"[비교] index = {user.myHousingObject[i].index}, original_x,y = {user.myHousingObject[i].x}, {user.myHousingObject[i].y}");
+
             if (user.myHousingObject[i].index == index && user.myHousingObject[i].x == original_x && user.myHousingObject[i].y == original_y)
             {
                 MyHousingObject temp = user.myHousingObject[i];
                 temp.x = new_x;
                 temp.y = new_y;
                 user.myHousingObject[i] = temp;
+
+                Debug.Log($"새로운 x:{user.myHousingObject[i].x}, 새로운 y:{user.myHousingObject[i].y} 에 오브젝트 이동!");
 
                 return;
             }
@@ -828,6 +834,7 @@ public class DBManager : MonoBehaviour
         for (int i = 0; i < user.myHousingObject.Count; i++)
         {
             Param h_Param = new Param(); // 하우징 오브젝트 정보
+            Debug.Log($"X:{user.myHousingObject[i].x}, Y:{user.myHousingObject[i].y} 에 Index:{user.myHousingObject[i].index}의 하우징 오브젝트 저장!");
             h_Param.Add("Index", user.myHousingObject[i].index);
             h_Param.Add("X", user.myHousingObject[i].x);
             h_Param.Add("Y", user.myHousingObject[i].y);
