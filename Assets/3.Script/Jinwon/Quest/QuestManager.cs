@@ -30,7 +30,7 @@ public class QuestManager : MonoBehaviour
         timerCoroutine = StartCoroutine(UpdateTimeLeftText_co());
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         StopCoroutine(timerCoroutine);
     }
@@ -40,7 +40,7 @@ public class QuestManager : MonoBehaviour
         dayTabButton.interactable = false;
         weekTabButton.interactable = true;
 
-        DBManager.instance.QuestResetCheck();
+        DBManager.instance.AllResetCheck();
 
         ShowDayQuestList();
     }
@@ -132,7 +132,7 @@ public class QuestManager : MonoBehaviour
             dateDiff = next6AM - DateTime.Now;
             timeLeftText.text = $"갱신까지 {dateDiff.Hours}시간 {dateDiff.Minutes}분";
 
-            DBManager.instance.QuestResetCheck();
+            DBManager.instance.AllResetCheck();
 
             yield return wfs;
         }

@@ -407,7 +407,7 @@ public class DBManager : MonoBehaviour
 
         Debug.Log("새로운 유저 데이터 초기값 설정 완료");
     }
-    
+
     public void AddCharacter(int index) // 최초 캐릭터 획득 시 호출
     {
         List<Character> characters = ChartManager.instance.characterDatas; // 캐싱
@@ -656,6 +656,32 @@ public class DBManager : MonoBehaviour
         }
     }
 
+    public void AllResetCheck()
+    {
+        // 퀘스트 리셋
+        QuestResetCheck();
+
+        // 상점 리셋
+        ShopResetCheck();
+
+        // 최종 체크 시간 갱신
+        user.lastCheckTime = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+    }
+
+    public void ShopResetCheck()
+    {
+        // # 매일 6시마다 리셋
+        if (DailyReset())
+        {
+            for (int i = 0; i < user.dailyShopInfo.Length; i++)
+            {
+                int rand = UnityEngine.Random.Range(0, user.tokens.Length);
+                user.dailyShopInfo[i, 0] = rand;
+                user.dailyShopInfo[i, 1] = 1;
+            }
+        }
+    }
+
     public void QuestResetCheck()
     {
         // # 매일 6시마다 리셋
@@ -679,9 +705,6 @@ public class DBManager : MonoBehaviour
                 user.questRewardInfo[i] = 0;
             }
         }
-
-        // 최종 체크 시간 갱신
-        user.lastCheckTime = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
     }
 
     public void UseActivePoint()
@@ -703,7 +726,7 @@ public class DBManager : MonoBehaviour
                 return;
             }
         }
-        
+
         DateTime dt_apTime;
 
         for (int i = 0; i < 5; i++)
