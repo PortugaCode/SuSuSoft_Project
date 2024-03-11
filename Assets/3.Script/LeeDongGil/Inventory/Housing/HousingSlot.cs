@@ -12,7 +12,7 @@ public class HousingSlot : MonoBehaviour
     public int slotItemCount;
     [Header("Window Inventory")]
     public HousingItemData itemInfomation;                  //데이터 연동 이전
-    public HousingObject? housingObject;                     //데이터 연동 이후
+    public HousingObject housingObject;                     //데이터 연동 이후
     public HousingInterationWindow housingInterationWindow;
     public GameObject popUP;
     public float gameTime = 0;
@@ -90,7 +90,6 @@ public class HousingSlot : MonoBehaviour
             slotItemCount = housingInven.count;
             housingInven.image.color = new Color(1, 1, 1, 0);
             itemInfomation = null;
-            housingObject = null;
         }
 
         //if (popUP.activeSelf)
@@ -105,7 +104,7 @@ public class HousingSlot : MonoBehaviour
         if (isWindow)
         {
             popUP.transform.position = transform.position;
-            housingInterationWindow.housingObjWindow = (HousingObject)housingObject;
+            housingInterationWindow.housingObjWindow = housingObject;
             housingInterationWindow.P_housingCountInt = slotItemCount;
             popUP.SetActive(true);
         }

@@ -52,6 +52,24 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1dffcbc6e4a8ecb4a814af32572d3a86, type: 2}
   - {fileID: 11400000, guid: 7b9203676884ae5468ec7c5b0730ae3e, type: 2}
   - {fileID: 11400000, guid: 52825412b0668bd45b157339dd0d15e6, type: 2}
+  testHousingV2: []
+  tokenList: []
+  player: {fileID: 0}
   invenSys: {fileID: 0}
   housingInvenSys: {fileID: 0}
+  housingInvenSysWindow: {fileID: 0}
+  isHousingInventoryLoad: 0
+  isInventoryLoad: 0
+  isAll: 1
+  isFront: 0
+  isBack: 0
+  isBuilding: 0
+  isInteration: 0
+  isAllToken: 1
+  isSportsToken: 0
+  isFruitsToken: 0
+  canvasGroup: {fileID: 0}
+  canvasGroup_win: {fileID: 0}
+  isShowUI: 1
+  isShowUI_win: 1
   isEditMode: 0

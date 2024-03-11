@@ -80,7 +80,7 @@ public class InventorySystem : MonoBehaviour
             }
             else
             {
-                if (slot.housingObject.GetValueOrDefault().index == housingObject.index)
+                if (slot.housingObject.index == housingObject.index)
                 {
                     if (DBManager.instance.user.housingObject[ChartManager.instance.housingObjectDatas[housingIndex].name_e] == 0)
                     {
@@ -89,7 +89,7 @@ public class InventorySystem : MonoBehaviour
                     }
                     else
                     {
-                        slot.GetComponentInChildren<HousingInventory>().count = count;
+                        //slot.GetComponentInChildren<HousingInventory>().count = count;
                         Debug.Log("여기로 들어오면 그냥 넘어가");
                         break;
                     }
