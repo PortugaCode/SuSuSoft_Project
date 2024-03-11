@@ -49,6 +49,38 @@ public class HousingSlot : MonoBehaviour
         {
             slotItemName = housingInven.housingName;
             slotItemCount = housingInven.count;
+            if (TestManager.instance.isAll)
+            {
+                housingInven.image.color = Color.white;
+            }
+            else if (TestManager.instance.isFront)
+            {
+                if (housingInven.housingObj.type.Equals("전경"))
+                {
+                    housingInven.image.color = Color.white;
+                }
+            }
+            else if (TestManager.instance.isBack)
+            {
+                if (housingInven.housingObj.type.Equals("후경"))
+                {
+                    housingInven.image.color = Color.white;
+                }
+            }
+            else if (TestManager.instance.isBuilding)
+            {
+                if (housingInven.housingObj.type.Equals("건물"))
+                {
+                    housingInven.image.color = Color.white;
+                }
+            }
+            else if (TestManager.instance.isInteration)
+            {
+                if (housingInven.housingObj.type.Equals("상호작용"))
+                {
+                    housingInven.image.color = Color.white;
+                }
+            }
             //itemInfomation = housingInven.housingData;
             housingObject = housingInven.housingObj;
         }
@@ -56,6 +88,7 @@ public class HousingSlot : MonoBehaviour
         {
             slotItemName = string.Empty;
             slotItemCount = housingInven.count;
+            housingInven.image.color = new Color(1, 1, 1, 0);
             itemInfomation = null;
             housingObject = null;
         }

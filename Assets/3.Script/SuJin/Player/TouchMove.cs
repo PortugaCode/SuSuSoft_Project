@@ -194,12 +194,14 @@ public class TouchMove : MonoBehaviour
     {
         Debug.Log("Show UI");
         TestManager.instance.isShowUI = true;
+        TestManager.instance.isShowUI_win = true;
     }
 
     public void SetHideUI()
     {
         Debug.Log("Hide UI");
         TestManager.instance.isShowUI = false;
+        TestManager.instance.isShowUI_win = false;
     }
 
     private void SetTouchPosition()

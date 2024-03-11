@@ -12,7 +12,7 @@ public class DrawingGrid : MonoBehaviour
     private void InitLineRenderer(LineRenderer lr)
     {
         //lr.startWidth = lr.endWidth = 0.01f;
-        lr.material.color = Color.white;
+        //lr.material.color = Color.white;
     }
 
 
@@ -68,7 +68,7 @@ public class DrawingGrid : MonoBehaviour
     private void Start()
     {
         line = GetComponent<LineRenderer>();
-        InitLineRenderer(line);
+        //InitLineRenderer(line);
         DrawGrid(line, startX, startY, rowCount, colCount);
     }
 

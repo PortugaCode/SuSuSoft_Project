@@ -120,6 +120,8 @@ public class HousingDrag : MonoBehaviour
             //LoadHousing.instance.localHousingObject.Add(primaryIndex, housingObject);
 
             transform.position = new Vector3(clampX, clampY, -1);
+            original_x = clampX;
+            original_y = clampY;
             DBManager.instance.AddMyHousingObject(housingObject.index, transform.position.x, transform.position.y);
         }
 
@@ -270,6 +272,8 @@ public class HousingDrag : MonoBehaviour
                 {
                     transform.position = new Vector3(transform.position.x, transform.position.y, -0.9f);
                 }
+
+                DBManager.instance.MoveMyHousingObject(id, original_x, original_y, new_x, new_y);
 
                 /*if (isCanBuild)
                 {
@@ -425,7 +429,6 @@ public class HousingDrag : MonoBehaviour
                 //조만간 DBManager로 바꿔야 함
                 //LoadHousing.instance.localHousing[primaryIndex] = (housingObject, transform.position);
                 //LoadHousing.instance.localCloneHousing[primaryIndex] = cloneObject.transform.position;
-                DBManager.instance.MoveMyHousingObject(id, original_x, original_y, new_x, new_y);
             }
         }
         else
@@ -704,7 +707,7 @@ public class HousingDrag : MonoBehaviour
     {
         if (isInsertInven)
         {
-            Debug.Log("오브젝트 넣기를 누를때 여기 실행");
+            Debug.Log($"오브젝트 넣기 {gameObject.name}");
             DBManager.instance.RemoveMyHousingObject(id, new_x, new_y);
             Destroy(cloneObject);
             #region 이전 작업코드
@@ -716,7 +719,7 @@ public class HousingDrag : MonoBehaviour
         }
         else
         {
-            Debug.Log("평소의 OnDestroy 실행");
+            Debug.Log($"평소의 OnDestroy 실행 {gameObject.name}");
         }
     }
 

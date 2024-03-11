@@ -32,6 +32,9 @@ public class HousingInterationWindow : MonoBehaviour
     public TextMeshProUGUI P_housingSetInfo;                            //하우징 세트효과 설명
     public TextMeshProUGUI P_housingEnhanceInfo;                        //하우징 세트 강화효과 정보
 
+    [Header("Housing UI")]
+    public ToggleHousingInventory housingToggle;
+
 
     private void Update()
     {
@@ -169,18 +172,20 @@ public class HousingInterationWindow : MonoBehaviour
         {
             DBManager.instance.user.housingObject.Add(housingObj.name_e, 1);
         }
-        housingInvenSys.LoadInventory();
+        housingInvenSys.LoadHousingInventory(housingObj.index, DBManager.instance.user.housingObject[housingObj.name_e]);
         //housingInvenSys.GetHousingItem(housingObj.index, 1);
         housingObject.GetComponent<HousingDrag>().isInsertInven = true;
         Destroy(housingObject);
         //TestManager.instance.isShowUI = true;
         transform.GetChild(0).gameObject.SetActive(false);
+        housingToggle.housingInventory.SetActive(true);
     }
 
     public void SetHousingPosition()
     {
         housingObject.GetComponent<HousingDrag>().isSetBuild = true;
         transform.GetChild(0).gameObject.SetActive(false);
+        housingToggle.housingInventory.SetActive(true);
         //TestManager.instance.isShowUI = true;
     }
 

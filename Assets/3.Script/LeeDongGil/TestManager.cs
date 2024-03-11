@@ -34,7 +34,9 @@ public class TestManager : MonoBehaviour
 
     [Header("UI")]
     public CanvasGroup canvasGroup;
+    public CanvasGroup canvasGroup_win;
     public bool isShowUI = true;
+    public bool isShowUI_win = true;
 
     public bool isEditMode = false;
     private void Awake()
@@ -80,6 +82,20 @@ public class TestManager : MonoBehaviour
         }
     }
 
+    public void SetUI_win(bool value)
+    {
+        if (value)
+        {
+            canvasGroup_win.alpha = 1.0f;
+            canvasGroup_win.blocksRaycasts = true;
+        }
+        else
+        {
+            canvasGroup_win.alpha = 0;
+            canvasGroup_win.blocksRaycasts = false;
+        }
+    }
+
     private void Start()
     {
 
@@ -121,7 +137,7 @@ public class TestManager : MonoBehaviour
         #endregion
 
         SetUI(isShowUI);
-
+        SetUI_win(isShowUI_win);
     }
 
     public void LoadHousingChart()

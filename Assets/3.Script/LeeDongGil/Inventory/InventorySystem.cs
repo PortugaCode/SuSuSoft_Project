@@ -73,18 +73,26 @@ public class InventorySystem : MonoBehaviour
             {
                 SetItemInfo(housingObject, slot);
                 slot.GetComponentInChildren<HousingInventory>().count = count;
+                slot.transform.SetAsFirstSibling();
                 slot.isSlotUse = true;
                 Debug.Log(slot.isSlotUse);
                 break;
-
             }
             else
             {
                 if (slot.housingObject.GetValueOrDefault().index == housingObject.index)
                 {
-                    slot.GetComponentInChildren<HousingInventory>().count = count;
-                    Debug.Log("여기로 들어오면 그냥 넘어가");
-                    break;
+                    if (DBManager.instance.user.housingObject[ChartManager.instance.housingObjectDatas[housingIndex].name_e] == 0)
+                    {
+                        slot.GetComponentInChildren<HousingInventory>().count = 0;
+                        break;
+                    }
+                    else
+                    {
+                        slot.GetComponentInChildren<HousingInventory>().count = count;
+                        Debug.Log("여기로 들어오면 그냥 넘어가");
+                        break;
+                    }
                 }
             }
         }
@@ -329,4 +337,6 @@ public class InventorySystem : MonoBehaviour
         _slot.transform.GetComponentInChildren<ItemInfo>()._itemData = TestManager.instance.tokenList[tokenIndex];
         _slot.transform.GetComponentInChildren<ItemInfo>()._itemName = TestManager.instance.tokenList[tokenIndex].itemName;
     }
+
+    
 }

@@ -12,16 +12,26 @@ public class ToggleHousingInventory : MonoBehaviour
     public GameObject housingInventory;
     public RectTransform buttonRect;
     public RectTransform windowRect;
+    public TouchMove character;
+
+    private void Start()
+    {
+        character = TestManager.instance.player.GetComponent<TouchMove>();
+    }
 
     private void Update()
     {
         if (housingInventory.activeSelf)
         {
             arrowText.text = "▼";
+            windowRect.anchoredPosition = new Vector2(0, 720);
+            buttonRect.anchoredPosition = new Vector2(200, 200);
         }
         else
         {
             arrowText.text = "▲";
+            windowRect.anchoredPosition = new Vector2(0, 320);
+            buttonRect.anchoredPosition = new Vector2(200, -200);
         }
     }
 
@@ -30,13 +40,10 @@ public class ToggleHousingInventory : MonoBehaviour
         if(housingInventory.activeSelf)
         {
             housingInventory.SetActive(false);
-            windowRect.anchoredPosition = new Vector2(0, 320);
-            buttonRect.anchoredPosition = new Vector2(200, -200);
+            
         }
         else
         {
-            windowRect.anchoredPosition = new Vector2(0, 720);
-            buttonRect.anchoredPosition = new Vector2(200, 200);
             housingInventory.SetActive(true);
         }
     }

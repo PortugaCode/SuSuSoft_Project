@@ -74,6 +74,13 @@ public class EditModeButton : MonoBehaviour
     public void EditMode()
     {
         TestManager.instance.isEditMode = !isEdit;
+        //foreach (var key in DBManager.instance.user.housingObject.Keys)
+        //{
+        //    if (DBManager.instance.user.housingObject[key] == 0)
+        //    {
+        //        DBManager.instance.user.housingObject.Remove(key);
+        //    }
+        //}
         housingInven.SetActive(true);
         buttonRect.anchoredPosition = new Vector2(200, 200);
         if(!TestManager.instance.isEditMode)
