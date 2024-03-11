@@ -21,7 +21,7 @@ public class FilterButton : MonoBehaviour
     private void OnEnable()
     {
         Debug.Log("필터 버튼이 활성화 될 때 이 디버그가 표시됨");
-        if (TestManager.instance.isAll)
+       /* if (TestManager.instance.isAll)
         {
             AllButton();
         }
@@ -40,7 +40,7 @@ public class FilterButton : MonoBehaviour
         else if (TestManager.instance.isInteration)
         {
             InteractionButton();
-        }
+        }*/
 
     }
 
@@ -202,6 +202,7 @@ public class FilterButton : MonoBehaviour
 
         }
     }
+    #endregion
 
     public void Filter(int value)
     {
@@ -256,7 +257,6 @@ public class FilterButton : MonoBehaviour
         }
     }
 
-    #endregion
 
     #region Token Filter
 

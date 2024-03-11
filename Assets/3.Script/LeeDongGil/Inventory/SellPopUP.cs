@@ -88,6 +88,6 @@ public class SellPopUP : MonoBehaviour
 
     private void OnDisable()
     {
-        sellHousingInven.LoadInventory();
+        sellHousingInven.LoadHousingInventory();
     }
 }
