@@ -23,16 +23,14 @@ public class QuestManager : MonoBehaviour
     [SerializeField] private GameObject questPrefab;
     [SerializeField] private Transform content;
 
-    private Coroutine timerCoroutine = null;
-
     private void OnEnable()
     {
-        timerCoroutine = StartCoroutine(UpdateTimeLeftText_co());
+        DBManager.instance.TimerEvent += UpdateTimeText;
     }
 
     private void OnDisable()
     {
-        StopCoroutine(timerCoroutine);
+        DBManager.instance.TimerEvent -= UpdateTimeText;
     }
 
     public void OpenDayTab()
@@ -114,28 +112,9 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    public IEnumerator UpdateTimeLeftText_co()
+    public void UpdateTimeText(object sender, EventArgs e)
     {
-        TimeSpan dateDiff;
-
-        WaitForSeconds wfs = new WaitForSeconds(1.0f);
-
-        // 기준점(내일 월요일 6시)이 될 DateTime 선언
-        DateTime point = DateTime.Now;
-        point = point.AddDays(1);
-
-        // Point를 내일 오전 6시로 설정
-        DateTime next6AM = new DateTime(point.Year, point.Month, point.Day, 6, 0, 0);
-
-        while (true)
-        {
-            dateDiff = next6AM - DateTime.Now;
-            timeLeftText.text = $"갱신까지 {dateDiff.Hours}시간 {dateDiff.Minutes}분";
-
-            DBManager.instance.AllResetCheck();
-
-            yield return wfs;
-        }
+        timeLeftText.text = DBManager.instance.user.timeLeftText;
     }
 
     public void OpenQuestPopup()

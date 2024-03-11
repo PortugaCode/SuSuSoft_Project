@@ -109,6 +109,7 @@ public struct StageInfo
 
 public class User
 {
+    public bool isLogin { get; set; } // 현재 로그인 성공 했는가?
     public string UserID { get; set; } // 유저 아이디
     public string Password { get; set; } // 유저 비밀번호
     public string UserName { get; set; } // 유저 이름
@@ -133,9 +134,11 @@ public class User
     public string[] activePointTime { get; set; } // 다음 스타 획득 가능 시간
     public int[,] dailyShopInfo { get; set; } // 일일 상점 3개 품목 정보 ([인덱스, 살수있는 개수])
     public int[,] tokenShopInfo { get; set; } // 토큰 상점 6개 품목 정보 ([인덱스, 살수있는 개수])
+    public string timeLeftText { get; set; } // 갱신까지 남은 시간 문자열
 
     public User() // 생성자에서 초기화
     {
+        isLogin = false;
         UserID = "";
         Password = "";
         UserName = "";
@@ -158,6 +161,7 @@ public class User
         activePointTime = new string[5];
         dailyShopInfo = new int[3, 2];
         tokenShopInfo = new int[6, 2];
+        timeLeftText = "";
     }
 }
 
@@ -166,6 +170,10 @@ public class DBManager : MonoBehaviour
     public static DBManager instance;
 
     public User user = new User();
+
+    private Coroutine timerCoroutine = null;
+
+    public event EventHandler TimerEvent;
 
     private void Awake()
     {
@@ -178,6 +186,16 @@ public class DBManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void OnEnable()
+    {
+        timerCoroutine = StartCoroutine(UpdateTimeLeftText_co());
+    }
+
+    private void OnDisable()
+    {
+        StopCoroutine(timerCoroutine);
     }
 
     private void OnApplicationQuit()
@@ -329,7 +347,7 @@ public class DBManager : MonoBehaviour
         user.activePoint = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["ActivePoint"][0].ToString());
 
         // [다음 스타 재화 획득 시간]
-        for (int i = 0; i < bro.GetReturnValuetoJSON()["rows"][0]["ActivePointTime"].Count; i++)
+        for (int i = 0; i < bro.GetReturnValuetoJSON()["rows"][0]["ActivePointTime"][0].Count; i++)
         {
             user.activePointTime[i] = bro.FlattenRows()[0]["ActivePointTime"][i].ToString();
         }
@@ -600,8 +618,7 @@ public class DBManager : MonoBehaviour
 
     public bool DailyReset() // 6시 기준으로 지났는가 안지났는가
     {
-        string last = user.lastCheckTime;
-        DateTime dt_last = DateTime.ParseExact(last, "yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
+        DateTime dt_last = DateTime.ParseExact(user.lastCheckTime, "yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
 
         // # 매일 6시마다 리셋
         // 기준점(내일 6시)이 될 DateTime 선언
@@ -629,8 +646,7 @@ public class DBManager : MonoBehaviour
 
     public bool WeeklyReset() // 월요일 6시 기준으로 지났는가 안지났는가
     {
-        string last = user.lastCheckTime;
-        DateTime dt_last = DateTime.ParseExact(last, "yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
+        DateTime dt_last = DateTime.ParseExact(user.lastCheckTime, "yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
 
         // # 매주 월요일 6시마다 리셋
         // 기준점(최근 월요일 6시)이 될 DateTime 선언
@@ -742,6 +758,36 @@ public class DBManager : MonoBehaviour
             {
                 user.activePoint += 1;
             }
+        }
+    }
+
+    public IEnumerator UpdateTimeLeftText_co()
+    {
+        TimeSpan dateDiff;
+
+        WaitForSeconds wfs = new WaitForSeconds(1.0f);
+
+        // 기준점(내일 월요일 6시)이 될 DateTime 선언
+        DateTime point = DateTime.Now;
+        point = point.AddDays(1);
+
+        // Point를 내일 오전 6시로 설정
+        DateTime next6AM = new DateTime(point.Year, point.Month, point.Day, 6, 0, 0);
+
+        while (true)
+        {
+            if (user.isLogin)
+            {
+                dateDiff = next6AM - DateTime.Now;
+                user.timeLeftText = $"갱신까지 {dateDiff.Hours}시간 {dateDiff.Minutes}분";
+
+                // 이벤트 호출
+                TimerEvent?.Invoke(this, EventArgs.Empty);
+
+                AllResetCheck();
+            }
+
+            yield return wfs;
         }
     }
 
