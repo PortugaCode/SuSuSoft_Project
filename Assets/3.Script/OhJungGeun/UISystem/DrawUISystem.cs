@@ -507,7 +507,7 @@ public class DrawUISystem : MonoBehaviour
 
     private void AddDrawCharater(int index)
     {
-/*        if (HaveUserIndexCharater(index))
+        if (HaveUserIndexCharater(index))
         {
             //중복된 캐릭터 보유 메서드
             DBManager.instance.UpdateCharacter(index);
@@ -515,7 +515,7 @@ public class DrawUISystem : MonoBehaviour
         else
         {
             DBManager.instance.AddCharacter(index);
-        }*/
+        }
     }
 
     private void ResetDrawCharacter()
