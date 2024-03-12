@@ -12,12 +12,14 @@ public class MatchRoomTest : MonoBehaviour
 {
     public static MatchRoomTest Instance = null;
 
+    [Header("UI Goods")]
+    [SerializeField] private TextMeshProUGUI friendshipPointText;
+    [SerializeField] private TextMeshProUGUI rubyText;
+    [SerializeField] private TextMeshProUGUI goldText_1;
+
     [Header("Body & Face Sprite")]
     public Sprite[] bodys;
     public Sprite[] faces;
-
-
-
 
 
     [Header("User Info")]
@@ -32,9 +34,6 @@ public class MatchRoomTest : MonoBehaviour
 
     [Header("User Clone Prefab")]
     [SerializeField] private MatchClonePlayer matchClonePlayerPrefab;
-
-
-
 
     [Header("ChatInput")]
     [SerializeField] private TMP_InputField textInput;
@@ -83,6 +82,53 @@ public class MatchRoomTest : MonoBehaviour
         };
 
         SetRoomInfo(true);
+        SetMasterInfo();
+        UpdateGoods();
+    }
+
+    public void UpdateGoods()
+    {
+        // Friendship Point
+        if (DBManager.instance.user.goods["friendshipPoint"] >= 10000000)
+        {
+            friendshipPointText.text = String.Format("{0:0,0}M", DBManager.instance.user.goods["friendshipPoint"] / 1000000);
+        }
+        else if (DBManager.instance.user.goods["friendshipPoint"] >= 10000)
+        {
+            friendshipPointText.text = String.Format("{0:0,0}K", DBManager.instance.user.goods["friendshipPoint"] / 1000);
+        }
+        else
+        {
+            friendshipPointText.text = DBManager.instance.user.goods["friendshipPoint"].ToString();
+        }
+
+        // Ruby
+        if (DBManager.instance.user.goods["ruby"] >= 10000000)
+        {
+            rubyText.text = String.Format("{0:0,0}M", DBManager.instance.user.goods["ruby"] / 1000000);
+        }
+        else if (DBManager.instance.user.goods["ruby"] >= 10000)
+        {
+            rubyText.text = String.Format("{0:0,0}K", DBManager.instance.user.goods["ruby"] / 1000);
+        }
+        else
+        {
+            rubyText.text = DBManager.instance.user.goods["ruby"].ToString();
+        }
+
+        // Gold
+        if (DBManager.instance.user.goods["gold"] >= 10000000)
+        {
+            goldText_1.text = String.Format("{0:0,0}M", DBManager.instance.user.goods["gold"] / 1000000);
+        }
+        else if (DBManager.instance.user.goods["gold"] >= 10000)
+        {
+            goldText_1.text = String.Format("{0:0,0}K", DBManager.instance.user.goods["gold"] / 1000);
+        }
+        else
+        {
+            goldText_1.text = DBManager.instance.user.goods["gold"].ToString();
+        }
     }
 
 
@@ -90,6 +136,12 @@ public class MatchRoomTest : MonoBehaviour
     private void SetMasterInfo()
     {
         //마스터_인포 세팅하기
+        master_NickName.text = $"{BackEndManager.Instance.GetMatchSystem().masterUser_NickName}";
+    }
+
+    private void SetHousing()
+    {
+        //마스터 DB의 하우징 데이터 가지고 오기
     }
 
 
