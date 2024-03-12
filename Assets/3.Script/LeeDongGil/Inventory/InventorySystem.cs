@@ -16,11 +16,12 @@ public class InventorySystem : MonoBehaviour
     public Transform inventoryCreate;
     public Transform inventoryUpgrade;
 
-    private void OnEnable()
+    [SerializeField] private FilterButton filter;
+    /*private void OnEnable()
     {
         //유저 정보 로드
-        if (DBManager.instance == null) return;
         //Debug.Log($"DB Count : {DBManager.instance.user.housingObject.Count}");
+        if (DBManager.instance == null) return;
         Debug.Log("인벤토리 로드중?");
         LoadHousingInventory();
 
@@ -36,11 +37,25 @@ public class InventorySystem : MonoBehaviour
         //    //TestManager.instance.isInventoryLoad = true;
         //}
 
+    }*/
+
+
+
+    private void OnEnable()
+    {
+        if (DBManager.instance == null) return;
+        Debug.Log("인벤토리 로드중?");
+        LoadHousingInventory();
+        if (filter != null)
+        {
+            filter.Filtering();
+        }
     }
+
     public void ClearHousingInventory()
     {
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
-        foreach(HousingSlot slot in slots)
+        foreach (HousingSlot slot in slots)
         {
             slot.transform.GetChild(0).GetComponent<Image>().sprite = null;
             slot.transform.GetChild(0).GetComponent<Image>().color = new Color(1, 1, 1, 0);
@@ -75,7 +90,7 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
-    public void LoadHousingInventory(int housingIndex, int count)
+    public void LoadHousingInventory_(int housingIndex, int count)
     {
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         HousingObject housingObject = ChartManager.instance.housingObjectDatas[housingIndex];

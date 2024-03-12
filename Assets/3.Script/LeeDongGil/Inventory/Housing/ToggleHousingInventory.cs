@@ -13,6 +13,7 @@ public class ToggleHousingInventory : MonoBehaviour
     public RectTransform buttonRect;
     public RectTransform windowRect;
     public TouchMove character;
+    public Button openButton;
 
     private void Start()
     {
@@ -24,6 +25,7 @@ public class ToggleHousingInventory : MonoBehaviour
         if (housingInventory.activeSelf)
         {
             arrowText.text = "▼";
+            openButton.interactable = true;
             windowRect.anchoredPosition = new Vector2(0, 720);
             buttonRect.anchoredPosition = new Vector2(200, 200);
         }

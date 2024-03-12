@@ -8,6 +8,7 @@ public class DrawingGrid : MonoBehaviour
     public float startX, startY;
     public int rowCount, colCount;
     public float gridSize = 1;
+    public GameObject cantBuild;
 
     private void InitLineRenderer(LineRenderer lr)
     {
@@ -77,10 +78,12 @@ public class DrawingGrid : MonoBehaviour
         if(TestManager.instance.isEditMode)
         {
             line.enabled = true;
+            cantBuild.SetActive(true);
         }
         else
         {
             line.enabled = false;
+            cantBuild.SetActive(false);
         }
     }
 }

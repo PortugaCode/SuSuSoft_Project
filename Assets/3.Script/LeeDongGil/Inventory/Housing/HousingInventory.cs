@@ -139,7 +139,7 @@ public class HousingInventory : MonoBehaviour
             countText.text = "99+";
         }
 
-        if (image.color.a <= 0.1f)             //슬롯 알파값이 0보다 작으면 아이템이 없으므로
+        if (image.color.a <= 0.5f)             //슬롯 알파값이 0보다 작으면 아이템이 없음 0.5f는 필터링
         {
             button.interactable = false;    //비활성화
             if (!TestManager.instance.isEditMode)
@@ -194,17 +194,6 @@ public class HousingInventory : MonoBehaviour
     {
         if (!slot.isWindow)
         {
-            DBManager.instance.user.housingObject[housingObj.name_e]--;
-            if (DBManager.instance.user.housingObject[housingObj.name_e] == 0)
-            {
-                image.color = new Color(1, 1, 1, 0);
-                count = 0;
-                DBManager.instance.user.housingObject.Remove(housingObj.name_e);
-            }
-            else
-            {
-                image.color = Color.white;
-            }
             Vector3 createPos = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, 0);
             Debug.Log(createPos);
             thisBuilding = Instantiate(Building, createPos, Quaternion.identity, buildingSpace);
@@ -216,7 +205,9 @@ public class HousingInventory : MonoBehaviour
             interaction.housingObject = thisBuilding;
             interaction.housingObj = this.housingObj;
             interaction.housingName.text = housingObj.name_k;
-            windowCanvas.GetChild(0).gameObject.SetActive(true);
+            interaction.firstHousingName.text = housingObj.name_k;
+            interaction.isFirstSet = true;
+            interaction.firstWindow.SetActive(true);
 
 
             TestManager.instance.isShowUI = false;
@@ -224,6 +215,7 @@ public class HousingInventory : MonoBehaviour
             housingInven.SetActive(false);
             toggleHousingButton.windowRect.anchoredPosition = new Vector2(0, 320);
             toggleHousingButton.buttonRect.anchoredPosition = new Vector2(200, -200);
+            toggleHousingButton.openButton.interactable = false;
         }
     }
 
