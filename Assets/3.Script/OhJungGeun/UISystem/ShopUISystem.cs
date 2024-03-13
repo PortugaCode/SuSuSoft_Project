@@ -37,7 +37,9 @@ public class ShopUISystem : MonoBehaviour
 
     [Header("UI GameObject")]
     [SerializeField] private GameObject shopPopUp;
-    [SerializeField] private GameObject updatePopUp;
+    [SerializeField] private GameObject updatePopUp_Daily;
+    [SerializeField] private GameObject updatePopUp_Token;
+    [SerializeField] private GameObject updatePopUp_Gold;
     [SerializeField] private GameObject errorPopUp;
 
     [Header("Daily Shop Data")]
@@ -57,13 +59,39 @@ public class ShopUISystem : MonoBehaviour
 
     [Header("Gold Shop Data")]
     [SerializeField] private int[] getGold = new int[3] { 100, 2000, 40000};
-    [SerializeField] private int[] goldPrices = new int[3] {0, 100, 500};
+    [SerializeField] private int[] goldPrices = new int[3] {50, 100, 500};
 
+    private Coroutine updateDayTime;
+    private int nowIndex;
 
-    private void Start()
+    [Header("Shop Time Text")]
+    [SerializeField] private TextMeshProUGUI dayTimeText;
+    private void OnEnable()
+    {
+        // 이벤트 구독
+        DBManager.instance.TimerEvent += TimeChage;
+        DBManager.instance.OnResetDay += SetAllShopItem;
+
+        SetDailyShopItem();
+        SetTokenShopItem();
+    }
+
+    private void SetAllShopItem(object sender, System.EventArgs e)
     {
         SetDailyShopItem();
-        ShuffleTokenData();
+        SetTokenShopItem();
+    }
+
+    private void TimeChage(object sender, System.EventArgs e)
+    {
+        dayTimeText.text = DBManager.instance.user.timeLeftText;
+    }
+
+    private void OnDisable()
+    {
+        //이벤트 구독 취소
+        DBManager.instance.TimerEvent -= TimeChage;
+        DBManager.instance.OnResetDay -= SetAllShopItem;
     }
 
     #region[Set & Update ShopItem]
@@ -74,14 +102,14 @@ public class ShopUISystem : MonoBehaviour
         for (int i = 0; i < dailyItemNames.Length; i++)
         {
             //해당 품복 인덱스 저장
-            dailyItemIndex.Add(dailyItemData[i, 0]);
+            dailyItemIndex.Add(DBManager.instance.user.dailyShopInfo[i,0]);
 
             //상점 품목 이미지 및 텍스트 변경
             dailyItemNames[i].text = tokenNames[dailyItemIndex[i]];
             dailyItemPrices[i].text = (dailyItemIntPrices[i].Equals(0)) ? "무료" : $"{dailyItemIntPrices[i].ToString()} 골드";
             dailyItemImages[i].sprite = tokenImage[dailyItemIndex[i]];
 
-            if(dailyItemData[i,1] <= 0)
+            if(DBManager.instance.user.dailyShopInfo[i, 1] <= 0)
             {
                 dailyItemImages[i].color = new Color32(255, 255, 255, 120);
             }
@@ -99,16 +127,16 @@ public class ShopUISystem : MonoBehaviour
         for (int i = 0; i < tokenItemNames.Length; i++)
         {
             //해당 품복 인덱스 저장
-            tokenItemIndex.Add(tokenItemData[i, 0]);
+            tokenItemIndex.Add(DBManager.instance.user.tokenShopInfo[i, 0]);
 
             //상점 품목 이미지 및 텍스트 변경
             tokenItemNames[i].text = tokenNames[tokenItemIndex[i]];
             tokenItemPrices[i].text = $"{GetTokenPrice(tokenItemIndex[i]).ToString()} 골드";
             tokenItemIntPrices[i] = GetTokenPrice(tokenItemIndex[i]);
-            tokenRemain[i].text = $"{tokenItemData[i, 1]} / 3";
+            tokenRemain[i].text = $"{DBManager.instance.user.tokenShopInfo[i, 1]} / 3";
             tokenItemImages[i].sprite = tokenImage[tokenItemIndex[i]];
 
-            if(tokenItemData[i,1] <= 0)
+            if(DBManager.instance.user.tokenShopInfo[i, 1] <= 0)
             {
                 tokenItemImages[i].color = new Color32(255, 255, 255, 120);
             }
@@ -128,7 +156,7 @@ public class ShopUISystem : MonoBehaviour
             dailyItemPrices[i].text = (dailyItemIntPrices[i].Equals(0)) ? "무료" : $"{dailyItemIntPrices[i].ToString()} 골드";
             dailyItemImages[i].sprite = tokenImage[dailyItemIndex[i]];
 
-            if (dailyItemData[i, 1] <= 0)
+            if (DBManager.instance.user.dailyShopInfo[i, 1] <= 0)
             {
                 dailyItemImages[i].color = new Color32(255, 255, 255, 120);
             }
@@ -147,10 +175,10 @@ public class ShopUISystem : MonoBehaviour
             tokenItemNames[i].text = tokenNames[tokenItemIndex[i]];
             tokenItemPrices[i].text = $"{GetTokenPrice(tokenItemIndex[i]).ToString()} 골드";
             tokenItemIntPrices[i] = GetTokenPrice(tokenItemIndex[i]);
-            tokenRemain[i].text = $"{tokenItemData[i, 1]} / 3";
+            tokenRemain[i].text = $"{DBManager.instance.user.tokenShopInfo[i, 1]} / 3";
             tokenItemImages[i].sprite = tokenImage[tokenItemIndex[i]];
 
-            if (tokenItemData[i, 1] <= 0)
+            if (DBManager.instance.user.tokenShopInfo[i, 1] <= 0)
             {
                 tokenItemImages[i].color = new Color32(255, 255, 255, 120);
             }
@@ -172,51 +200,169 @@ public class ShopUISystem : MonoBehaviour
             tokenItemData[i, 0] = rand;
             tokenItemData[i, 1] = 3;
         }
+
+        DBManager.instance.user.tokenShopInfo = tokenItemData;
         SetTokenShopItem();
+    }
+
+    public void ShuffleDailyData()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            int rand = Random.Range(0, tokenImage.Length);
+            dailyItemData[i, 0] = rand;
+            dailyItemData[i, 1] = 1;
+        }
+
+        DBManager.instance.user.dailyShopInfo = dailyItemData;
+        SetDailyShopItem();
     }
     #endregion
 
+    //리셋 버튼
+    public void ShuffleToken_DB()
+    {
+        //골드 확인 및 지불
+        if (!CheckCanBuy_Reset()) return;
 
-    public void BuyToken_DailyShop(int index)
+        //DB에서 셔플 메서드 불러오기
+        DBManager.instance.ShopResetCheck_Token();
+
+        //세팅
+        SetTokenShopItem();
+    }
+
+    
+
+
+    public void BuyToken_DailyShop()
     {
         //살 수 있는 지 확인 메서드 (돈 + 갯수 확인)
-
+        if (!CheckCanBuy_DailyShop())
+        {
+            //error 창 뜨기
+            CloseUpdatePopUp();
+            OpenErrorPopUp();
+            return;
+        }
 
         //토큰 데이터에서 갯수 빼기 (DB)
-        dailyItemData[index, 1] -= 1;
+        dailyItemData[nowIndex, 1] -= 1;
 
         //토큰 갯수 올리기 (DB)
-        //DBManager.instance.user.tokens[tokenItemData[index, 0]] += 1;
+        DBManager.instance.user.tokens[DBManager.instance.user.dailyShopInfo[nowIndex, 0]] += 1;
 
 
         //토큰 업데이트하기
         UpdateDailyShopItem();
     }
 
-    public void BuyToken_TokenShop(int index)
+    public void BuyToken_TokenShop()
     {
         //살 수 있는 지 확인 메서드 (돈 + 갯수 확인)
-
+        if (!CheckCanBuy_TokenShop())
+        {
+            //error 창 뜨기
+            CloseUpdatePopUp();
+            OpenErrorPopUp();
+            return;
+        }
 
         //토큰 데이터에서 갯수 빼기 (DB)
-        tokenItemData[index, 1] -= 1;
-        tokenRemain[index].text = $"{tokenItemData[index, 1]} / 3";
+        tokenItemData[nowIndex, 1] -= 1;
+        tokenRemain[nowIndex].text = $"{tokenItemData[nowIndex, 1]} / 3";
 
         //토큰 갯수 올리기 (DB)
-        //DBManager.instance.user.tokens[tokenItemData[index, 0]] += 1;
+        DBManager.instance.user.tokens[DBManager.instance.user.tokenShopInfo[nowIndex, 0]] += 1;
 
 
         //토큰 업데이트하기
         UpdateTokenShopItem();
     }
 
+    public void BuyGold_GoldShop()
+    {
+        if (DBManager.instance.user.goods["ruby"] >= goldPrices[nowIndex])
+        {
+            DBManager.instance.user.goods["gold"] += getGold[nowIndex];
+        }
+        else
+        {
+            CloseUpdatePopUp();
+            OpenErrorPopUp();
+        }
+    }
 
+    private bool CheckCanBuy_DailyShop()
+    {
+        if (DBManager.instance.user.goods["gold"] < tokenItemIntPrices[nowIndex] && dailyItemData[nowIndex, 1] <= 0)
+        {
+            OpenErrorPopUp();
+            return false;
+        }
+        else return true;
+    }
+
+    private bool CheckCanBuy_TokenShop()
+    {
+        if (DBManager.instance.user.goods["gold"] < dailyItemIntPrices[nowIndex] && tokenItemData[nowIndex, 1] <= 0)
+        {
+            OpenErrorPopUp();
+            return false;
+        }
+        else return true;
+    }
+
+    private bool CheckCanBuy_Reset()
+    {
+        if (DBManager.instance.user.goods["gold"] < resetListPrice)
+        {
+            OpenErrorPopUp();
+            return false;
+        }
+        else return true;
+    }
 
     private int GetTokenPrice(int index)
     {
         bool value = index == 0 || index == 9 || (index >= 5 && index <= 7);
         if (value) return 400;
         else return 200;
+    }
+
+
+
+    public void OpenUpdatePopUp_Daily(int index)
+    {
+        nowIndex = index;
+        updatePopUp_Daily.SetActive(true);
+    }
+    public void OpenUpdatePopUp_Token(int index)
+    {
+        nowIndex = index;
+        updatePopUp_Token.SetActive(true);
+    }
+    public void OpenUpdatePopUp_Gold(int index)
+    {
+        nowIndex = index;
+        updatePopUp_Gold.SetActive(true);
+    }
+
+    public void CloseUpdatePopUp()
+    {
+        updatePopUp_Daily.SetActive(false);
+        updatePopUp_Token.SetActive(false);
+        updatePopUp_Gold.SetActive(false);
+    }
+
+    public void OpenErrorPopUp()
+    {
+        errorPopUp.SetActive(true);
+    }
+
+    public void CloseErrorPopUp()
+    {
+        errorPopUp.SetActive(false);
     }
 
 }

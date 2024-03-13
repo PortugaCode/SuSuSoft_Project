@@ -12,7 +12,7 @@ public class HousingSlot : MonoBehaviour
     public int slotItemCount;
     [Header("Window Inventory")]
     public HousingItemData itemInfomation;                  //데이터 연동 이전
-    public HousingObject? housingObject;                     //데이터 연동 이후
+    public HousingObject housingObject;                     //데이터 연동 이후
     public HousingInterationWindow housingInterationWindow;
     public GameObject popUP;
     public float gameTime = 0;
@@ -49,6 +49,38 @@ public class HousingSlot : MonoBehaviour
         {
             slotItemName = housingInven.housingName;
             slotItemCount = housingInven.count;
+            if (TestManager.instance.isAll)
+            {
+                housingInven.image.color = Color.white;
+            }
+            else if (TestManager.instance.isFront)
+            {
+                if (housingInven.housingObj.type.Equals("전경"))
+                {
+                    housingInven.image.color = Color.white;
+                }
+            }
+            else if (TestManager.instance.isBack)
+            {
+                if (housingInven.housingObj.type.Equals("후경"))
+                {
+                    housingInven.image.color = Color.white;
+                }
+            }
+            else if (TestManager.instance.isBuilding)
+            {
+                if (housingInven.housingObj.type.Equals("건물"))
+                {
+                    housingInven.image.color = Color.white;
+                }
+            }
+            else if (TestManager.instance.isInteration)
+            {
+                if (housingInven.housingObj.type.Equals("상호작용"))
+                {
+                    housingInven.image.color = Color.white;
+                }
+            }
             //itemInfomation = housingInven.housingData;
             housingObject = housingInven.housingObj;
         }
@@ -56,8 +88,8 @@ public class HousingSlot : MonoBehaviour
         {
             slotItemName = string.Empty;
             slotItemCount = housingInven.count;
+            housingInven.image.color = new Color(1, 1, 1, 0);
             itemInfomation = null;
-            housingObject = null;
         }
 
         //if (popUP.activeSelf)
@@ -72,7 +104,7 @@ public class HousingSlot : MonoBehaviour
         if (isWindow)
         {
             popUP.transform.position = transform.position;
-            housingInterationWindow.housingObjWindow = (HousingObject)housingObject;
+            housingInterationWindow.housingObjWindow = housingObject;
             housingInterationWindow.P_housingCountInt = slotItemCount;
             popUP.SetActive(true);
         }

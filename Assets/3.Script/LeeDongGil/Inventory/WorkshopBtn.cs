@@ -52,6 +52,7 @@ public class WorkshopBtn : MonoBehaviour
         }
         image.color = selectedColor;
 
+        inventory.SetActive(true);
         createInventory.SetActive(true);
         filterBTN.SetActive(true);
         upgradeInventory.SetActive(false);
@@ -68,6 +69,7 @@ public class WorkshopBtn : MonoBehaviour
         }
         image.color = selectedColor;
 
+        inventory.SetActive(true);
         upgradeInventory.SetActive(true);
         createInventory.SetActive(false);
         filterBTN.SetActive(false);

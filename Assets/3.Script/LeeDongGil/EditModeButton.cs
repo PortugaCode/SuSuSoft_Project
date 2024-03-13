@@ -6,14 +6,27 @@ using TMPro;
 
 public class EditModeButton : MonoBehaviour
 {
+    public Transform cannotBuild;
+
+    [Header("EditButton Setting")]
     public GameObject editModeBtn;
     public GameObject HousingInventory;
-    public Transform cannotBuild;
     public Button button;
     public TextMeshProUGUI btnTxt;
     public bool isEdit;
+    public Image currentImage;
+    public Sprite[] buttonImages = new Sprite[2];
+    public RectTransform buttonRect;
+
+    [Header("Hide Button")]
+    public GameObject hideButton;
 
     [SerializeField] private GameObject lobyPlayer;
+
+    [Header("Housing Inventory")]
+    public GameObject housingInven;
+    public RectTransform housingRect;
+    public float moveSpeed = 0.5f; 
 
     private void Start()
     {
@@ -24,6 +37,9 @@ public class EditModeButton : MonoBehaviour
     {
         if (TestManager.instance.isEditMode)
         {
+            housingRect.anchoredPosition = Vector2.MoveTowards(housingRect.anchoredPosition, Vector2.zero, moveSpeed);
+            TestManager.instance.isShowUI = false;
+            hideButton.SetActive(true);
             if (cannotBuild.childCount > 0)
             {
                 button.interactable = false;
@@ -33,6 +49,7 @@ public class EditModeButton : MonoBehaviour
                 button.interactable = true;
             }
             isEdit = true;
+            currentImage.sprite = buttonImages[1];
             btnTxt.text = "편집모드 종료";
             if (lobyPlayer != null)
             {
@@ -41,7 +58,10 @@ public class EditModeButton : MonoBehaviour
         }
         else
         {
+            housingRect.anchoredPosition = Vector2.MoveTowards(housingRect.anchoredPosition, new Vector2(0, 350), moveSpeed);
+            hideButton.SetActive(false);
             isEdit = false;
+            currentImage.sprite = buttonImages[0];
             btnTxt.text = "편집모드 시작";
             if (lobyPlayer != null)
             {
@@ -54,5 +74,18 @@ public class EditModeButton : MonoBehaviour
     public void EditMode()
     {
         TestManager.instance.isEditMode = !isEdit;
+        //foreach (var key in DBManager.instance.user.housingObject.Keys)
+        //{
+        //    if (DBManager.instance.user.housingObject[key] == 0)
+        //    {
+        //        DBManager.instance.user.housingObject.Remove(key);
+        //    }
+        //}
+        housingInven.SetActive(true);
+        buttonRect.anchoredPosition = new Vector2(200, 200);
+        if(!TestManager.instance.isEditMode)
+        {
+            TestManager.instance.isShowUI = true;
+        }
     }
 }

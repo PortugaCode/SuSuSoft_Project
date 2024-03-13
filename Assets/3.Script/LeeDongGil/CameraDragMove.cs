@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraDragMove : MonoBehaviour
 {
@@ -65,7 +66,7 @@ public class CameraDragMove : MonoBehaviour
             Ray cameraRay = mainCam.ScreenPointToRay(touch.position);
             RaycastHit hit;
 
-            if (Physics.Raycast(cameraRay, out hit))
+            if (Physics.Raycast(cameraRay, out hit) && EventSystem.current.IsPointerOverGameObject(0) == false)
             {
                 if (hit.collider.CompareTag("CanBuild"))
                 {

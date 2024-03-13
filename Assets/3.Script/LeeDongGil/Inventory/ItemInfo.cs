@@ -117,12 +117,12 @@ public class ItemInfo : MonoBehaviour
 
     public void SetTokenCreate()
     {
+        create.SetActive(true);
         createHousing.require = requireToken;
         createHousing.resultSlot.sprite = image.sprite;
         createHousing.resultSlot.color = Color.white;
         createHousing.tokenID = _itemData.itemID;
         createHousing.housingObject = ChartManager.instance.housingObjectDatas[_itemData.housingIndex];
-        create.SetActive(true);
         if (DBManager.instance.user.tokens[_itemData.itemID] < requireToken)
         {
             for (int i = 0; i < DBManager.instance.user.tokens[_itemData.itemID]; i++)
@@ -148,6 +148,7 @@ public class ItemInfo : MonoBehaviour
         createHousing.require = requireToken;
         createHousing.resultSlot.sprite = image.sprite;
         createHousing.resultSlot.color = Color.white;
+        createHousing.tokenID = _itemData.itemID;
         createHousing.housingObject = ChartManager.instance.housingObjectDatas[_itemData.housingIndex];
         if (DBManager.instance.user.tokens[_itemData.itemID] < requireToken)
         {

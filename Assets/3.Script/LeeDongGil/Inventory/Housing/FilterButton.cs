@@ -18,32 +18,29 @@ public class FilterButton : MonoBehaviour
 
     public Button btn;
 
-    private void OnEnable()
+
+    public void Filtering()
     {
-        Debug.Log("필터 버튼이 활성화 될 때 이 디버그가 표시됨");
-        if(TestManager.instance.isAll)
+        if (TestManager.instance.isAll)
         {
             AllButton();
         }
-        else if(TestManager.instance.isFront)
+        else if (TestManager.instance.isFront)
         {
-            FrontButton();
+            Filter((int)housingType.front);
         }
         else if (TestManager.instance.isBack)
         {
-            BackButton();
+            Filter((int)housingType.back);
         }
         else if (TestManager.instance.isBuilding)
         {
-            BuildingButton();
+            Filter((int)housingType.building);
         }
-
-    }
-
-    private void OnDisable()
-    {
-        Debug.Log("필터 버튼이 비활성화 될 때 이 디버그가 표시됨");
-        
+        else if (TestManager.instance.isInteration)
+        {
+            Filter((int)housingType.interaction);
+        }
     }
 
     #region Housing Filter
@@ -55,6 +52,7 @@ public class FilterButton : MonoBehaviour
         TestManager.instance.isFront = false;
         TestManager.instance.isBack = false;
         TestManager.instance.isBuilding = false;
+        TestManager.instance.isInteration = false;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         foreach (HousingSlot slot in slots)
         {
@@ -73,6 +71,7 @@ public class FilterButton : MonoBehaviour
         TestManager.instance.isFront = true;
         TestManager.instance.isBack = false;
         TestManager.instance.isBuilding = false;
+        TestManager.instance.isInteration = false;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         int[] currentindexs = new int[20];
         int index = 0;
@@ -80,23 +79,21 @@ public class FilterButton : MonoBehaviour
         foreach (HousingSlot slot in slots)
         {
             currentindexs[index] = slot.transform.GetSiblingIndex();
-            if (slot.isSlotUse)
+            if (slot.housingObject.layer == 6)
             {
-                if(slot.housingObject.Value.type.Equals("전경"))
-                {
-                    slot.transform.SetSiblingIndex(setindex);
-                    slot.housingInven.image.color = Color.white;
-                    slot.housingInven.countObject.SetActive(true);
-                    slot.housingInven.button.interactable = true;
-                    setindex++;
-                }
-                else
-                {
-                    slot.housingInven.image.color = new Color(1, 1, 1, 0.1f);
-                    slot.housingInven.countObject.SetActive(false);
-                    slot.housingInven.button.interactable = false;
-                }
+                slot.transform.SetSiblingIndex(setindex);
+                slot.housingInven.image.color = Color.white;
+                slot.housingInven.countObject.SetActive(true);
+                slot.housingInven.button.interactable = true;
+                setindex++;
             }
+            else
+            {
+                slot.housingInven.image.color = new Color(1, 1, 1, 0.5f);
+                slot.housingInven.countObject.SetActive(false);
+                slot.housingInven.button.interactable = false;
+            }
+
         }
     }
 
@@ -107,6 +104,7 @@ public class FilterButton : MonoBehaviour
         TestManager.instance.isFront = false;
         TestManager.instance.isBack = true;
         TestManager.instance.isBuilding = false;
+        TestManager.instance.isInteration = false;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         int[] currentindexs = new int[20];
         int index = 0;
@@ -114,23 +112,21 @@ public class FilterButton : MonoBehaviour
         foreach (HousingSlot slot in slots)
         {
             currentindexs[index] = slot.transform.GetSiblingIndex();
-            if (slot.isSlotUse)
+            if (slot.housingObject.layer == 2)
             {
-                if (slot.housingObject.Value.type.Equals("후경"))
-                {
-                    slot.transform.SetSiblingIndex(setindex);
-                    slot.housingInven.image.color = Color.white;
-                    slot.housingInven.countObject.SetActive(true);
-                    slot.housingInven.button.interactable = true;
-                    setindex++;
-                }
-                else
-                {
-                    slot.housingInven.image.color = new Color(1, 1, 1, 0.1f);
-                    slot.housingInven.countObject.SetActive(false);
-                    slot.housingInven.button.interactable = false;
-                }
+                slot.transform.SetSiblingIndex(setindex);
+                slot.housingInven.image.color = Color.white;
+                slot.housingInven.countObject.SetActive(true);
+                slot.housingInven.button.interactable = true;
+                setindex++;
             }
+            else
+            {
+                slot.housingInven.image.color = new Color(1, 1, 1, 0.5f);
+                slot.housingInven.countObject.SetActive(false);
+                slot.housingInven.button.interactable = false;
+            }
+
         }
     }
 
@@ -141,6 +137,7 @@ public class FilterButton : MonoBehaviour
         TestManager.instance.isFront = false;
         TestManager.instance.isBack = false;
         TestManager.instance.isBuilding = true;
+        TestManager.instance.isInteration = false;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         int[] currentindexs = new int[20];
         int index = 0;
@@ -148,29 +145,32 @@ public class FilterButton : MonoBehaviour
         foreach (HousingSlot slot in slots)
         {
             currentindexs[index] = slot.transform.GetSiblingIndex();
-            if (slot.isSlotUse)
+            if (slot.housingObject.layer == 3)
             {
-                if (slot.housingObject.Value.type.Equals("건물"))
-                {
-                    slot.transform.SetSiblingIndex(setindex);
-                    slot.housingInven.image.color = Color.white;
-                    slot.housingInven.countObject.SetActive(true);
-                    slot.housingInven.button.interactable = true;
-                    setindex++;
-                }
-                else
-                {
-                    slot.housingInven.image.color = new Color(1, 1, 1, 0.1f);
-                    slot.housingInven.countObject.SetActive(false);
-                    slot.housingInven.button.interactable = false;
-                }
+                slot.transform.SetSiblingIndex(setindex);
+                slot.housingInven.image.color = Color.white;
+                slot.housingInven.countObject.SetActive(true);
+                slot.housingInven.button.interactable = true;
+                setindex++;
             }
+            else
+            {
+                slot.housingInven.image.color = new Color(1, 1, 1, 0.5f);
+                slot.housingInven.countObject.SetActive(false);
+                slot.housingInven.button.interactable = false;
+            }
+
         }
     }
 
-    public void ConstellationButton()
+    public void InteractionButton()
     {
         isFilter = true;
+        TestManager.instance.isAll = false;
+        TestManager.instance.isFront = false;
+        TestManager.instance.isBack = false;
+        TestManager.instance.isBuilding = false;
+        TestManager.instance.isInteration = true;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         int[] currentindexs = new int[20];
         int index = 0;
@@ -178,27 +178,77 @@ public class FilterButton : MonoBehaviour
         foreach (HousingSlot slot in slots)
         {
             currentindexs[index] = slot.transform.GetSiblingIndex();
-            if (slot.isSlotUse)
+            if (slot.housingObject.layer == 8)
             {
-                if (slot.itemInfomation.housingType == HousingType.constellation)
-                {
-                    slot.transform.SetSiblingIndex(setindex);
-                    slot.housingInven.image.color = Color.white;
-                    slot.housingInven.countObject.SetActive(true);
-                    slot.housingInven.button.interactable = true;
-                    setindex++;
-                }
-                else
-                {
-                    slot.housingInven.image.color = new Color(1, 1, 1, 0.1f);
-                    slot.housingInven.countObject.SetActive(false);
-                    slot.housingInven.button.interactable = false;
-                }
+                slot.transform.SetSiblingIndex(setindex);
+                slot.housingInven.image.color = Color.white;
+                slot.housingInven.countObject.SetActive(true);
+                slot.housingInven.button.interactable = true;
+                setindex++;
             }
+            else
+            {
+                slot.housingInven.image.color = new Color(1, 1, 1, 0.5f);
+                slot.housingInven.countObject.SetActive(false);
+                slot.housingInven.button.interactable = false;
+            }
+
+        }
+    }
+    #endregion
+
+    public void Filter(int value)
+    {
+        isFilter = true;
+        TestManager.instance.isAll = false;
+        switch (value)
+        {
+            case 2:     //back
+                TestManager.instance.isFront = false;
+                TestManager.instance.isBack = true;
+                TestManager.instance.isBuilding = false;
+                TestManager.instance.isInteration = false;
+                break;
+            case 3:     //building
+                TestManager.instance.isFront = false;
+                TestManager.instance.isBack = false;
+                TestManager.instance.isBuilding = true;
+                TestManager.instance.isInteration = false;
+                break;
+            case 6:     //front
+                TestManager.instance.isFront = true;
+                TestManager.instance.isBack = false;
+                TestManager.instance.isBuilding = false;
+                TestManager.instance.isInteration = false;
+                break;
+            case 8:     //interaction
+                TestManager.instance.isFront = false;
+                TestManager.instance.isBack = false;
+                TestManager.instance.isBuilding = false;
+                TestManager.instance.isInteration = true;
+                break;
+        }
+        HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
+        //int setindex = 0;
+        foreach (HousingSlot slot in slots)
+        {
+            if (slot.housingObject.layer == value)
+            {
+                slot.transform.SetAsFirstSibling();
+                slot.housingInven.image.color = Color.white;
+                slot.housingInven.countObject.SetActive(true);
+                slot.housingInven.button.interactable = true;
+            }
+            else
+            {
+                slot.housingInven.image.color = new Color(1, 1, 1, 0.5f);
+                slot.housingInven.countObject.SetActive(false);
+                slot.housingInven.button.interactable = false;
+            }
+
         }
     }
 
-    #endregion
 
     #region Token Filter
 
@@ -244,7 +294,7 @@ public class FilterButton : MonoBehaviour
                 }
                 else
                 {
-                    slot.itemInfo.image.color = new Color(1, 1, 1, 0.1f);
+                    slot.itemInfo.image.color = new Color(1, 1, 1, 0.5f);
                     slot.itemInfo.countObject.SetActive(false);
                     slot.itemInfo.button.interactable = false;
                 }
@@ -277,7 +327,7 @@ public class FilterButton : MonoBehaviour
                 }
                 else
                 {
-                    slot.itemInfo.image.color = new Color(1, 1, 1, 0.1f);
+                    slot.itemInfo.image.color = new Color(1, 1, 1, 0.5f);
                     slot.itemInfo.countObject.SetActive(false);
                     slot.itemInfo.button.interactable = false;
                 }
@@ -294,6 +344,7 @@ public class FilterButton : MonoBehaviour
         TestManager.instance.isFront = false;
         TestManager.instance.isBack = false;
         TestManager.instance.isBuilding = false;
+        TestManager.instance.isInteration = false;
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         foreach (HousingSlot slot in slots)
         {
@@ -321,5 +372,12 @@ public class FilterButton : MonoBehaviour
             }
         }
     }
+}
 
+public enum housingType
+{
+    back = 2,
+    building = 3,
+    front = 6,
+    interaction = 8
 }

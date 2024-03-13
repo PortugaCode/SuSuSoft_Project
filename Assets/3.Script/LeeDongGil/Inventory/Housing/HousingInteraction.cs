@@ -14,11 +14,13 @@ public class HousingInteraction : MonoBehaviour
 
     private void Start()
     {
+        if (Utils.Instance.nowScene == SceneNames.MatchRoom) return;
         window = FindObjectOfType<WindowCanvas>().transform.GetComponentInChildren<HousingInterationWindow>().gameObject;
         drag = GetComponent<HousingDrag>();
     }
     private void Update()
     {
+        if (Utils.Instance.nowScene == SceneNames.MatchRoom) return;
         if (TestManager.instance.isEditMode)
         {
             InteractionWindow();
@@ -47,15 +49,19 @@ public class HousingInteraction : MonoBehaviour
                         if (gameTime > 0.5f)
                         {
                             TestManager.instance.isShowUI = false;
-                            window.transform.GetChild(0).gameObject.SetActive(true);
+                            TestManager.instance.housingInven.SetActive(false);
+                            if (window.GetComponent<HousingInterationWindow>().isFirstSet)
+                            {
+                                window.GetComponent<HousingInterationWindow>().firstWindow.SetActive(true);
+                                window.GetComponent<HousingInterationWindow>().housingToggle.openButton.interactable = false;
+                            }
+                            else
+                            {
+                                window.GetComponent<HousingInterationWindow>().window.SetActive(true);
+                                window.GetComponent<HousingInterationWindow>().housingToggle.openButton.interactable = false;
+                            }
                         }
                     }
-                }
-                else if (!hit.collider.gameObject.CompareTag("Building") && EventSystem.current.IsPointerOverGameObject(0) == false)
-                {
-                    Debug.Log("여기가 실행됨?");
-                    //TestManager.instance.isShowUI = true;
-                    //window.transform.GetChild(0).gameObject.SetActive(false);
                 }
             }
         }

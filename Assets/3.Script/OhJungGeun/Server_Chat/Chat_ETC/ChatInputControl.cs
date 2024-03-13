@@ -21,7 +21,6 @@ public class ChatInputControl : MonoBehaviour
         if (textInput.text.Length <= 0)
         {
             textInput.text = "";
-            textInput.ActivateInputField();
             return;
         }
         else if(textInput.text.StartsWith("/w ") || textInput.text.StartsWith("/W ") || textInput.text.StartsWith("/귓속말 ") || textInput.text.StartsWith("/ㅈ ") || textInput.text.StartsWith("/귓 "))
@@ -36,7 +35,6 @@ public class ChatInputControl : MonoBehaviour
                 string wMessage = valueStr.Substring(wMesssageStart);
                 BackEndManager.Instance.GetChatManager().Whisper(nickName, wMessage);
                 textInput.text = "";
-                textInput.ActivateInputField();
             }
         }
         else if(textInput.text.StartsWith("/초대 ") || textInput.text.StartsWith("/invite ") || textInput.text.StartsWith("/Invite "))
@@ -48,13 +46,11 @@ public class ChatInputControl : MonoBehaviour
             BackEndManager.Instance.GetMatchSystem().CreateMatchRoom(nickName);
 
             textInput.text = "";
-            textInput.ActivateInputField();
         }
         else
         {
             BackEndManager.Instance.GetChatManager().ChatToChannel(textInput.text);
             textInput.text = "";
-            textInput.ActivateInputField();
         }
     }
 

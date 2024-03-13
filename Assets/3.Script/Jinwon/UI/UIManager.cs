@@ -76,7 +76,7 @@ public class UIManager : MonoBehaviour
         timerCoroutine = StartCoroutine(UpdateTimeLeftText_co());
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         StopCoroutine(timerCoroutine);
     }

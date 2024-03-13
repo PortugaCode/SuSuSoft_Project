@@ -42,7 +42,7 @@ public class LoadHousing : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+/*
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Q))
@@ -57,7 +57,7 @@ public class LoadHousing : MonoBehaviour
             }
         }
     }
-
+*/
     public void LoadHousingData()
     {
         //isLoading = true;

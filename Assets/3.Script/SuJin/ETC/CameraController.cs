@@ -20,6 +20,16 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         StartBGM();
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+
+        if(playerObj != null)
+        {
+            player = playerObj.transform;
+        }
+        else
+        {
+            Debug.Log("No Player");
+        }
     }
 
     private void StartBGM()

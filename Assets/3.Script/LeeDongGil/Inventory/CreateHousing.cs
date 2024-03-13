@@ -55,7 +55,7 @@ public class CreateHousing : MonoBehaviour
     [SerializeField] private Button createButton;
     [SerializeField] private Button upgradeButton;
 
-    private void OnEnable()
+    private void Start()
     {
         enName.text = string.Format("{0}", housingObject.name_e);
         price.text = string.Format("{0:#,###}", priceInt);
