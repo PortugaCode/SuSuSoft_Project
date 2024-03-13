@@ -61,6 +61,7 @@ public class DrawUISystem : MonoBehaviour
         UpdateUserCharaterData(rand);
 
 
+
         if (drawAnimation != null)
         {
             StopCoroutine(drawAnimation);
@@ -83,7 +84,7 @@ public class DrawUISystem : MonoBehaviour
             UpdateUserCharaterData(rand);
         }
 
-        //SetCharaterCount_10();
+        SetCharaterCount_10();
 
         if (drawAnimation != null)
         {
@@ -515,14 +516,17 @@ public class DrawUISystem : MonoBehaviour
 
     private void AddDrawCharater(int index)
     {
+        Debug.Log($"뽑은 캐릭터 인덱스 : {index}");
         if (HaveUserIndexCharater(index))
         {
             //중복된 캐릭터 보유 메서드
             DBManager.instance.UpdateCharacter(index);
+            charaterCount.text = $"{GetCharaterCount(index)} / 30";
         }
         else
         {
             DBManager.instance.AddCharacter(index);
+            charaterCount.text = $"{GetCharaterCount(index)} / 30";
         }
     }
 

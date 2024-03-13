@@ -9,6 +9,9 @@ using System.Globalization;
 
 public class UIManager : MonoBehaviour
 {
+    public static EventHandler OnChangeCurrentCharacter;
+
+
     [Header("Tab")]
     [SerializeField] GameObject characterSelectTab;
     [SerializeField] GameObject tailTab;
@@ -86,8 +89,6 @@ public class UIManager : MonoBehaviour
         characters = DBManager.instance.user.character;
         characterDatas = ChartManager.instance.characterDatas;
         UpdateCharacterButton();
-
-        UseCharacter();
     }
 
     public void UpdateGoods()
@@ -465,6 +466,7 @@ public class UIManager : MonoBehaviour
         }
 
         DBManager.instance.user.currentCharacterIndex = index + 9 * characterTabIndex;
+        OnChangeCurrentCharacter?.Invoke(this, EventArgs.Empty);
     }
 
     public void OpenOptionPopup()

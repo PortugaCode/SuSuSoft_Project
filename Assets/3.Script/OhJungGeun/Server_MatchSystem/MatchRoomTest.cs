@@ -150,7 +150,7 @@ public class MatchRoomTest : MonoBehaviour
         var bro = Backend.PlayerData.GetOtherData("User", n_inDate);
         int index = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString());
         master_Body.sprite = bodys[index];
-        master_Face.sprite = faces[(int)(index / 5)];
+        master_Face.sprite = faces[(int)(index / 4)];
 
 
         master_NickName.text = $"{BackEndManager.Instance.GetMatchSystem().masterUser_NickName}";
@@ -213,6 +213,7 @@ public class MatchRoomTest : MonoBehaviour
                 players[a].gameObject.GetComponent<MatchChat>().SetChatOrder(order1, order2);
                 players[a].gameObject.GetComponent<MatchChat>().SetNickName(cloneNickName.GetComponent<TextMeshPro>());
                 players[a].gameObject.GetComponent<MatchChat>().SetNickName(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
+                players[a].gameObject.GetComponent<CurrentPlayerSprite>().SetUserCharacter(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
                 #endregion
 
                 #region [클론 캐릭터 생성_Left Clone]
@@ -229,6 +230,7 @@ public class MatchRoomTest : MonoBehaviour
                 matchClonePlayer_Left.gameObject.GetComponent<MatchChat>().SetChatOrder(order1, order2);
                 matchClonePlayer_Left.gameObject.GetComponent<MatchChat>().SetNickName(cloneNickName_Left.GetComponent<TextMeshPro>());
                 matchClonePlayer_Left.gameObject.GetComponent<MatchChat>().SetNickName(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
+                matchClonePlayer_Left.gameObject.GetComponent<CurrentPlayerSprite>().SetUserCharacter(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
                 #endregion
 
                 #region [클론 캐릭터 생성_Right Clone]
@@ -245,6 +247,7 @@ public class MatchRoomTest : MonoBehaviour
                 matchClonePlayer_Right.gameObject.GetComponent<MatchChat>().SetChatOrder(order1, order2);
                 matchClonePlayer_Right.gameObject.GetComponent<MatchChat>().SetNickName(cloneNickName_Right.GetComponent<TextMeshPro>());
                 matchClonePlayer_Right.gameObject.GetComponent<MatchChat>().SetNickName(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
+                matchClonePlayer_Right.gameObject.GetComponent<CurrentPlayerSprite>().SetUserCharacter(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
                 #endregion
 
 
