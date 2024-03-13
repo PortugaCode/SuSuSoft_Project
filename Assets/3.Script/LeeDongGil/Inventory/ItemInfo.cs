@@ -19,7 +19,7 @@ public class ItemInfo : MonoBehaviour
     public TextMeshProUGUI countText;
     public GameObject countObject;
     public Image image;
-    public int requireToken = 1;
+    public int requireToken = 5;
 
 
     [Header("Housing Create")]
@@ -37,7 +37,7 @@ public class ItemInfo : MonoBehaviour
 
     private void Start()
     {
-        requireToken = createHousing.require;
+        requireToken = 5;
     }
 
     private void Update()
@@ -117,12 +117,13 @@ public class ItemInfo : MonoBehaviour
 
     public void SetTokenCreate()
     {
-        create.SetActive(true);
         createHousing.require = requireToken;
         createHousing.resultSlot.sprite = image.sprite;
         createHousing.resultSlot.color = Color.white;
         createHousing.tokenID = _itemData.itemID;
         createHousing.housingObject = ChartManager.instance.housingObjectDatas[_itemData.housingIndex];
+        Debug.Log($"{createHousing.housingObject.name_e} : 버튼");
+        create.SetActive(true);
         if (DBManager.instance.user.tokens[_itemData.itemID] < requireToken)
         {
             for (int i = 0; i < DBManager.instance.user.tokens[_itemData.itemID]; i++)
@@ -144,12 +145,12 @@ public class ItemInfo : MonoBehaviour
 
     public void SetHousingUpgrade()
     {
-        upgrade.SetActive(true);
         createHousing.require = requireToken;
         createHousing.resultSlot.sprite = image.sprite;
         createHousing.resultSlot.color = Color.white;
         createHousing.tokenID = _itemData.itemID;
         createHousing.housingObject = ChartManager.instance.housingObjectDatas[_itemData.housingIndex];
+        upgrade.SetActive(true);
         if (DBManager.instance.user.tokens[_itemData.itemID] < requireToken)
         {
             for (int i = 0; i < DBManager.instance.user.tokens[_itemData.itemID]; i++)

@@ -16,7 +16,7 @@ public class CreateHousing : MonoBehaviour
     public int tokenID = 0;
 
     [Header("Housing Information")]
-    public int priceInt = 9999999;
+    public int priceInt = 500;
     public TextMeshProUGUI enName;
     public TextMeshProUGUI price;
     public Image resultSlot;
@@ -55,8 +55,11 @@ public class CreateHousing : MonoBehaviour
     [SerializeField] private Button createButton;
     [SerializeField] private Button upgradeButton;
 
-    private void Start()
+    private void OnEnable()
     {
+        require = 5;
+        priceInt = 500;
+        Debug.Log($"{housingObject.name_e} : 팝업");
         enName.text = string.Format("{0}", housingObject.name_e);
         price.text = string.Format("{0:#,###}", priceInt);
         if (DBManager.instance.user.tokens[tokenID] < require)
@@ -99,11 +102,21 @@ public class CreateHousing : MonoBehaviour
     {
         DBManager.instance.user.tokens[tokenID] -= require;
         //골드 빼세요
+        if (DBManager.instance.user.goods["gold"] >= priceInt)
+        {
+            DBManager.instance.user.goods["gold"] -= priceInt;
+        }
+        else
+        {
+            //버튼 추가해서 비활성화 시키기(Chatting Scene)
+            return;
+        }
         if (DBManager.instance.user.tokens[tokenID] < require)
         {
             for (int i = 0; i < stuff.Count; i++)
             {
                 stuff[i].sprite = null;
+                stuff[i].color = new Color32(255, 255, 255, 0);
             }
 
             for (int i = 0; i < DBManager.instance.user.tokens[tokenID]; i++)
@@ -143,11 +156,21 @@ public class CreateHousing : MonoBehaviour
     {
         DBManager.instance.user.tokens[tokenID] -= require;
         //골드 빼세요
+        if (DBManager.instance.user.goods["gold"] >= priceInt)
+        {
+            DBManager.instance.user.goods["gold"] -= priceInt;
+        }
+        else
+        {
+            //버튼 추가해서 비활성화 시키기(Chatting Scene)
+            return;
+        }
         if (DBManager.instance.user.tokens[tokenID] < require)
         {
             for (int i = 0; i < stuff.Count; i++)
             {
                 stuff[i].sprite = null;
+                stuff[i].color = new Color32(255, 255, 255, 0);
             }
 
             for (int i = 0; i < DBManager.instance.user.tokens[tokenID]; i++)
