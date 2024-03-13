@@ -16,48 +16,81 @@ public class InventorySystem : MonoBehaviour
     public Transform inventoryCreate;
     public Transform inventoryUpgrade;
 
-    private void OnEnable()
+    [SerializeField] private FilterButton filter;
+    /*private void OnEnable()
     {
         //유저 정보 로드
+        //Debug.Log($"DB Count : {DBManager.instance.user.housingObject.Count}");
         if (DBManager.instance == null) return;
-        Debug.Log($"DB Count : {DBManager.instance.user.housingObject.Count}");
+        Debug.Log("인벤토리 로드중?");
+        LoadHousingInventory();
 
-        if (!TestManager.instance.isHousingInventoryLoad)
+        //if (!TestManager.instance.isInventoryLoad)
+        //{
+        //    for (int i = 0; i < DBManager.instance.user.tokens.Length; i++)
+        //    {
+        //        if (DBManager.instance.user.tokens[i] != 0)
+        //        {
+        //            LoadTokenItem(i, DBManager.instance.user.tokens[i]);
+        //        }
+        //    }
+        //    //TestManager.instance.isInventoryLoad = true;
+        //}
+
+    }*/
+
+
+
+    private void OnEnable()
+    {
+        if (DBManager.instance == null) return;
+        Debug.Log("인벤토리 로드중?");
+        LoadHousingInventory();
+        if (filter != null)
         {
-            if (DBManager.instance.user.housingObject.Count > 0)
+            filter.Filtering();
+        }
+    }
+
+    public void ClearHousingInventory()
+    {
+        HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
+        foreach (HousingSlot slot in slots)
+        {
+            slot.transform.GetChild(0).GetComponent<Image>().sprite = null;
+            slot.transform.GetChild(0).GetComponent<Image>().color = new Color(1, 1, 1, 0);
+            slot.transform.GetComponentInChildren<HousingInventory>().housingName = string.Empty;
+            slot.transform.GetComponentInChildren<HousingInventory>().count = 0;
+            slot.transform.GetComponentInChildren<HousingInventory>().countObject.SetActive(false);
+        }
+    }
+
+
+    public void LoadHousingInventory()
+    {
+        ClearHousingInventory();
+        HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
+        int index = 0;
+        if (DBManager.instance.user.housingObject.Count > 0)
+        {
+            foreach (var key in DBManager.instance.user.housingObject.Keys)
             {
-                foreach (var key in DBManager.instance.user.housingObject.Keys)
+                for (int i = 0; i < ChartManager.instance.housingObjectDatas.Count; i++)
                 {
-                    for (int i = 0; i < ChartManager.instance.housingObjectDatas.Count; i++)
+                    if (ChartManager.instance.housingObjectDatas[i].name_e == key)
                     {
-                        if (ChartManager.instance.housingObjectDatas[i].name_e == key)
-                        {
-                            Debug.Log($"{i}번째 Key : {key}");
-                            int housingIndex = ChartManager.instance.housingObjectDatas[i].index;
-                            LoadHousingInventory(housingIndex, DBManager.instance.user.housingObject[key]);
-                            break;
-                        }
+                        Debug.Log($"{i}번째 Key : {key}");
+                        SetItemInfo(ChartManager.instance.housingObjectDatas[i], slots[index], DBManager.instance.user.housingObject[key]);
+                        index++;
+                        //LoadHousingInventory(housingIndex, DBManager.instance.user.housingObject[key]);
+                        break;
                     }
                 }
             }
-            //TestManager.instance.isHousingInventoryLoad = true;
         }
-
-        if (!TestManager.instance.isInventoryLoad)
-        {
-            for (int i = 0; i < DBManager.instance.user.tokens.Length; i++)
-            {
-                if (DBManager.instance.user.tokens[i] != 0)
-                {
-                    LoadTokenItem(i, DBManager.instance.user.tokens[i]);
-                }
-            }
-            //TestManager.instance.isInventoryLoad = true;
-        }
-
     }
 
-    public void LoadHousingInventory(int housingIndex, int count)
+    public void LoadHousingInventory_(int housingIndex, int count)
     {
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
         HousingObject housingObject = ChartManager.instance.housingObjectDatas[housingIndex];
@@ -67,17 +100,26 @@ public class InventorySystem : MonoBehaviour
             {
                 SetItemInfo(housingObject, slot);
                 slot.GetComponentInChildren<HousingInventory>().count = count;
+                slot.transform.SetAsFirstSibling();
                 slot.isSlotUse = true;
                 Debug.Log(slot.isSlotUse);
                 break;
-
             }
             else
             {
-                if (slot.housingObject.GetValueOrDefault().index == housingObject.index)
+                if (slot.housingObject.index == housingObject.index)
                 {
-                    Debug.Log("여기로 들어오면 그냥 넘어가");
-                    break;
+                    if (DBManager.instance.user.housingObject[ChartManager.instance.housingObjectDatas[housingIndex].name_e] == 0)
+                    {
+                        slot.GetComponentInChildren<HousingInventory>().count = 0;
+                        break;
+                    }
+                    else
+                    {
+                        //slot.GetComponentInChildren<HousingInventory>().count = count;
+                        Debug.Log("여기로 들어오면 그냥 넘어가");
+                        break;
+                    }
                 }
             }
         }
@@ -316,10 +358,20 @@ public class InventorySystem : MonoBehaviour
         _slot.transform.GetComponentInChildren<HousingInventory>().housingName = housing.name_e;
     }
 
+    public void SetItemInfo(HousingObject housing, HousingSlot _slot, int count)     //하우징 인벤토리에 이미지와 데이터 이름 넣기(연동)
+    {
+        _slot.transform.GetChild(0).GetComponent<Image>().sprite = SpriteManager.instance.sprites[housing.imageIndex];
+        _slot.transform.GetComponentInChildren<HousingInventory>().housingObj = housing;
+        _slot.transform.GetComponentInChildren<HousingInventory>().housingName = housing.name_e;
+        _slot.transform.GetComponentInChildren<HousingInventory>().count = count;
+    }
+
     public void SetItemInfo(int tokenIndex, Slot _slot)      //공방 인벤토리에 토큰이미지와 데이터 이름 넣기
     {
         _slot.transform.GetChild(0).GetComponent<Image>().sprite = TestManager.instance.tokenList[tokenIndex].sprite;
         _slot.transform.GetComponentInChildren<ItemInfo>()._itemData = TestManager.instance.tokenList[tokenIndex];
         _slot.transform.GetComponentInChildren<ItemInfo>()._itemName = TestManager.instance.tokenList[tokenIndex].itemName;
     }
+
+
 }

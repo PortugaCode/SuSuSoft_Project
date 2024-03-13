@@ -10,6 +10,8 @@ public class HousingDrag : MonoBehaviour
     public bool isCanBuild = true;
     public bool isSetBuild = true;
     public bool isInsertInven = false;
+    public bool isAdd = false;
+    public bool isRemove = false;
     public Transform previousParent;
     [HideInInspector] public bool isTouch = false;
     [HideInInspector] public Vector3 offset;
@@ -19,7 +21,7 @@ public class HousingDrag : MonoBehaviour
     [SerializeField] private bool isCloneCreate = false;
     public GameObject cloneObject;
     public GameObject originalObject;
-
+    public int currentLayer_;
 
     [Header("Build Setting")]
     private Transform buildSpaceParent;
@@ -92,6 +94,10 @@ public class HousingDrag : MonoBehaviour
         //하우징 오브젝트 레이어 설정
         SetZ(gameObject.layer);
 
+        currentLayer_ = gameObject.layer;
+
+        gameObject.name = housingObject.name_e;
+
         isInsertInven = false;
         mainCam = Camera.main;
         if (!LoadHousing.instance.isLoading && !isClone)        //새로 설치할 하우징 코드
@@ -103,22 +109,31 @@ public class HousingDrag : MonoBehaviour
 
             previousParent = transform.parent;
 
-            if (LoadHousing.instance.tempKey.Count == 0)        //임시 키값이 없을 경우
-            {
-                primaryIndex = LoadHousing.instance.primaryKey;
-                LoadHousing.instance.primaryKey += 1;
-            }
-            else
-            {
-                primaryIndex = LoadHousing.instance.tempKey[0];
-                LoadHousing.instance.tempKey.RemoveAt(0);
-            }
+            transform.position = new Vector3(clampX, clampY, -1);
+
+
+            #region 이전 코드
+
+            //if (LoadHousing.instance.tempKey.Count == 0)        //임시 키값이 없을 경우
+            //{
+            //    primaryIndex = LoadHousing.instance.primaryKey;
+            //    LoadHousing.instance.primaryKey += 1;
+            //}
+            //else
+            //{
+            //    primaryIndex = LoadHousing.instance.tempKey[0];
+            //    LoadHousing.instance.tempKey.RemoveAt(0);
+            //}
             //조만간 DBManager로 바꿔야 함
             //LoadHousing.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
             //LoadHousing.instance.localHousingObject.Add(primaryIndex, housingObject);
-            DBManager.instance.AddMyHousingObject(housingObject.index, transform.position.x, transform.position.y);
 
-            transform.position = new Vector3(clampX, clampY, -1);
+            #endregion
+        }
+        else
+        {
+            isSetBuild = true;
+            isAdd = true;
         }
 
         if (!isCloneCreate)
@@ -140,6 +155,9 @@ public class HousingDrag : MonoBehaviour
         space.transform.localScale = new Vector3(spaceX, spaceY, 1);
         boxCollider.size = new Vector3(spaceX, spaceY, 0.2f);
         subCollider.enabled = false;
+
+        original_x = transform.position.x;
+        original_y = transform.position.y;
 
         #region Scriptable Object(연동 전)
         /*
@@ -197,13 +215,16 @@ public class HousingDrag : MonoBehaviour
             {
                 check.gameObject.SetActive(false);
                 subCollider.enabled = false;
+                SetZ(currentLayer_);
             }
             else
             {
                 check.gameObject.SetActive(true);
                 subCollider.enabled = true;
+                transform.position = new Vector3(transform.position.x, transform.position.y, -0.9f);
             }
         }
+
 
         ClonePosition();
 
@@ -231,19 +252,20 @@ public class HousingDrag : MonoBehaviour
 
             if (touch.phase == TouchPhase.Began)
             {
-
-                //Debug.Log("Began 실행");
                 if (Physics.Raycast(ray, out hit))
                 {
                     if (EventSystem.current.IsPointerOverGameObject(0) == false && hit.collider.gameObject == gameObject)
                     {
-                        original_x = transform.position.x;
-                        original_y = transform.position.y;
                         isTouch = true;
                         Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
                         offset = transform.position - ray.GetPoint(hit.distance);
+                        if (!isAdd)
+                        {
+                            //DBManager.instance.AddMyHousingObject(housingObject.index, transform.position.x, transform.position.y);
+                            isAdd = true;
+                            isRemove = false;
+                        }
                     }
-
                     #region Gizmos
                     /*
                                         gizmosHit = hit;
@@ -256,23 +278,40 @@ public class HousingDrag : MonoBehaviour
             }
             else if (touch.phase == TouchPhase.Ended)
             {
-                //Debug.Log("End");
                 isDragging = false;
                 transform.position = new Vector3(clampX, clampY, transform.position.z);
                 new_x = clampX;
                 new_y = clampY;
-                subCollider.enabled = false;
                 isTouch = false;
                 touchTime = 0;
-                int currentLayer = gameObject.layer;
-                if (isCanBuild)
-                {
-                    SetZ(currentLayer);
-                }
-                else
+
+                //DBManager.instance.MoveMyHousingObject(id, original_x, original_y, new_x, new_y);
+
+                if (!isCanBuild)
                 {
                     transform.position = new Vector3(transform.position.x, transform.position.y, -0.9f);
+                    if (!isRemove)
+                    {
+                        //DBManager.instance.RemoveMyHousingObject(id, new_x, new_y);
+                        isRemove = true;
+                        isAdd = false;
+                    }
                 }
+
+
+                #region 이전 코드
+                /*
+                if (isCanBuild)
+                        {
+                            SetZ(currentLayer_);
+                        }
+                        else
+                        {
+                            transform.position = new Vector3(transform.position.x, transform.position.y, -0.9f);
+                        }
+                */
+                #endregion
+
             }
 
             if (isDragging)
@@ -414,19 +453,11 @@ public class HousingDrag : MonoBehaviour
                     }
                 }
 
-
-                //드래그 끝날 때 Dictionary 수정
-                //조만간 DBManager로 바꿔야 함
-                //LoadHousing.instance.localHousing[primaryIndex] = (housingObject, transform.position);
-                //LoadHousing.instance.localCloneHousing[primaryIndex] = cloneObject.transform.position;
-                DBManager.instance.MoveMyHousingObject(id, original_x, original_y, new_x, new_y);
             }
         }
         else
         {
             isDragging = false;
-            subCollider.enabled = false;
-            //Debug.Log($"클론 포지션 : {LoadHousing.instance.localCloneHousing[primaryIndex]}");
         }
     }
 
@@ -512,26 +543,35 @@ public class HousingDrag : MonoBehaviour
              hit_LB.collider.gameObject.layer != currentLayer &&
              hit_RB.collider.gameObject.layer != currentLayer &&
              hit_Center.collider.gameObject.layer != currentLayer &&
-             hit_Box.collider.gameObject.layer != currentLayer)
+             hit_Box.collider.gameObject.layer != currentLayer)                         //Ray의 어느것이라도 
         {
             #region 건물을 바닥에만 설치할 수 있게 하려면 아래 region의 코드를 주석처리 후 이 조건문을 활성화 하세요.
 
             if ((currentLayer == LayerMask.NameToLayer("Building") ||
-                currentLayer == LayerMask.NameToLayer("Front") ||
-                currentLayer == LayerMask.NameToLayer("Back")) &&
-                transform.position.y > Vector3.zero.y)                //배경의 절반 아래에만 설치 가능
+                 currentLayer == LayerMask.NameToLayer("Front") ||
+                 currentLayer == LayerMask.NameToLayer("Back")) && transform.position.y > Vector3.zero.y)                //배경의 절반 아래에만 설치 가능
             {
                 check.color = new Color32(255, 0, 0, 100);
                 check.gameObject.SetActive(true);
                 transform.SetParent(previousParent);
                 isCanBuild = false;
-
+            }
+            else if (hit_RT.collider.gameObject.CompareTag("NotBuild") ||
+               hit_LT.collider.gameObject.CompareTag("NotBuild") ||
+               hit_LB.collider.gameObject.CompareTag("NotBuild") ||
+               hit_RB.collider.gameObject.CompareTag("NotBuild") ||
+               hit_Center.collider.gameObject.CompareTag("NotBuild") ||
+               hit_Box.collider.gameObject.CompareTag("NotBuild"))
+            {
+                check.color = new Color32(255, 0, 0, 100);
+                check.gameObject.SetActive(true);
+                isCanBuild = false;
             }
             else
             {
                 check.color = new Color32(0, 255, 0, 100);
                 isCanBuild = true;
-                if (!isDragging)
+                if (isSetBuild)
                 {
                     transform.SetParent(hit_Center.collider.transform.parent);
                 }
@@ -554,9 +594,9 @@ public class HousingDrag : MonoBehaviour
         {
             check.color = new Color32(255, 0, 0, 100);
             check.gameObject.SetActive(true);
-            //transform.SetParent(previousParent);
             isCanBuild = false;
         }
+
 
     }
 
@@ -607,6 +647,7 @@ public class HousingDrag : MonoBehaviour
             }
         }
     }
+    #region 하우징 초반 세팅
 
     private void SetWidthHeight()
     {
@@ -693,21 +734,23 @@ public class HousingDrag : MonoBehaviour
         }
     }
 
+    #endregion
     private void OnDestroy()
     {
-        if (isInsertInven)
+        if (!isClone)
         {
-            Debug.Log("오브젝트 넣기를 누를때 여기 실행");
-            //LoadHousing.instance.tempKey.Add(primaryIndex);
-            //LoadHousing.instance.localHousing.Remove(primaryIndex);
-            //LoadHousing.instance.localCloneHousing.Remove(primaryIndex);
-            //LoadHousing.instance.localHousingObject.Remove(primaryIndex);
-            DBManager.instance.RemoveMyHousingObject(id, new_x, new_y);
-            Destroy(cloneObject);
-        }
-        else
-        {
-            Debug.Log("평소의 OnDestroy 실행");
+            if (isInsertInven)
+            {
+                Debug.Log($"오브젝트 넣기 {gameObject.name}");
+                //DBManager.instance.RemoveMyHousingObject(id, new_x, new_y);
+                Destroy(cloneObject);
+                #region 이전 작업코드
+                //LoadHousing.instance.tempKey.Add(primaryIndex);
+                //LoadHousing.instance.localHousing.Remove(primaryIndex);
+                //LoadHousing.instance.localCloneHousing.Remove(primaryIndex);
+                //LoadHousing.instance.localHousingObject.Remove(primaryIndex);
+                #endregion
+            }
         }
     }
 

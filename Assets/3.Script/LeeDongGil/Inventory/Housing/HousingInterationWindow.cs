@@ -8,16 +8,21 @@ using System.Text;
 
 public class HousingInterationWindow : MonoBehaviour
 {
+    public bool isFirstSet = false;
+
     [Header("Window")]
     public InventorySystem housingInvenSys;
     public TextMeshProUGUI housingName;
+    public TextMeshProUGUI firstHousingName;
     public GameObject housingObject;
-    public HousingItemData housingData;
-    public HousingItemData housingDataWindow;
     public HousingObject housingObj;
     public HousingObject housingObjWindow;
     public Button insertBTN;
     public Button setBTN;
+    public Button firstSetBTN;
+    public GameObject firstWindow;
+    public GameObject window;
+    public HousingDrag housingDrag;
 
     [Header("PopUp")]
     public GameObject PopupObject;                                      //윈도우 오브젝트
@@ -32,13 +37,16 @@ public class HousingInterationWindow : MonoBehaviour
     public TextMeshProUGUI P_housingSetInfo;                            //하우징 세트효과 설명
     public TextMeshProUGUI P_housingEnhanceInfo;                        //하우징 세트 강화효과 정보
 
+    [Header("Housing UI")]
+    public ToggleHousingInventory housingToggle;
+
 
     private void Update()
     {
         CheckHousingObjectToTouch();
         if (!TestManager.instance.isEditMode)
         {
-            transform.GetChild(0).gameObject.SetActive(false);
+            window.SetActive(false);
         }
 
         if (PopupObject.activeSelf)
@@ -63,23 +71,29 @@ public class HousingInterationWindow : MonoBehaviour
                     if (hit.collider.gameObject.CompareTag("Building"))
                     {
                         //housingData = housingObject.GetComponent<HousingDrag>().data;
-                        Debug.Log($"{housingObj.index}번 {housingObj.name_e}");
                         housingObject = hit.collider.gameObject;
-                        housingObj = this.housingObject.GetComponent<HousingDrag>().housingObject;
+                        housingDrag = housingObject.GetComponent<HousingDrag>();
+                        housingObj = housingDrag.housingObject;
                         housingName.text = housingObj.name_k;
-                        if (housingObject.GetComponent<HousingDrag>().isCanBuild)
-                        {
-                            setBTN.interactable = true;
-                        }
-                        else
-                        {
-                            setBTN.interactable = false;
-                        }
+                        firstHousingName.text = housingObj.name_k;
                     }
                 }
 
             }
 
+        }
+        if (housingObject != null)
+        {
+            if (housingObject.GetComponent<HousingDrag>().isCanBuild)
+            {
+                setBTN.interactable = true;
+                firstSetBTN.interactable = true;
+            }
+            else
+            {
+                setBTN.interactable = false;
+                firstSetBTN.interactable = false;
+            }
         }
     }
 
@@ -158,18 +172,64 @@ public class HousingInterationWindow : MonoBehaviour
 
     public void InsertHousingInventory()
     {
-        housingInvenSys.GetHousingItem(housingObj.index, 1);
+        if (DBManager.instance.user.housingObject.ContainsKey(housingObj.name_e))
+        {
+            DBManager.instance.user.housingObject[housingObj.name_e] += 1;
+        }
+        else
+        {
+            DBManager.instance.user.housingObject.Add(housingObj.name_e, 1);
+        }
+        DBManager.instance.RemoveMyHousingObject(housingObj.index, housingDrag.new_x, housingDrag.new_y);
+        housingInvenSys.LoadHousingInventory();
+        //housingInvenSys.GetHousingItem(housingObj.index, 1);
         housingObject.GetComponent<HousingDrag>().isInsertInven = true;
         Destroy(housingObject);
-        TestManager.instance.isShowUI = true;
-        transform.GetChild(0).gameObject.SetActive(false);
+        //TestManager.instance.isShowUI = true;
+        isFirstSet = false;
+        housingToggle.openButton.interactable = true;
+        window.SetActive(false);
+        TestManager.instance.housingInven.SetActive(true);
     }
-
     public void SetHousingPosition()
     {
         housingObject.GetComponent<HousingDrag>().isSetBuild = true;
-        transform.GetChild(0).gameObject.SetActive(false);
-        TestManager.instance.isShowUI = true;
+        DBManager.instance.MoveMyHousingObject(housingObj.index, housingDrag.original_x, housingDrag.original_y, housingDrag.new_x, housingDrag.new_y);
+        isFirstSet = false;
+        housingToggle.openButton.interactable = true;
+        window.SetActive(false);
+        housingToggle.housingInventory.SetActive(true);
+        //TestManager.instance.isShowUI = true;
+    }
+
+    public void FirstInsertHousingInventory()
+    {
+        housingInvenSys.LoadHousingInventory();
+        //housingInvenSys.GetHousingItem(housingObj.index, 1);
+        housingObject.GetComponent<HousingDrag>().isInsertInven = true;
+        Destroy(housingObject);
+        //TestManager.instance.isShowUI = true;
+        isFirstSet = false;
+        housingToggle.openButton.interactable = true;
+        firstWindow.SetActive(false);
+        TestManager.instance.housingInven.SetActive(true);
+    }
+
+
+    public void FirstSetHousingPosition()
+    {
+        housingObject.GetComponent<HousingDrag>().isSetBuild = true;
+        DBManager.instance.user.housingObject[housingObj.name_e]--;
+        if (DBManager.instance.user.housingObject[housingObj.name_e] == 0)
+        {
+            DBManager.instance.user.housingObject.Remove(housingObj.name_e);
+        }
+        DBManager.instance.AddMyHousingObject(housingObj.index, housingObject.transform.position.x, housingObject.transform.position.y);
+        isFirstSet = false;
+        housingToggle.openButton.interactable = true;
+        firstWindow.SetActive(false);
+        housingToggle.housingInventory.SetActive(true);
+        //TestManager.instance.isShowUI = true;
     }
 
 }
