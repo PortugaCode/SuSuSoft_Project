@@ -14,11 +14,21 @@ public enum SceneNames
     OnGame
 }
 
+public enum Level
+{
+    Level_1,
+    Level_2,
+    Level_3,
+    Level_4,
+    Level_5,
+}
+
 public class Utils : MonoBehaviour
 {
     public static Utils Instance;
 
     public SceneNames nowScene;
+    public Level currentLevel;
 
     private void Awake()
     {
@@ -59,7 +69,63 @@ public class Utils : MonoBehaviour
 
     public void LoadScene(SceneNames sceneNames)
     {
+         
         nowScene = sceneNames;
         SceneManager.LoadScene(sceneNames.ToString());
     }
+
+    private void SelectLevel()
+    {
+        switch((int)currentLevel)
+        {
+            case 0:
+                {
+                    currentLevel = Level.Level_1;
+                    break;
+                }
+            case 1:
+                {
+                    currentLevel = Level.Level_2;
+                    break;
+                }
+            case 2:
+                {
+                    currentLevel = Level.Level_3;
+                    break;
+                }
+            case 3:
+                {
+                    currentLevel = Level.Level_4;
+                    break;
+                }
+            case 4:
+                {
+                    currentLevel = Level.Level_5;
+                    break;
+                }
+        }
+    }
+    
+    public void SelectStage(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                currentLevel = Level.Level_1;
+                break;
+            case 1:
+                currentLevel = Level.Level_2;
+                break;
+            case 2:
+                currentLevel = Level.Level_3;
+                break;
+            case 3:
+                currentLevel = Level.Level_4;
+                break;
+            case 4:
+                currentLevel = Level.Level_5;
+                break;
+        }
+    }
+    
 }

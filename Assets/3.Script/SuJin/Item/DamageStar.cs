@@ -4,21 +4,27 @@ using UnityEngine;
 
 public class DamageStar : MonoBehaviour
 {
-    [SerializeField] private GameObject boss;
+    [SerializeField] private Transform bossControll;
     [SerializeField] private float speed;
     private bool isMoveOn = false;
 
+    Animator animator;
 
     private void Awake()
     {
-        boss = GameObject.FindGameObjectWithTag("Boss");
+        animator = GetComponent<Animator>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        if(isMoveOn)
+        AttackStar();
+    }
+
+    public void AttackStar()
+    {
+        if (isMoveOn)
         {
-            transform.position = Vector2.Lerp(this.transform.position, boss.transform.position, speed * Time.deltaTime);
+            transform.position = Vector2.Lerp(this.transform.position, bossControll.position, speed * Time.deltaTime);
         }
     }
 
@@ -27,9 +33,14 @@ public class DamageStar : MonoBehaviour
         //별이 플레이어에 닿았을 때 
         if (collision.CompareTag("Player"))    //&& Utils.Instance.currentLevel == Level.Level_5 
         {
-            Debug.Log("OnTriggerEnter2D");
             isMoveOn = true;
-           
+            gameObject.layer = 0;
+            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        }
+        else if(collision.CompareTag("Boss") && isMoveOn)
+        {
+            animator.SetTrigger("BossHurt");
+            Destroy(gameObject);
         }
     }
 }
