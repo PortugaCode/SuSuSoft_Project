@@ -50,11 +50,11 @@ public class HorizontalPlayer : MonoBehaviour
     [SerializeField] Rigidbody2D rb2D;
     private bool gameStart = false;
 
-    //Player Light
+    [Header("Player Light")]
     [SerializeField] private Transform player;
     [SerializeField] private Light2D playerLight;
-    private float maxSightRange = 2.72f;      //lightRangeOuter
-    private float minSightRange = 1.3f;      //lightRangeBaseOuter
+    [SerializeField] private float maxSightRange = 2.72f;      //lightRangeOuter
+    [SerializeField] private float minSightRange = 1.3f;      //lightRangeBaseOuter
     private float sightRangeSpeed = 0.5f;
 
     //+
@@ -71,6 +71,7 @@ public class HorizontalPlayer : MonoBehaviour
 
     private void Start()
     {
+        playerProperty = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerProperty>();
         playerLight.pointLightOuterRadius = maxSightRange;
         graphicRay = canvas.GetComponent<GraphicRaycaster>();
     }
