@@ -22,7 +22,9 @@ public class MatchSystem
     private SessionId roomId;
     private string roomToken;
     private MatchMakingUserInfo inviteUserInfo;
-    public string inviteUserNickName; // 방장 닉네임 => 나중에 여기 DB를 이용해서 하우징 오브젝트 동기화
+    public string inviteUserNickName;
+
+    public string masterUser_NickName;
 
     public MatchMakingUserInfo InviteUserInfo => inviteUserInfo;
     public SessionId RoomID => roomId;
@@ -333,6 +335,7 @@ public class MatchSystem
             {
                 isHost = true;
                 inviteUserNickName = nickName;
+                masterUser_NickName = Backend.UserNickName;
                 OnMatchInviteUI?.Invoke(this, EventArgs.Empty);
                 isTimerOn = true;
             }
@@ -349,6 +352,7 @@ public class MatchSystem
                 roomId = args.RoomId;
                 roomToken = args.RoomToken;
                 inviteUserInfo = args.InviteUserInfo;
+                masterUser_NickName = inviteUserInfo.m_nickName;
                 Todo();
             }
         };
@@ -476,6 +480,7 @@ public class MatchSystem
     //대기방 퇴장
     public void LeaveMatchRoom()
     {
+        masterUser_NickName = string.Empty;
         isTimerOn = false;
         timer = 12.0f;
         Backend.Match.LeaveMatchRoom();
@@ -579,6 +584,7 @@ public class MatchSystem
                 roomInfo = null;
                 userNickName.Clear();
                 userTeam.Clear();
+                masterUser_NickName = string.Empty;
             }
         };
     }
