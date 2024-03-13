@@ -18,6 +18,7 @@ public class BtnControl : MonoBehaviour
     [SerializeField] private GameObject testHousingButton;
     [SerializeField] private GameObject editModeButton;
     [SerializeField] private GameObject stageUI;
+    [SerializeField] private GameObject shopUI;
 
     [Header("Select Button Color")]
     [SerializeField] private List<Image> selectBtnList;

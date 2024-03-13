@@ -297,7 +297,6 @@ public class ShopUISystem : MonoBehaviour
     {
         if (DBManager.instance.user.goods["gold"] < tokenItemIntPrices[nowIndex] && dailyItemData[nowIndex, 1] <= 0)
         {
-            OpenErrorPopUp();
             return false;
         }
         else return true;
@@ -307,7 +306,6 @@ public class ShopUISystem : MonoBehaviour
     {
         if (DBManager.instance.user.goods["gold"] < dailyItemIntPrices[nowIndex] && tokenItemData[nowIndex, 1] <= 0)
         {
-            OpenErrorPopUp();
             return false;
         }
         else return true;

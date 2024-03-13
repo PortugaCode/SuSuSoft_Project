@@ -403,8 +403,22 @@ public class DBManager : MonoBehaviour
         param.Add("LastCheckTime", user.lastCheckTime);
         user.activePoint = 5;
         param.Add("ActivePoint", user.activePoint);
+        for (int i = 0; i < 3; i++)
+        {
+            int rand = UnityEngine.Random.Range(0, user.tokens.Length);
+            user.dailyShopInfo[i, 0] = rand;
+            user.dailyShopInfo[i, 1] = 1;
+        }
         param.Add("DailyShopInfo", user.dailyShopInfo);
+
+        for (int i = 0; i < 6; i++)
+        {
+            int rand = UnityEngine.Random.Range(0, user.tokens.Length);
+            user.tokenShopInfo[i, 0] = rand;
+            user.tokenShopInfo[i, 1] = 3;
+        }
         param.Add("TokenShopInfo", user.tokenShopInfo);
+
 
         for (int i = 0; i < 5; i++)
         {
@@ -696,13 +710,13 @@ public class DBManager : MonoBehaviour
         // # 매일 6시마다 리셋
         if (DailyReset())
         {
-            for (int i = 0; i < user.dailyShopInfo.Length; i++)
+            for (int i = 0; i < 3; i++)
             {
                 int rand = UnityEngine.Random.Range(0, user.tokens.Length);
                 user.dailyShopInfo[i, 0] = rand;
                 user.dailyShopInfo[i, 1] = 1;
             }
-            for (int i = 0; i < user.tokenShopInfo.Length; i++)
+            for (int i = 0; i < 6; i++)
             {
                 int rand = UnityEngine.Random.Range(0, user.tokens.Length);
                 user.tokenShopInfo[i, 0] = rand;
@@ -715,7 +729,7 @@ public class DBManager : MonoBehaviour
     public void ShopResetCheck_Token()
     {
         //즉시 갱신
-        for (int i = 0; i < user.tokenShopInfo.Length; i++)
+        for (int i = 0; i < 6; i++)
         {
             int rand = UnityEngine.Random.Range(0, user.tokens.Length);
             user.tokenShopInfo[i, 0] = rand;

@@ -53,7 +53,7 @@ public class DrawUISystem : MonoBehaviour
         CloseUpdatePopUp();
         CloseUpdatePopUp_10();
 
-        //if (!CanDraw()) return;
+        if (!CanDraw()) return;
 
         ResetDrawCharacter();
         int rand = Random.Range(0, bodies.Length);
@@ -72,7 +72,7 @@ public class DrawUISystem : MonoBehaviour
         CloseUpdatePopUp();
         CloseUpdatePopUp_10();
 
-        //if (!CanDraw(10)) return;
+        if (!CanDraw(10)) return;
 
         ResetDrawCharacter();
         characterIndex.Clear();
@@ -486,7 +486,11 @@ public class DrawUISystem : MonoBehaviour
 
     private bool CanDraw()
     {
-        if (DBManager.instance.user.goods["gold"] > drawGold) return true;
+        if (DBManager.instance.user.goods["gold"] > drawGold)
+        {
+            DBManager.instance.user.goods["gold"] -= drawGold;
+            return true;
+        }
         else
         {
             errorPopUp.SetActive(true);
@@ -496,7 +500,11 @@ public class DrawUISystem : MonoBehaviour
 
     private bool CanDraw(int index)
     {
-        if (DBManager.instance.user.goods["gold"] > (drawGold * 10)) return true;
+        if (DBManager.instance.user.goods["gold"] > (drawGold * 10))
+        {
+            DBManager.instance.user.goods["gold"] -= (drawGold * 10);
+            return true;
+        }
         else
         {
             errorPopUp.SetActive(true);
