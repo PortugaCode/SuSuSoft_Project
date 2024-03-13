@@ -91,6 +91,7 @@ public class LoginManager : MonoBehaviour
                 else
                 {
                     Debug.Log("로그인 완료");
+                    DBManager.instance.user.isLogin = true;
                     ChartManager.instance.GetChartData();
                     DBManager.instance.DB_Load(idText, pwText);
                     BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
