@@ -174,6 +174,7 @@ public class DBManager : MonoBehaviour
     private Coroutine timerCoroutine = null;
 
     public event EventHandler TimerEvent;
+    public event EventHandler OnResetDay;
 
     private void Awake()
     {
@@ -701,6 +702,24 @@ public class DBManager : MonoBehaviour
                 user.dailyShopInfo[i, 0] = rand;
                 user.dailyShopInfo[i, 1] = 1;
             }
+            for (int i = 0; i < user.tokenShopInfo.Length; i++)
+            {
+                int rand = UnityEngine.Random.Range(0, user.tokens.Length);
+                user.tokenShopInfo[i, 0] = rand;
+                user.tokenShopInfo[i, 1] = 3;
+            }
+            OnResetDay?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public void ShopResetCheck_Token()
+    {
+        //즉시 갱신
+        for (int i = 0; i < user.tokenShopInfo.Length; i++)
+        {
+            int rand = UnityEngine.Random.Range(0, user.tokens.Length);
+            user.tokenShopInfo[i, 0] = rand;
+            user.tokenShopInfo[i, 1] = 3;
         }
     }
 

@@ -79,10 +79,13 @@ public class HousingDrag : MonoBehaviour
         check = transform.GetChild(0).GetComponent<SpriteRenderer>();
         boxCollider = GetComponent<BoxCollider>();
         subCollider = transform.GetChild(1).GetComponent<BoxCollider>();
-        group = FindObjectOfType<EditModeButton>().GetComponent<CanvasGroup>();
         grid = FindObjectOfType<HousingGrid>();
-        buildSpaceParent = FindObjectOfType<DrawingGrid>().transform;
-        player = TestManager.instance.player;
+        if (Utils.Instance.nowScene != SceneNames.MatchRoom)
+        {
+            group = FindObjectOfType<EditModeButton>().GetComponent<CanvasGroup>();
+            buildSpaceParent = FindObjectOfType<DrawingGrid>().transform;
+            player = TestManager.instance.player;
+        }
         #endregion
 
         //하우징 오브젝트의 너비와 높이 조절
@@ -100,7 +103,7 @@ public class HousingDrag : MonoBehaviour
 
         isInsertInven = false;
         mainCam = Camera.main;
-        if (!LoadHousing.instance.isLoading && !isClone)        //새로 설치할 하우징 코드
+        if (!LoadHousing.instance.isLoading && !isClone && Utils.Instance.nowScene != SceneNames.MatchRoom)        //새로 설치할 하우징 코드
         {
             moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(mainCam.transform.position.x) * checkMinusX : Mathf.FloorToInt(mainCam.transform.position.x) + 0.5f;
             moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(mainCam.transform.position.y) * checkMinusY : Mathf.FloorToInt(mainCam.transform.position.y) + 0.5f;
@@ -620,29 +623,32 @@ public class HousingDrag : MonoBehaviour
             cloneObject.SetActive(false);
         }
 
-        if (player.transform.position.x >= (grid.boundX / 2) - 10)
+        if (Utils.Instance.nowScene != SceneNames.MatchRoom)
         {
-            HousingDrag[] housingObjs = buildSpaceParent.GetComponentsInChildren<HousingDrag>();
-            foreach (HousingDrag housing in housingObjs)
+            if (player.transform.position.x >= (grid.boundX / 2) - 10)
             {
-                if (housing.isClone && housing.gameObject.transform.position.x >= (grid.boundX / 2) - 10)
+                HousingDrag[] housingObjs = buildSpaceParent.GetComponentsInChildren<HousingDrag>();
+                foreach (HousingDrag housing in housingObjs)
                 {
-                    Vector3 tempPosition = housing.gameObject.transform.position;
-                    housing.gameObject.transform.position = housing.originalObject.transform.position;
-                    housing.originalObject.transform.position = tempPosition;
+                    if (housing.isClone && housing.gameObject.transform.position.x >= (grid.boundX / 2) - 10)
+                    {
+                        Vector3 tempPosition = housing.gameObject.transform.position;
+                        housing.gameObject.transform.position = housing.originalObject.transform.position;
+                        housing.originalObject.transform.position = tempPosition;
+                    }
                 }
             }
-        }
-        else if (player.transform.position.x <= -(grid.boundX / 2) + 10)
-        {
-            HousingDrag[] housingObjs = buildSpaceParent.GetComponentsInChildren<HousingDrag>();
-            foreach (HousingDrag housing in housingObjs)
+            else if (player.transform.position.x <= -(grid.boundX / 2) + 10)
             {
-                if (housing.isClone && housing.gameObject.transform.position.x <= -(grid.boundX / 2) + 10)
+                HousingDrag[] housingObjs = buildSpaceParent.GetComponentsInChildren<HousingDrag>();
+                foreach (HousingDrag housing in housingObjs)
                 {
-                    Vector3 tempPosition = housing.gameObject.transform.position;
-                    housing.gameObject.transform.position = housing.originalObject.transform.position;
-                    housing.originalObject.transform.position = tempPosition;
+                    if (housing.isClone && housing.gameObject.transform.position.x <= -(grid.boundX / 2) + 10)
+                    {
+                        Vector3 tempPosition = housing.gameObject.transform.position;
+                        housing.gameObject.transform.position = housing.originalObject.transform.position;
+                        housing.originalObject.transform.position = tempPosition;
+                    }
                 }
             }
         }

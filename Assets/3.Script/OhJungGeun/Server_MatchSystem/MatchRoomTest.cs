@@ -45,6 +45,13 @@ public class MatchRoomTest : MonoBehaviour
     [SerializeField] private Image master_Body;
     [SerializeField] private Image master_Face;
 
+    [Header("Master Housing")]
+    [SerializeField] private Transform buildSpace;
+    [SerializeField] private HousingDrag housingGameObj;
+    [SerializeField] private GameObject thisBuilding;
+
+    
+
 
 
     private void Awake()
@@ -84,6 +91,7 @@ public class MatchRoomTest : MonoBehaviour
         SetRoomInfo(true);
         SetMasterInfo();
         UpdateGoods();
+        SetHousing();
     }
 
     public void UpdateGoods()
@@ -136,12 +144,37 @@ public class MatchRoomTest : MonoBehaviour
     private void SetMasterInfo()
     {
         //마스터_인포 세팅하기
+        var n_bro = Backend.Social.GetUserInfoByNickName(BackEndManager.Instance.GetMatchSystem().masterUser_NickName);
+        string n_inDate = n_bro.GetReturnValuetoJSON()["row"]["inDate"].ToString();
+
+        var bro = Backend.PlayerData.GetOtherData("User", n_inDate);
+        int index = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString());
+        master_Body.sprite = bodys[index];
+        master_Face.sprite = faces[(int)(index / 5)];
+
+
         master_NickName.text = $"{BackEndManager.Instance.GetMatchSystem().masterUser_NickName}";
     }
 
     private void SetHousing()
     {
         //마스터 DB의 하우징 데이터 가지고 오기
+        var n_bro = Backend.Social.GetUserInfoByNickName(BackEndManager.Instance.GetMatchSystem().masterUser_NickName);
+        string n_inDate = n_bro.GetReturnValuetoJSON()["row"]["inDate"].ToString();
+
+        var bro = Backend.PlayerData.GetOtherData("Housing", n_inDate);
+
+        for (int i = 0; i < bro.GetReturnValuetoJSON()["rows"].Count; i++)
+        {
+            int index = int.Parse(bro.GetReturnValuetoJSON()["rows"][i]["Index"][0].ToString());
+            float x = float.Parse(bro.GetReturnValuetoJSON()["rows"][i]["X"][0].ToString());
+            float y = float.Parse(bro.GetReturnValuetoJSON()["rows"][i]["Y"][0].ToString());
+            Debug.Log($"{index} : ({x}, {y})");
+            HousingDrag cloneBuild = Instantiate(housingGameObj, new Vector3(x, y, 0), Quaternion.identity, buildSpace);
+            cloneBuild.housingObject = ChartManager.instance.housingObjectDatas[index];
+            cloneBuild.id = index;
+            cloneBuild.buildSprite.sprite = SpriteManager.instance.sprites[index];
+        }
     }
 
 

@@ -14,11 +14,13 @@ public class HousingInteraction : MonoBehaviour
 
     private void Start()
     {
+        if (Utils.Instance.nowScene == SceneNames.MatchRoom) return;
         window = FindObjectOfType<WindowCanvas>().transform.GetComponentInChildren<HousingInterationWindow>().gameObject;
         drag = GetComponent<HousingDrag>();
     }
     private void Update()
     {
+        if (Utils.Instance.nowScene == SceneNames.MatchRoom) return;
         if (TestManager.instance.isEditMode)
         {
             InteractionWindow();

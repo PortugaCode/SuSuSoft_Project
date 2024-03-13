@@ -68,16 +68,30 @@ public class ShopUISystem : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dayTimeText;
     private void OnEnable()
     {
-        // 코루틴 넣어두기
-
+        // 이벤트 구독
+        DBManager.instance.TimerEvent += TimeChage;
+        DBManager.instance.OnResetDay += SetAllShopItem;
 
         SetDailyShopItem();
         SetTokenShopItem();
     }
 
+    private void SetAllShopItem(object sender, System.EventArgs e)
+    {
+        SetDailyShopItem();
+        SetTokenShopItem();
+    }
+
+    private void TimeChage(object sender, System.EventArgs e)
+    {
+        dayTimeText.text = DBManager.instance.user.timeLeftText;
+    }
+
     private void OnDisable()
     {
-        //코루틴 끄기
+        //이벤트 구독 취소
+        DBManager.instance.TimerEvent -= TimeChage;
+        DBManager.instance.OnResetDay -= SetAllShopItem;
     }
 
     #region[Set & Update ShopItem]
@@ -205,12 +219,20 @@ public class ShopUISystem : MonoBehaviour
     }
     #endregion
 
-
+    //리셋 버튼
     public void ShuffleToken_DB()
     {
         //골드 확인 및 지불
+        if (!CheckCanBuy_Reset()) return;
+
         //DB에서 셔플 메서드 불러오기
+        DBManager.instance.ShopResetCheck_Token();
+
+        //세팅
+        SetTokenShopItem();
     }
+
+    
 
 
     public void BuyToken_DailyShop()
@@ -284,6 +306,16 @@ public class ShopUISystem : MonoBehaviour
     private bool CheckCanBuy_TokenShop()
     {
         if (DBManager.instance.user.goods["gold"] < dailyItemIntPrices[nowIndex] && tokenItemData[nowIndex, 1] <= 0)
+        {
+            OpenErrorPopUp();
+            return false;
+        }
+        else return true;
+    }
+
+    private bool CheckCanBuy_Reset()
+    {
+        if (DBManager.instance.user.goods["gold"] < resetListPrice)
         {
             OpenErrorPopUp();
             return false;
