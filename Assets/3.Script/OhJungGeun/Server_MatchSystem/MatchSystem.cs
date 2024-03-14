@@ -641,6 +641,13 @@ public class MatchSystem
                     MatchRoomTest.Instance.ProcessPlayerData(chatMessage);
                 }
                 break;
+            case Protocol.Type.PlayerAnimation:
+                if (Utils.Instance.nowScene == SceneNames.MatchRoom)
+                {
+                    PlayerAnimationMessage animationMessage = DataParser.ReadJsonData<PlayerAnimationMessage>(args.BinaryUserData);
+                    MatchRoomTest.Instance.ProcessPlayerData(animationMessage);
+                }
+                break;
             default:
                 Debug.Log("Unknown protocol type");
                 return;

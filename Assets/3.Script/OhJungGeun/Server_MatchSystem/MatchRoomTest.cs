@@ -231,6 +231,7 @@ public class MatchRoomTest : MonoBehaviour
                 matchClonePlayer_Left.gameObject.GetComponent<MatchChat>().SetNickName(cloneNickName_Left.GetComponent<TextMeshPro>());
                 matchClonePlayer_Left.gameObject.GetComponent<MatchChat>().SetNickName(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
                 matchClonePlayer_Left.gameObject.GetComponent<CurrentPlayerSprite>().SetUserCharacter(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
+                players[a].gameObject.GetComponent<InteractionControl>().doCloneAnimation = matchClonePlayer_Left.gameObject.GetComponent<InteractionControl>().PlayAnimation;
                 #endregion
 
                 #region [클론 캐릭터 생성_Right Clone]
@@ -248,6 +249,7 @@ public class MatchRoomTest : MonoBehaviour
                 matchClonePlayer_Right.gameObject.GetComponent<MatchChat>().SetNickName(cloneNickName_Right.GetComponent<TextMeshPro>());
                 matchClonePlayer_Right.gameObject.GetComponent<MatchChat>().SetNickName(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
                 matchClonePlayer_Right.gameObject.GetComponent<CurrentPlayerSprite>().SetUserCharacter(BackEndManager.Instance.GetMatchSystem().userNickName[a]);
+                players[a].gameObject.GetComponent<InteractionControl>().doCloneAnimation = matchClonePlayer_Right.gameObject.GetComponent<InteractionControl>().PlayAnimation;
                 #endregion
 
 
@@ -344,6 +346,21 @@ public class MatchRoomTest : MonoBehaviour
         players[data.playerSession].SetPosition(movePosition);
         players[data.playerSession].SetIsRight();
         Debug.Log("상대방 움직임");
+    }
+
+    public void ProcessPlayerData(PlayerAnimationMessage data)
+    {
+        Debug.Log(data.playerSession.ToString());
+        if (data.playerSession == Backend.Match.GetMySessionId())
+        {
+            Debug.Log("내가 애니메이션");
+            return;
+        }
+
+
+        int index = data.index;
+        players[data.playerSession].PlayAnimation_Index(index);
+        Debug.Log("상대방 애니메이션");
     }
 
     public void LeaveGameServer()
