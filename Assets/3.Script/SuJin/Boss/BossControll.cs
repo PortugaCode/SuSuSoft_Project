@@ -27,7 +27,7 @@ public class BossControll : MonoBehaviour
         ClampScreen();
     }
 
-    private void ClampScreen()
+    public void ClampScreen()
     {
         screenBound = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
         Vector3 objectPos = transform.position;
@@ -38,6 +38,7 @@ public class BossControll : MonoBehaviour
     private void FollowPlayer()
     {
         rb.velocity = horizontalPlayer.GetRigidbody2D().velocity;
+        transform.position = new Vector2(horizontalPlayer.gameObject.transform.position.x, transform.position.y);
     }
 }
 

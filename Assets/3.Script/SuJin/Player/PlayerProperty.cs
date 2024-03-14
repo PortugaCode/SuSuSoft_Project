@@ -172,10 +172,10 @@ public class PlayerProperty : MonoBehaviour
             //Audio
             AudioManager.Instance.PlaySFX(SFX_Name.GetStar);
 
-            Instantiate(starPrefebs, transform.position, Quaternion.identity);
+            //Instantiate(starPrefebs, transform.position, Quaternion.identity);
             onStarBar?.Invoke(this, EventArgs.Empty);
             onStarShape?.Invoke(this, EventArgs.Empty);
-            Destroy(collision.gameObject);
+           // Destroy(collision.gameObject);
 
         }
         else if (collision.gameObject.CompareTag("BigStar"))
@@ -183,12 +183,12 @@ public class PlayerProperty : MonoBehaviour
             //Audio
             AudioManager.Instance.PlaySFX(SFX_Name.GetStar);
 
-            Instantiate(starPrefebs, transform.position, Quaternion.identity);
-            Instantiate(starPrefebs, transform.position, Quaternion.identity);
-            Instantiate(starPrefebs, transform.position, Quaternion.identity);
+           //Instantiate(starPrefebs, transform.position, Quaternion.identity);
+           //Instantiate(starPrefebs, transform.position, Quaternion.identity);
+           //Instantiate(starPrefebs, transform.position, Quaternion.identity);
             onStarBar?.Invoke(this, EventArgs.Empty);
             onStarShape?.Invoke(this, EventArgs.Empty);
-            Destroy(collision.gameObject);
+            //Destroy(collision.gameObject);
         }
 
         //거대화, 최소화
