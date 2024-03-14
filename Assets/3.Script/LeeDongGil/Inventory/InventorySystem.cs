@@ -125,21 +125,18 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
-    public void LoadTokenItem(int tokenIndex, int count)
+    public void LoadTokenItem()
     {
         Slot[] slots = GetComponentsInChildren<Slot>();
         foreach (Slot slot in slots)
         {
-            if (!slot.isSlotUse)
+            for(int i = 0; i < DBManager.instance.user.tokens.Length; i++)
             {
-                SetItemInfo(tokenIndex, slot);
-                slot.itemInfo._itemCount = count;
-                slot.isSlotUse = true;
-                break;
-            }
-            else
-            {
-                if (slot.itemData.itemID == tokenIndex) break;
+                if(DBManager.instance.user.tokens[i] != 0)
+                {
+                    SetItemInfo(i, slot);
+                    break;
+                }
             }
         }
     }
@@ -304,12 +301,12 @@ public class InventorySystem : MonoBehaviour
 
     public void GotoScroll()
     {
-        HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
-        foreach (HousingSlot slot in slots)
-        {
-            slot.transform.SetParent(inventoryScroll);
-            slot.isWindow = false;
-        }
+        //HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
+        //foreach (HousingSlot slot in slots)
+        //{
+        //    slot.transform.SetParent(inventoryScroll);
+        //    slot.isWindow = false;
+        //}
     }
 
     public void GotoCreate()
@@ -368,7 +365,7 @@ public class InventorySystem : MonoBehaviour
 
     public void SetItemInfo(int tokenIndex, Slot _slot)      //공방 인벤토리에 토큰이미지와 데이터 이름 넣기
     {
-        _slot.transform.GetChild(0).GetComponent<Image>().sprite = TestManager.instance.tokenList[tokenIndex].sprite;
+        _slot.transform.GetChild(0).GetComponent<Image>().sprite = SpriteManager.instance.tokenSprites[tokenIndex];
         _slot.transform.GetComponentInChildren<ItemInfo>()._itemData = TestManager.instance.tokenList[tokenIndex];
         _slot.transform.GetComponentInChildren<ItemInfo>()._itemName = TestManager.instance.tokenList[tokenIndex].itemName;
     }
