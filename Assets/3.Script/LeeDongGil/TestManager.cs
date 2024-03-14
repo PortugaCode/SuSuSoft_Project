@@ -27,6 +27,7 @@ public class TestManager : MonoBehaviour
     public bool isBack = false;
     public bool isBuilding = false;
     public bool isInteration = false;
+    public int filterLayer = 0;
 
     [Header("Token Filter")]
     public bool isAllToken = true;
@@ -97,6 +98,30 @@ public class TestManager : MonoBehaviour
         }
     }
 
+    private void SetFilterLayer()
+    {
+        if (isAll)
+        {
+            filterLayer = 0;
+        }
+        else if (isFront)
+        {
+            filterLayer = 6;
+        }
+        else if (isBack)
+        {
+            filterLayer = 2;
+        }
+        else if (isBuilding)
+        {
+            filterLayer = 3;
+        }
+        else if (isInteration)
+        {
+            filterLayer = 8;
+        }
+    }
+
     private void Start()
     {
 
@@ -139,6 +164,7 @@ public class TestManager : MonoBehaviour
 
         SetUI(isShowUI);
         SetUI_win(isShowUI_win);
+        SetFilterLayer();
     }
 
     public void LoadHousingChart()
