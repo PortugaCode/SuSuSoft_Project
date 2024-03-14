@@ -6,6 +6,7 @@ using TMPro;
 using BackEnd;
 using System;
 using System.Globalization;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -428,11 +429,21 @@ public class UIManager : MonoBehaviour
 
         Character chr = characterDatas[index + 9 * characterTabIndex];
 
+        int matchIndex = -1;
+
+        for (int i = 0; i < DBManager.instance.user.character.Count; i++)
+        {
+            if (DBManager.instance.user.character[i].index == index + 9 * characterTabIndex)
+            {
+                matchIndex = i;
+            }
+        }
+
         characterName.text = $"{chr.name}";
         body.sprite = characterBodyImages[index + 9 * characterTabIndex];
-        face.sprite = characterFaceImages[index + 9 * characterTabIndex];
-        gauge.fillAmount = 0f;
-        gaugeText.text = $"{0} / {30}";
+        face.sprite = characterFaceImages[(int)((index + 9 * characterTabIndex) / 4)];
+        gauge.fillAmount = (float)DBManager.instance.user.character[matchIndex].count / 30.0f;
+        gaugeText.text = $"{DBManager.instance.user.character[matchIndex].count} / {30}";
         typeText.text = chr.color;
         healthText2.text = $"{chr.maxHealth + chr.level * chr.healthIncreaseRate}"; // + 세트효과 구현 필요
         sightText2.text = $"{chr.minSightRange}"; // + 패시브, 세트효과 구현 필요
@@ -533,7 +544,7 @@ public class UIManager : MonoBehaviour
 
         while (true)
         {
-            if (DBManager.instance.user.activePoint < 5)
+            if (SceneManager.GetActiveScene().name.Equals("Chatting") && DBManager.instance.user.activePoint < 5)
             {
                 if (DateTime.Compare(dt_apTime, DateTime.Now) == 1)
                 {

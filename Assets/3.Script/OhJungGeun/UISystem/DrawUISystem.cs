@@ -520,7 +520,6 @@ public class DrawUISystem : MonoBehaviour
         if (HaveUserIndexCharater(index))
         {
             //중복된 캐릭터 보유 메서드
-            DBManager.instance.UpdateCharacter(index);
             charaterCount.text = $"{GetCharaterCount(index)} / 30";
         }
         else

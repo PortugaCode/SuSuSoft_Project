@@ -9,6 +9,9 @@ public class StageClear : MonoBehaviour
     [SerializeField] private TMP_Text stageInfoText;
     [SerializeField] private GameObject character;
 
+    [Header("Popup")]
+    [SerializeField] GameObject tutorialRewardPopup; // 건물 획득 알림 팝업
+
     [Header("Sprite")]
     [SerializeField] Sprite[] characterBodyImages; // 캐릭터 Body 이미지 배열
     [SerializeField] Sprite[] characterFaceImages; // 캐릭터 Face 이미지 배열
@@ -51,6 +54,11 @@ public class StageClear : MonoBehaviour
         int stageLevel = ChartManager.instance.stageInfos[stageIndex].index + 1;
         string stageName = ChartManager.instance.stageInfos[stageIndex].name_k;
         stageInfoText.text = $"{chapter} - {stageLevel} {stageName}";
+
+        if (stageLevel == 1)
+        {
+            tutorialRewardPopup.SetActive(true);
+        }
 
         int characterIndex = DBManager.instance.user.currentCharacterIndex;
         character.transform.GetChild(0).GetComponent<Image>().sprite = characterBodyImages[characterIndex];

@@ -445,53 +445,32 @@ public class DBManager : MonoBehaviour
     {
         List<Character> characters = ChartManager.instance.characterDatas; // 캐싱
 
-        Param characterParam = new Param(); // Character 정보
-
         for (int i = 0; i < characters.Count; i++)
         {
             Debug.Log($"index : {index}");
 
             if (characters[i].index == index)
             {
-                characterParam.Add("Index", characters[i].index);
-                characterParam.Add("ImageIndex", characters[i].imageIndex);
-                characterParam.Add("LookImageIndex", characters[i].lookImageIndex);
-                characterParam.Add("Name", characters[i].name);
-                characterParam.Add("Color", characters[i].color);
-                characterParam.Add("Level", characters[i].level);
-                characterParam.Add("Count", characters[i].count);
-                characterParam.Add("HealthIncreaseRate", characters[i].healthIncreaseRate);
-                characterParam.Add("MaxHealth", characters[i].maxHealth);
-                characterParam.Add("MaxSpeed", characters[i].maxSpeed);
-                characterParam.Add("MinSpeed", characters[i].minSpeed);
-                characterParam.Add("MaxSightRange", characters[i].maxSightRange);
-                characterParam.Add("MinSightRange", characters[i].minSightRange);
-                characterParam.Add("ActiveSkill", characters[i].activeSkill);
-                characterParam.Add("PassiveSkill", characters[i].passiveSkill);
+                Character chr = new Character();
+                chr.index = characters[i].index;
+                chr.imageIndex = characters[i].imageIndex;
+                chr.lookImageIndex = characters[i].lookImageIndex;
+                chr.name = characters[i].name;
+                chr.color = characters[i].color;
+                chr.level = characters[i].level;
+                chr.count = characters[i].count;
+                chr.healthIncreaseRate = characters[i].healthIncreaseRate;
+                chr.maxHealth = characters[i].maxHealth;
+                chr.maxSpeed = characters[i].maxSpeed;
+                chr.maxSightRange = characters[i].maxSightRange;
+                chr.minSightRange = characters[i].minSightRange;
+                chr.activeSkill = characters[i].activeSkill;
+                chr.passiveSkill = characters[i].passiveSkill;
+                user.character.Add(chr);
                 break;
             }
         }
-
-        Backend.GameData.Insert("Character", characterParam); // Character 테이블에 데이터 삽입
-
         Debug.Log("캐릭터 추가 완료");
-    }
-
-    public void UpdateCharacter(int index) // 캐릭터 정보 수정 시 호출
-    {
-        // Character 정보 갱신
-        Param characterParam = new Param(); // Character 정보
-
-        characterParam.Add("Level", user.character[index].level);
-        characterParam.Add("Count", user.character[index].count);
-        characterParam.Add("HealthIncreaseRate", user.character[index].healthIncreaseRate);
-        characterParam.Add("MaxHealth", user.character[index].maxHealth);
-        characterParam.Add("MaxSpeed", user.character[index].maxSpeed);
-        characterParam.Add("MinSpeed", user.character[index].minSpeed);
-        characterParam.Add("MaxSightRange", user.character[index].maxSightRange);
-        characterParam.Add("MinSightRange", user.character[index].minSightRange);
-
-        Backend.PlayerData.UpdateMyLatestData("Character", characterParam);
     }
 
     public void AddMyHousingObject(int index, float x, float y) // 하우징 오브젝트를 아예 새로 배치할 때
@@ -873,5 +852,37 @@ public class DBManager : MonoBehaviour
             h_Param.Add("Y", user.myHousingObject[i].y);
             Backend.GameData.Insert("Housing", h_Param); // Housing 테이블에 데이터 삽입
         }
+
+        // Character 정보 갱신
+        var c_bro = Backend.GameData.GetMyData("Character", where);
+        if (c_bro.GetReturnValuetoJSON()["rows"].Count > 0)
+        {
+            for (int i = 0; i < c_bro.FlattenRows().Count; i++)
+            {
+                Backend.PlayerData.DeleteMyLatestData("Character");
+            }
+        }
+        for (int i = 0; i < user.character.Count; i++)
+        {
+            Param characterParam = new Param(); // Character 정보
+            characterParam.Add("Index", user.character[i].index);
+            characterParam.Add("ImageIndex", user.character[i].imageIndex);
+            characterParam.Add("LookImageIndex", user.character[i].lookImageIndex);
+            characterParam.Add("Name", user.character[i].name);
+            characterParam.Add("Color", user.character[i].color);
+            characterParam.Add("Level", user.character[i].level);
+            characterParam.Add("Count", user.character[i].count);
+            characterParam.Add("HealthIncreaseRate", user.character[i].healthIncreaseRate);
+            characterParam.Add("MaxHealth", user.character[i].maxHealth);
+            characterParam.Add("MaxSpeed", user.character[i].maxSpeed);
+            characterParam.Add("MinSpeed", user.character[i].minSpeed);
+            characterParam.Add("MaxSightRange", user.character[i].maxSightRange);
+            characterParam.Add("MinSightRange", user.character[i].minSightRange);
+            characterParam.Add("ActiveSkill", user.character[i].activeSkill);
+            characterParam.Add("PassiveSkill", user.character[i].passiveSkill);
+
+            Backend.GameData.Insert("Character", characterParam); // Character 테이블에 데이터 삽입
+        }
+        
     }
 }
