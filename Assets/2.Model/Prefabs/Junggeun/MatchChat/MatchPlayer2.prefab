@@ -188,6 +188,9 @@ GameObject:
   - component: {fileID: 2848042727349811581}
   - component: {fileID: 556911611880741161}
   - component: {fileID: 1755505748216239946}
+  - component: {fileID: 4856456179924286245}
+  - component: {fileID: 9221221155295565721}
+  - component: {fileID: 3407892258793241603}
   m_Layer: 0
   m_Name: MatchPlayer2
   m_TagString: Player
@@ -339,7 +342,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   basicFace: {fileID: 5919089505296093299}
   blinkFace: {fileID: 6926192324133288763}
-  interactionControl: {fileID: 0}
+  interactionControl: {fileID: 9221221155295565721}
   speed: 1.8
   rotationSpeed: 10
   rb2D: {fileID: 8738195489350241443}
@@ -371,6 +374,116 @@ MonoBehaviour:
   chatBoxRenderer: {fileID: 0}
   nickName: {fileID: 0}
   isClone: 0
+--- !u!114 &4856456179924286245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967960774111708397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23941293efbaaaf4a8aab36c40c7c301, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bodies:
+  - {fileID: 21300000, guid: 14e3c942eb6f735409f78c335d70e001, type: 3}
+  - {fileID: 21300000, guid: 58305c45e8a838440ad9e020ff07e1a8, type: 3}
+  - {fileID: 21300000, guid: a728072163799a74994d51d82dd10d83, type: 3}
+  - {fileID: 21300000, guid: 8e1f4753d27ae9e4b9a33b5c005c3c92, type: 3}
+  - {fileID: 21300000, guid: c4e588f1b650cf74dbdb541cf473d10a, type: 3}
+  - {fileID: 21300000, guid: 1e45a07be96938541a502decc767a13f, type: 3}
+  - {fileID: 21300000, guid: 51244dd2da98c974fa785113e4d06113, type: 3}
+  - {fileID: 21300000, guid: 7aff2255caaa0cd4cb0e5f44f47bcaa7, type: 3}
+  - {fileID: 21300000, guid: 62fdfd311338fa545ae6a5184b7e9814, type: 3}
+  - {fileID: 21300000, guid: 97bef5d39d7945c4b8fcfafce4887e9e, type: 3}
+  - {fileID: 21300000, guid: 6005738bea82ebd4bb65e5b1e17e4b22, type: 3}
+  - {fileID: 21300000, guid: feff8223efecf2043a8e9bf3e7d03f74, type: 3}
+  - {fileID: 21300000, guid: d6d7ebaeb5a44874abc7d5692abfb3a4, type: 3}
+  - {fileID: 21300000, guid: 19b14eb19d5b50742b99fde958f88eaf, type: 3}
+  - {fileID: 21300000, guid: a79e0b641a89ced40857df7369e23c9d, type: 3}
+  - {fileID: 21300000, guid: d7d73368c6344dc47b0ada023ac7ed76, type: 3}
+  - {fileID: 21300000, guid: 58a5735e61133734ca828e2f165535b0, type: 3}
+  - {fileID: 21300000, guid: 149181706928a1b43bc981494ba9d5d6, type: 3}
+  - {fileID: 21300000, guid: 04f3a216dd42ec7478a691f14795954e, type: 3}
+  - {fileID: 21300000, guid: 1096757fb2271834698a4a9ff4b51566, type: 3}
+  basefaces:
+  - {fileID: 21300000, guid: 19c9613648af9fe4e9482df65a4f03f9, type: 3}
+  - {fileID: 21300000, guid: 8b808983a062b764696c90d3713fdcbc, type: 3}
+  - {fileID: 21300000, guid: 11a295815e05f194a809aedebb119160, type: 3}
+  - {fileID: 21300000, guid: 171e9b7f768b2c740b7a130e7c48ab1a, type: 3}
+  - {fileID: 21300000, guid: f532ba69186499e47b92b7b0dd2bfe8d, type: 3}
+  blinkfaces:
+  - {fileID: 21300000, guid: fed1170f4b450134e8dcec6a635991d5, type: 3}
+  - {fileID: 21300000, guid: 3cdc815b6d70f0c4f9212797a3d3e231, type: 3}
+  - {fileID: 21300000, guid: 3129c03db0d73014e88e1bc3e186a798, type: 3}
+  - {fileID: 21300000, guid: 89288b5fce5bebe408dd87d3e045219e, type: 3}
+  - {fileID: 21300000, guid: 86fd611e392479f439bf987177af7380, type: 3}
+  slowfaces:
+  - {fileID: 21300000, guid: 9cb477a2c4354234d9e070a060ed4c02, type: 3}
+  - {fileID: 21300000, guid: 7069e7c51dd35d64f8b8c89c7300fab6, type: 3}
+  - {fileID: 21300000, guid: 6a70c2022b83ae741a4144352e0da678, type: 3}
+  - {fileID: 21300000, guid: 54a93e1675b46b146b2eb36a7f120234, type: 3}
+  - {fileID: 21300000, guid: a8cd384df75c2a742a5fcde1d710b76a, type: 3}
+  poisonfaces:
+  - {fileID: 21300000, guid: fcd035e58a92e4245ad4eb1734b811a3, type: 3}
+  - {fileID: 21300000, guid: 3c90e17c712cc02468fde53926a98b9a, type: 3}
+  - {fileID: 21300000, guid: 5b68f9647fc6efa43b65071a2d7bbc6b, type: 3}
+  - {fileID: 21300000, guid: 4a192e9a8e180794ab598276291c7d27, type: 3}
+  - {fileID: 21300000, guid: 16be092adc60c7c4697e3065f0cf5d6e, type: 3}
+  giantfaces:
+  - {fileID: 21300000, guid: 35514a2dd418a1f4593a10b1fd08900d, type: 3}
+  - {fileID: 21300000, guid: b89c6e49c5de46f4b851d12a6caaa136, type: 3}
+  - {fileID: 21300000, guid: 88785d06b233c6740825614517420f60, type: 3}
+  - {fileID: 21300000, guid: d12f0330d558e1948a361071ad076bda, type: 3}
+  - {fileID: 21300000, guid: f0c18de7c17ff4b48b0c4bd16fa7875d, type: 3}
+  hurtfaces:
+  - {fileID: 21300000, guid: 87d7522f2ad00c44797c76a3e36f30c6, type: 3}
+  - {fileID: 21300000, guid: d45f38656ac8bd84bbc7ba8122ea2e7f, type: 3}
+  - {fileID: 21300000, guid: 17dbe5af94f98b14eb03df3dfa628d4c, type: 3}
+  - {fileID: 21300000, guid: 2e6b84290875f494b8a00f31ebfa44ef, type: 3}
+  - {fileID: 21300000, guid: 8567d236602568e44a89d67770fea868, type: 3}
+  body: {fileID: 8130391821356719143}
+  baseface: {fileID: 4120069717363526602}
+  blinkface: {fileID: 8350104874852940992}
+  slowface: {fileID: 2642899724991602916}
+  poisonface: {fileID: 3558273400628751373}
+  giantface: {fileID: 7525154883614982815}
+  hurtface: {fileID: 131167187666628865}
+--- !u!114 &9221221155295565721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967960774111708397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e155d94f6ea4c2469c1ccad909b44e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 3407892258793241603}
+--- !u!95 &3407892258793241603
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967960774111708397}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ccf66aebd8e62324daf108daca9fa1ac, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 1
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2552551464671919243
 GameObject:
   m_ObjectHideFlags: 0

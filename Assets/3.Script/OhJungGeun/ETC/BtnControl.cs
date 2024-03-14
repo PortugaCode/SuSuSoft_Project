@@ -76,6 +76,7 @@ public class BtnControl : MonoBehaviour
         editModeButton.SetActive(false);
         stageUI.SetActive(false);
         workShopUI.SetActive(false);
+        shopUI.SetActive(false);
     }
 
     public void SetChatUI(bool value)
@@ -133,6 +134,13 @@ public class BtnControl : MonoBehaviour
         transparency.SetActive(false);
         ResetUI();
         stageUI.SetActive(value);
+    }
+
+    public void PopUp_ShopUI(bool value)
+    {
+        transparency.SetActive(false);
+        ResetUI();
+        shopUI.SetActive(value);
     }
 
 
