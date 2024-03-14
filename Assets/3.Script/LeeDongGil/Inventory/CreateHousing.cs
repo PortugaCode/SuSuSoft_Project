@@ -131,6 +131,8 @@ public class CreateHousing : MonoBehaviour
 
     public void CreateHousingObject()
     {
+        if (DBManager.instance.user.tokens[tokenID] < require) return;
+
         DBManager.instance.user.tokens[tokenID] -= require;
         //골드 빼세요
         if (DBManager.instance.user.goods["gold"] >= priceInt)
@@ -163,6 +165,8 @@ public class CreateHousing : MonoBehaviour
 
     public void UpgradeHousingObject()
     {
+        if (DBManager.instance.user.tokens[tokenID] < require) return;
+
         DBManager.instance.user.tokens[tokenID] -= require;
         //골드 빼세요
         if (DBManager.instance.user.goods["gold"] >= priceInt)
