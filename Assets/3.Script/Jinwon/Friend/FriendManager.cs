@@ -111,7 +111,7 @@ public class FriendManager : MonoBehaviour
             int index = DBManager.instance.CharacterIndexMatching(int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString()));
 
             friendTab.transform.GetChild(1).GetComponent<Image>().sprite = characterBodyImages[index]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
-            friendTab.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = characterFaceImages[index/5]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
+            friendTab.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = characterFaceImages[index / 4]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
             friendTab.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{friends[i].name}";
 
             int temp = i;
@@ -138,7 +138,7 @@ public class FriendManager : MonoBehaviour
             int index = DBManager.instance.CharacterIndexMatching(int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString()));
 
             requestTab.transform.GetChild(1).GetComponent<Image>().sprite = characterBodyImages[index]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
-            requestTab.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = characterFaceImages[index / 5]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
+            requestTab.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = characterFaceImages[index / 4]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
             requestTab.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{requests[i].name}";
 
             int temp = i;
@@ -362,7 +362,7 @@ public class FriendManager : MonoBehaviour
 
         // 닉네임 & InDate로 유저 조회 후 표시 구현 필요
         searchTab.transform.GetChild(1).GetComponent<Image>().sprite = characterBodyImages[index]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
-        searchTab.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = characterFaceImages[index / 5]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
+        searchTab.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = characterFaceImages[index / 4]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
         searchTab.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{bro.GetReturnValuetoJSON()["rows"][0]["UserName"][0]}";
 
         searchUserName = searchInputField.text;

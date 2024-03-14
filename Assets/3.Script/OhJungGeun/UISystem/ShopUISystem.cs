@@ -247,7 +247,7 @@ public class ShopUISystem : MonoBehaviour
         }
 
         //토큰 데이터에서 갯수 빼기 (DB)
-        dailyItemData[nowIndex, 1] -= 1;
+        DBManager.instance.user.dailyShopInfo[nowIndex, 1] -= 1;
 
         //토큰 갯수 올리기 (DB)
         DBManager.instance.user.tokens[DBManager.instance.user.dailyShopInfo[nowIndex, 0]] += 1;
@@ -255,6 +255,7 @@ public class ShopUISystem : MonoBehaviour
 
         //토큰 업데이트하기
         UpdateDailyShopItem();
+        CloseUpdatePopUp();
     }
 
     public void BuyToken_TokenShop()
@@ -269,8 +270,8 @@ public class ShopUISystem : MonoBehaviour
         }
 
         //토큰 데이터에서 갯수 빼기 (DB)
-        tokenItemData[nowIndex, 1] -= 1;
-        tokenRemain[nowIndex].text = $"{tokenItemData[nowIndex, 1]} / 3";
+        DBManager.instance.user.tokenShopInfo[nowIndex, 1] -= 1;
+        tokenRemain[nowIndex].text = $"{DBManager.instance.user.tokenShopInfo[nowIndex, 1]} / 3";
 
         //토큰 갯수 올리기 (DB)
         DBManager.instance.user.tokens[DBManager.instance.user.tokenShopInfo[nowIndex, 0]] += 1;
@@ -278,6 +279,7 @@ public class ShopUISystem : MonoBehaviour
 
         //토큰 업데이트하기
         UpdateTokenShopItem();
+        CloseUpdatePopUp();
     }
 
     public void BuyGold_GoldShop()
@@ -285,6 +287,7 @@ public class ShopUISystem : MonoBehaviour
         if (DBManager.instance.user.goods["ruby"] >= goldPrices[nowIndex])
         {
             DBManager.instance.user.goods["gold"] += getGold[nowIndex];
+            CloseUpdatePopUp();
         }
         else
         {
@@ -295,7 +298,7 @@ public class ShopUISystem : MonoBehaviour
 
     private bool CheckCanBuy_DailyShop()
     {
-        if (DBManager.instance.user.goods["gold"] < tokenItemIntPrices[nowIndex] && dailyItemData[nowIndex, 1] <= 0)
+        if (DBManager.instance.user.goods["gold"] < dailyItemIntPrices[nowIndex] || DBManager.instance.user.dailyShopInfo[nowIndex, 1] <= 0)
         {
             return false;
         }
@@ -304,7 +307,7 @@ public class ShopUISystem : MonoBehaviour
 
     private bool CheckCanBuy_TokenShop()
     {
-        if (DBManager.instance.user.goods["gold"] < dailyItemIntPrices[nowIndex] && tokenItemData[nowIndex, 1] <= 0)
+        if (DBManager.instance.user.goods["gold"] < tokenItemIntPrices[nowIndex] || DBManager.instance.user.tokenShopInfo[nowIndex, 1] <= 0)
         {
             return false;
         }

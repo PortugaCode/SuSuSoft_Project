@@ -31,4 +31,9 @@ public class InteractionControl : MonoBehaviour
     {
         animator.SetTrigger("DoBasketBall");
     }
+
+    private void PlayAnimation_Clone(int index)
+    {
+        doAnimatorArray[index]?.Invoke();
+    }
 }
