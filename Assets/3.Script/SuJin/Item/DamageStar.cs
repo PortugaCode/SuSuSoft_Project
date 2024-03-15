@@ -8,12 +8,7 @@ public class DamageStar : MonoBehaviour
     [SerializeField] private float speed;
     private bool isMoveOn = false;
 
-    Animator animator;
 
-    private void Awake()
-    {
-        animator = GetComponent<Animator>();
-    }
 
     private void FixedUpdate()
     {
@@ -39,7 +34,6 @@ public class DamageStar : MonoBehaviour
         }
         else if(collision.CompareTag("Boss") && isMoveOn)
         {
-            animator.SetTrigger("BossHurt");
             Destroy(gameObject);
         }
     }

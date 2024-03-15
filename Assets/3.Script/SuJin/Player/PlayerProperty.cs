@@ -27,16 +27,13 @@ public class PlayerProperty : MonoBehaviour
     [Header("Player")]
     [SerializeField] private Transform player;
     public string PlayerColor;
-    //public int activeSkill;
-    //public int passiveSkill;
+
 
     [Header("HP")]
     public int currentHealth;
     public int maxHealth;
     public int damage;
-    //private int HealthIncreaseRate;   //+
 
-    //private bool isCanShield;
     public bool isCanSkill;
 
     //Attack nullified 공격 무효화
@@ -94,6 +91,9 @@ public class PlayerProperty : MonoBehaviour
     public enum PlayerActiveSkill { Shield, Magnetic, Recovery, SpeedUp }
     public PlayerActiveSkill playerActiveSkill;
 
+    //Player Color
+    public enum PlayerColor { Yellow, Orange, Blue, Purple, Green }
+    public PlayerColor playerColor;
 
 
     private void Start()
@@ -286,6 +286,39 @@ public class PlayerProperty : MonoBehaviour
                 }
         }
     }
+    
+    public void SetPlayerColor()
+    {
+        switch((int)playerColor)
+        {
+            case 0:         //Yellow
+                {
+
+                break;
+                }
+
+            case 1:         //Orange
+                {
+
+                    break;
+                }
+            case 2:         //Orange
+                {
+
+                    break;
+                }
+            case 3:         //Orange
+                {
+
+                    break;
+                }
+            case 4:         //Orange
+                {
+
+                    break;
+                }
+        }
+    }
    
     #region [Attack nullified 공격 무효화]
     private void PassiveAttackNull()    //10% 확률로 데미지 무효화
@@ -342,8 +375,6 @@ public class PlayerProperty : MonoBehaviour
     {
         skillActive.isItemOn = false;
         isCanSkill = true;
-
-
 
         if (isCanSkill)
         {
