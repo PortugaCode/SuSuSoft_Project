@@ -6,6 +6,9 @@ using TMPro;
 
 public class ShopUISystem : MonoBehaviour
 {
+    [SerializeField] private UIManager uIManager;
+
+
     [Header("Test Shop DBManager")]
     private int[,] dailyItemData = new int[3,2] { {0,1}, {1,1}, {2, 1} };
     private int[,] tokenItemData = new int[6,2] { {0,3}, {1,1}, {2, 3}, { 3, 0 }, { 4, 3 }, { 5, 3 } };
@@ -287,6 +290,7 @@ public class ShopUISystem : MonoBehaviour
         if (DBManager.instance.user.goods["ruby"] >= goldPrices[nowIndex])
         {
             DBManager.instance.user.goods["gold"] += getGold[nowIndex];
+            uIManager.UpdateGoods();
             CloseUpdatePopUp();
         }
         else
@@ -302,7 +306,12 @@ public class ShopUISystem : MonoBehaviour
         {
             return false;
         }
-        else return true;
+        else
+        {
+            DBManager.instance.user.goods["gold"] -= dailyItemIntPrices[nowIndex];
+            uIManager.UpdateGoods();
+            return true;
+        }
     }
 
     private bool CheckCanBuy_TokenShop()
@@ -311,7 +320,12 @@ public class ShopUISystem : MonoBehaviour
         {
             return false;
         }
-        else return true;
+        else
+        {
+            DBManager.instance.user.goods["gold"] -= tokenItemIntPrices[nowIndex];
+            uIManager.UpdateGoods();
+            return true;
+        }
     }
 
     private bool CheckCanBuy_Reset()
@@ -321,7 +335,12 @@ public class ShopUISystem : MonoBehaviour
             OpenErrorPopUp();
             return false;
         }
-        else return true;
+        else
+        {
+            DBManager.instance.user.goods["gold"] -= resetListPrice;
+            uIManager.UpdateGoods();
+            return true;
+        }
     }
 
     private int GetTokenPrice(int index)
