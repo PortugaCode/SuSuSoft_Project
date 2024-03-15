@@ -26,7 +26,7 @@ public class PlayerProperty : MonoBehaviour
 
     [Header("Player")]
     [SerializeField] private Transform player;
-    public string PlayerColor;
+    //public string PlayerColor;
 
 
     [Header("HP")]
