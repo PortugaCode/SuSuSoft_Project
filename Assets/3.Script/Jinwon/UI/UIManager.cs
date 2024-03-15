@@ -76,6 +76,18 @@ public class UIManager : MonoBehaviour
     private void OnEnable()
     {
         UpdateGoods();
+
+        if (characters == null || characterDatas == null)
+        {
+            characters = DBManager.instance.user.character;
+            characterDatas = ChartManager.instance.characterDatas;
+        }
+
+        UpdateCharacterButton();
+
+        healthText.text = $"체력 : {characters[DBManager.instance.user.currentCharacterIndex].maxHealth}";
+        sightRangeText.text = $"시야 범위 : {characterDatas[DBManager.instance.user.currentCharacterIndex].maxSightRange}";
+
         DBManager.instance.CheckActivePoint();
         timerCoroutine = StartCoroutine(UpdateTimeLeftText_co());
     }
@@ -83,13 +95,6 @@ public class UIManager : MonoBehaviour
     private void OnDisable()
     {
         StopCoroutine(timerCoroutine);
-    }
-
-    private void Start()
-    {
-        characters = DBManager.instance.user.character;
-        characterDatas = ChartManager.instance.characterDatas;
-        UpdateCharacterButton();
     }
 
     public void UpdateGoods()
@@ -334,7 +339,7 @@ public class UIManager : MonoBehaviour
             {
                 characterButtons[i].GetComponent<Button>().interactable = false;
                 characterButtons[i].transform.GetChild(0).GetComponent<Image>().sprite = characterBodyImages[characterDatas[i + 9 * characterTabIndex].imageIndex];
-                characterButtons[i].transform.GetChild(1).GetComponent<Image>().sprite = characterFaceImages[characterDatas[i + 9 * characterTabIndex].lookImageIndex + 1];
+                characterButtons[i].transform.GetChild(1).GetComponent<Image>().sprite = characterFaceImages[characterDatas[i + 9 * characterTabIndex].imageIndex / 4];
                 characterButtons[i].transform.GetChild(2).GetComponent<TMP_Text>().text = $"{characterDatas[i + 9 * characterTabIndex].name}";
 
                 Color color = characterButtons[i].GetComponent<Image>().color;
@@ -372,7 +377,7 @@ public class UIManager : MonoBehaviour
                 {
                     characterButtons[i].GetComponent<Button>().interactable = false;
                     characterButtons[i].transform.GetChild(0).GetComponent<Image>().sprite = characterBodyImages[characterDatas[i + 9 * characterTabIndex].imageIndex];
-                    characterButtons[i].transform.GetChild(1).GetComponent<Image>().sprite = characterFaceImages[characterDatas[i + 9 * characterTabIndex].lookImageIndex];
+                    characterButtons[i].transform.GetChild(1).GetComponent<Image>().sprite = characterFaceImages[characterDatas[i + 9 * characterTabIndex].imageIndex / 4];
                     characterButtons[i].transform.GetChild(2).GetComponent<TMP_Text>().text = $"{characterDatas[i + 9 * characterTabIndex].name}";
 
                     Color color = characterButtons[i].GetComponent<Image>().color;
@@ -433,7 +438,7 @@ public class UIManager : MonoBehaviour
 
         for (int i = 0; i < DBManager.instance.user.character.Count; i++)
         {
-            if (DBManager.instance.user.character[i].index == index + 9 * characterTabIndex)
+            if (DBManager.instance.CharacterIndexMatching(DBManager.instance.user.character[i].index) == index + 9 * characterTabIndex)
             {
                 matchIndex = i;
             }
