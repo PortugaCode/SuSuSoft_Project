@@ -17,7 +17,12 @@ public class FilterButton : MonoBehaviour
 
 
     public Button btn;
+    [SerializeField] private InventorySystem invenSystem;
 
+    private void Awake()
+    {
+        invenSystem = GetComponent<InventorySystem>();
+    }
 
     public void Filtering()
     {
@@ -53,15 +58,16 @@ public class FilterButton : MonoBehaviour
         TestManager.instance.isBack = false;
         TestManager.instance.isBuilding = false;
         TestManager.instance.isInteration = false;
-        HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
-        foreach (HousingSlot slot in slots)
-        {
-            if (slot.isSlotUse)
-            {
-                slot.housingInven.image.color = Color.white;
-                slot.housingInven.countObject.SetActive(true);
-            }
-        }
+        invenSystem.LoadHousingInventory();
+        /* HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
+         foreach (HousingSlot slot in slots)
+         {
+             if (slot.isSlotUse)
+             {
+                 slot.housingInven.image.color = Color.white;
+                 slot.housingInven.countObject.SetActive(true);
+             }
+         }*/
     }
 
     public void FrontButton()
@@ -228,25 +234,27 @@ public class FilterButton : MonoBehaviour
                 TestManager.instance.isInteration = true;
                 break;
         }
-        HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
-        //int setindex = 0;
-        foreach (HousingSlot slot in slots)
-        {
-            if (slot.housingObject.layer == value)
-            {
-                slot.transform.SetAsFirstSibling();
-                slot.housingInven.image.color = Color.white;
-                slot.housingInven.countObject.SetActive(true);
-                slot.housingInven.button.interactable = true;
-            }
-            else
-            {
-                slot.housingInven.image.color = new Color(1, 1, 1, 0.5f);
-                slot.housingInven.countObject.SetActive(false);
-                slot.housingInven.button.interactable = false;
-            }
+        TestManager.instance.filterLayer = value;
+        invenSystem.LoadHousingInventory();
+        /* HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
+         //int setindex = 0;
+         foreach (HousingSlot slot in slots)
+         {
+             if (slot.housingObject.layer == value)
+             {
+                 slot.transform.SetAsFirstSibling();
+                 slot.housingInven.image.color = Color.white;
+                 slot.housingInven.countObject.SetActive(true);
+                 slot.housingInven.button.interactable = true;
+             }
+             else
+             {
+                 slot.housingInven.image.color = new Color(1, 1, 1, 0.5f);
+                 slot.housingInven.countObject.SetActive(false);
+                 slot.housingInven.button.interactable = false;
+             }
 
-        }
+         }*/
     }
 
 

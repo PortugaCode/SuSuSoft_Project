@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class SellPopUP : MonoBehaviour
 {
+    [SerializeField] private UIManager uiManager;
     public bool isHousing = false;
     public SellItem sell;
     public InventorySystem sellHousingInven;
@@ -25,6 +26,11 @@ public class SellPopUP : MonoBehaviour
     [Header("Sell ItemData")]
     public ItemData itemData;
     public HousingObject housingObject;
+
+    private void Awake()
+    {
+        uiManager = FindObjectOfType<UIManager>();
+    }
 
     private void OnEnable()
     {
@@ -83,6 +89,7 @@ public class SellPopUP : MonoBehaviour
         sell.isSellItem = true;
         background.SetActive(false);
         gameObject.SetActive(false);
+        uiManager.UpdateGoods();
     }
 
 

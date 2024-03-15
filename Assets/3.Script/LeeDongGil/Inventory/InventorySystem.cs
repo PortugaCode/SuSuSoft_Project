@@ -46,6 +46,13 @@ public class InventorySystem : MonoBehaviour
         if (DBManager.instance == null) return;
         Debug.Log("인벤토리 로드중?");
         LoadHousingInventory();
+        //StartCoroutine(FilterHousing());
+    }
+
+    private IEnumerator FilterHousing()
+    {
+        WaitForSeconds wfs = new WaitForSeconds(0.1f);
+        yield return wfs;
         if (filter != null)
         {
             filter.Filtering();
@@ -77,13 +84,27 @@ public class InventorySystem : MonoBehaviour
             {
                 for (int i = 0; i < ChartManager.instance.housingObjectDatas.Count; i++)
                 {
-                    if (ChartManager.instance.housingObjectDatas[i].name_e == key)
+                    if (TestManager.instance.isAll)
                     {
-                        Debug.Log($"{i}번째 Key : {key}");
-                        SetItemInfo(ChartManager.instance.housingObjectDatas[i], slots[index], DBManager.instance.user.housingObject[key]);
-                        index++;
-                        //LoadHousingInventory(housingIndex, DBManager.instance.user.housingObject[key]);
-                        break;
+                        if (ChartManager.instance.housingObjectDatas[i].name_e == key)
+                        {
+                            Debug.Log($"all?");
+                            SetItemInfo(ChartManager.instance.housingObjectDatas[i], slots[index], DBManager.instance.user.housingObject[key]);
+                            index++;
+                            //LoadHousingInventory(housingIndex, DBManager.instance.user.housingObject[key]);
+                            break;
+                        }
+                    }
+                    else if(!TestManager.instance.isAll)
+                    {
+                        if (ChartManager.instance.housingObjectDatas[i].name_e == key && ChartManager.instance.housingObjectDatas[i].layer == TestManager.instance.filterLayer)
+                        {
+                            Debug.Log($"filter?");
+                            SetItemInfo(ChartManager.instance.housingObjectDatas[i], slots[index], DBManager.instance.user.housingObject[key]);
+                            index++;
+                            //LoadHousingInventory(housingIndex, DBManager.instance.user.housingObject[key]);
+                            break;
+                        }
                     }
                 }
             }
@@ -130,9 +151,9 @@ public class InventorySystem : MonoBehaviour
         Slot[] slots = GetComponentsInChildren<Slot>();
         foreach (Slot slot in slots)
         {
-            for(int i = 0; i < DBManager.instance.user.tokens.Length; i++)
+            for (int i = 0; i < DBManager.instance.user.tokens.Length; i++)
             {
-                if(DBManager.instance.user.tokens[i] != 0)
+                if (DBManager.instance.user.tokens[i] != 0)
                 {
                     SetItemInfo(i, slot);
                     break;
