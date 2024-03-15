@@ -16,11 +16,17 @@ public class BossHPSlide : MonoBehaviour
 
     private void Start()
     {
+        GameObject[] stars = GameObject.FindGameObjectsWithTag("Star");
+        for(int i = 0; i < stars.Length; i++)
+        {
+            stars[i].GetComponent<DamageStar>().onBossHPSlide = DamageHealth;
+        }
+
         bossControll = GameObject.FindGameObjectWithTag("Boss").GetComponent<BossControll>();
 
         currentValue = maxValue;
         fill.fillAmount = 1;
-        bossControll.onBossHPSlide = DamageHealth; 
+        //bossControll.onBossHPSlide = DamageHealth; 
     }
     private void DamageHealth(object sender, EventArgs args)
     {

@@ -10,6 +10,7 @@ public class MoveRockObstacle : MonoBehaviour
     [SerializeField] private ItemEventControl itemEventControl;
     [SerializeField] private bool isBossStage = false;
 
+    public bool isGreen;
 
     //Elploable
     Explodable explodable;
