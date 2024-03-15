@@ -48,7 +48,6 @@ public class FilterButton : MonoBehaviour
         }
     }
 
-    #region Housing Filter
 
     public void AllButton()
     {
@@ -58,6 +57,7 @@ public class FilterButton : MonoBehaviour
         TestManager.instance.isBack = false;
         TestManager.instance.isBuilding = false;
         TestManager.instance.isInteration = false;
+        TestManager.instance.filterLayer = -1;
         invenSystem.LoadHousingInventory();
         /* HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
          foreach (HousingSlot slot in slots)
@@ -70,6 +70,7 @@ public class FilterButton : MonoBehaviour
          }*/
     }
 
+    #region Housing Filter
     public void FrontButton()
     {
         isFilter = true;
