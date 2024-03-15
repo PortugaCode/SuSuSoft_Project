@@ -44,6 +44,25 @@ public class WorkshopBtn : MonoBehaviour
         filterBTN.SetActive(true);
     }
 
+    private void OnDisable()
+    {
+        for (int i = 0; i < topButtons.Count; i++)
+        {
+            topButtons[i].color = Color.white;
+        }
+        for (int i = 0; i < filterButtons.Count; i++)
+        {
+            filterButtons[i].color = Color.white;
+        }
+
+        topButtons[0].color = selectedColor;
+        filterButtons[0].color = selectedColor;
+        sellFilterButtons[0].color = selectedColor;
+        inventory.SetActive(true);
+        createInventory.SetActive(true);
+        filterBTN.SetActive(true);
+    }
+
     public void OpenCreateInventory(Image image)
     {
         for (int i = 0; i < topButtons.Count; i++)
@@ -134,7 +153,7 @@ public class WorkshopBtn : MonoBehaviour
         {
             topButtons[i].color = Color.white;
         }
-        topButtons[2].color = selectedColor; 
+        topButtons[2].color = selectedColor;
 
         inventory.SetActive(true);
         sellInventory.SetActive(true);

@@ -46,18 +46,8 @@ public class InventorySystem : MonoBehaviour
         if (DBManager.instance == null) return;
         Debug.Log("인벤토리 로드중?");
         LoadHousingInventory();
-        //StartCoroutine(FilterHousing());
     }
 
-    private IEnumerator FilterHousing()
-    {
-        WaitForSeconds wfs = new WaitForSeconds(0.1f);
-        yield return wfs;
-        if (filter != null)
-        {
-            filter.Filtering();
-        }
-    }
 
     public void ClearHousingInventory()
     {
