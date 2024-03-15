@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,13 @@ public class DamageStar : MonoBehaviour
     [SerializeField] private float speed;
     private bool isMoveOn = false;
 
+    public EventHandler onBossHPSlide;
+    BossControll boss;
 
+    private void Awake()
+    {
+        boss = GameObject.FindGameObjectWithTag("Boss").GetComponent<BossControll>();
+    }
 
     private void FixedUpdate()
     {
@@ -35,6 +42,9 @@ public class DamageStar : MonoBehaviour
         else if(collision.CompareTag("Boss") && isMoveOn)
         {
             Destroy(gameObject);
+            boss.animator.SetTrigger("BossHurt");
+            boss.BossDamage();
+            onBossHPSlide?.Invoke(this, EventArgs.Empty);
         }
     }
 }

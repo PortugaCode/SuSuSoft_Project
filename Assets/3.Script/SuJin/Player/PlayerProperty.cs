@@ -17,6 +17,9 @@ public class PlayerProperty : MonoBehaviour
     private HorizontalPlayer horizontalPlayer;
     public Magnetic magnetic;
 
+
+    private bool isShield = false;
+
     public int level;
 
     [Header("Particle")]
@@ -26,7 +29,6 @@ public class PlayerProperty : MonoBehaviour
 
     [Header("Player")]
     [SerializeField] private Transform player;
-    public string PlayerColor;
 
 
     [Header("HP")]
@@ -49,6 +51,8 @@ public class PlayerProperty : MonoBehaviour
 
     private bool isGiant;
     private bool isSmaller;
+
+    private bool isBossStage = false;
 
 
     #region [나중에 구현]
@@ -77,7 +81,6 @@ public class PlayerProperty : MonoBehaviour
     [SerializeField] GameObject RecoveryOn;
     [SerializeField] GameObject SpeedUpOn;
     [SerializeField] float skillDuration;
-    //private bool coolGiant;                             // 자이언트 쿨타임
     
 
     [Header("Animator")]
@@ -109,24 +112,63 @@ public class PlayerProperty : MonoBehaviour
         //장애물
         if (collision.gameObject.CompareTag("Obstacles") && isCanHit)
         {
-            //Audio
-            AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
-
-            StartCoroutine(HitDelay_Co());
-
-            PassiveAttackNull();
-            onHPSlider?.Invoke(this, EventArgs.Empty);
-            onStarBar?.Invoke(this, EventArgs.Empty);
-            onStarShape?.Invoke(this, EventArgs.Empty);
-
-            //Player Damage
-            if (!skillActive.isItemOn)
+            //만약 보스스테이지가 아니라면
+            if (!isBossStage)
             {
+                //Audio
+                AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
+
+                StartCoroutine(HitDelay_Co());
+
+
+                if(isShield)
+                {
+                    Debug.Log("쉴드 모드 중");
+                    return;
+                }
+                else
+                {
+                    PassiveAttackNull();  // 데미지 입히는 코드
+                    onHPSlider?.Invoke(this, EventArgs.Empty);
+                    onStarBar?.Invoke(this, EventArgs.Empty);
+                    onStarShape?.Invoke(this, EventArgs.Empty);
+                }
+
+
+
+/*                //Player Damage
+                if (!skillActive.isItemOn)
+                {
                     PassiveAttackNull();
                     onHPSlider?.Invoke(this, EventArgs.Empty);
                     onStarBar?.Invoke(this, EventArgs.Empty);
                     onStarShape?.Invoke(this, EventArgs.Empty);
+                }*/
             }
+            /*            else  // OnGame 씬에는 DBManager가 없기 때문에 로그인부터 쭉 해서 들어와야 확인 가능  //Obstacles 태그를 가진 오브젝트는 무조건 MoveRockObstacle 스크립트가 있어야 함
+                        {
+                            if (collision.GetComponent<MoveRockObstacle>().isGreen)
+                            {
+                                AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
+
+                                int index = DBManager.instance.user.currentCharacterIndex; // 0~19    0~4
+                                if ((int)(index / 4) == 4)
+                                {
+                                    Debug.Log("같은 색 부딪침");
+                                }
+                                else
+                                {
+                                    StartCoroutine(HitDelay_Co());
+                                    PassiveAttackNull();
+                                    onHPSlider?.Invoke(this, EventArgs.Empty);
+                                    onStarBar?.Invoke(this, EventArgs.Empty);
+                                    onStarShape?.Invoke(this, EventArgs.Empty);
+                                }
+                            }
+                        }*/
+
+
+
         }
 
         else if (collision.gameObject.CompareTag("Breaking"))
@@ -175,8 +217,9 @@ public class PlayerProperty : MonoBehaviour
             //Instantiate(starPrefebs, transform.position, Quaternion.identity);
             onStarBar?.Invoke(this, EventArgs.Empty);
             onStarShape?.Invoke(this, EventArgs.Empty);
-           // Destroy(collision.gameObject);
 
+            //보스 스테이지가 아니면 삭제
+            // Destroy(collision.gameObject);
         }
         else if (collision.gameObject.CompareTag("BigStar"))
         {
@@ -188,6 +231,8 @@ public class PlayerProperty : MonoBehaviour
            //Instantiate(starPrefebs, transform.position, Quaternion.identity);
             onStarBar?.Invoke(this, EventArgs.Empty);
             onStarShape?.Invoke(this, EventArgs.Empty);
+
+            //보스 스테이지가 아니면 삭제
             //Destroy(collision.gameObject);
         }
 
@@ -302,17 +347,17 @@ public class PlayerProperty : MonoBehaviour
 
                     break;
                 }
-            case 2:         //Orange
+            case 2:         //Blue
                 {
 
                     break;
                 }
-            case 3:         //Orange
+            case 3:         //Purple
                 {
 
                     break;
                 }
-            case 4:         //Orange
+            case 4:         //Green
                 {
 
                     break;
@@ -333,7 +378,7 @@ public class PlayerProperty : MonoBehaviour
 
     private void SetDamage()     //Damage 입는 메서드
     {
-        if(!isCanSkill)
+        if(!isShield)
         {
             if (stars.Count > 0)
             {
@@ -341,7 +386,7 @@ public class PlayerProperty : MonoBehaviour
                 stars.RemoveAt(stars.Count - 1);
                 Destroy(a);
             }
-
+            Debug.Log("Damage");
             currentHealth -= damage;
             animator.SetTrigger("Hit");
 
@@ -363,6 +408,7 @@ public class PlayerProperty : MonoBehaviour
     {
         skillActive.isItemOn = false;
         isCanSkill = true;
+        isShield = true;
 
         AudioManager.Instance.PlaySFX(SFX_Name.ShieldBuff);
 
@@ -402,6 +448,16 @@ public class PlayerProperty : MonoBehaviour
         dieAction.gameObject.transform.SetParent(null);
         hitAction.Play();
         dieAction.Play();
+    }
+
+    public void StopPlayer()
+    {
+        if (TryGetComponent<HorizontalPlayer>(out HorizontalPlayer horizontalPlayer))
+        {
+            horizontalPlayer.GameControl.ActiveOnEndUI();
+            hitAction.gameObject.transform.SetParent(null);
+            dieAction.gameObject.transform.SetParent(null);
+        }
     }
 
     #endregion //Attack nullified 공격 무효화
@@ -470,6 +526,7 @@ public class PlayerProperty : MonoBehaviour
         yield return new WaitForSeconds(skillDuration);
 
         isCanSkill = false;
+        isShield = false;
         ShieldOn.SetActive(false);
         //skillActive.shieldFillImage.fillAmount = 1.0f;
         this.horizontalPlayer.coroutine = StartCoroutine(skillActive.CoolTime_Co());

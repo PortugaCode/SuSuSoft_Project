@@ -41,6 +41,7 @@ public class HorizontalPlayer : MonoBehaviour
 
     private float speed;
     private bool isSpeed = false;
+    public bool isGameOver = false;
 
     [Header("Player Location")]
     [SerializeField] private float rotationSpeed;
@@ -108,6 +109,12 @@ public class HorizontalPlayer : MonoBehaviour
 
     public void PlayerUp()         //플레이어 위로 이동
     {
+        if(isGameOver)
+        {
+            rb2D.velocity = Vector2.zero;
+            return;
+        }
+        //=========================================
         if (Input.touchCount > 0)
         {
             animator.SetBool("Move", true);

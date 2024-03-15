@@ -13,7 +13,7 @@ public class StageSelectControl : MonoBehaviour
 
     private void OnEnable()
     {
-        for (int i = 0; i < 1; i++) // i < 스테이지 개수 로 변경 필요
+        for (int i = 0; i < 5; i++) // i < 스테이지 개수 로 변경 필요
         {
             for (int j = 0; j < 3; j++)
             {

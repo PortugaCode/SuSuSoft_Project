@@ -12,6 +12,10 @@ public class SpriteManager : MonoBehaviour
     [Header("Stage Index  == SpriteManager List Index")]
     public List<Sprite> tokenSprites = new List<Sprite>();
 
+
+    [Header("StarTail Index  == SpriteManager List Index")]
+    public List<Sprite> startailes = new List<Sprite>();
+
     private void Awake()
     {
         if(instance == null)

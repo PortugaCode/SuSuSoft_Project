@@ -7,11 +7,13 @@ using TMPro;
 
 public class DrawUISystem : MonoBehaviour
 {
+    [SerializeField] private UIManager uIManager;
+
+
+
     [Header("Body & Face")]
     [SerializeField] private Sprite[] bodies;
     [SerializeField] private Sprite[] faces;
-
-
 
     [Header("Result Charater List")]
     [SerializeField] private GameObject resultObject;
@@ -490,6 +492,7 @@ public class DrawUISystem : MonoBehaviour
         if (DBManager.instance.user.goods["gold"] > drawGold)
         {
             DBManager.instance.user.goods["gold"] -= drawGold;
+            uIManager.UpdateGoods();
             return true;
         }
         else
@@ -504,6 +507,7 @@ public class DrawUISystem : MonoBehaviour
         if (DBManager.instance.user.goods["gold"] > (drawGold * 10))
         {
             DBManager.instance.user.goods["gold"] -= (drawGold * 10);
+            uIManager.UpdateGoods();
             return true;
         }
         else
@@ -543,15 +547,15 @@ public class DrawUISystem : MonoBehaviour
     //유저가 해당 인덱스 캐릭터가 이미 있나요?
     private bool HaveUserIndexCharater(int index)
     {
-        foreach(Character character in DBManager.instance.user.character)
+        for (int i = 0; i < DBManager.instance.user.character.Count; i++)
         {
-            if(character.index == index)
+            if(DBManager.instance.user.character[i].index == index)
             {
-                RaiseCharaterCount(character);
-                return true;
+                Character a = DBManager.instance.user.character[i];
+                a.count += 1;
+                DBManager.instance.user.character[i] = a;
             }
         }
-
         return false;
     }
 
@@ -587,9 +591,4 @@ public class DrawUISystem : MonoBehaviour
         drawPopUP.SetActive(false);
     }
 
-    private void RaiseCharaterCount(Character character)
-    {
-        character.count += 1;
-        charaterCount.text = $"{character.count} / 30";
-    }
 }

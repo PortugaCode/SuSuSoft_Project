@@ -77,17 +77,6 @@ public class UIManager : MonoBehaviour
     {
         UpdateGoods();
 
-        if (characters == null || characterDatas == null)
-        {
-            characters = DBManager.instance.user.character;
-            characterDatas = ChartManager.instance.characterDatas;
-        }
-
-        UpdateCharacterButton();
-
-        healthText.text = $"체력 : {characters[DBManager.instance.user.currentCharacterIndex].maxHealth}";
-        sightRangeText.text = $"시야 범위 : {characterDatas[DBManager.instance.user.currentCharacterIndex].maxSightRange}";
-
         DBManager.instance.CheckActivePoint();
         timerCoroutine = StartCoroutine(UpdateTimeLeftText_co());
     }
@@ -332,6 +321,20 @@ public class UIManager : MonoBehaviour
 
     public void UpdateCharacterButton()
     {
+        for (int i = 0; i < characters.Count; i++)
+        {
+            if (characters[i].imageIndex == DBManager.instance.user.currentCharacterIndex)
+            {
+                currentCharacter.transform.GetChild(0).GetComponent<Image>().sprite = characterBodyImages[characters[i].imageIndex];
+                currentCharacter.transform.GetChild(1).GetComponent<Image>().sprite = characterFaceImages[characters[i].imageIndex / 4];
+                currentCharacter.transform.GetChild(2).GetComponent<TMP_Text>().text = characters[i].name;
+
+                healthText.text = $"체력 : {characters[i].maxHealth}";
+                sightRangeText.text = $"시야 범위 : {characterDatas[i].maxSightRange}";
+                break;
+            }
+        }
+
         if (characterTabIndex < 2)
         {
             // 모든 캐릭터 버튼 비활성화
@@ -357,7 +360,6 @@ public class UIManager : MonoBehaviour
                 if (characters[i].imageIndex >= 9 * characterTabIndex && characters[i].imageIndex <= 8 + 9 * characterTabIndex)
                 {
                     int index = characters[i].imageIndex - 9 * characterTabIndex;
-                    characterButtons[index].transform.GetChild(1).GetComponent<Image>().sprite = characterFaceImages[characters[i].lookImageIndex];
                     characterButtons[index].GetComponent<Button>().interactable = true;
                     Color color = characterButtons[index].GetComponent<Image>().color;
                     color.a = 1.0f;
@@ -498,6 +500,19 @@ public class UIManager : MonoBehaviour
     public void OpenMailPopup()
     {
         mailPopup.SetActive(true);
+    }
+
+    public void OpenInfoPopup()
+    {
+        characterInfoPopup.SetActive(true);
+
+        characters = DBManager.instance.user.character;
+        characterDatas = ChartManager.instance.characterDatas;
+
+        UpdateCharacterButton();
+
+        healthText.text = $"체력 : {characters[DBManager.instance.CharacterIndexMatching(DBManager.instance.user.currentCharacterIndex)].maxHealth}";
+        sightRangeText.text = $"시야 범위 : {characterDatas[DBManager.instance.CharacterIndexMatching(DBManager.instance.user.currentCharacterIndex)].maxSightRange}";
     }
 
     public void CloseInfoPopup()

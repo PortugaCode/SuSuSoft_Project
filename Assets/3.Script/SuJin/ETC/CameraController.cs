@@ -73,7 +73,6 @@ public class CameraController : MonoBehaviour
         
     }
 
-
     private void CameraPos_Stage()
     {
         if (player == null) return;

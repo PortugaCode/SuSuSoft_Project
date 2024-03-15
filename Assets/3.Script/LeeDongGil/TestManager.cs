@@ -27,7 +27,7 @@ public class TestManager : MonoBehaviour
     public bool isBack = false;
     public bool isBuilding = false;
     public bool isInteration = false;
-    public int filterLayer = 0;
+    public int filterLayer = -1;
 
     [Header("Token Filter")]
     public bool isAllToken = true;
@@ -102,22 +102,42 @@ public class TestManager : MonoBehaviour
     {
         if (isAll)
         {
-            filterLayer = 0;
+            isFront = false;
+            isBack = false;
+            isBuilding = false;
+            isInteration = false;
+            filterLayer = -1;
         }
         else if (isFront)
         {
+            isAll = false;
+            isBack = false;
+            isBuilding = false;
+            isInteration = false;
             filterLayer = 6;
         }
         else if (isBack)
         {
+            isAll = false;
+            isFront = false;
+            isBuilding = false;
+            isInteration = false;
             filterLayer = 2;
         }
         else if (isBuilding)
         {
+            isAll = false;
+            isFront = false;
+            isBack = false;
+            isInteration = false;
             filterLayer = 3;
         }
         else if (isInteration)
         {
+            isAll = false;
+            isFront = false;
+            isBack = false;
+            isBuilding = false;
             filterLayer = 8;
         }
     }

@@ -455,7 +455,6 @@ public class HousingDrag : MonoBehaviour
                         sp.color = Color.white;
                     }
                 }
-                subCollider.enabled = false;
             }
         }
         else
