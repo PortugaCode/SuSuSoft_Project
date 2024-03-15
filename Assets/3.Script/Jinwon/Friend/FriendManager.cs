@@ -40,26 +40,11 @@ public class FriendManager : MonoBehaviour
     private List<Friend> friends = new List<Friend>();
     private List<Friend> requests = new List<Friend>();
 
-    private void Start()
-    {
-        // For Test
-        var bro = Backend.Initialize(true);
-
-        var login = Backend.BMember.CustomLogin("test5", "1234");
-
-        if (login.IsSuccess())
-        {
-            GetFriendsData();
-            ShowFriendsList();
-            ResetUI();
-        }
-    }
-
     private void OnEnable()
     {
-        //GetFriendsData();
-        //ShowFriendsList();
-        //ResetUI();
+        GetFriendsData();
+        ShowFriendsList();
+        ResetUI();
     }
 
     public void ResetUI()
@@ -74,6 +59,8 @@ public class FriendManager : MonoBehaviour
 
     public void GetFriendsData() // 친구 목록 조회
     {
+        friends.Clear();
+
         // 전체 친구 리스트 조회
         var bro = Backend.Friend.GetFriendList();
 
@@ -101,6 +88,11 @@ public class FriendManager : MonoBehaviour
 
     public void ShowFriendsList()
     {
+        for (int i = 0; i < content_friendList.childCount; i++)
+        {
+            Destroy(content_friendList.GetChild(0).gameObject);
+        }
+
         for (int i = 0; i < friends.Count; i++)
         {
             GameObject friendTab = Instantiate(friendTabPrefab);
@@ -108,10 +100,10 @@ public class FriendManager : MonoBehaviour
 
             var bro = Backend.PlayerData.GetOtherData("User", friends[i].inDate);
 
-            int index = DBManager.instance.CharacterIndexMatching(int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString()));
+            int index = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString());
 
-            friendTab.transform.GetChild(1).GetComponent<Image>().sprite = characterBodyImages[index]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
-            friendTab.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = characterFaceImages[index / 4]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
+            friendTab.transform.GetChild(1).GetComponent<Image>().sprite = characterBodyImages[index];
+            friendTab.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = characterFaceImages[index / 4];
             friendTab.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{friends[i].name}";
 
             int temp = i;
@@ -128,6 +120,8 @@ public class FriendManager : MonoBehaviour
 
     public void ShowRequestsList()
     {
+        requests = GetReceivedRequestList();
+
         for (int i = 0; i < requests.Count; i++)
         {
             GameObject requestTab = Instantiate(requestTabPrefab);
@@ -135,15 +129,15 @@ public class FriendManager : MonoBehaviour
 
             var bro = Backend.PlayerData.GetOtherData("User", requests[i].inDate);
 
-            int index = DBManager.instance.CharacterIndexMatching(int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString()));
+            int index = int.Parse(bro.GetReturnValuetoJSON()["rows"][0]["CurrentCharacterIndex"][0].ToString());
 
             requestTab.transform.GetChild(1).GetComponent<Image>().sprite = characterBodyImages[index]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
             requestTab.transform.GetChild(1).GetChild(0).GetComponent<Image>().sprite = characterFaceImages[index / 4]; // 해당 친구가 사용중인 캐릭터로 매칭 필요
             requestTab.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{requests[i].name}";
 
             int temp = i;
-            requestTab.transform.GetChild(3).GetComponent<Button>().onClick.AddListener(delegate { RejectRequest(temp, friends[temp].inDate); });
-            requestTab.transform.GetChild(4).GetComponent<Button>().onClick.AddListener(delegate { AcceptRequest(temp, friends[temp].inDate); });
+            requestTab.transform.GetChild(3).GetComponent<Button>().onClick.AddListener(delegate { RejectRequest(temp, requests[temp].inDate); });
+            requestTab.transform.GetChild(4).GetComponent<Button>().onClick.AddListener(delegate { AcceptRequest(temp, requests[temp].inDate); });
         }
     }
 
@@ -310,7 +304,7 @@ public class FriendManager : MonoBehaviour
     {
         // 해당 유저에게 별 전송하기 구현 필요
 
-        content_friendList.GetChild(index).GetChild(4).GetChild(1).GetComponent<TMP_Text>().text = $"전송완료";
+        content_friendList.GetChild(index).GetChild(4).GetChild(1).GetComponent<TMP_Text>().text = $"전송 아직 미구현";
     }
 
     public void DeleteFriend(int index, string inDate) // 해당 친구 삭제

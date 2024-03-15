@@ -85,8 +85,11 @@ public class UIManager : MonoBehaviour
 
         UpdateCharacterButton();
 
-        healthText.text = $"체력 : {characters[DBManager.instance.user.currentCharacterIndex].maxHealth}";
-        sightRangeText.text = $"시야 범위 : {characterDatas[DBManager.instance.user.currentCharacterIndex].maxSightRange}";
+        if (healthText != null && sightRangeText != null)
+        {
+            healthText.text = $"체력 : {characters[DBManager.instance.CharacterIndexMatching(DBManager.instance.user.currentCharacterIndex)].maxHealth}";
+            sightRangeText.text = $"시야 범위 : {characterDatas[DBManager.instance.CharacterIndexMatching(DBManager.instance.user.currentCharacterIndex)].maxSightRange}";
+        }
 
         DBManager.instance.CheckActivePoint();
         timerCoroutine = StartCoroutine(UpdateTimeLeftText_co());
