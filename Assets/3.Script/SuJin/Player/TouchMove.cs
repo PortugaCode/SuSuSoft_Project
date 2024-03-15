@@ -350,13 +350,97 @@ public class TouchMove : MonoBehaviour
                         interactionControl.doAnimatorArray[0].Invoke();
                         touchPosition = transform.position;
                         isInteraction = false;
+
+                        if (Utils.Instance.nowScene == SceneNames.MatchRoom)
+                        {
+                            PlayerMoveMessage msg = new PlayerMoveMessage(Backend.Match.GetMySessionId(), touchPosition, direction);
+                            BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerMoveMessage>(msg);
+
+                            //=====================================================================================================
+
+                            PlayerAnimationMessage ani_msg = new PlayerAnimationMessage(Backend.Match.GetMySessionId(), 0);
+                            BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerAnimationMessage>(ani_msg);
+                        }
+
                         break;
+
+                    case 8:
+                        Debug.Log("테니스공 : 8 들어옴");
+                        interactionControl.doAnimatorArray[1].Invoke();
+                        touchPosition = transform.position;
+                        isInteraction = false;
+
+                        if (Utils.Instance.nowScene == SceneNames.MatchRoom)
+                        {
+                            PlayerMoveMessage msg = new PlayerMoveMessage(Backend.Match.GetMySessionId(), touchPosition, direction);
+                            BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerMoveMessage>(msg);
+
+                            //=====================================================================================================
+
+                            PlayerAnimationMessage ani_msg = new PlayerAnimationMessage(Backend.Match.GetMySessionId(), 1);
+                            BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerAnimationMessage>(ani_msg);
+                        }
+                        break;
+
+                    case 9:
+                        Debug.Log("골프 : 9 들어옴");
+                        interactionControl.doAnimatorArray[2].Invoke();
+                        touchPosition = transform.position;
+                        isInteraction = false;
+
+                        if (Utils.Instance.nowScene == SceneNames.MatchRoom)
+                        {
+                            PlayerMoveMessage msg = new PlayerMoveMessage(Backend.Match.GetMySessionId(), touchPosition, direction);
+                            BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerMoveMessage>(msg);
+
+                            //=====================================================================================================
+
+                            PlayerAnimationMessage ani_msg = new PlayerAnimationMessage(Backend.Match.GetMySessionId(), 2);
+                            BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerAnimationMessage>(ani_msg);
+                        }
+                        break;
+
+                    case 10:
+                        Debug.Log("축구공 : 10 들어옴");
+                        interactionControl.doAnimatorArray[3].Invoke();
+                        touchPosition = transform.position;
+                        isInteraction = false;
+
+                        if (Utils.Instance.nowScene == SceneNames.MatchRoom)
+                        {
+                            PlayerMoveMessage msg = new PlayerMoveMessage(Backend.Match.GetMySessionId(), touchPosition, direction);
+                            BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerMoveMessage>(msg);
+
+                            //=====================================================================================================
+
+                            PlayerAnimationMessage ani_msg = new PlayerAnimationMessage(Backend.Match.GetMySessionId(), 3);
+                            BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerAnimationMessage>(ani_msg);
+                        }
+                        break;
+
+                    case 11:
+                        Debug.Log("트로피 : 11 들어옴");
+                        interactionControl.doAnimatorArray[4].Invoke();
+                        touchPosition = transform.position;
+                        isInteraction = false;
+
+                        if (Utils.Instance.nowScene == SceneNames.MatchRoom)
+                        {
+                            PlayerMoveMessage msg = new PlayerMoveMessage(Backend.Match.GetMySessionId(), touchPosition, direction);
+                            BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerMoveMessage>(msg);
+
+                            //=====================================================================================================
+
+                            PlayerAnimationMessage ani_msg = new PlayerAnimationMessage(Backend.Match.GetMySessionId(), 4);
+                            BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerAnimationMessage>(ani_msg);
+                        }
+                        break;
+
                     default:
                         Debug.Log("Unknown housingID type");
                         return;
                 }
             }
-            
             #region [type 비교]
             /*            if (housingDrag.data.housingType == HousingType.interactionable)
                         {
@@ -375,6 +459,11 @@ public class TouchMove : MonoBehaviour
                         }*/
             #endregion
         }
+    }
+
+    public void PlayAnimation_Index(int index)
+    {
+        interactionControl.PlayAnimation(index);
     }
 
 

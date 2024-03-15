@@ -10,9 +10,11 @@ public class InteractionControl : MonoBehaviour
     public delegate void animatorFunc();
     public animatorFunc[] doAnimatorArray;
 
+    public Action<int> doCloneAnimation;
+
     private void Start()
     {
-        doAnimatorArray = new animatorFunc[] { PlayBasketBall };
+        doAnimatorArray = new animatorFunc[] { PlayBasketBall, PlayTennisBall, PlayGolf, PlayFootBall, PlayTrophy};
     }
 
     #region [SetRootMotion] 
@@ -32,8 +34,29 @@ public class InteractionControl : MonoBehaviour
         animator.SetTrigger("DoBasketBall");
     }
 
-    private void PlayAnimation_Clone(int index)
+    private void PlayTennisBall()
+    {
+        animator.SetTrigger("DoTennisBall");
+    }
+
+    private void PlayGolf()
+    {
+        animator.SetTrigger("DoGolf");
+    }
+
+    private void PlayFootBall()
+    {
+        animator.SetTrigger("DoFootBall");
+    }
+
+    private void PlayTrophy()
+    {
+        animator.SetTrigger("DoTrophy");
+    }
+
+    public void PlayAnimation(int index)
     {
         doAnimatorArray[index]?.Invoke();
+        doCloneAnimation?.Invoke(index);
     }
 }

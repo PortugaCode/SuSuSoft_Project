@@ -7,9 +7,10 @@ namespace Protocol
     // 이벤트 타입
     public enum Type : sbyte
     {
-        Key = 0,        // 키(가상 조이스틱) 입력
-        PlayerMove,     // 플레이어 이동
-        PlayerChat      // 플레이어 채팅
+        Key = 0,            // 키(가상 조이스틱) 입력
+        PlayerMove,         // 플레이어 이동
+        PlayerChat,         // 플레이어 채팅
+        PlayerAnimation     // 플레이어 애니메이션
     }
 
 
@@ -53,6 +54,18 @@ namespace Protocol
         {
             this.playerSession = session;
             this.chat = chat;
+        }
+    }
+
+    public class PlayerAnimationMessage : Message
+    {
+        public SessionId playerSession;
+        public int index;
+
+        public PlayerAnimationMessage(SessionId session, int index) : base(Type.PlayerAnimation)
+        {
+            this.playerSession = session;
+            this.index = index;
         }
     }
 }
