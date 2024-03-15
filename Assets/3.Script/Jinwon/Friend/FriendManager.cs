@@ -364,6 +364,13 @@ public class FriendManager : MonoBehaviour
 
     public void SendAddRequest()
     {
+        if (Backend.UserNickName == searchUserName)
+        {
+            errorText.GetComponent<TMP_Text>().text = $"자신에게는 보낼 수 없습니다";
+            errorText.SetActive(true);
+            return;
+        }
+
         sendRequestButton.interactable = false;
         sendRequestButton.transform.GetChild(0).GetComponent<TMP_Text>().text = $"전송 완료";
 

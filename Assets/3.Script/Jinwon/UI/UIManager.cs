@@ -77,20 +77,6 @@ public class UIManager : MonoBehaviour
     {
         UpdateGoods();
 
-        if (characters == null || characterDatas == null)
-        {
-            characters = DBManager.instance.user.character;
-            characterDatas = ChartManager.instance.characterDatas;
-        }
-
-        UpdateCharacterButton();
-
-        if (healthText != null && sightRangeText != null)
-        {
-            healthText.text = $"체력 : {characters[DBManager.instance.CharacterIndexMatching(DBManager.instance.user.currentCharacterIndex)].maxHealth}";
-            sightRangeText.text = $"시야 범위 : {characterDatas[DBManager.instance.CharacterIndexMatching(DBManager.instance.user.currentCharacterIndex)].maxSightRange}";
-        }
-
         DBManager.instance.CheckActivePoint();
         timerCoroutine = StartCoroutine(UpdateTimeLeftText_co());
     }
@@ -514,6 +500,19 @@ public class UIManager : MonoBehaviour
     public void OpenMailPopup()
     {
         mailPopup.SetActive(true);
+    }
+
+    public void OpenInfoPopup()
+    {
+        characterInfoPopup.SetActive(true);
+
+        characters = DBManager.instance.user.character;
+        characterDatas = ChartManager.instance.characterDatas;
+
+        UpdateCharacterButton();
+
+        healthText.text = $"체력 : {characters[DBManager.instance.CharacterIndexMatching(DBManager.instance.user.currentCharacterIndex)].maxHealth}";
+        sightRangeText.text = $"시야 범위 : {characterDatas[DBManager.instance.CharacterIndexMatching(DBManager.instance.user.currentCharacterIndex)].maxSightRange}";
     }
 
     public void CloseInfoPopup()
