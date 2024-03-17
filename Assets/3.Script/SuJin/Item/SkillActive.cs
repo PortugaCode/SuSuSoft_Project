@@ -26,6 +26,13 @@ public class SkillActive : MonoBehaviour
     public bool isItemOn = false;
     PlayerProperty playerProperty;
 
+    GameObject skillActiveUI;
+
+    private void Awake()
+    {
+        skillActiveUI = GameObject.FindGameObjectWithTag("SkillActive");
+        skillActiveUI.SetActive(true);      //GameOver or Result 씬에서 false 시키기
+    }
 
     private void Start()
     {

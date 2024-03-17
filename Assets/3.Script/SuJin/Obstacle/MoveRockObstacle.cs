@@ -8,9 +8,8 @@ public class MoveRockObstacle : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rigid;
     [SerializeField] private ItemEventControl itemEventControl;
-    [SerializeField] private bool isBossStage = false;
-
-    public bool isGreen;
+    [SerializeField] private ItemEventControl itemEventControl_3;
+    //[SerializeField] private bool isBossStage = false;
 
     //Elploable
     Explodable explodable;
@@ -21,12 +20,20 @@ public class MoveRockObstacle : MonoBehaviour
     {
         explodable = GetComponent<Explodable>();
 
+        if (itemEventControl != null)
+        {
+            itemEventControl.onItemEquip += OnSimulation;
+        }
+        if (itemEventControl_3 != null)
+        {
+            itemEventControl_3.onItemEquip += OnSimulation;
+        }
 
         //if (Utils.Instance.currentLevel == Level.Level_5) return;   //Level 예외 처리 해주기
-/*        if (!isBossStage)
-        {
-            itemEventControl.onItemEquip += OnSimulation;       //메서드를 여러 개 담을 때 +=   //단일 매서드는 =  //  Destroy 될 때는 -= 로 구독해지 해주기
-        }*/
+        /*        if (!isBossStage)
+                {
+                    itemEventControl.onItemEquip += OnSimulation;       //메서드를 여러 개 담을 때 +=   //단일 매서드는 =  //  Destroy 될 때는 -= 로 구독해지 해주기
+                }*/
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

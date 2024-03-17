@@ -13,10 +13,16 @@ public class Magnetic : MonoBehaviour
 
     Rigidbody2D rb;
     PlayerProperty playerProperty;
+    SkillActive skillActive;
 
     private bool isMagnetItem = false;
     public bool isMagnetActive = false;
     private bool isMagnetPassive = false;
+
+    private void Awake()
+    {
+        skillActive = GameObject.FindGameObjectWithTag("SkillActive").GetComponent<SkillActive>();
+    }
 
     private void Start()
     {
@@ -100,7 +106,7 @@ public class Magnetic : MonoBehaviour
 
     public void ActiveMagnet()
     {
-        playerProperty.skillActive.isItemOn = false;
+        skillActive.isItemOn = false;
         playerProperty.isCanSkill = true;
         isMagnetActive = true;
 

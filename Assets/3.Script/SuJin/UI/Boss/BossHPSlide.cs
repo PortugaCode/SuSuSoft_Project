@@ -16,8 +16,14 @@ public class BossHPSlide : MonoBehaviour
 
     private void Start()
     {
-        GameObject[] stars = GameObject.FindGameObjectsWithTag("Star");
-        for(int i = 0; i < stars.Length; i++)
+        SetStarDamage();
+        SetObstacleDamge();
+    }
+
+    private void SetStarDamage()
+    {
+        GameObject[] stars = GameObject.FindGameObjectsWithTag("BossStar");
+        for (int i = 0; i < stars.Length; i++)
         {
             stars[i].GetComponent<DamageStar>().onBossHPSlide = DamageHealth;
         }
@@ -28,6 +34,16 @@ public class BossHPSlide : MonoBehaviour
         fill.fillAmount = 1;
         //bossControll.onBossHPSlide = DamageHealth; 
     }
+
+    private void SetObstacleDamge()
+    {
+        GameObject[] greenObstacle = GameObject.FindGameObjectsWithTag("GreenObstacle");
+        for (int i = 0; i < greenObstacle.Length; i++)
+        {
+            greenObstacle[i].GetComponent<DamageObstacle>().onBossHPSlide = DamageHealth;
+        }
+    }
+
     private void DamageHealth(object sender, EventArgs args)
     {
         if (currentValue < 0) currentValue = 0;

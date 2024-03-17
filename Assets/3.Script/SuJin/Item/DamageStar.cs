@@ -26,7 +26,7 @@ public class DamageStar : MonoBehaviour
     {
         if (isMoveOn)
         {
-            transform.position = Vector2.Lerp(this.transform.position, bossControll.position, speed * Time.deltaTime);
+            transform.position = Vector2.LerpUnclamped(this.transform.position, bossControll.position, speed * Time.deltaTime);
         }
     }
 

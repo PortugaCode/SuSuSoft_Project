@@ -14,7 +14,10 @@ public class HorizontalPlayer : MonoBehaviour
     [SerializeField] private GameManager gameManager;
     public GameManager GameControl => gameManager;
     [SerializeField] private PlayerProperty playerProperty;
+    [SerializeField] private SkillActive skillActive;
     [SerializeField] private TextMeshProUGUI starCountTmpPro;
+    [SerializeField] private GameObject bossFourStage;
+    [SerializeField] private Utils utils;
 
     //PlayerMove
     private Vector3 touchPosition;
@@ -26,6 +29,7 @@ public class HorizontalPlayer : MonoBehaviour
     public Canvas canvas;
     GraphicRaycaster graphicRay;
     public Coroutine coroutine;
+
 
 
     [Header("PlyerSpeed")]
@@ -43,6 +47,7 @@ public class HorizontalPlayer : MonoBehaviour
     private bool isSpeed = false;
     public bool isGameOver = false;
 
+
     [Header("Player Location")]
     [SerializeField] private float rotationSpeed;
 
@@ -58,9 +63,6 @@ public class HorizontalPlayer : MonoBehaviour
     [SerializeField] private float minSightRange = 1.3f;      //lightRangeBaseOuter
     private float sightRangeSpeed = 0.5f;
 
-    //+
-    //private int ActiveSkill;
-    //private int PassiveSkill;
 
     [Header("Animator")]
     [SerializeField] private Animator animator;
@@ -68,13 +70,26 @@ public class HorizontalPlayer : MonoBehaviour
     private void Awake()
     {
         currentAcceleration = baseAcceleration;
+        skillActive = GameObject.FindGameObjectWithTag("SkillActive").GetComponent<SkillActive>();
+        //bossFourStage = GameObject.FindGameObjectWithTag("BossFourStage");
+
     }
 
     private void Start()
     {
         playerProperty = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerProperty>();
         playerLight.pointLightOuterRadius = maxSightRange;
+
         graphicRay = canvas.GetComponent<GraphicRaycaster>();
+
+/*        if(!utils.isFourStage)
+        {
+            bossFourStage.SetActive(false);
+        }
+        else
+        {
+            bossFourStage.SetActive(true);
+        }    */
     }
 
     private void Update()
@@ -177,12 +192,12 @@ public class HorizontalPlayer : MonoBehaviour
             if (obj.CompareTag("UI"))
             {
                 isPlayerMove = false;
-                if(playerProperty.skillActive.isItemOn)
+                if(skillActive.isItemOn)
                 {
                     playerProperty.SkillActive();
 
                     //CoolTime 초기화
-                    playerProperty.skillActive.shieldFillImage.fillAmount = 1.0f;
+                    skillActive.shieldFillImage.fillAmount = 1.0f;
                 }
             }
             else
@@ -219,7 +234,7 @@ public class HorizontalPlayer : MonoBehaviour
 
     public void ActiveSpeedUp()
     {
-        playerProperty.skillActive.isItemOn = false;
+        skillActive.isItemOn = false;
         playerProperty.isCanSkill = true;
 
         if(playerProperty.isCanSkill)
@@ -315,7 +330,7 @@ public class HorizontalPlayer : MonoBehaviour
         gameStart = true;
         if(gameStart)
         {
-            this.coroutine = playerProperty.skillActive.StartCoroutine(playerProperty.skillActive.CoolTime_Co());
+            this.coroutine = skillActive.StartCoroutine(skillActive.CoolTime_Co());
         }
     }
     #endregion

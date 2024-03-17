@@ -41,11 +41,10 @@ public class BossControll : MonoBehaviour
 
     private void Awake()
     {
-       // animator = GetComponent<Animator>();
         playerProperty = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerProperty>();
         horizontalPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<HorizontalPlayer>();
 
-        endWhite = GameObject.FindGameObjectWithTag("EditorOnly");  // 태그 바꾸기 
+        endWhite = GameObject.FindGameObjectWithTag("EndWhite");
         endImage = endWhite.GetComponent<Image>();
         endWhite.SetActive(false);
     }
@@ -72,33 +71,28 @@ public class BossControll : MonoBehaviour
     {
         screenBound = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
         Vector3 objectPos = transform.position;
-        objectPos.y = Mathf.Clamp(objectPos.y, screenBound.y * -1, screenBound.y - 0.65f);
+        // objectPos.y = Mathf.Clamp(objectPos.y, screenBound.y * -1, screenBound.y - 0.65f);
+        // transform.position = objectPos;
+        objectPos.y = Mathf.Clamp(objectPos.y, screenBound.y * -50 + 0.25f, screenBound.y);
         transform.position = objectPos;
+        rb.velocity = Vector2.zero;
     }
 
     private void FollowPlayer()
     {
-        rb.velocity = horizontalPlayer.GetRigidbody2D().velocity;
-        transform.position = new Vector2(horizontalPlayer.gameObject.transform.position.x, transform.position.y);
+        if(horizontalPlayer != null)
+        {
+            rb.velocity = horizontalPlayer.GetRigidbody2D().velocity;
+            transform.position = new Vector2(horizontalPlayer.gameObject.transform.position.x, transform.position.y);
+        }
     }
     #endregion
 
-
-   /* private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.CompareTag("Star"))
-        {
-            animator.SetTrigger("BossRage");
-
-            BossDamage();
-
-            onBossHPSlide?.Invoke(this, EventArgs.Empty);   //Damage
-        }
-    }*/
     public void BossDamage()
     {
         currentHealth -= damage;
         onBossDamage?.Invoke(this, EventArgs.Empty);
+        Debug.Log($"{currentHealth}");
 
          if (currentHealth <= 0 && !isDie)
         {
@@ -118,6 +112,34 @@ public class BossControll : MonoBehaviour
             bossHitAction_2.Play();
         }
          else if(currentHealth <= 100)
+        {
+            bossHitAction_1.Play();
+        }
+    }
+    public void OtherDamage()
+    {
+        currentHealth -= damage/2;
+        onBossDamage?.Invoke(this, EventArgs.Empty);
+        Debug.Log($"{currentHealth}");
+
+        if (currentHealth <= 0 && !isDie)
+        {
+            currentHealth = 0;
+            BossDie();
+            return;
+        }
+        else if (currentHealth <= 30)
+        {
+            bossbase.sprite = bossRed;
+            gameObject.transform.GetChild(0).transform.localScale = new Vector3(2.09f, 2.09f, 2.09f);
+            bossHitAction_3.Play();
+        }
+        else if (currentHealth <= 50)
+        {
+            animator.SetTrigger("BossRage");
+            bossHitAction_2.Play();
+        }
+        else if (currentHealth <= 100)
         {
             bossHitAction_1.Play();
         }

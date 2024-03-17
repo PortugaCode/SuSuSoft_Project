@@ -29,6 +29,8 @@ public class Utils : MonoBehaviour
 
     public SceneNames nowScene;
     public Level currentLevel;
+    public bool isFourStage = false;
+    public bool isBossStage = false;
 
     private void Awake()
     {
@@ -74,7 +76,7 @@ public class Utils : MonoBehaviour
         SceneManager.LoadScene(sceneNames.ToString());
     }
 
-    private void SelectLevel()
+    public void SelectLevel()
     {
         switch((int)currentLevel)
         {
@@ -95,11 +97,13 @@ public class Utils : MonoBehaviour
                 }
             case 3:
                 {
+                    isFourStage = true;
                     currentLevel = Level.Level_4;
                     break;
                 }
             case 4:
                 {
+                    isBossStage = true;
                     currentLevel = Level.Level_5;
                     break;
                 }
