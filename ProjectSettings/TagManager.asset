@@ -41,6 +41,8 @@ TagManager:
   - EndWhite
   - BossHP
   - SkillActive
+  - FourStageBoss
+  - EndPopUp
   layers:
   - Default
   - TransparentFX

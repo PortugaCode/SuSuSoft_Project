@@ -21,6 +21,13 @@ public class ItemEventControl : MonoBehaviour
 
     private bool isTriggered = false;
 
+    private void Awake()
+    {
+        stageClearPopup = GameObject.FindGameObjectWithTag("EndPopUp").transform.GetChild(1).gameObject;
+    }
+
+
+
     private void Start()
     {
         if (gameObject.CompareTag("Lever"))

@@ -13,7 +13,7 @@ public class Magnetic : MonoBehaviour
 
     Rigidbody2D rb;
     PlayerProperty playerProperty;
-    SkillActive skillActive;
+    [SerializeField]SkillActive skillActive;
 
     private bool isMagnetItem = false;
     public bool isMagnetActive = false;
@@ -21,13 +21,13 @@ public class Magnetic : MonoBehaviour
 
     private void Awake()
     {
-        skillActive = GameObject.FindGameObjectWithTag("SkillActive").GetComponent<SkillActive>();
+        playerProperty = gameObject. GetComponent<PlayerProperty>();
     }
 
     private void Start()
     {
         isMagnetPassive = true;
-        playerProperty = GetComponent<PlayerProperty>();
+        
     }
 
     private void Update()

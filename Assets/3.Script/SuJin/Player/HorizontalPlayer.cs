@@ -16,8 +16,6 @@ public class HorizontalPlayer : MonoBehaviour
     [SerializeField] private PlayerProperty playerProperty;
     [SerializeField] private SkillActive skillActive;
     [SerializeField] private TextMeshProUGUI starCountTmpPro;
-    [SerializeField] private GameObject bossFourStage;
-    [SerializeField] private Utils utils;
 
     //PlayerMove
     private Vector3 touchPosition;
@@ -29,7 +27,6 @@ public class HorizontalPlayer : MonoBehaviour
     public Canvas canvas;
     GraphicRaycaster graphicRay;
     public Coroutine coroutine;
-
 
 
     [Header("PlyerSpeed")]
@@ -70,26 +67,15 @@ public class HorizontalPlayer : MonoBehaviour
     private void Awake()
     {
         currentAcceleration = baseAcceleration;
-        skillActive = GameObject.FindGameObjectWithTag("SkillActive").GetComponent<SkillActive>();
-        //bossFourStage = GameObject.FindGameObjectWithTag("BossFourStage");
-
+        playerProperty = gameObject.GetComponent<PlayerProperty>();
     }
 
     private void Start()
     {
-        playerProperty = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerProperty>();
+        
         playerLight.pointLightOuterRadius = maxSightRange;
 
         graphicRay = canvas.GetComponent<GraphicRaycaster>();
-
-/*        if(!utils.isFourStage)
-        {
-            bossFourStage.SetActive(false);
-        }
-        else
-        {
-            bossFourStage.SetActive(true);
-        }    */
     }
 
     private void Update()
@@ -189,13 +175,16 @@ public class HorizontalPlayer : MonoBehaviour
         if (raycastResults.Count > 0)
         {
             GameObject obj = raycastResults[0].gameObject;
+            Debug.Log("raycastResults");
             if (obj.CompareTag("UI"))
             {
                 isPlayerMove = false;
-                if(skillActive.isItemOn)
+                Debug.Log("UI 제한 됨");
+
+                if (skillActive.isItemOn)
                 {
                     playerProperty.SkillActive();
-
+                    Debug.Log("SkillActive");
                     //CoolTime 초기화
                     skillActive.shieldFillImage.fillAmount = 1.0f;
                 }

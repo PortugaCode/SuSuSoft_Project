@@ -32,6 +32,8 @@ public class Utils : MonoBehaviour
     public bool isFourStage = false;
     public bool isBossStage = false;
 
+    public int stageIndex;
+
     private void Awake()
     {
         #region [싱글톤] 
@@ -83,28 +85,42 @@ public class Utils : MonoBehaviour
             case 0:
                 {
                     currentLevel = Level.Level_1;
+                    isFourStage = false;
+                    isBossStage = false;
                     break;
                 }
             case 1:
                 {
                     currentLevel = Level.Level_2;
+                    isFourStage = false;
+                    isBossStage = false;
                     break;
                 }
             case 2:
                 {
                     currentLevel = Level.Level_3;
+                    isFourStage = false;
+                    isBossStage = false;
                     break;
                 }
             case 3:
                 {
                     isFourStage = true;
+                    isBossStage = false;
                     currentLevel = Level.Level_4;
                     break;
                 }
             case 4:
                 {
                     isBossStage = true;
+                    isBossStage = false;
                     currentLevel = Level.Level_5;
+                    break;
+                }
+            default :
+                {
+                    isFourStage = false;
+                    isBossStage = false;
                     break;
                 }
         }
@@ -112,22 +128,36 @@ public class Utils : MonoBehaviour
     
     public void SelectStage(int index)
     {
+        
+        stageIndex = index;
+
+        Debug.Log($"stageIndex : {stageIndex}");
         switch (index)
         {
             case 0:
                 currentLevel = Level.Level_1;
+                isFourStage = false;
+                isBossStage = false;
                 break;
             case 1:
                 currentLevel = Level.Level_2;
+                isFourStage = false;
+                isBossStage = false;
                 break;
             case 2:
                 currentLevel = Level.Level_3;
+                isFourStage = false;
+                isBossStage = false;
                 break;
             case 3:
                 currentLevel = Level.Level_4;
+                isFourStage = true;
+                isBossStage = false;
                 break;
             case 4:
                 currentLevel = Level.Level_5;
+                isFourStage = false;
+                isBossStage = true;
                 break;
         }
     }

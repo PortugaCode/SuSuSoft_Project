@@ -13,14 +13,15 @@ public class PlayerProperty : MonoBehaviour
     public EventHandler onChangeStar;
 
     //참조
-    private SkillActive skillActive;
+    [SerializeField]private SkillActive skillActive;
     private HorizontalPlayer horizontalPlayer;
     public Magnetic magnetic;
     private BossControll boss;
+    public BossControll Boss => boss;
 
     private bool isShield = false;
 
-    public int level;
+    public bool isTokenAdd = false;
 
     [Header("Particle")]
     [SerializeField] private ParticleSystem hitAction;
@@ -54,7 +55,7 @@ public class PlayerProperty : MonoBehaviour
     private bool isSmaller;
 
     private bool isBossStage = false;
-    private bool isGreen = false;
+    [SerializeField] private bool isGreen = false;
 
     #region [나중에 구현]
     /*[Header("Magnetism")]
@@ -101,15 +102,49 @@ public class PlayerProperty : MonoBehaviour
 
     private void Awake()
     {
-        //boss = GameObject.FindGameObjectWithTag("Boss").GetComponent<BossControll>();       // Level 예외처리 
-        skillActive = GameObject.FindGameObjectWithTag("SkillActive").GetComponent<SkillActive>();
+        horizontalPlayer = gameObject.GetComponent<HorizontalPlayer>();
+        boss = GameObject.FindGameObjectWithTag("Boss").GetComponent<BossControll>();       // Level 예외처리 
+        if(!Utils.Instance.isBossStage)
+        {
+            boss.gameObject.SetActive(false);
+        }
+
+        SetActiveSkill();
     }
 
     private void Start()
     {
-        level = 1;
         currentHealth = maxHealth;
-        horizontalPlayer = GetComponent<HorizontalPlayer>();
+
+    }
+
+    private void SetActiveSkill()
+    {
+        int index = DBManager.instance.user.currentCharacterIndex; // 0~19    0~4
+
+        switch ((int)(index / 4))
+        {
+            case 0:
+                skillActive.gameObject.SetActive(false);
+                break;
+            case 1:
+                skillActive.gameObject.SetActive(true);
+                playerActiveSkill = PlayerActiveSkill.Shield;
+                break;
+            case 2:
+                skillActive.gameObject.SetActive(true);
+                playerActiveSkill = PlayerActiveSkill.Magnetic;
+                break;
+            case 3:
+                skillActive.gameObject.SetActive(true);
+                playerActiveSkill = PlayerActiveSkill.Recovery;
+                break;
+            case 4:
+                skillActive.gameObject.SetActive(true);
+                playerActiveSkill = PlayerActiveSkill.SpeedUp;
+                break;
+        }
+
     }
 
     #region [OnTrigger]
@@ -118,53 +153,25 @@ public class PlayerProperty : MonoBehaviour
         //장애물
         if (collision.gameObject.CompareTag("Obstacles") && isCanHit)
         {
-            //만약 보스스테이지가 아니라면
-            if (!isBossStage)
+            //Audio
+            AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
+
+            StartCoroutine(HitDelay_Co());
+
+            if (isShield)
             {
-                //Audio
-                AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
-
-                StartCoroutine(HitDelay_Co());
-
-
-                if(isShield)
-                {
-                    Debug.Log("쉴드 모드 중");
-                    return;
-                }
-                else
-                {
-                    // 데미지 입힘
-                    PassiveAttackNull();  
-                    onHPSlider?.Invoke(this, EventArgs.Empty);
-                    onStarBar?.Invoke(this, EventArgs.Empty);
-                    onStarShape?.Invoke(this, EventArgs.Empty);
-                }
+                Debug.Log("쉴드 모드 중");
+                return;
             }
-            /*            else  // OnGame 씬에는 DBManager가 없기 때문에 로그인부터 쭉 해서 들어와야 확인 가능  //Obstacles 태그를 가진 오브젝트는 무조건 MoveRockObstacle 스크립트가 있어야 함
-                        {
-                            if (collision.GetComponent<MoveRockObstacle>().isGreen)
-                            {
-                                AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
-
-                                int index = DBManager.instance.user.currentCharacterIndex; // 0~19    0~4
-                                if ((int)(index / 4) == 4)
-                                {
-                                    Debug.Log("같은 색 부딪침");
-                                }
-                                else
-                                {
-                                    StartCoroutine(HitDelay_Co());
-                                    PassiveAttackNull();
-                                    onHPSlider?.Invoke(this, EventArgs.Empty);
-                                    onStarBar?.Invoke(this, EventArgs.Empty);
-                                    onStarShape?.Invoke(this, EventArgs.Empty);
-                                }
-                            }
-                        }*/
-
-
-
+            else
+            {
+                // 데미지 입힘
+                PassiveAttackNull();
+                onHPSlider?.Invoke(this, EventArgs.Empty);
+                onStarBar?.Invoke(this, EventArgs.Empty);
+                onStarShape?.Invoke(this, EventArgs.Empty);
+            }
+            // OnGame 씬에는 DBManager가 없기 때문에 로그인부터 쭉 해서 들어와야 확인 가능  //Obstacles 태그를 가진 오브젝트는 무조건 MoveRockObstacle 스크립트가 있어야 함
         }
 
         else if (collision.gameObject.CompareTag("Breaking"))
@@ -269,9 +276,9 @@ public class PlayerProperty : MonoBehaviour
         //Token
         else if (collision.gameObject.CompareTag("Token"))
         {
-           //Audio
-           AudioManager.Instance.PlaySFX(SFX_Name.GetToken);
-           
+            //Audio
+            AudioManager.Instance.PlaySFX(SFX_Name.GetToken);
+            isTokenAdd = true;
             Destroy(collision.gameObject);
         }
 
@@ -299,10 +306,23 @@ public class PlayerProperty : MonoBehaviour
 
         else if (collision.gameObject.CompareTag("GreenObstacle"))
         {
-            if (isGreen)
+            AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
+
+            int index = DBManager.instance.user.currentCharacterIndex; // 0~19    0~4
+            if ((int)(index / 4) == 4)
             {
-                Debug.Log($"boss HP: {boss.currentHealth}");
-                boss.BossDamage();
+                //초록색 캐릭터
+                Debug.Log("같은 색 부딪침");
+            }
+            else
+            {
+                //다른 색 캐릭터
+                Debug.Log("초록색 부딫침 아프다");
+                StartCoroutine(HitDelay_Co());
+                PassiveAttackNull();
+                onHPSlider?.Invoke(this, EventArgs.Empty);
+                onStarBar?.Invoke(this, EventArgs.Empty);
+                onStarShape?.Invoke(this, EventArgs.Empty);
             }
         }
 

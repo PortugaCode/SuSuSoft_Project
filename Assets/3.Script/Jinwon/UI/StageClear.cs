@@ -36,8 +36,12 @@ public class StageClear : MonoBehaviour
     [Header("Stage")]
     public int stageIndex = 0; // 현재 클리어한 스테이지의 인덱스, 스테이지마다 연동 필요
 
+
+
     private void OnEnable()
     {
+        
+        Debug.Log($"stageIndex InGame : {stageIndex}");
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
@@ -50,29 +54,43 @@ public class StageClear : MonoBehaviour
 
         DBManager.instance.UseActivePoint();
 
+        stageIndex = Utils.Instance.stageIndex;
+
         int chapter = 1;
         int stageLevel = ChartManager.instance.stageInfos[stageIndex].index + 1;
         string stageName = ChartManager.instance.stageInfos[stageIndex].name_k;
         stageInfoText.text = $"{chapter} - {stageLevel} {stageName}";
 
+        Debug.Log($"클리어한 스테이지 레벨 : {stageLevel}");
+
         if (stageLevel == 1)
         {
             tutorialRewardPopup.SetActive(true);
         }
+        else
+        {
+            tutorialRewardPopup.SetActive(false);
+        }
 
         int characterIndex = DBManager.instance.user.currentCharacterIndex;
         character.transform.GetChild(0).GetComponent<Image>().sprite = characterBodyImages[characterIndex];
-        character.transform.GetChild(1).GetComponent<Image>().sprite = characterFaceImages[characterIndex];
-
-        starCountText.text = $"획득한 별 개수 : {player.GetComponent<PlayerProperty>().stars.Count}";
+        character.transform.GetChild(1).GetComponent<Image>().sprite = characterFaceImages[characterIndex / 4];
 
         int reward_1 = ChartManager.instance.stageInfos[stageIndex].reward_1;
         int reward_2 = ChartManager.instance.stageInfos[stageIndex].reward_2;
         int reward_gold = ChartManager.instance.stageInfos[stageIndex].reward_repeat;
-        conditionText_2.text = $"별 X {ChartManager.instance.stageInfos[stageIndex].condition_2}";
-        conditionText_3.text = $"별 X {ChartManager.instance.stageInfos[stageIndex].condition_3}";
+
+        conditionText_3.text = $"클리어";
+
+        if (stageLevel != 5)
+        {
+            starCountText.text = $"획득한 별 개수 : {player.GetComponent<PlayerProperty>().stars.Count}";
+            conditionText_2.text = $"별 X {ChartManager.instance.stageInfos[stageIndex].condition_2}";
+            rewardText_2.text = $"{reward_2}";
+            conditionText_3.text = $"별 X {ChartManager.instance.stageInfos[stageIndex].condition_3}";
+        }
+
         rewardText_1.text = $"{reward_1}";
-        rewardText_2.text = $"{reward_2}";
         rewardText_3.text = $"1";
         tokenRewardIcon.GetComponent<Image>().sprite = tokenImages[stageIndex];
         rewardText_gold.text = $"{reward_gold}";
@@ -82,109 +100,166 @@ public class StageClear : MonoBehaviour
 
     public void CheckReward(int starCount)
     {
-        if (starCount >= ChartManager.instance.stageInfos[stageIndex].condition_3) // 3별 획득 조건 - 토큰
+        if (player.GetComponent<PlayerProperty>().isTokenAdd) // 해당 스테이지에서 토큰 먹었냐 bool값
         {
-            rewardTab_1.SetActive(true);
-            rewardTab_2.SetActive(true);
-            rewardTab_3.SetActive(true);
-
-            if (DBManager.instance.user.clearInfo[stageIndex, 2] == 0)
+            if (DBManager.instance.user.clearInfo[stageIndex, 4] == 0)
             {
-                DBManager.instance.user.clearInfo[stageIndex, 2] = 1;
+                DBManager.instance.user.clearInfo[stageIndex, 4] = 1;
                 DBManager.instance.user.tokens[stageIndex] += 1;
             }
-            else
-            {
-                rewardText_3.text = $"획득 완료";
-            }
-
-            if (DBManager.instance.user.clearInfo[stageIndex, 1] == 0)
-            {
-                DBManager.instance.user.clearInfo[stageIndex, 1] = 1;
-                DBManager.instance.user.goods["ruby"] += ChartManager.instance.stageInfos[stageIndex].reward_2;
-            }
-            else
-            {
-                rewardText_2.text = $"획득 완료";
-            }
-
-            if (DBManager.instance.user.clearInfo[stageIndex, 0] == 0)
-            {
-                DBManager.instance.user.clearInfo[stageIndex, 0] = 1;
-                DBManager.instance.user.goods["gold"] += ChartManager.instance.stageInfos[stageIndex].reward_1;
-            }
-            else
-            {
-                rewardText_1.text = $"획득 완료";
-            }
         }
-        else if (starCount >= ChartManager.instance.stageInfos[stageIndex].condition_2) // 2별 획득 조건 - 루비
-        {
-            rewardTab_1.SetActive(true);
-            rewardTab_2.SetActive(true);
-            rewardTab_3.SetActive(false);
-
-            if (DBManager.instance.user.clearInfo[stageIndex, 1] == 0)
-            {
-                DBManager.instance.user.clearInfo[stageIndex, 1] = 1;
-                DBManager.instance.user.goods["ruby"] += ChartManager.instance.stageInfos[stageIndex].reward_2;
-            }
-            else
-            {
-                rewardText_2.text = $"획득 완료";
-            }
-
-            if (DBManager.instance.user.clearInfo[stageIndex, 0] == 0)
-            {
-                DBManager.instance.user.clearInfo[stageIndex, 0] = 1;
-                DBManager.instance.user.goods["gold"] += ChartManager.instance.stageInfos[stageIndex].reward_1;
-            }
-            else
-            {
-                rewardText_1.text = $"획득 완료";
-            }
-        }
-        else if (starCount >= ChartManager.instance.stageInfos[stageIndex].condition_1) // 1별 획득 조건 - 골드
+        
+        if (stageIndex == 4)
         {
             rewardTab_1.SetActive(true);
             rewardTab_2.SetActive(false);
-            rewardTab_3.SetActive(false);
+            rewardTab_3.SetActive(true);
 
             if (DBManager.instance.user.clearInfo[stageIndex, 0] == 0)
             {
                 DBManager.instance.user.clearInfo[stageIndex, 0] = 1;
+                DBManager.instance.user.clearInfo[stageIndex, 1] = 1;
+                DBManager.instance.user.clearInfo[stageIndex, 2] = 1;
                 DBManager.instance.user.goods["gold"] += ChartManager.instance.stageInfos[stageIndex].reward_1;
             }
             else
             {
                 rewardText_1.text = $"획득 완료";
+                rewardText_3.text = $"획득 완료";
+            }
+
+            // 반복보상 추가
+            DBManager.instance.user.goods["gold"] += ChartManager.instance.stageInfos[stageIndex].reward_repeat;
+
+            if (DBManager.instance.user.tokenInfo[stageIndex] == 0)
+            {
+                DBManager.instance.user.tokenInfo[stageIndex] = 1;
+                DBManager.instance.user.tokens[stageIndex] += 1;
+            }
+
+            if (DBManager.instance.user.clearInfo[stageIndex, 3] == 0 && ChartManager.instance.stageInfos[stageIndex].reward_4 != -1)
+            {
+                DBManager.instance.user.clearInfo[stageIndex, 3] = 1;
+
+                // 건물 해금
+                if (DBManager.instance.user.housingObject.ContainsKey(ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4)))
+                {
+                    DBManager.instance.user.housingObject[ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4)] += 1;
+                }
+                else
+                {
+                    // 없을 때 Add
+                    DBManager.instance.user.housingObject.Add(ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4), 1);
+                }
+
             }
         }
-
-        // 반복보상 추가
-        DBManager.instance.user.goods["gold"] += ChartManager.instance.stageInfos[stageIndex].reward_repeat;
-
-        if (DBManager.instance.user.tokenInfo[stageIndex] == 0)
+        else
         {
-            DBManager.instance.user.tokenInfo[stageIndex] = 1;
-            DBManager.instance.user.tokens[stageIndex] += 1;
-        }
-
-        if (DBManager.instance.user.clearInfo[stageIndex, 3] == 0 && ChartManager.instance.stageInfos[stageIndex].reward_4 != -1)
-        {
-            DBManager.instance.user.clearInfo[stageIndex, 3] = 1;
-
-            // 건물 해금
-            if (DBManager.instance.user.housingObject.ContainsKey(ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4)))
+            if (starCount >= ChartManager.instance.stageInfos[stageIndex].condition_3) // 3별 획득 조건 - 토큰
             {
-                DBManager.instance.user.housingObject[ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4)] += 1;
+                rewardTab_1.SetActive(true);
+                rewardTab_2.SetActive(true);
+                rewardTab_3.SetActive(true);
+
+                if (DBManager.instance.user.clearInfo[stageIndex, 2] == 0)
+                {
+                    DBManager.instance.user.clearInfo[stageIndex, 2] = 1;
+                    DBManager.instance.user.tokens[stageIndex] += 1;
+                }
+                else
+                {
+                    rewardText_3.text = $"획득 완료";
+                }
+
+                if (DBManager.instance.user.clearInfo[stageIndex, 1] == 0)
+                {
+                    DBManager.instance.user.clearInfo[stageIndex, 1] = 1;
+                    DBManager.instance.user.goods["ruby"] += ChartManager.instance.stageInfos[stageIndex].reward_2;
+                }
+                else
+                {
+                    rewardText_2.text = $"획득 완료";
+                }
+
+                if (DBManager.instance.user.clearInfo[stageIndex, 0] == 0)
+                {
+                    DBManager.instance.user.clearInfo[stageIndex, 0] = 1;
+                    DBManager.instance.user.goods["gold"] += ChartManager.instance.stageInfos[stageIndex].reward_1;
+                }
+                else
+                {
+                    rewardText_1.text = $"획득 완료";
+                }
             }
-            else
+            else if (starCount >= ChartManager.instance.stageInfos[stageIndex].condition_2) // 2별 획득 조건 - 루비
             {
-                // 없을 때 Add
-                DBManager.instance.user.housingObject.Add(ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4), 1);
+                rewardTab_1.SetActive(true);
+                rewardTab_2.SetActive(true);
+                rewardTab_3.SetActive(false);
+
+                if (DBManager.instance.user.clearInfo[stageIndex, 1] == 0)
+                {
+                    DBManager.instance.user.clearInfo[stageIndex, 1] = 1;
+                    DBManager.instance.user.goods["ruby"] += ChartManager.instance.stageInfos[stageIndex].reward_2;
+                }
+                else
+                {
+                    rewardText_2.text = $"획득 완료";
+                }
+
+                if (DBManager.instance.user.clearInfo[stageIndex, 0] == 0)
+                {
+                    DBManager.instance.user.clearInfo[stageIndex, 0] = 1;
+                    DBManager.instance.user.goods["gold"] += ChartManager.instance.stageInfos[stageIndex].reward_1;
+                }
+                else
+                {
+                    rewardText_1.text = $"획득 완료";
+                }
             }
-            
+            else if (starCount >= ChartManager.instance.stageInfos[stageIndex].condition_1) // 1별 획득 조건 - 골드
+            {
+                rewardTab_1.SetActive(true);
+                rewardTab_2.SetActive(false);
+                rewardTab_3.SetActive(false);
+
+                if (DBManager.instance.user.clearInfo[stageIndex, 0] == 0)
+                {
+                    DBManager.instance.user.clearInfo[stageIndex, 0] = 1;
+                    DBManager.instance.user.goods["gold"] += ChartManager.instance.stageInfos[stageIndex].reward_1;
+                }
+                else
+                {
+                    rewardText_1.text = $"획득 완료";
+                }
+            }
+
+            // 반복보상 추가
+            DBManager.instance.user.goods["gold"] += ChartManager.instance.stageInfos[stageIndex].reward_repeat;
+
+            if (DBManager.instance.user.tokenInfo[stageIndex] == 0)
+            {
+                DBManager.instance.user.tokenInfo[stageIndex] = 1;
+                DBManager.instance.user.tokens[stageIndex] += 1;
+            }
+
+            if (DBManager.instance.user.clearInfo[stageIndex, 3] == 0 && ChartManager.instance.stageInfos[stageIndex].reward_4 != -1)
+            {
+                DBManager.instance.user.clearInfo[stageIndex, 3] = 1;
+
+                // 건물 해금
+                if (DBManager.instance.user.housingObject.ContainsKey(ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4)))
+                {
+                    DBManager.instance.user.housingObject[ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4)] += 1;
+                }
+                else
+                {
+                    // 없을 때 Add
+                    DBManager.instance.user.housingObject.Add(ChartManager.instance.GetHousingObjectName(ChartManager.instance.stageInfos[stageIndex].reward_4), 1);
+                }
+
+            }
         }
     }
 }

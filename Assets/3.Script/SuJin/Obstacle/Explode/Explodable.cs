@@ -17,6 +17,9 @@ public class Explodable : MonoBehaviour
     public string sortingLayerName = "Default";
     public int orderInLayer = 0;
 
+
+    public LayerMask childLayer;
+
     public enum ShatterType
     {
         Triangle,
@@ -29,6 +32,13 @@ public class Explodable : MonoBehaviour
     /// <summary>
     /// Creates fragments if necessary and destroys original gameobject
     /// </summary>
+    /// 
+
+    private void Start()
+    {
+        fragmentInEditor();
+    }
+
     public void explode()
     {
         //if fragments were not created before runtime then create them now
@@ -65,6 +75,8 @@ public class Explodable : MonoBehaviour
         foreach (GameObject frag in fragments)
         {
             frag.transform.parent = transform;
+            frag.AddComponent<ExplosionForce>();
+            frag.layer = 9;
             frag.SetActive(false);
         }
     }
