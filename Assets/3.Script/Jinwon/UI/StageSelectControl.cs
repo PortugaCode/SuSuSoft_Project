@@ -17,27 +17,27 @@ public class StageSelectControl : MonoBehaviour
     private int[] checkCounts = { 10, 20, 30 };
 
     [Header("Planet")]
-    [SerializeField] private GameObject[] planetButtons;
+    [SerializeField] private GameObject[] planetObjects;
 
     private void OnEnable()
     {
         int count = 0;
 
+        for (int i = 1; i < 5; i++)
+        {
+            planetObjects[i].SetActive(false);
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (DBManager.instance.user.clearInfo[i, 0] == 1)
+            {
+                planetObjects[i + 1].SetActive(true);
+            }
+        }
+
         for (int i = 0; i < 5; i++) // i < 스테이지 개수 로 변경 필요
         {
-            if (i != 0)
-            {
-                planetButtons[i].GetComponent<Button>().enabled = false;
-            }
-            
-            if (i <= 3)
-            {
-                if (DBManager.instance.user.clearInfo[i, 0] == 1)
-                {
-                    planetButtons[i + 1].GetComponent<Button>().enabled = true;
-                }
-            }
-
             for (int j = 0; j < 3; j++)
             {
                 if (DBManager.instance.user.clearInfo[i, j] == 1)
