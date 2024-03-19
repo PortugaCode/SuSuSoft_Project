@@ -248,6 +248,8 @@ public class TouchMove : MonoBehaviour
                     PlayerMoveMessage msg = new PlayerMoveMessage(Backend.Match.GetMySessionId(), touchPosition, direction);
                     BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerMoveMessage>(msg);
                 }
+
+                AudioManager.Instance.PlaySFX(SFX_Name.HousingSound02);
             }
         }
     }
@@ -361,7 +363,7 @@ public class TouchMove : MonoBehaviour
                             PlayerAnimationMessage ani_msg = new PlayerAnimationMessage(Backend.Match.GetMySessionId(), 0);
                             BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerAnimationMessage>(ani_msg);
                         }
-
+                        
                         break;
 
                     case 8:
@@ -434,6 +436,9 @@ public class TouchMove : MonoBehaviour
                             PlayerAnimationMessage ani_msg = new PlayerAnimationMessage(Backend.Match.GetMySessionId(), 4);
                             BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerAnimationMessage>(ani_msg);
                         }
+
+                        AudioManager.Instance.PlaySFX(SFX_Name.Trophy02);
+
                         break;
 
                     default:

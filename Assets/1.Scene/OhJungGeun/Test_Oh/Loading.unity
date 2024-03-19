@@ -1084,6 +1084,7 @@ MonoBehaviour:
   currentLevel: 0
   isFourStage: 0
   isBossStage: 0
+  stageIndex: 0
 --- !u!1 &1698460316
 GameObject:
   m_ObjectHideFlags: 0

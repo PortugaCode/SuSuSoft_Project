@@ -512,8 +512,14 @@ public class UIManager : MonoBehaviour
 
         UpdateCharacterButton();
 
-        healthText.text = $"체력 : {characters[DBManager.instance.user.currentCharacterIndex].maxHealth}";
-        sightRangeText.text = $"시야 범위 : {characterDatas[DBManager.instance.user.currentCharacterIndex].maxSightRange}";
+        for (int i = 0; i < characters.Count; i++)
+        {
+            if (characters[i].imageIndex == DBManager.instance.user.currentCharacterIndex)
+            {
+                healthText.text = $"체력 : {characters[i].maxHealth}";
+                sightRangeText.text = $"시야 범위 : {characters[i].maxSightRange}";
+            }
+        }
     }
 
     public void CloseInfoPopup()

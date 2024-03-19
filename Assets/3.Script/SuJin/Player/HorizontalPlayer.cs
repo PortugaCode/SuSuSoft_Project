@@ -317,7 +317,8 @@ public class HorizontalPlayer : MonoBehaviour
             yield return null;
         }
         gameStart = true;
-        if(gameStart)
+        int index = DBManager.instance.user.currentCharacterIndex; // 0~19    0~4
+        if (gameStart && (int)(index/4) > 0)
         {
             this.coroutine = skillActive.StartCoroutine(skillActive.CoolTime_Co());
         }

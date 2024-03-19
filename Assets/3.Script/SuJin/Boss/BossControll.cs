@@ -149,15 +149,18 @@ public class BossControll : MonoBehaviour
             bossbase.sprite = bossRed;
             gameObject.transform.GetChild(0).transform.localScale = new Vector3(2.09f, 2.09f, 2.09f);
             bossHitAction_3.Play();
+            AudioManager.Instance.PlaySFX(SFX_Name.Crash3);
         }
         else if(currentHealth <= 50)
         {
             animator.SetTrigger("BossRage");
             bossHitAction_2.Play();
+            AudioManager.Instance.PlaySFX(SFX_Name.Crash2);
         }
          else if(currentHealth <= 100)
         {
             bossHitAction_1.Play();
+            AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
         }
     }
     public void OtherDamage()
@@ -205,6 +208,7 @@ public class BossControll : MonoBehaviour
         bossStageClearPopup.GetComponent<StageClear>().ShowClearUI();
 
         bossStageClearPopup.SetActive(true);
+        AudioManager.Instance.PlaySFX(SFX_Name.StageSuccess);
     }
 
 

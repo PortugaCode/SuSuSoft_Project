@@ -86,6 +86,7 @@ public class ItemEventControl : MonoBehaviour
             isTriggered = true;
             Debug.Log("OnTriggerEnter2D");
             //Todo End => Stage 클리어 보상 팝업 띄우기
+            AudioManager.Instance.PlaySFX(SFX_Name.StageSuccess);
             onEndGame?.Invoke(this, EventArgs.Empty);
         }
     }
