@@ -61,6 +61,7 @@ public class ItemEventControl : MonoBehaviour
         StartCoroutine(MoveRock_Co());
         leverOn.SetActive(true);
         leverOff.SetActive(false);
+        AudioManager.Instance.PlaySFX(SFX_Name.WorkshopSound02);
     }
 
     private IEnumerator MoveRock_Co()
