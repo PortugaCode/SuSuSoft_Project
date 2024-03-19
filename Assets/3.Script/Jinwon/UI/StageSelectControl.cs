@@ -34,6 +34,11 @@ public class StageSelectControl : MonoBehaviour
             {
                 planetObjects[i + 1].SetActive(true);
             }
+            else
+            {
+                Debug.Log($"현재 {i - 1}단계 까지 클리어했습니다");
+                break;
+            }
         }
 
         for (int i = 0; i < 5; i++) // i < 스테이지 개수 로 변경 필요
