@@ -37,8 +37,8 @@ public class LoginManager : MonoBehaviour
 
     private void Start()
     {
-        //inputFieldSignUpID.text = BackEndManager.Instance.googleHashKey;
-        //signUpErrorText.text = BackEndManager.Instance.googleHashKey;
+        inputFieldSignUpID.text = BackEndManager.Instance.googleHashKey;
+        signUpErrorText.text = BackEndManager.Instance.googleHashKey;
     }
 
     private void Update()
