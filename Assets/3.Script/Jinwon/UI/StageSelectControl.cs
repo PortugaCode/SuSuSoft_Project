@@ -36,7 +36,7 @@ public class StageSelectControl : MonoBehaviour
             }
             else
             {
-                Debug.Log($"현재 {i - 1}단계 까지 클리어했습니다");
+                Debug.Log($"현재 {i}단계 까지 클리어했습니다");
                 break;
             }
         }

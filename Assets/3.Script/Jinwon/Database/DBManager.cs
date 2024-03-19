@@ -894,5 +894,6 @@ public class DBManager : MonoBehaviour
             Backend.GameData.Insert("Character", characterParam); // Character 테이블에 데이터 삽입
         }
 
+        Debug.Log($"게임 종료 시 데이터 DB에 저장");
     }
 }

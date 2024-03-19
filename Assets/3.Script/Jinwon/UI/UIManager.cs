@@ -541,6 +541,12 @@ public class UIManager : MonoBehaviour
         UpdateTailButton();
     }
 
+    public void ExitGame()
+    {
+        DBManager.instance.SaveUserData();
+        Application.Quit();
+    }
+
     public DateTime SetAPPoint()
     {
         DateTime dt_apTime = DateTime.Now;
