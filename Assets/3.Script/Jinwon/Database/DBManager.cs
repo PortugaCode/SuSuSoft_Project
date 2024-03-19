@@ -151,7 +151,7 @@ public class User
         friend = new List<Friend>();
         guestBook = new List<int>();
         mail = new List<Mail>();
-        clearInfo = new int[10, 4];
+        clearInfo = new int[10, 5];
         tokenInfo = new int[10];
         dayQuestInfo = new int[13];
         questRewardCount = 0;
@@ -240,7 +240,7 @@ public class DBManager : MonoBehaviour
         // [보상 획득 정보 (2차원 배열)]
         for (int i = 0; i < 10; i++) // (총 스테이지 개수 = 10)
         {
-            for (int j = 0; j < 4; j++) // (리워드 개수 = 4)
+            for (int j = 0; j < 5; j++) // (리워드 개수 = 5)
             {
                 user.clearInfo[i, j] = int.Parse(bro.FlattenRows()[0]["ClearInfo"][i][j].ToString());
             }

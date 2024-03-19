@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 
 public class ExplosionForce : MonoBehaviour {
-	public float force = 50;
+	public float force = 200;
 	public float radius = 5;
 	public float upliftModifer = 5;
 

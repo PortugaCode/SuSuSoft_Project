@@ -13,15 +13,21 @@ public class Magnetic : MonoBehaviour
 
     Rigidbody2D rb;
     PlayerProperty playerProperty;
+    [SerializeField]SkillActive skillActive;
 
     private bool isMagnetItem = false;
     public bool isMagnetActive = false;
     private bool isMagnetPassive = false;
 
+    private void Awake()
+    {
+        playerProperty = gameObject. GetComponent<PlayerProperty>();
+    }
+
     private void Start()
     {
         isMagnetPassive = true;
-        playerProperty = GetComponent<PlayerProperty>();
+        
     }
 
     private void Update()
@@ -100,7 +106,7 @@ public class Magnetic : MonoBehaviour
 
     public void ActiveMagnet()
     {
-        playerProperty.skillActive.isItemOn = false;
+        skillActive.isItemOn = false;
         playerProperty.isCanSkill = true;
         isMagnetActive = true;
 

@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject tailTab;
 
     [Header("Character Select UI")]
+    [SerializeField] GameObject characterSelectPopup; // 캐릭터 선택 팝업
     private int characterTabIndex = 0; // 캐릭터 탭(3개) 중 현재 탭 인덱스
     [SerializeField] GameObject[] characterButtons; // 캐릭터 버튼 9개
     [SerializeField] GameObject[] characterTabCounter; // 캐릭터 탭 3개
@@ -502,17 +503,17 @@ public class UIManager : MonoBehaviour
         mailPopup.SetActive(true);
     }
 
-    public void OpenInfoPopup()
+    public void OpenSelectPopup()
     {
-        characterInfoPopup.SetActive(true);
+        characterSelectPopup.SetActive(true);
 
         characters = DBManager.instance.user.character;
         characterDatas = ChartManager.instance.characterDatas;
 
         UpdateCharacterButton();
 
-        healthText.text = $"체력 : {characters[DBManager.instance.CharacterIndexMatching(DBManager.instance.user.currentCharacterIndex)].maxHealth}";
-        sightRangeText.text = $"시야 범위 : {characterDatas[DBManager.instance.CharacterIndexMatching(DBManager.instance.user.currentCharacterIndex)].maxSightRange}";
+        healthText.text = $"체력 : {characters[DBManager.instance.user.currentCharacterIndex].maxHealth}";
+        sightRangeText.text = $"시야 범위 : {characterDatas[DBManager.instance.user.currentCharacterIndex].maxSightRange}";
     }
 
     public void CloseInfoPopup()

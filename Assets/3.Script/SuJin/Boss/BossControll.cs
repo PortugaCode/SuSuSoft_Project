@@ -9,11 +9,14 @@ public class BossControll : MonoBehaviour
     public EventHandler onBossHPSlide;
     public EventHandler onBossDamage;
 
-    HorizontalPlayer horizontalPlayer;
+    [SerializeField] GameObject fourStageBoss;
+    [SerializeField] GameObject bossStageBoss;
+
+    [SerializeField] HorizontalPlayer horizontalPlayer;
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Vector2 screenBound;
 
-    PlayerProperty playerProperty;
+    [SerializeField] PlayerProperty playerProperty;
 
     [Header("Face")]
     [SerializeField] SpriteRenderer bossbase;
@@ -41,25 +44,49 @@ public class BossControll : MonoBehaviour
 
     private void Awake()
     {
-       // animator = GetComponent<Animator>();
+        Debug.Log("EndWhite false");
         playerProperty = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerProperty>();
         horizontalPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<HorizontalPlayer>();
 
-        endWhite = GameObject.FindGameObjectWithTag("EditorOnly");  // 태그 바꾸기 
+        endWhite = GameObject.FindObjectOfType<LevelManager>().EndWhite;
         endImage = endWhite.GetComponent<Image>();
         endWhite.SetActive(false);
-    }
 
-    private void Start()
-    {
+
         rb = GetComponent<Rigidbody2D>();
 
         currentHealth = maxHealth;
+
+        if (Utils.Instance.isFourStage)
+        {
+            Debug.Log("4스테이지 보스 온");
+            fourStageBoss.SetActive(true);
+            bossStageBoss.SetActive(false);
+        }
+        else if (Utils.Instance.isBossStage)
+        {
+            Debug.Log("5스테이지 보스 온");
+            fourStageBoss.SetActive(false);
+            bossStageBoss.SetActive(true);
+        }
+        else
+        {
+            fourStageBoss.SetActive(false);
+            bossStageBoss.SetActive(false);
+        }
     }
 
     private void FixedUpdate()
     {
-        FollowPlayer();
+        if(Utils.Instance.currentLevel == Level.Level_5)
+        {
+            FollowPlayer();
+        }
+        else if(Utils.Instance.currentLevel == Level.Level_4)
+        {
+            FollowPlayer_4();
+        }
+
     }
 
     private void LateUpdate()
@@ -72,33 +99,44 @@ public class BossControll : MonoBehaviour
     {
         screenBound = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
         Vector3 objectPos = transform.position;
-        objectPos.y = Mathf.Clamp(objectPos.y, screenBound.y * -1, screenBound.y - 0.65f);
-        transform.position = objectPos;
+
+        if(Utils.Instance.isBossStage)
+        {
+            objectPos.y = Mathf.Clamp(objectPos.y, screenBound.y * -1, screenBound.y - 0.65f);
+            transform.position = objectPos;
+        }
+/*        else if (Utils.Instance.isFourStage)
+        {
+            objectPos.y = Mathf.Clamp(objectPos.y, screenBound.y * -50 + 0.25f, screenBound.y);
+            transform.position = objectPos;
+            rb.velocity = Vector2.zero;
+        }*/
+    }
+
+    private void FollowPlayer_4()
+    {
+        if (horizontalPlayer != null)
+        {
+            transform.position = Vector2.Lerp(transform.position, new Vector2(horizontalPlayer.transform.position.x, horizontalPlayer.transform.position.y - 4.2f), 15f * Time.deltaTime);
+        }
     }
 
     private void FollowPlayer()
     {
-        rb.velocity = horizontalPlayer.GetRigidbody2D().velocity;
-        transform.position = new Vector2(horizontalPlayer.gameObject.transform.position.x, transform.position.y);
+        if(horizontalPlayer != null)
+        {
+            transform.position = Vector2.Lerp(transform.position, new Vector2(horizontalPlayer.transform.position.x, horizontalPlayer.transform.position.y + 5f), 15f * Time.deltaTime);
+            /*            rb.velocity = horizontalPlayer.GetRigidbody2D().velocity;
+                        transform.position = new Vector2(horizontalPlayer.gameObject.transform.position.x, transform.position.y);*/
+        }
     }
     #endregion
 
-
-   /* private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.CompareTag("Star"))
-        {
-            animator.SetTrigger("BossRage");
-
-            BossDamage();
-
-            onBossHPSlide?.Invoke(this, EventArgs.Empty);   //Damage
-        }
-    }*/
     public void BossDamage()
     {
         currentHealth -= damage;
         onBossDamage?.Invoke(this, EventArgs.Empty);
+        Debug.Log($"{currentHealth}");
 
          if (currentHealth <= 0 && !isDie)
         {
@@ -118,6 +156,34 @@ public class BossControll : MonoBehaviour
             bossHitAction_2.Play();
         }
          else if(currentHealth <= 100)
+        {
+            bossHitAction_1.Play();
+        }
+    }
+    public void OtherDamage()
+    {
+        currentHealth -= damage/2;
+        onBossDamage?.Invoke(this, EventArgs.Empty);
+        Debug.Log($"{currentHealth}");
+
+        if (currentHealth <= 0 && !isDie)
+        {
+            currentHealth = 0;
+            BossDie();
+            return;
+        }
+        else if (currentHealth <= 30)
+        {
+            bossbase.sprite = bossRed;
+            gameObject.transform.GetChild(0).transform.localScale = new Vector3(2.09f, 2.09f, 2.09f);
+            bossHitAction_3.Play();
+        }
+        else if (currentHealth <= 50)
+        {
+            animator.SetTrigger("BossRage");
+            bossHitAction_2.Play();
+        }
+        else if (currentHealth <= 100)
         {
             bossHitAction_1.Play();
         }

@@ -13,14 +13,15 @@ public class PlayerProperty : MonoBehaviour
     public EventHandler onChangeStar;
 
     //참조
-    public SkillActive skillActive;
+    [SerializeField]private SkillActive skillActive;
     private HorizontalPlayer horizontalPlayer;
     public Magnetic magnetic;
-
+    private BossControll boss;
+    public BossControll Boss => boss;
 
     private bool isShield = false;
 
-    public int level;
+    public bool isTokenAdd = false;
 
     [Header("Particle")]
     [SerializeField] private ParticleSystem hitAction;
@@ -35,6 +36,7 @@ public class PlayerProperty : MonoBehaviour
     public int currentHealth;
     public int maxHealth;
     public int damage;
+    private int maxDamage = 50;
 
     public bool isCanSkill;
 
@@ -53,7 +55,7 @@ public class PlayerProperty : MonoBehaviour
     private bool isSmaller;
 
     private bool isBossStage = false;
-
+    [SerializeField] private bool isGreen = false;
 
     #region [나중에 구현]
     /*[Header("Magnetism")]
@@ -98,12 +100,51 @@ public class PlayerProperty : MonoBehaviour
     public enum PlayerColor { Yellow, Orange, Blue, Purple, Green }
     public PlayerColor playerColor;
 
+    private void Awake()
+    {
+        horizontalPlayer = gameObject.GetComponent<HorizontalPlayer>();
+        boss = GameObject.FindGameObjectWithTag("Boss").GetComponent<BossControll>();       // Level 예외처리 
+        if(!Utils.Instance.isBossStage)
+        {
+            boss.gameObject.SetActive(false);
+        }
+
+        SetActiveSkill();
+    }
 
     private void Start()
     {
-        level = 1;
         currentHealth = maxHealth;
-        horizontalPlayer = GetComponent<HorizontalPlayer>();
+
+    }
+
+    private void SetActiveSkill()
+    {
+        int index = DBManager.instance.user.currentCharacterIndex; // 0~19    0~4
+
+        switch ((int)(index / 4))
+        {
+            case 0:
+                skillActive.gameObject.SetActive(false);
+                break;
+            case 1:
+                skillActive.gameObject.SetActive(true);
+                playerActiveSkill = PlayerActiveSkill.Shield;
+                break;
+            case 2:
+                skillActive.gameObject.SetActive(true);
+                playerActiveSkill = PlayerActiveSkill.Magnetic;
+                break;
+            case 3:
+                skillActive.gameObject.SetActive(true);
+                playerActiveSkill = PlayerActiveSkill.Recovery;
+                break;
+            case 4:
+                skillActive.gameObject.SetActive(true);
+                playerActiveSkill = PlayerActiveSkill.SpeedUp;
+                break;
+        }
+
     }
 
     #region [OnTrigger]
@@ -112,63 +153,25 @@ public class PlayerProperty : MonoBehaviour
         //장애물
         if (collision.gameObject.CompareTag("Obstacles") && isCanHit)
         {
-            //만약 보스스테이지가 아니라면
-            if (!isBossStage)
+            //Audio
+            AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
+
+            StartCoroutine(HitDelay_Co());
+
+            if (isShield)
             {
-                //Audio
-                AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
-
-                StartCoroutine(HitDelay_Co());
-
-
-                if(isShield)
-                {
-                    Debug.Log("쉴드 모드 중");
-                    return;
-                }
-                else
-                {
-                    PassiveAttackNull();  // 데미지 입히는 코드
-                    onHPSlider?.Invoke(this, EventArgs.Empty);
-                    onStarBar?.Invoke(this, EventArgs.Empty);
-                    onStarShape?.Invoke(this, EventArgs.Empty);
-                }
-
-
-
-/*                //Player Damage
-                if (!skillActive.isItemOn)
-                {
-                    PassiveAttackNull();
-                    onHPSlider?.Invoke(this, EventArgs.Empty);
-                    onStarBar?.Invoke(this, EventArgs.Empty);
-                    onStarShape?.Invoke(this, EventArgs.Empty);
-                }*/
+                Debug.Log("쉴드 모드 중");
+                return;
             }
-            /*            else  // OnGame 씬에는 DBManager가 없기 때문에 로그인부터 쭉 해서 들어와야 확인 가능  //Obstacles 태그를 가진 오브젝트는 무조건 MoveRockObstacle 스크립트가 있어야 함
-                        {
-                            if (collision.GetComponent<MoveRockObstacle>().isGreen)
-                            {
-                                AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
-
-                                int index = DBManager.instance.user.currentCharacterIndex; // 0~19    0~4
-                                if ((int)(index / 4) == 4)
-                                {
-                                    Debug.Log("같은 색 부딪침");
-                                }
-                                else
-                                {
-                                    StartCoroutine(HitDelay_Co());
-                                    PassiveAttackNull();
-                                    onHPSlider?.Invoke(this, EventArgs.Empty);
-                                    onStarBar?.Invoke(this, EventArgs.Empty);
-                                    onStarShape?.Invoke(this, EventArgs.Empty);
-                                }
-                            }
-                        }*/
-
-
-
+            else
+            {
+                // 데미지 입힘
+                PassiveAttackNull();
+                onHPSlider?.Invoke(this, EventArgs.Empty);
+                onStarBar?.Invoke(this, EventArgs.Empty);
+                onStarShape?.Invoke(this, EventArgs.Empty);
+            }
+            // OnGame 씬에는 DBManager가 없기 때문에 로그인부터 쭉 해서 들어와야 확인 가능  //Obstacles 태그를 가진 오브젝트는 무조건 MoveRockObstacle 스크립트가 있어야 함
         }
 
         else if (collision.gameObject.CompareTag("Breaking"))
@@ -214,26 +217,35 @@ public class PlayerProperty : MonoBehaviour
             //Audio
             AudioManager.Instance.PlaySFX(SFX_Name.GetStar);
 
-            //Instantiate(starPrefebs, transform.position, Quaternion.identity);
+            Instantiate(starPrefebs, transform.position, Quaternion.identity);
             onStarBar?.Invoke(this, EventArgs.Empty);
             onStarShape?.Invoke(this, EventArgs.Empty);
 
             //보스 스테이지가 아니면 삭제
-            // Destroy(collision.gameObject);
+            Destroy(collision.gameObject);
         }
         else if (collision.gameObject.CompareTag("BigStar"))
         {
             //Audio
             AudioManager.Instance.PlaySFX(SFX_Name.GetStar);
 
-           //Instantiate(starPrefebs, transform.position, Quaternion.identity);
-           //Instantiate(starPrefebs, transform.position, Quaternion.identity);
-           //Instantiate(starPrefebs, transform.position, Quaternion.identity);
+           Instantiate(starPrefebs, transform.position, Quaternion.identity);
+           Instantiate(starPrefebs, transform.position, Quaternion.identity);
+           Instantiate(starPrefebs, transform.position, Quaternion.identity);
             onStarBar?.Invoke(this, EventArgs.Empty);
             onStarShape?.Invoke(this, EventArgs.Empty);
 
-            //보스 스테이지가 아니면 삭제
-            //Destroy(collision.gameObject);
+            //보스 스테이지가 아닌 다른 레벨에서는 별 삭제
+            Destroy(collision.gameObject);
+        }
+
+
+        else if(collision.gameObject.CompareTag("DamageMax"))
+        {
+            currentHealth -= maxDamage;
+            Debug.Log($"{currentHealth}");
+            animator.SetTrigger("Hit");
+            onHPSlider?.Invoke(this, EventArgs.Empty);
         }
 
         //거대화, 최소화
@@ -264,11 +276,56 @@ public class PlayerProperty : MonoBehaviour
         //Token
         else if (collision.gameObject.CompareTag("Token"))
         {
-           //Audio
-           AudioManager.Instance.PlaySFX(SFX_Name.GetToken);
-           
+            //Audio
+            AudioManager.Instance.PlaySFX(SFX_Name.GetToken);
+            isTokenAdd = true;
             Destroy(collision.gameObject);
         }
+
+
+        //BOSS Tag
+        else if (collision.gameObject.CompareTag("BossStar"))
+        {
+            //Audio
+            AudioManager.Instance.PlaySFX(SFX_Name.GetStar);
+
+        }
+        else if (collision.gameObject.CompareTag("BossHP"))
+        {
+            //Audio
+            AudioManager.Instance.PlaySFX(SFX_Name.GetHeart);
+
+            currentHealth += 12;
+            if (currentHealth >= maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
+            onHPSlider?.Invoke(this, EventArgs.Empty);
+            Destroy(collision.gameObject);
+        }
+
+        else if (collision.gameObject.CompareTag("GreenObstacle"))
+        {
+            AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
+
+            int index = DBManager.instance.user.currentCharacterIndex; // 0~19    0~4
+            if ((int)(index / 4) == 4)
+            {
+                //초록색 캐릭터
+                Debug.Log("같은 색 부딪침");
+            }
+            else
+            {
+                //다른 색 캐릭터
+                Debug.Log("초록색 부딫침 아프다");
+                StartCoroutine(HitDelay_Co());
+                PassiveAttackNull();
+                onHPSlider?.Invoke(this, EventArgs.Empty);
+                onStarBar?.Invoke(this, EventArgs.Empty);
+                onStarShape?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -287,8 +344,9 @@ public class PlayerProperty : MonoBehaviour
     }
 
     #endregion
-    
 
+
+    #region [Player SkillActive & PlayerColor]
     public void SkillActive()
     {
         switch((int)playerActiveSkill)
@@ -359,12 +417,14 @@ public class PlayerProperty : MonoBehaviour
                 }
             case 4:         //Green
                 {
-
+                    isGreen = true;
                     break;
                 }
         }
     }
-   
+
+    #endregion
+
     #region [Attack nullified 공격 무효화]
     private void PassiveAttackNull()    //10% 확률로 데미지 무효화
     {
@@ -386,7 +446,6 @@ public class PlayerProperty : MonoBehaviour
                 stars.RemoveAt(stars.Count - 1);
                 Destroy(a);
             }
-            Debug.Log("Damage");
             currentHealth -= damage;
             animator.SetTrigger("Hit");
 
@@ -403,6 +462,7 @@ public class PlayerProperty : MonoBehaviour
         
         hitAction.Play();
     }
+
 
     public void ShieldMode()                    // Shield Mode
     {
