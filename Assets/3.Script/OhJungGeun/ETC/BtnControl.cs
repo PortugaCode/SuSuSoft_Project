@@ -101,14 +101,14 @@ public class BtnControl : MonoBehaviour
 
     public void PopUp_CharacterUI(bool value)
     {
-        ResetUI();
         transparency.SetActive(value);
+        ResetUI();
         characterUI.SetActive(value);
     }
 
     public void PopUp_InventoryUI(bool value)
     {
-        transparency.SetActive(false);
+        transparency.SetActive(value);
         if (TestManager.instance.isEditMode) return;
         if (inventoryWindowUI.activeSelf)
         {
@@ -124,21 +124,21 @@ public class BtnControl : MonoBehaviour
 
     public void PopUp_WorkshopUI(bool value)
     {
-        transparency.SetActive(false);
+        transparency.SetActive(value);
         ResetUI();
         workShopUI.SetActive(value);
     }
 
     public void PopUp_StageUI(bool value)
     {
-        transparency.SetActive(false);
+        //transparency.SetActive(value);
         ResetUI();
         stageUI.SetActive(value);
     }
 
     public void PopUp_ShopUI(bool value)
     {
-        transparency.SetActive(false);
+        //transparency.SetActive(value);
         ResetUI();
         shopUI.SetActive(value);
     }

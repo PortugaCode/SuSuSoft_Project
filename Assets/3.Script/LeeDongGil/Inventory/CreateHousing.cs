@@ -68,7 +68,7 @@ public class CreateHousing : MonoBehaviour
         Debug.Log($"{housingObject.name_e} : 팝업");
         enName.text = string.Format("{0}", housingObject.name_e);
         price.text = string.Format("{0:#,###}", priceInt);
-        if (DBManager.instance.user.tokens[tokenID] < require)
+        if (DBManager.instance.user.tokens[tokenID] < require || DBManager.instance.user.goods["gold"] < priceInt)
         {
             createButton.interactable = false;
             upgradeButton.interactable = false;
@@ -110,7 +110,15 @@ public class CreateHousing : MonoBehaviour
         background_up.SetActive(true);
         checkImage.sprite = resultSlot.sprite;
         checkEN_KRName.text = string.Format("{0} : {1}", housingObject.name_e, housingObject.name_k);
-        checkUpgrade.text = string.Format("{0} → {1}", 0, 1);
+        if (housingObject.level < housingObject.maxLevel)
+        {
+            checkUpgrade.text = string.Format("{0} → {1}", housingObject.level, housingObject.level + 1);
+        }
+        else
+        {
+            checkUpgrade.text = string.Format("최대 레벨");
+        }
+
         if (require > 0)
         {
             checkStuff.text = string.Format("x {0}", require);
@@ -131,19 +139,11 @@ public class CreateHousing : MonoBehaviour
 
     public void CreateHousingObject()
     {
-        if (DBManager.instance.user.tokens[tokenID] < require) return;
-
-        DBManager.instance.user.tokens[tokenID] -= require;
         //골드 빼세요
-        if (DBManager.instance.user.goods["gold"] >= priceInt)
+        if (DBManager.instance.user.goods["gold"] >= priceInt && DBManager.instance.user.tokens[tokenID] >= require)
         {
+            DBManager.instance.user.tokens[tokenID] -= require;
             DBManager.instance.user.goods["gold"] -= priceInt;
-            upgradeButton.interactable = true;
-        }
-        else
-        {
-            upgradeButton.interactable = false;
-            return;
         }
         uiManager.UpdateGoods();
         if (DBManager.instance.user.tokens[tokenID] < require)
@@ -165,18 +165,11 @@ public class CreateHousing : MonoBehaviour
 
     public void UpgradeHousingObject()
     {
-        if (DBManager.instance.user.tokens[tokenID] < require) return;
-
-        DBManager.instance.user.tokens[tokenID] -= require;
         //골드 빼세요
-        if (DBManager.instance.user.goods["gold"] >= priceInt)
+        if (DBManager.instance.user.goods["gold"] >= priceInt && DBManager.instance.user.tokens[tokenID] >= require)
         {
             DBManager.instance.user.goods["gold"] -= priceInt;
-            upgradeButton.interactable = true;
-        }
-        else
-        {
-            upgradeButton.interactable = false;
+            DBManager.instance.user.tokens[tokenID] -= require;
         }
         uiManager.UpdateGoods();
         if (DBManager.instance.user.tokens[tokenID] < require)

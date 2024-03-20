@@ -111,9 +111,9 @@ public class HousingInterationWindow : MonoBehaviour
         StringBuilder listAdd = new StringBuilder();
 
         P_housingImage.sprite = SpriteManager.instance.sprites[housingObjWindow.imageIndex];
-        P_housingName.text = string.Format("{0} +{1}", housingObjWindow.name_k, "임시");
+        P_housingName.text = string.Format("{0} +{1}", housingObjWindow.name_k, housingObjWindow.level);
         //P_housingCount.text = string.Format("{0}", DBManager.instance.user.housingObject[housingObjWindow.name_e]);
-        P_housingCount.text = string.Format("{0}", P_housingCountInt);
+        P_housingCount.text = string.Format("{0}개", P_housingCountInt);
         P_housingInfo.text = housingObjWindow.text_k;
 
         P_housingSetName.text = HousingSetNameToKR();
@@ -123,11 +123,15 @@ public class HousingInterationWindow : MonoBehaviour
             listAdd.Append($"{P_housingSetItemList[i]} ");
             if (DBManager.instance.user.housingObject.ContainsKey(housingObjWindow.name_e))
             {
-                listAdd.Append("보유");
+                listAdd.Append("   보유");
             }
             else if (LoadHousing.instance.localHousingObject.ContainsValue(housingObjWindow))       //여기 DBManager로 바꿔야함
             {
-                listAdd.Append("배치");
+                listAdd.Append("   배치");
+            }
+            else
+            {
+                listAdd.Append("   미보유");
             }
             listAdd.Append("\n");
             P_housingSetItem.text = listAdd.ToString();

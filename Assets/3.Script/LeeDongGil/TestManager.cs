@@ -185,6 +185,14 @@ public class TestManager : MonoBehaviour
         SetUI(isShowUI);
         SetUI_win(isShowUI_win);
         SetFilterLayer();
+
+        /*if(Application.platform == RuntimePlatform.Android)
+        {
+            if(Input.GetKey(KeyCode.Escape))
+            {
+
+            }
+        }*/
     }
 
     public void LoadHousingChart()
