@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class StageClear : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class StageClear : MonoBehaviour
 
     [Header("Popup")]
     [SerializeField] GameObject tutorialRewardPopup; // 건물 획득 알림 팝업
+    [SerializeField] GameObject starLessPopup;
 
     [Header("Sprite")]
     [SerializeField] Sprite[] characterBodyImages; // 캐릭터 Body 이미지 배열
@@ -18,7 +20,7 @@ public class StageClear : MonoBehaviour
     [SerializeField] Sprite[] tokenImages; // 토큰 이미지 배열
 
     [Header("Reward")]
-    [SerializeField] private GameObject[] starIcons;
+    [SerializeField] private GameObject[] starBackgrounds;
     [SerializeField] private TMP_Text rewardText_1;
     [SerializeField] private TMP_Text rewardText_2;
     [SerializeField] private TMP_Text rewardText_3;
@@ -58,7 +60,7 @@ public class StageClear : MonoBehaviour
         string stageName = ChartManager.instance.stageInfos[stageIndex].name_k;
         stageInfoText.text = $"{chapter} - {stageLevel} {stageName}";
 
-        if (stageLevel == 1)
+        if (stageLevel == 1 && DBManager.instance.user.clearInfo[stageIndex, 0] == 0)
         {
             tutorialRewardPopup.SetActive(true);
         }
@@ -79,12 +81,18 @@ public class StageClear : MonoBehaviour
 
         if (player.GetComponent<PlayerProperty>().stars.Count >= ChartManager.instance.stageInfos[stageIndex].condition_2)
         {
-            starIcons[1].SetActive(true);
+            starBackgrounds[1].SetActive(false);
         }
 
         if (player.GetComponent<PlayerProperty>().stars.Count >= ChartManager.instance.stageInfos[stageIndex].condition_3)
         {
-            starIcons[2].SetActive(true);
+            starBackgrounds[2].SetActive(false);
+        }
+
+        if (stageLevel == 5)
+        {
+            starBackgrounds[1].SetActive(false);
+            starBackgrounds[2].SetActive(false);
         }
 
         conditionText_2.text = $"별 X {ChartManager.instance.stageInfos[stageIndex].condition_2}";
@@ -242,6 +250,19 @@ public class StageClear : MonoBehaviour
             {
                 rewardText_1.text = $"획득 완료";
             }
+        }
+    }
+
+    public void RetryCheck()
+    {
+        if (DBManager.instance.user.activePoint <= 0)
+        {
+            starLessPopup.SetActive(true);
+            return;
+        }
+        else
+        {
+            SceneManager.LoadScene("OnGame");
         }
     }
 }

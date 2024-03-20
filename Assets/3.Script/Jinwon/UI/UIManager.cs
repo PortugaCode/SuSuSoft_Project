@@ -56,6 +56,9 @@ public class UIManager : MonoBehaviour
     [Header("Option")]
     [SerializeField] GameObject OptionPopup;
 
+    [Header("Exit")]
+    [SerializeField] GameObject ExitPopup;
+
     [Header("Friends UI")]
     [SerializeField] GameObject friendsPopup;
 
@@ -330,8 +333,8 @@ public class UIManager : MonoBehaviour
                 currentCharacter.transform.GetChild(1).GetComponent<Image>().sprite = characterFaceImages[characters[i].imageIndex / 4];
                 currentCharacter.transform.GetChild(2).GetComponent<TMP_Text>().text = characters[i].name;
 
-                healthText.text = $"체력 : {characters[i].maxHealth}";
-                sightRangeText.text = $"시야 범위 : {characterDatas[i].maxSightRange}";
+                healthText.text = $"체력 : {characters[i].maxHealth + (characters[i].level - 1) * characters[i].healthIncreaseRate}";
+                sightRangeText.text = $"시야 범위 : {characters[i].maxSightRange}";
                 break;
             }
         }
@@ -453,10 +456,10 @@ public class UIManager : MonoBehaviour
         gauge.fillAmount = (float)DBManager.instance.user.character[matchIndex].count / 30.0f;
         gaugeText.text = $"{DBManager.instance.user.character[matchIndex].count} / {30}";
         typeText.text = chr.color;
-        healthText2.text = $"{chr.maxHealth + chr.level * chr.healthIncreaseRate}"; // + 세트효과 구현 필요
-        sightText2.text = $"{chr.minSightRange}"; // + 패시브, 세트효과 구현 필요
+        healthText2.text = $"{DBManager.instance.user.character[matchIndex].maxHealth + (DBManager.instance.user.character[matchIndex].level - 1) * DBManager.instance.user.character[matchIndex].healthIncreaseRate}"; // + 세트효과 구현 필요
+        sightText2.text = $"{DBManager.instance.user.character[matchIndex].minSightRange}"; // + 패시브, 세트효과 구현 필요
 
-        if (chr.level >= 6)
+        if (DBManager.instance.user.character[matchIndex].level >= 6)
         {
             starIcon.sprite = star_red;
         }
@@ -478,8 +481,8 @@ public class UIManager : MonoBehaviour
         {
             if (characters[i].imageIndex == index + 9 * characterTabIndex)
             {
-                healthText.text = $"체력 : {characters[i].maxHealth}";
-                sightRangeText.text = $"시야 범위 : {characterDatas[i].maxSightRange}";
+                healthText.text = $"체력 : {characters[i].maxHealth + (characters[i].level - 1) * characters[i].healthIncreaseRate}";
+                sightRangeText.text = $"시야 범위 : {characters[i].maxSightRange}";
                 break;
             }
         }
@@ -516,7 +519,7 @@ public class UIManager : MonoBehaviour
         {
             if (characters[i].imageIndex == DBManager.instance.user.currentCharacterIndex)
             {
-                healthText.text = $"체력 : {characters[i].maxHealth}";
+                healthText.text = $"체력 : {characters[i].maxHealth + (characters[i].level - 1) * characters[i].healthIncreaseRate}";
                 sightRangeText.text = $"시야 범위 : {characters[i].maxSightRange}";
             }
         }
@@ -530,6 +533,16 @@ public class UIManager : MonoBehaviour
     public void OpenChracterSelectTab()
     {
         characterSelectTab.SetActive(true);
+
+        for (int i = 0; i < characters.Count; i++)
+        {
+            if (characters[i].imageIndex == DBManager.instance.user.currentCharacterIndex)
+            {
+                healthText.text = $"체력 : {characters[i].maxHealth + (characters[i].level - 1) * characters[i].healthIncreaseRate}";
+                sightRangeText.text = $"시야 범위 : {characters[i].maxSightRange}";
+            }
+        }
+
         tailTab.SetActive(false);
     }
 
@@ -539,6 +552,11 @@ public class UIManager : MonoBehaviour
         tailTab.SetActive(true);
 
         UpdateTailButton();
+    }
+
+    public void OpenExitPopup()
+    {
+        ExitPopup.SetActive(true);
     }
 
     public void ExitGame()

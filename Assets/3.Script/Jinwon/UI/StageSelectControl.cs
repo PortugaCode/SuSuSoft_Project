@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class StageSelectControl : MonoBehaviour
 {
@@ -18,6 +19,9 @@ public class StageSelectControl : MonoBehaviour
 
     [Header("Planet")]
     [SerializeField] private GameObject[] planetObjects;
+
+    [Header("Popup")]
+    [SerializeField] private GameObject starLessPopup;
 
     private void OnEnable()
     {
@@ -85,9 +89,17 @@ public class StageSelectControl : MonoBehaviour
         }
     }
 
-    public void UseActivePoint()
+    public void UseActivePoint(int stageIndex)
     {
-        // 입장시가 아닌 클리어시에 사용하는것으로 변경
-        //DBManager.instance.UseActivePoint();
+        if (DBManager.instance.user.activePoint <= 0)
+        {
+            starLessPopup.SetActive(true);
+            return;
+        }
+        else
+        {
+            GetComponent<NowStageSelect>().NowStageIndex(stageIndex);
+            SceneManager.LoadScene("OnGame");
+        }
     }
 }
