@@ -58,7 +58,7 @@ public class StageClear : MonoBehaviour
         string stageName = ChartManager.instance.stageInfos[stageIndex].name_k;
         stageInfoText.text = $"{chapter} - {stageLevel} {stageName}";
 
-        if (stageLevel == 1)
+        if (stageLevel == 1 && DBManager.instance.user.clearInfo[stageIndex, 0] == 0)
         {
             tutorialRewardPopup.SetActive(true);
         }
