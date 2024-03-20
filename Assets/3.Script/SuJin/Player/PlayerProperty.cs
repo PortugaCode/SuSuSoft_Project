@@ -36,7 +36,6 @@ public class PlayerProperty : MonoBehaviour
     public int currentHealth;
     public int maxHealth;
     public int damage;
-    private int maxDamage = 50;
 
     public bool isCanSkill;
 
@@ -242,7 +241,10 @@ public class PlayerProperty : MonoBehaviour
 
         else if(collision.gameObject.CompareTag("DamageMax"))
         {
-            currentHealth -= maxDamage;
+            damage = 500;
+            ignoreAttack = 0;
+
+            PassiveAttackNull();
             Debug.Log($"{currentHealth}");
             animator.SetTrigger("Hit");
             onHPSlider?.Invoke(this, EventArgs.Empty);

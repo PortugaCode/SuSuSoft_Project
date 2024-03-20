@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
 {
     public static EventHandler OnChangeCurrentCharacter;
 
+    [SerializeField] private GameObject BG;
 
     [Header("Tab")]
     [SerializeField] GameObject characterSelectTab;
@@ -509,7 +510,7 @@ public class UIManager : MonoBehaviour
     public void OpenSelectPopup()
     {
         characterSelectPopup.SetActive(true);
-
+        BG.SetActive(true);
         characters = DBManager.instance.user.character;
         characterDatas = ChartManager.instance.characterDatas;
 

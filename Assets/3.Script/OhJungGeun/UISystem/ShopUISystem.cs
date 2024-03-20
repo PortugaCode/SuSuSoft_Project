@@ -43,6 +43,7 @@ public class ShopUISystem : MonoBehaviour
     [SerializeField] private GameObject updatePopUp_Daily;
     [SerializeField] private GameObject updatePopUp_Token;
     [SerializeField] private GameObject updatePopUp_Gold;
+    [SerializeField] private GameObject updatePopUp_Reset;
     [SerializeField] private GameObject errorPopUp;
 
     [Header("Daily Shop Data")]
@@ -334,12 +335,14 @@ public class ShopUISystem : MonoBehaviour
         if (DBManager.instance.user.goods["gold"] < resetListPrice)
         {
             OpenErrorPopUp();
+            CloseUpdatePopUp();
             return false;
         }
         else
         {
             DBManager.instance.user.goods["gold"] -= resetListPrice;
             uIManager.UpdateGoods();
+            CloseUpdatePopUp();
             return true;
         }
     }
@@ -374,6 +377,7 @@ public class ShopUISystem : MonoBehaviour
         updatePopUp_Daily.SetActive(false);
         updatePopUp_Token.SetActive(false);
         updatePopUp_Gold.SetActive(false);
+        updatePopUp_Reset.SetActive(false);
     }
 
     public void OpenErrorPopUp()
