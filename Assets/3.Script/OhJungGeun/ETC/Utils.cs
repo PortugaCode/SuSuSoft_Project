@@ -34,6 +34,9 @@ public class Utils : MonoBehaviour
 
     public int stageIndex;
 
+
+    public bool isGoToHome = false;
+
     private void Awake()
     {
         #region [싱글톤] 

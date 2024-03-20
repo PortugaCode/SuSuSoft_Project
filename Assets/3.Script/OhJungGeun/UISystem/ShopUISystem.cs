@@ -290,6 +290,7 @@ public class ShopUISystem : MonoBehaviour
         if (DBManager.instance.user.goods["ruby"] >= goldPrices[nowIndex])
         {
             DBManager.instance.user.goods["gold"] += getGold[nowIndex];
+            DBManager.instance.user.goods["ruby"] -= goldPrices[nowIndex];
             uIManager.UpdateGoods();
             CloseUpdatePopUp();
         }

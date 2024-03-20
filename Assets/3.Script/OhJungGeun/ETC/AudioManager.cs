@@ -99,7 +99,7 @@ public enum SFX_Name
 public enum BGM_Name
 {
     Main,
-    Stage
+    Stage,
 }
 
 
@@ -118,6 +118,9 @@ public class AudioManager : MonoBehaviour
     [Header("AudioSource Collection")]
     [SerializeField] private AudioSource bgm_AudioSource;
     [SerializeField] private AudioSource sfx_AudioSource;
+
+    public AudioSource BGM_AudioSource => bgm_AudioSource;
+    public AudioSource SFX_AudioSource => sfx_AudioSource;
 
     [Header("BGM AudioClip")]
     [SerializeField] private AudioClip mainBGM;

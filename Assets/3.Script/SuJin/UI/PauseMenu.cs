@@ -34,7 +34,6 @@ public class PauseMenu : MonoBehaviour
 
     public void GameOver()
     {
-        AudioManager.Instance.PlaySFX(SFX_Name.StageFail);
         Time.timeScale = 0;
     }
 }
