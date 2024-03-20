@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -68981540, guid: 8793634646421d549b349e04beef8dce, type: 3}
+  m_Name: TheBackendGoogleSettings
+  m_EditorClassIdentifier: 
+  webClientID: 655652684084-ivcdn8v9hls12o04ckfp2257d07fr2f8.apps.googleusercontent.com
+  androidSDKVersion: 2.1.0
+  iosClientID: 
+  iosURLSchema: 
+  iosSDKVersion: 1.1.0

@@ -10,6 +10,7 @@ public class LoginManager : MonoBehaviour
 {
     [Header("Menu")]
     [SerializeField] private GameObject popUp_Menu;
+    [SerializeField] private TMP_Text mobileDebugText;
 
     [Header("LogIn")]
     [SerializeField] private GameObject popUp_LogIn;
@@ -58,13 +59,24 @@ public class LoginManager : MonoBehaviour
     {
         if (isSuccess == false)
         {
+            mobileDebugText.text = errorMessage;
             Debug.LogError(errorMessage);
             return;
+        }
+        else
+        {
+            mobileDebugText.text = $"성공";
         }
 
         Debug.Log("구글 토큰 : " + token);
         var bro = Backend.BMember.AuthorizeFederation(token, FederationType.Google);
         Debug.Log("페데레이션 로그인 결과 : " + bro);
+
+        DBManager.instance.user.isLogin = true;
+        ChartManager.instance.GetChartData();
+        DBManager.instance.DB_Load(idText, pwText);
+        BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
+        BackEndManager.Instance.GetChatManager().GetChatStatus();
     }
 
     public void Login()
