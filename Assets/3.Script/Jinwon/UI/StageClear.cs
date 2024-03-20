@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class StageClear : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class StageClear : MonoBehaviour
 
     [Header("Popup")]
     [SerializeField] GameObject tutorialRewardPopup; // 건물 획득 알림 팝업
+    [SerializeField] GameObject starLessPopup;
 
     [Header("Sprite")]
     [SerializeField] Sprite[] characterBodyImages; // 캐릭터 Body 이미지 배열
@@ -248,6 +250,19 @@ public class StageClear : MonoBehaviour
             {
                 rewardText_1.text = $"획득 완료";
             }
+        }
+    }
+
+    public void RetryCheck()
+    {
+        if (DBManager.instance.user.activePoint <= 0)
+        {
+            starLessPopup.SetActive(true);
+            return;
+        }
+        else
+        {
+            SceneManager.LoadScene("OnGame");
         }
     }
 }
