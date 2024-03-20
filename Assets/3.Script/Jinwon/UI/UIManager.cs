@@ -56,6 +56,9 @@ public class UIManager : MonoBehaviour
     [Header("Option")]
     [SerializeField] GameObject OptionPopup;
 
+    [Header("Exit")]
+    [SerializeField] GameObject ExitPopup;
+
     [Header("Friends UI")]
     [SerializeField] GameObject friendsPopup;
 
@@ -549,6 +552,11 @@ public class UIManager : MonoBehaviour
         tailTab.SetActive(true);
 
         UpdateTailButton();
+    }
+
+    public void OpenExitPopup()
+    {
+        ExitPopup.SetActive(true);
     }
 
     public void ExitGame()

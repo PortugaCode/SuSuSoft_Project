@@ -18,7 +18,7 @@ public class StageClear : MonoBehaviour
     [SerializeField] Sprite[] tokenImages; // 토큰 이미지 배열
 
     [Header("Reward")]
-    [SerializeField] private GameObject[] starIcons;
+    [SerializeField] private GameObject[] starBackgrounds;
     [SerializeField] private TMP_Text rewardText_1;
     [SerializeField] private TMP_Text rewardText_2;
     [SerializeField] private TMP_Text rewardText_3;
@@ -79,12 +79,18 @@ public class StageClear : MonoBehaviour
 
         if (player.GetComponent<PlayerProperty>().stars.Count >= ChartManager.instance.stageInfos[stageIndex].condition_2)
         {
-            starIcons[1].SetActive(true);
+            starBackgrounds[1].SetActive(false);
         }
 
         if (player.GetComponent<PlayerProperty>().stars.Count >= ChartManager.instance.stageInfos[stageIndex].condition_3)
         {
-            starIcons[2].SetActive(true);
+            starBackgrounds[2].SetActive(false);
+        }
+
+        if (stageLevel == 5)
+        {
+            starBackgrounds[1].SetActive(false);
+            starBackgrounds[2].SetActive(false);
         }
 
         conditionText_2.text = $"별 X {ChartManager.instance.stageInfos[stageIndex].condition_2}";
