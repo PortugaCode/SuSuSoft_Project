@@ -209,6 +209,7 @@ public class BossControll : MonoBehaviour
 
         bossStageClearPopup.SetActive(true);
         AudioManager.Instance.PlaySFX(SFX_Name.StageSuccess);
+        AudioManager.Instance.BGM_AudioSource.Stop();
     }
 
 

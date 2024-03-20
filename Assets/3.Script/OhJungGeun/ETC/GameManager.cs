@@ -17,5 +17,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         endUI.SetActive(true);
+        AudioManager.Instance.PlaySFX(SFX_Name.StageFail);
+        AudioManager.Instance.BGM_AudioSource.Stop();
     }
 }

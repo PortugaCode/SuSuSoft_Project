@@ -556,6 +556,13 @@ public class DrawUISystem : MonoBehaviour
                 DBManager.instance.user.character[i] = a;
             }
         }
+        for (int i = 0; i < DBManager.instance.user.character.Count; i++)
+        {
+            if (DBManager.instance.user.character[i].index == index)
+            {
+                return true;
+            }
+        }
         return false;
     }
 

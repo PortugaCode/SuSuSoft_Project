@@ -423,6 +423,7 @@ public class MatchSystem
             //게임방 최초 접속 시 1번 호출되는 이벤트
             Backend.Match.OnSessionListInServer = (MatchInGameSessionListEventArgs args) =>
             {
+                DBManager.instance.SaveUserData();
                 roomInfo = args.RoomInfo;
                 userNickName.Clear();
                 for (int i = 0; i < args.GameRecords.Count; i++)
