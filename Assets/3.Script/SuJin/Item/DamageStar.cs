@@ -12,21 +12,24 @@ public class DamageStar : MonoBehaviour
     public EventHandler onBossHPSlide;
     BossControll boss;
 
-    private void Awake()
+    private void Start()
     {
-        boss = GameObject.FindGameObjectWithTag("Boss").GetComponent<BossControll>();
+        PlayerProperty player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerProperty>();
+        boss = player.Boss;
+
+        bossControll = boss.transform;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         AttackStar();
     }
 
     public void AttackStar()
     {
-        if (isMoveOn)
+        if (isMoveOn && Utils.Instance.isBossStage)
         {
-            transform.position = Vector2.Lerp(this.transform.position, bossControll.position, speed * Time.deltaTime);
+            transform.position = Vector3.Slerp(this.transform.position, bossControll.position, speed * Time.deltaTime);
         }
     }
 
@@ -39,7 +42,7 @@ public class DamageStar : MonoBehaviour
             gameObject.layer = 0;
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         }
-        else if(collision.CompareTag("Boss") && isMoveOn)
+        else if(collision.CompareTag("Boss") && isMoveOn && Utils.Instance.isBossStage)
         {
             Destroy(gameObject);
             boss.animator.SetTrigger("BossHurt");

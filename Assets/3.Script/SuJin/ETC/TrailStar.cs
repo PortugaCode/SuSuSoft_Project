@@ -20,23 +20,23 @@ public class TrailStar : MonoBehaviour
 
     private void Start()
     {
-        //SetTarget();
+        SetTarget();
     }
 
     private void FixedUpdate()
     {
-       // ChasePlayer();
+        ChasePlayer();
     }
 
 
     private void Update()
     {
-       // if (player == null)
-       // {
-       //     Destroy(gameObject);
-       //     return;
-       // }
-       // ItemRotate();
+        if (player == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        ItemRotate();
     }
     
     private void ChasePlayer()

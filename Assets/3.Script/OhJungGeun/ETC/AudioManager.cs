@@ -233,6 +233,8 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
+        SetBGMVolume(0.6f);
+        SetSFXVolume(0.6f);
         //Test
         PlayBGM(BGM_Name.Main);
     }

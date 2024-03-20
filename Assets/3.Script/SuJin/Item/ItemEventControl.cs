@@ -21,6 +21,13 @@ public class ItemEventControl : MonoBehaviour
 
     private bool isTriggered = false;
 
+    private void Awake()
+    {
+        stageClearPopup = GameObject.FindGameObjectWithTag("EndPopUp").transform.GetChild(1).gameObject;
+    }
+
+
+
     private void Start()
     {
         if (gameObject.CompareTag("Lever"))
@@ -54,6 +61,7 @@ public class ItemEventControl : MonoBehaviour
         StartCoroutine(MoveRock_Co());
         leverOn.SetActive(true);
         leverOff.SetActive(false);
+        AudioManager.Instance.PlaySFX(SFX_Name.WorkshopSound02);
     }
 
     private IEnumerator MoveRock_Co()
@@ -79,6 +87,7 @@ public class ItemEventControl : MonoBehaviour
             isTriggered = true;
             Debug.Log("OnTriggerEnter2D");
             //Todo End => Stage 클리어 보상 팝업 띄우기
+            AudioManager.Instance.PlaySFX(SFX_Name.StageSuccess);
             onEndGame?.Invoke(this, EventArgs.Empty);
         }
     }

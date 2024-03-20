@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StarTailSpriteSet : MonoBehaviour
 {
-    [SerializeField] private Sprite tailSprite;
+    [SerializeField] private SpriteRenderer tailSprite;
 
 
     private void Awake()
@@ -16,6 +16,6 @@ public class StarTailSpriteSet : MonoBehaviour
     {
         int index = DBManager.instance.user.currentTailIndex;
 
-        tailSprite = SpriteManager.instance.startailes[index];
+        tailSprite.sprite = SpriteManager.instance.startailes[index];
     }
 }

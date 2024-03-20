@@ -35,6 +35,14 @@ TagManager:
   - EffectManager
   - Boss
   - BossStar
+  - CameraMove
+  - DamageMax
+  - GreenObstacle
+  - EndWhite
+  - BossHP
+  - SkillActive
+  - FourStageBoss
+  - EndPopUp
   layers:
   - Default
   - TransparentFX

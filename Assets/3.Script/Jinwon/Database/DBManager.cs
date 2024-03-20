@@ -125,6 +125,7 @@ public class User
     public List<int> guestBook { get; set; } // 방명록 리스트
     public List<Mail> mail { get; set; } // 우편 리스트
     public int[,] clearInfo { get; set; } // 최초 보상 획득 정보
+    public int[] stageTotalInfo { get; set; } // 스테이지 통합 별 개수에 따른 보상 획득 여부
     public int[] tokenInfo { get; set; } // 해당 스테이지에서 토큰을 먹었는지 여부
     public int[] dayQuestInfo { get; set; } // 일일 퀘스트 수행 여부 (0: 진행중, 1: 수행 완료)
     public int questRewardCount { get; set; } // 퀘스트 완료 횟수
@@ -151,7 +152,8 @@ public class User
         friend = new List<Friend>();
         guestBook = new List<int>();
         mail = new List<Mail>();
-        clearInfo = new int[10, 4];
+        clearInfo = new int[10, 5];
+        stageTotalInfo = new int[3];
         tokenInfo = new int[10];
         dayQuestInfo = new int[13];
         questRewardCount = 0;
@@ -240,7 +242,7 @@ public class DBManager : MonoBehaviour
         // [보상 획득 정보 (2차원 배열)]
         for (int i = 0; i < 10; i++) // (총 스테이지 개수 = 10)
         {
-            for (int j = 0; j < 4; j++) // (리워드 개수 = 4)
+            for (int j = 0; j < 5; j++) // (리워드 개수 = 5)
             {
                 user.clearInfo[i, j] = int.Parse(bro.FlattenRows()[0]["ClearInfo"][i][j].ToString());
             }
@@ -256,6 +258,12 @@ public class DBManager : MonoBehaviour
         {
             var key = housingArray[i];
             user.housingObject[key] = int.Parse(json[0]["HousingObject"][key].ToString());
+        }
+
+        // [총 별 개수에 따른 보상 획득 정보]
+        for (int i = 0; i < 3; i++)
+        {
+            user.stageTotalInfo[i] = int.Parse(bro.FlattenRows()[0]["StageTotalInfo"][i].ToString());
         }
 
         // [토큰 획득 정보]
@@ -389,6 +397,7 @@ public class DBManager : MonoBehaviour
         param.Add("UserName", user.UserName);
         param.Add("Goods", user.goods);
         param.Add("ClearInfo", user.clearInfo);
+        param.Add("StageTotalInfo", user.stageTotalInfo);
         param.Add("TokenInfo", user.tokenInfo);
         param.Add("Tokens", user.tokens);
         param.Add("HousingObject", user.housingObject);
@@ -817,6 +826,7 @@ public class DBManager : MonoBehaviour
         param.Add("CurrentTailIndex", user.currentTailIndex);
         param.Add("Goods", user.goods);
         param.Add("ClearInfo", user.clearInfo);
+        param.Add("StageTotalInfo", user.stageTotalInfo);
         param.Add("TokenInfo", user.tokenInfo);
         param.Add("Tokens", user.tokens);
         param.Add("HousingObject", user.housingObject);
@@ -883,6 +893,7 @@ public class DBManager : MonoBehaviour
 
             Backend.GameData.Insert("Character", characterParam); // Character 테이블에 데이터 삽입
         }
-        
+
+        Debug.Log($"게임 종료 시 데이터 DB에 저장");
     }
 }
