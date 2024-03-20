@@ -15870,7 +15870,6 @@ MonoBehaviour:
   rigid: {fileID: 6298619346308009966}
   itemEventControl: {fileID: 5209677317221951814}
   itemEventControl_3: {fileID: 0}
-  isBossStage: 0
   isGreen: 0
 --- !u!114 &1149991543342957016
 MonoBehaviour:
@@ -25653,7 +25652,6 @@ MonoBehaviour:
   rigid: {fileID: 2743464553905436227}
   itemEventControl: {fileID: 5209677317221951814}
   itemEventControl_3: {fileID: 0}
-  isBossStage: 0
   isGreen: 0
 --- !u!114 &1734862526469967785
 MonoBehaviour:
@@ -33099,7 +33097,6 @@ MonoBehaviour:
   rigid: {fileID: 8087264516896411812}
   itemEventControl: {fileID: 5209677317221951814}
   itemEventControl_3: {fileID: 0}
-  isBossStage: 0
   isGreen: 0
 --- !u!114 &9028842166074881377
 MonoBehaviour:
@@ -85871,7 +85868,6 @@ MonoBehaviour:
   rigid: {fileID: 147899244406141873}
   itemEventControl: {fileID: 5209677317221951814}
   itemEventControl_3: {fileID: 0}
-  isBossStage: 0
   isGreen: 0
 --- !u!114 &7085323242917795315
 MonoBehaviour:
@@ -88725,7 +88721,6 @@ MonoBehaviour:
   rigid: {fileID: 2505008906475848886}
   itemEventControl: {fileID: 5209677317221951814}
   itemEventControl_3: {fileID: 0}
-  isBossStage: 0
   isGreen: 0
 --- !u!114 &8116817141792267257
 MonoBehaviour:
@@ -90722,7 +90717,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
   m_Color: {r: 0.78039217, g: 0.77254903, b: 0.9254902, a: 1}
-  m_Intensity: 0.8
+  m_Intensity: 0.4
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 0000000055f7b7a2
