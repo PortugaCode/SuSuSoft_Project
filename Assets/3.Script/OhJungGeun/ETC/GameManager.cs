@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] private GameObject endUI;
 
+
     public void ActiveOnEndUI()
     {
         StartCoroutine(ActiveOnEndUI_Co());

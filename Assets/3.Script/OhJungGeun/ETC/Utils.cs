@@ -76,7 +76,6 @@ public class Utils : MonoBehaviour
 
     public void LoadScene(SceneNames sceneNames)
     {
-         
         nowScene = sceneNames;
         SceneManager.LoadScene(sceneNames.ToString());
     }

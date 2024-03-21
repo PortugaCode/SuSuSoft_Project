@@ -89,6 +89,12 @@ public class BtnControl : MonoBehaviour
         Utils.Instance.LoadScene(sceneNames);
     }
 
+    public void LoadScene_GoToHome()
+    {
+        Utils.Instance.isGoToHome = true;
+        Utils.Instance.LoadScene(SceneNames.Chatting);
+    }
+
     public void SetInterfaceUI(GameObject a)
     {
         if (TestManager.instance.isEditMode) return;

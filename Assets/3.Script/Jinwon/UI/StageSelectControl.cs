@@ -99,7 +99,7 @@ public class StageSelectControl : MonoBehaviour
         else
         {
             GetComponent<NowStageSelect>().NowStageIndex(stageIndex);
-            SceneManager.LoadScene("OnGame");
+            Utils.Instance.LoadScene(SceneNames.OnGame);
         }
     }
 }
