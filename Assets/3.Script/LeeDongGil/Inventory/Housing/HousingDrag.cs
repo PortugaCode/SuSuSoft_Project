@@ -28,7 +28,7 @@ public class HousingDrag : MonoBehaviour
     public HousingItemData data;
     public HousingObject housingObject;
     public SpriteRenderer buildSprite;
-    public GameObject space;
+    public GameObject space;                        //설치 할 공간
     public float original_x = 0;
     public float original_y = 0;
     public float new_x = 0;
@@ -47,8 +47,8 @@ public class HousingDrag : MonoBehaviour
     [HideInInspector] public HousingGrid grid;
 
     private SpriteRenderer check;
-    private BoxCollider boxCollider;
-    private BoxCollider subCollider;
+    private BoxCollider boxCollider;                //자기 자신 오브젝트
+    private BoxCollider subCollider;                //다른 오브젝트 터치 안되게 하는 투명 오브젝트
 
     [HideInInspector] public float moveX;
     [HideInInspector] public float moveY;
@@ -322,8 +322,8 @@ public class HousingDrag : MonoBehaviour
                 isSetBuild = false;
                 transform.position = new Vector3(transform.position.x, transform.position.y, -1);
                 transform.SetParent(previousParent);
-                check.gameObject.SetActive(true);
-                subCollider.enabled = true;
+                //check.gameObject.SetActive(true);
+                //subCollider.enabled = true;
                 Vector3 newPosition = ray.GetPoint(offset.z);
 
                 sprender = FindObjectOfType<DrawingGrid>().GetComponentsInChildren<SpriteRenderer>();

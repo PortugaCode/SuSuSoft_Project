@@ -17,6 +17,7 @@ public class EditModeButton : MonoBehaviour
     public Image currentImage;
     public Sprite[] buttonImages = new Sprite[2];
     public RectTransform buttonRect;
+    public GameObject transparencyBG;
 
     [Header("Hide Button")]
     public GameObject hideButton;
@@ -26,7 +27,7 @@ public class EditModeButton : MonoBehaviour
     [Header("Housing Inventory")]
     public GameObject housingInven;
     public RectTransform housingRect;
-    public float moveSpeed = 0.5f; 
+    public float moveSpeed = 0.5f;
 
     private void Start()
     {
@@ -74,16 +75,17 @@ public class EditModeButton : MonoBehaviour
     public void EditMode()
     {
         TestManager.instance.isEditMode = !isEdit;
-        //foreach (var key in DBManager.instance.user.housingObject.Keys)
-        //{
-        //    if (DBManager.instance.user.housingObject[key] == 0)
-        //    {
-        //        DBManager.instance.user.housingObject.Remove(key);
-        //    }
-        //}
         housingInven.SetActive(true);
+        if (transparencyBG.activeSelf)
+        {
+            transparencyBG.SetActive(false);
+        }
+        else
+        {
+            transparencyBG.SetActive(true);
+        }
         buttonRect.anchoredPosition = new Vector2(200, 200);
-        if(!TestManager.instance.isEditMode)
+        if (!TestManager.instance.isEditMode)
         {
             TestManager.instance.isShowUI = true;
         }

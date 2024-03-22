@@ -158,6 +158,7 @@ MonoBehaviour:
   housingData: {fileID: 0}
   gameTime: 0
   drag: {fileID: 0}
+  isDoubleTouch: 0
 --- !u!114 &9215071218758292209
 MonoBehaviour:
   m_ObjectHideFlags: 0
