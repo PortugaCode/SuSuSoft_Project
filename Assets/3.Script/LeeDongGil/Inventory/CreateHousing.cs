@@ -32,6 +32,7 @@ public class CreateHousing : MonoBehaviour
     public Image checkStuffImage;
     public Image checkGoldImage;
     public TextMeshProUGUI checkUpgrade;
+    public GameObject notEnoughGold;
 
     [Header("Create Success")]
     public GameObject background;           //팝업 시 불투명 배경
@@ -68,14 +69,12 @@ public class CreateHousing : MonoBehaviour
         Debug.Log($"{housingObject.name_e} : 팝업");
         enName.text = string.Format("{0}", housingObject.name_e);
         price.text = string.Format("{0:#,###}", priceInt);
-        if (DBManager.instance.user.tokens[tokenID] < require || DBManager.instance.user.goods["gold"] < priceInt)
+        if (DBManager.instance.user.tokens[tokenID] < require)
         {
-            createButton.interactable = false;
             upgradeButton.interactable = false;
         }
         else
         {
-            createButton.interactable = true;
             upgradeButton.interactable = true;
         }
     }
@@ -144,22 +143,26 @@ public class CreateHousing : MonoBehaviour
         {
             DBManager.instance.user.tokens[tokenID] -= require;
             DBManager.instance.user.goods["gold"] -= priceInt;
-        }
-        uiManager.UpdateGoods();
-        if (DBManager.instance.user.tokens[tokenID] < require)
-        {
-            for (int i = 0; i < stuff.Count; i++)
+            uiManager.UpdateGoods();
+            if (DBManager.instance.user.tokens[tokenID] < require)
             {
-                stuff[i].sprite = null;
-                stuff[i].color = new Color32(255, 255, 255, 0);
-            }
+                for (int i = 0; i < stuff.Count; i++)
+                {
+                    stuff[i].sprite = null;
+                    stuff[i].color = new Color32(255, 255, 255, 0);
+                }
 
-            for (int i = 0; i < DBManager.instance.user.tokens[tokenID]; i++)
-            {
-                stuff[i].sprite = SpriteManager.instance.tokenSprites[tokenID];
+                for (int i = 0; i < DBManager.instance.user.tokens[tokenID]; i++)
+                {
+                    stuff[i].sprite = SpriteManager.instance.tokenSprites[tokenID];
+                }
             }
+            PopUpSuccess();
         }
-        PopUpSuccess();
+        else if (DBManager.instance.user.goods["gold"] < priceInt)
+        {
+            notEnoughGold.SetActive(true);
+        }
     }
 
 
@@ -170,22 +173,26 @@ public class CreateHousing : MonoBehaviour
         {
             DBManager.instance.user.goods["gold"] -= priceInt;
             DBManager.instance.user.tokens[tokenID] -= require;
-        }
-        uiManager.UpdateGoods();
-        if (DBManager.instance.user.tokens[tokenID] < require)
-        {
-            for (int i = 0; i < stuff.Count; i++)
+            uiManager.UpdateGoods();
+            if (DBManager.instance.user.tokens[tokenID] < require)
             {
-                stuff[i].sprite = null;
-                stuff[i].color = new Color32(255, 255, 255, 0);
-            }
+                for (int i = 0; i < stuff.Count; i++)
+                {
+                    stuff[i].sprite = null;
+                    stuff[i].color = new Color32(255, 255, 255, 0);
+                }
 
-            for (int i = 0; i < DBManager.instance.user.tokens[tokenID]; i++)
-            {
-                stuff[i].sprite = SpriteManager.instance.tokenSprites[tokenID];
+                for (int i = 0; i < DBManager.instance.user.tokens[tokenID]; i++)
+                {
+                    stuff[i].sprite = SpriteManager.instance.tokenSprites[tokenID];
+                }
             }
+            PopUpUpgradeSuccess();
         }
-        PopUpUpgradeSuccess();
+        else if (DBManager.instance.user.goods["gold"] < priceInt)
+        {
+            notEnoughGold.SetActive(true);
+        }
     }
 
     private void PopUpSuccess()

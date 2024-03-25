@@ -70,6 +70,11 @@ public class SellItem : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        isSellItem = false;
+        smithSpeech.SetActive(false);
+    }
 
     private IEnumerator SmithTalk()
     {
