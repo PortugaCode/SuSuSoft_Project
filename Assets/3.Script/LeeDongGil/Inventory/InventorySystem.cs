@@ -44,7 +44,6 @@ public class InventorySystem : MonoBehaviour
     private void OnEnable()
     {
         if (DBManager.instance == null) return;
-        Debug.Log("인벤토리 로드중?");
         LoadHousingInventory();
     }
 
@@ -78,18 +77,16 @@ public class InventorySystem : MonoBehaviour
                     {
                         if (ChartManager.instance.housingObjectDatas[i].name_e == key)
                         {
-                            Debug.Log($"all?");
                             SetItemInfo(ChartManager.instance.housingObjectDatas[i], slots[index], DBManager.instance.user.housingObject[key]);
                             index++;
                             //LoadHousingInventory(housingIndex, DBManager.instance.user.housingObject[key]);
                             break;
                         }
                     }
-                    else if(!TestManager.instance.isAll)
+                    else if (!TestManager.instance.isAll)
                     {
                         if (ChartManager.instance.housingObjectDatas[i].name_e == key && ChartManager.instance.housingObjectDatas[i].layer == TestManager.instance.filterLayer)
                         {
-                            Debug.Log($"filter?");
                             SetItemInfo(ChartManager.instance.housingObjectDatas[i], slots[index], DBManager.instance.user.housingObject[key]);
                             index++;
                             //LoadHousingInventory(housingIndex, DBManager.instance.user.housingObject[key]);
@@ -101,34 +98,26 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
-    public void LoadHousingInventory_(int housingIndex, int count)
+    public void LoadHousingInventory_Sell()
     {
+        ClearHousingInventory();
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
-        HousingObject housingObject = ChartManager.instance.housingObjectDatas[housingIndex];
-        foreach (HousingSlot slot in slots)
+        int index = 0;
+        if (DBManager.instance.user.housingObject.Count > 0)
         {
-            if (!slot.isSlotUse)
+            foreach (var key in DBManager.instance.user.housingObject.Keys)
             {
-                SetItemInfo(housingObject, slot);
-                slot.GetComponentInChildren<HousingInventory>().count = count;
-                slot.transform.SetAsFirstSibling();
-                slot.isSlotUse = true;
-                Debug.Log(slot.isSlotUse);
-                break;
-            }
-            else
-            {
-                if (slot.housingObject.index == housingObject.index)
+                for (int i = 0; i < ChartManager.instance.housingObjectDatas.Count; i++)
                 {
-                    if (DBManager.instance.user.housingObject[ChartManager.instance.housingObjectDatas[housingIndex].name_e] == 0)
+                    if (ChartManager.instance.housingObjectDatas[i].name_e == key)
                     {
-                        slot.GetComponentInChildren<HousingInventory>().count = 0;
-                        break;
-                    }
-                    else
-                    {
-                        //slot.GetComponentInChildren<HousingInventory>().count = count;
-                        Debug.Log("여기로 들어오면 그냥 넘어가");
+                        if (ChartManager.instance.housingObjectDatas[i].type == "건물")
+                        {
+                            break;
+                        }
+                        SetItemInfo(ChartManager.instance.housingObjectDatas[i], slots[index], DBManager.instance.user.housingObject[key]);
+                        index++;
+                        //LoadHousingInventory(housingIndex, DBManager.instance.user.housingObject[key]);
                         break;
                     }
                 }

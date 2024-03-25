@@ -21,7 +21,7 @@ public class SellItem : MonoBehaviour
     {
         TestManager.instance.isAll = true;
         TestManager.instance.filterLayer = -1;
-        sellHousingInven.LoadHousingInventory();
+        sellHousingInven.LoadHousingInventory_Sell();
         //sellTokenInven.LoadHousingInventory();
         bodyCharater.sprite = characterBodyImages[DBManager.instance.user.currentCharacterIndex];
         switch(DBManager.instance.user.currentCharacterIndex)

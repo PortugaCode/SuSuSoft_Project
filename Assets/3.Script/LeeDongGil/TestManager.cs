@@ -12,6 +12,7 @@ public class TestManager : MonoBehaviour
     public List<HousingItemData> testHousingV2 = new List<HousingItemData>();
     public List<ItemData> tokenList = new List<ItemData>();
     public GameObject player;
+    [SerializeField] private UIManager uiManager;
 
     [Header("Housing Inventory")]
     public InventorySystem invenSys;
@@ -186,13 +187,13 @@ public class TestManager : MonoBehaviour
         SetUI_win(isShowUI_win);
         SetFilterLayer();
 
-        /*if(Application.platform == RuntimePlatform.Android)
+        if (Application.platform == RuntimePlatform.Android)
         {
-            if(Input.GetKey(KeyCode.Escape))
+            if (Input.GetKey(KeyCode.Escape))
             {
-
+                uiManager.OpenExitPopup();
             }
-        }*/
+        }
     }
 
     public void LoadHousingChart()

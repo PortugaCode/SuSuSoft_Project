@@ -81,7 +81,7 @@ public class SellPopUP : MonoBehaviour
         DBManager.instance.user.housingObject[housingObject.name_e] -= (int)housingCountbar.value;
         if(DBManager.instance.user.housingObject[housingObject.name_e] == 0)
         {
-            sellHousingInven.LoadHousingInventory();
+            sellHousingInven.LoadHousingInventory_Sell();
             originHousingInven.LoadHousingInventory();
             DBManager.instance.user.housingObject.Remove(housingObject.name_e);
         }
@@ -95,6 +95,6 @@ public class SellPopUP : MonoBehaviour
 
     private void OnDisable()
     {
-        sellHousingInven.LoadHousingInventory();
+        sellHousingInven.LoadHousingInventory_Sell();
     }
 }
