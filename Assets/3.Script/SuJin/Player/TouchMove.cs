@@ -58,30 +58,6 @@ public class TouchMove : MonoBehaviour
         StartBGM();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Building") && isInteraction)
-        {
-            HousingDrag housingDrag = collision.GetComponent<HousingDrag>();
-            Debug.Log(housingDrag.gameObject.name);
-            if (housingDrag.data.housingType == HousingType.interactionable)
-            {
-                Debug.Log("housingType 들어옴");
-                switch (housingDrag.data.housingID)
-                {
-                    case 5001:
-                        Debug.Log("5001 들어옴");
-                        interactionObject = collision.gameObject;
-                        interactionControl.doAnimatorArray[0].Invoke();
-                        break;
-                    default:
-                        Debug.Log("Unknown housingID type");
-                        return;
-                }
-            }
-        }
-    }
-
 
     private void Update()
     {

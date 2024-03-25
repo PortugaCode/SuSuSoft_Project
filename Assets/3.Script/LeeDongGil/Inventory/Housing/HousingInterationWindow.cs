@@ -14,6 +14,8 @@ public class HousingInterationWindow : MonoBehaviour
     public InventorySystem housingInvenSys;
     public TextMeshProUGUI housingName;
     public TextMeshProUGUI firstHousingName;
+    public TextMeshProUGUI housingSetTag;
+    public TextMeshProUGUI firstHousingSetTag;
     public GameObject housingObject;
     public HousingObject housingObj;
     public HousingObject housingObjWindow;
@@ -197,13 +199,25 @@ public class HousingInterationWindow : MonoBehaviour
     }
     public void SetHousingPosition()
     {
-        housingObject.GetComponent<HousingDrag>().isSetBuild = true;
-        DBManager.instance.MoveMyHousingObject(housingObj.index, housingDrag.original_x, housingDrag.original_y, housingDrag.new_x, housingDrag.new_y);
-        isFirstSet = false;
-        housingToggle.openButton.interactable = true;
-        window.SetActive(false);
-        housingToggle.housingInventory.SetActive(true);
-        //TestManager.instance.isShowUI = true;
+        if (housingObject.GetComponent<HousingDrag>().isSetBuild)
+        {
+            housingObject.GetComponent<HousingDrag>().isSetBuild = false;
+            housingSetTag.text = "배치 완료";
+        }
+        else
+        {
+            housingSetTag.text = "배치 옮기기";
+            housingObject.GetComponent<HousingDrag>().isSetBuild = true;
+            housingObject.GetComponent<HousingDrag>().space.SetActive(false);
+            housingObject.GetComponent<HousingDrag>().subCollider.enabled = false;
+            housingObject.GetComponent<HousingDrag>().SetZ(housingObject.GetComponent<HousingDrag>().currentLayer_);
+            DBManager.instance.MoveMyHousingObject(housingObj.index, housingDrag.original_x, housingDrag.original_y, housingDrag.new_x, housingDrag.new_y);
+            isFirstSet = false;
+            housingToggle.openButton.interactable = true;
+            window.SetActive(false);
+            housingToggle.housingInventory.SetActive(true);
+            //TestManager.instance.isShowUI = true;
+        }
     }
 
     public void FirstInsertHousingInventory()
@@ -223,6 +237,9 @@ public class HousingInterationWindow : MonoBehaviour
     public void FirstSetHousingPosition()
     {
         housingObject.GetComponent<HousingDrag>().isSetBuild = true;
+        housingObject.GetComponent<HousingDrag>().space.SetActive(false);
+        housingObject.GetComponent<HousingDrag>().subCollider.enabled = false;
+        housingObject.GetComponent<HousingDrag>().SetZ(housingObject.GetComponent<HousingDrag>().currentLayer_);
         DBManager.instance.user.housingObject[housingObj.name_e]--;
         if (DBManager.instance.user.housingObject[housingObj.name_e] == 0)
         {

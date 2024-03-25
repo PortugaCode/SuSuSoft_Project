@@ -12,6 +12,7 @@ public class HousingDrag : MonoBehaviour
     public bool isInsertInven = false;
     public bool isAdd = false;
     public bool isRemove = false;
+    public bool isDoubleTouch = false;
     public Transform previousParent;
     [HideInInspector] public bool isTouch = false;
     [HideInInspector] public Vector3 offset;
@@ -25,7 +26,6 @@ public class HousingDrag : MonoBehaviour
 
     [Header("Build Setting")]
     private Transform buildSpaceParent;
-    public HousingItemData data;
     public HousingObject housingObject;
     public SpriteRenderer buildSprite;
     public GameObject space;                        //설치 할 공간
@@ -47,8 +47,8 @@ public class HousingDrag : MonoBehaviour
     [HideInInspector] public HousingGrid grid;
 
     private SpriteRenderer check;
-    private BoxCollider boxCollider;                //자기 자신 오브젝트
-    private BoxCollider subCollider;                //다른 오브젝트 터치 안되게 하는 투명 오브젝트
+    public BoxCollider boxCollider;                //자기 자신 오브젝트
+    public BoxCollider subCollider;                //다른 오브젝트 터치 안되게 하는 투명 오브젝트
 
     [HideInInspector] public float moveX;
     [HideInInspector] public float moveY;
@@ -62,6 +62,7 @@ public class HousingDrag : MonoBehaviour
     [SerializeField] private float cameraMoveStartPos = 1.6f;
     [SerializeField] private float camSpeed = 0.01f;
     SpriteRenderer[] sprender;
+    [SerializeField] private HousingInteraction housingInteract;
 
     #region Gizmos parameter
     /*
@@ -80,6 +81,7 @@ public class HousingDrag : MonoBehaviour
         boxCollider = GetComponent<BoxCollider>();
         subCollider = transform.GetChild(1).GetComponent<BoxCollider>();
         grid = FindObjectOfType<HousingGrid>();
+        housingInteract = GetComponent<HousingInteraction>();
         if (Utils.Instance.nowScene != SceneNames.MatchRoom)
         {
             group = FindObjectOfType<EditModeButton>().GetComponent<CanvasGroup>();
@@ -214,13 +216,7 @@ public class HousingDrag : MonoBehaviour
 
         if (isSetBuild)
         {
-            if (isCanBuild)
-            {
-                check.gameObject.SetActive(false);
-                subCollider.enabled = false;
-                SetZ(currentLayer_);
-            }
-            else
+            if (!isCanBuild)
             {
                 check.gameObject.SetActive(true);
                 subCollider.enabled = true;
@@ -317,13 +313,13 @@ public class HousingDrag : MonoBehaviour
 
             }
 
-            if (isDragging)
+            if (isDragging && !isSetBuild)
             {
-                isSetBuild = false;
+                //isSetBuild = false;
                 transform.position = new Vector3(transform.position.x, transform.position.y, -1);
                 transform.SetParent(previousParent);
-                //check.gameObject.SetActive(true);
-                //subCollider.enabled = true;
+                check.gameObject.SetActive(true);
+                subCollider.enabled = true;
                 Vector3 newPosition = ray.GetPoint(offset.z);
 
                 sprender = FindObjectOfType<DrawingGrid>().GetComponentsInChildren<SpriteRenderer>();
@@ -652,6 +648,7 @@ public class HousingDrag : MonoBehaviour
             }
         }
     }
+   
     #region 하우징 초반 세팅
 
     private void SetWidthHeight()
@@ -718,7 +715,7 @@ public class HousingDrag : MonoBehaviour
         }
     }
 
-    private void SetZ(int layer)
+    public void SetZ(int layer)
     {
         switch (layer)
         {
@@ -740,6 +737,7 @@ public class HousingDrag : MonoBehaviour
     }
 
     #endregion
+   
     private void OnDestroy()
     {
         if (!isClone)

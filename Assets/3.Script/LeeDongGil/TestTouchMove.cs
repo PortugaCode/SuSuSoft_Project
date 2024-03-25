@@ -99,7 +99,7 @@ public class TestTouchMove : MonoBehaviour
 
         if (interactionObject != null)
         {
-            InteractionPlayer();
+            //InteractionPlayer();
         }
 
         if (!isHost) return;
@@ -220,7 +220,7 @@ public class TestTouchMove : MonoBehaviour
             GetComponent<MatchChat>().DestroyChatBox();
         }
     }
-
+/*
     private void InteractionPlayer()
     {
         float width = interactionObject.GetComponent<HousingDrag>().spaceX;
@@ -246,5 +246,5 @@ public class TestTouchMove : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
 }

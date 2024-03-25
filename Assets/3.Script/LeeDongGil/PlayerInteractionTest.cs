@@ -6,7 +6,7 @@ public class PlayerInteractionTest : MonoBehaviour
 {
     [Header("Player")]
     [SerializeField] private TestTouchMove touchMove;
-
+/*
     private void OnTriggerEnter(Collider collision)
     {
             Debug.Log("들어왔니?");
@@ -30,5 +30,5 @@ public class PlayerInteractionTest : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
 }
