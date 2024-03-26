@@ -46,7 +46,6 @@ public class HousingInteraction : MonoBehaviour
                     {
                         if (hit.collider.gameObject.CompareTag("Building"))             //이거 지우면 크래시 일어나는데 왜지?
                         {
-                            Debug.Log("아아아아");
                             housing = hit.collider.gameObject;
                             housingObject = hit.collider.gameObject.GetComponent<HousingDrag>().housingObject;
                             drag = hit.collider.gameObject.GetComponent<HousingDrag>();
@@ -80,16 +79,17 @@ public class HousingInteraction : MonoBehaviour
                         else
                         {
                             //window.GetComponent<HousingInterationWindow>().firstWindow.SetActive(false);
-                            window.GetComponent<HousingInterationWindow>().window.SetActive(false);
-                            if (housing == null) return;
+                            if (housing == null || !drag.isSetBuild) return;
                             else
                             {
-                                Debug.Log("여어어어어");
                                 drag.space.SetActive(false);
                                 drag.subCollider.enabled = false;
                                 drag.SetZ(drag.currentLayer_);
                                 drag.isDoubleTouch = false;
                             }
+                            window.GetComponent<HousingInterationWindow>().window.SetActive(false);
+                            TestManager.instance.housingInven.SetActive(true);
+                            window.GetComponent<HousingInterationWindow>().housingToggle.openButton.interactable = true;
                         }
                     }
                 }

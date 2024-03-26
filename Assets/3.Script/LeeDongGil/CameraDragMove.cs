@@ -68,9 +68,13 @@ public class CameraDragMove : MonoBehaviour
 
             if (Physics.Raycast(cameraRay, out hit) && EventSystem.current.IsPointerOverGameObject(0) == false)
             {
-                if (hit.collider.CompareTag("CanBuild") || (hit.collider.CompareTag("CameraMove") && !hit.collider.transform.parent.GetComponent<HousingDrag>().isDragging))
+                if(
+                      hit.collider.CompareTag("CanBuild") ||
+                     (hit.collider.CompareTag("CameraMove") && hit.collider.transform.parent.GetComponent<HousingDrag>().isSetBuild) ||
+                     (hit.collider.CompareTag("Building") && hit.collider.transform.GetComponent<HousingDrag>().isSetBuild)
+                  )
                 {
-                    Debug.Log(hit.collider.gameObject);
+                    //Debug.Log(hit.collider.gameObject);
                     mainCam.transform.position = new Vector3(
                     cameraX - touch.deltaPosition.x * camSpeed,
                     cameraY - touch.deltaPosition.y * camSpeed,

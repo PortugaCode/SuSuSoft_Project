@@ -158,7 +158,8 @@ MonoBehaviour:
   housingData: {fileID: 0}
   gameTime: 0
   drag: {fileID: 0}
-  isDoubleTouch: 0
+  lastTouchTime: 0
+  housing: {fileID: 0}
 --- !u!114 &9215071218758292209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,6 +178,7 @@ MonoBehaviour:
   isInsertInven: 0
   isAdd: 0
   isRemove: 0
+  isDoubleTouch: 0
   previousParent: {fileID: 0}
   isTouch: 0
   offset: {x: 0, y: 0, z: 0}
@@ -187,7 +189,6 @@ MonoBehaviour:
   cloneObject: {fileID: 0}
   originalObject: {fileID: 0}
   currentLayer_: 0
-  data: {fileID: 0}
   buildSprite: {fileID: 6621264533684671820}
   space: {fileID: 9073170849238675846}
   original_x: 0
@@ -200,12 +201,15 @@ MonoBehaviour:
   id: 0
   primaryIndex: 0
   grid: {fileID: 0}
+  boxCollider: {fileID: 0}
+  subCollider: {fileID: 0}
   moveX: 0
   moveY: 0
   clampX: 0
   clampY: 0
   cameraMoveStartPos: 1.5
   camSpeed: 0.025
+  housingInteract: {fileID: 0}
 --- !u!65 &2554417741279338056
 BoxCollider:
   m_ObjectHideFlags: 0
