@@ -101,68 +101,23 @@ public class HousingDrag : MonoBehaviour
 
         currentLayer_ = gameObject.layer;
 
-        gameObject.name = housingObject.name_e;
-
         isInsertInven = false;
         mainCam = Camera.main;
-        if (!LoadHousing.instance.isLoading && !isClone && Utils.Instance.nowScene != SceneNames.MatchRoom)        //새로 설치할 하우징 코드
+
+        if (!isClone)
         {
-            moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(mainCam.transform.position.x) * checkMinusX : Mathf.FloorToInt(mainCam.transform.position.x) + 0.5f;
-            moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(mainCam.transform.position.y) * checkMinusY : Mathf.FloorToInt(mainCam.transform.position.y) + 0.5f;
-            clampX = Mathf.Clamp(moveX, -(grid.boundX / 2) + (spaceX / 2) + grid.posX, (grid.boundX / 2) - (spaceX / 2) + grid.posX);
-            clampY = Mathf.Clamp(moveY, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
-
-            previousParent = transform.parent;
-
-            transform.position = new Vector3(clampX, clampY, -1);
-
-
-            #region 이전 코드
-
-            //if (LoadHousing.instance.tempKey.Count == 0)        //임시 키값이 없을 경우
-            //{
-            //    primaryIndex = LoadHousing.instance.primaryKey;
-            //    LoadHousing.instance.primaryKey += 1;
-            //}
-            //else
-            //{
-            //    primaryIndex = LoadHousing.instance.tempKey[0];
-            //    LoadHousing.instance.tempKey.RemoveAt(0);
-            //}
-            //조만간 DBManager로 바꿔야 함
-            //LoadHousing.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
-            //LoadHousing.instance.localHousingObject.Add(primaryIndex, housingObject);
-
-            #endregion
+            gameObject.name = housingObject.name_e;
         }
         else
         {
-            isSetBuild = true;
-            isAdd = true;
+            gameObject.name = "Clone Building";
         }
 
-        if (!isCloneCreate)
-        {
-            cloneObject = Instantiate(gameObject, new Vector3(-50, -50, -1), Quaternion.identity, buildSpaceParent);
-            cloneObject.GetComponent<HousingDrag>().isClone = true;
-            cloneObject.GetComponent<HousingDrag>().isCloneCreate = true;
-            cloneObject.GetComponent<HousingDrag>().originalObject = gameObject;
-            cloneObject.transform.GetChild(0).gameObject.SetActive(false);
-            cloneObject.SetActive(false);
-            if (LoadHousing.instance.isLoading)
-            {
-                //Debug.Log(LoadHousing.instance.localCloneHousing[primaryIndex]);
-                ClonePosition();
-                cloneObject.SetActive(true);
-            }
-        }
+        InitBuildingPos();
 
-        space.transform.localScale = new Vector3(spaceX, spaceY, 1);
-        boxCollider.size = new Vector3(spaceX, spaceY, 0.2f);
-        subCollider.enabled = false;
+        CloneMade();
 
-        original_x = transform.position.x;
-        original_y = transform.position.y;
+        InitBuildingSetting();
 
         #region Scriptable Object(연동 전)
         /*
@@ -203,6 +158,7 @@ public class HousingDrag : MonoBehaviour
     {
         if (isClone) return;
 
+
         if (TestManager.instance.isEditMode)            //편집모드 일때
         {
             DragObject();
@@ -237,7 +193,7 @@ public class HousingDrag : MonoBehaviour
         }
     }
 
-
+    //하우징 드래그
     private void DragObject()
     {
         Ray ray;
@@ -459,6 +415,7 @@ public class HousingDrag : MonoBehaviour
         }
     }
 
+    //하우징 체크(중복 설치나 설치불가 위치)
     private void CheckToBuild()
     {
         #region Housing Object Ray
@@ -598,26 +555,43 @@ public class HousingDrag : MonoBehaviour
 
     }
 
+    //클론의 포지션
     private void ClonePosition()
     {
 
         if (transform.position.x >= -(grid.boundX / 2) && transform.position.x <= -(grid.boundX / 2) + 10)
         {
-            cloneObject.SetActive(true);
+            if (!TestManager.instance.isEditMode)
+            {
+                cloneObject.SetActive(true);
+            }
+            else
+            {
+                cloneObject.SetActive(false);
+            }
             Vector3 clonePosition_LR = new Vector3(transform.position.x + (grid.boundX - 10), transform.position.y, transform.position.z);
             cloneObject.transform.position = clonePosition_LR;
         }
         else if (transform.position.x >= (grid.boundX / 2) - 10 && transform.position.x <= (grid.boundX / 2))
         {
-            cloneObject.SetActive(true);
+            if (!TestManager.instance.isEditMode)
+            {
+                cloneObject.SetActive(true);
+            }
+            else
+            {
+                cloneObject.SetActive(false);
+            }
             Vector3 clonePosition_RL = new Vector3(transform.position.x - (grid.boundX - 10), transform.position.y, transform.position.z);
             cloneObject.transform.position = clonePosition_RL;
         }
         else
         {
+            cloneObject.transform.position = new Vector3(-50, -50, -1);
             cloneObject.SetActive(false);
         }
 
+        //플레이어가 좌측이나 우측 끝으로 이동 시 본체와 클론 위치 바꾸기
         if (Utils.Instance.nowScene != SceneNames.MatchRoom)
         {
             if (player.transform.position.x >= (grid.boundX / 2) - 10)
@@ -648,7 +622,83 @@ public class HousingDrag : MonoBehaviour
             }
         }
     }
-   
+
+    //클론 만들기
+    private void CloneMade()
+    {
+        if (!isCloneCreate)
+        {
+            cloneObject = Instantiate(gameObject, new Vector3(-50, -50, -1), Quaternion.identity, buildSpaceParent);
+            cloneObject.name = "Clone Building";
+            cloneObject.GetComponent<HousingDrag>().isClone = true;
+            cloneObject.GetComponent<HousingDrag>().isCloneCreate = true;
+            cloneObject.GetComponent<HousingDrag>().originalObject = gameObject;
+            cloneObject.transform.GetChild(0).gameObject.SetActive(false);
+            cloneObject.SetActive(false);
+            if (LoadHousing.instance.isLoading)
+            {
+                //Debug.Log(LoadHousing.instance.localCloneHousing[primaryIndex]);
+                ClonePosition();
+                cloneObject.SetActive(true);
+            }
+        }
+    }
+
+    //초기 하우징 세팅
+    private void InitBuildingPos()
+    {
+        if (!LoadHousing.instance.isLoading && !isClone && Utils.Instance.nowScene != SceneNames.MatchRoom)        //새로 설치할 하우징 코드
+        {
+            moveX = spaceX % 2 == 0 ? Mathf.RoundToInt(mainCam.transform.position.x) * checkMinusX : Mathf.FloorToInt(mainCam.transform.position.x) + 0.5f;
+            moveY = spaceY % 2 == 0 ? Mathf.RoundToInt(mainCam.transform.position.y) * checkMinusY : Mathf.FloorToInt(mainCam.transform.position.y) + 0.5f;
+            clampX = Mathf.Clamp(moveX, -(grid.boundX / 2) + (spaceX / 2) + grid.posX, (grid.boundX / 2) - (spaceX / 2) + grid.posX);
+            clampY = Mathf.Clamp(moveY, -(grid.boundY / 2) + (spaceY / 2) + grid.posY, (grid.boundY / 2) - (spaceY / 2) + grid.posY);
+
+            previousParent = transform.parent;
+
+            transform.position = new Vector3(clampX, clampY, -1);
+
+
+            #region 이전 코드
+
+            //if (LoadHousing.instance.tempKey.Count == 0)        //임시 키값이 없을 경우
+            //{
+            //    primaryIndex = LoadHousing.instance.primaryKey;
+            //    LoadHousing.instance.primaryKey += 1;
+            //}
+            //else
+            //{
+            //    primaryIndex = LoadHousing.instance.tempKey[0];
+            //    LoadHousing.instance.tempKey.RemoveAt(0);
+            //}
+            //조만간 DBManager로 바꿔야 함
+            //LoadHousing.instance.localHousing.Add(primaryIndex, (housingObject, transform.position));
+            //LoadHousing.instance.localHousingObject.Add(primaryIndex, housingObject);
+
+            #endregion
+        }
+        else
+        {
+            isSetBuild = true;
+            isAdd = true;
+        }
+    }
+
+    //초기 하우징 위치
+    private void InitBuildingSetting()
+    {
+        space.transform.localScale = new Vector3(spaceX, spaceY, 1);
+        boxCollider.size = new Vector3(spaceX, spaceY, 0.2f);
+        subCollider.enabled = false;
+
+        original_x = transform.position.x;
+        original_y = transform.position.y;
+    }
+
+
+
+
+
     #region 하우징 초반 세팅
 
     private void SetWidthHeight()
@@ -737,7 +787,7 @@ public class HousingDrag : MonoBehaviour
     }
 
     #endregion
-   
+
     private void OnDestroy()
     {
         if (!isClone)
