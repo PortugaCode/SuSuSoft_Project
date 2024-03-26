@@ -77,6 +77,7 @@ public class BtnControl : MonoBehaviour
         stageUI.SetActive(false);
         workShopUI.SetActive(false);
         shopUI.SetActive(false);
+        transparency.SetActive(false);
     }
 
     public void SetChatUI(bool value)
@@ -107,22 +108,21 @@ public class BtnControl : MonoBehaviour
 
     public void PopUp_CharacterUI(bool value)
     {
-        transparency.SetActive(value);
         ResetUI();
+        transparency.SetActive(value);
         characterUI.SetActive(value);
     }
 
     public void PopUp_InventoryUI(bool value)
     {
+        ResetUI();
         transparency.SetActive(value);
         if (TestManager.instance.isEditMode) return;
         if (inventoryWindowUI.activeSelf)
         {
-            inventoryWindowUI.transform.GetComponentInChildren<InventorySystem>().GotoScroll();
             inventoryWindowUI.transform.GetChild(0).GetComponent<FilterButton>().ReturnButton();
             inventoryWindowUI.SetActive(false);
         }
-        ResetUI();
         inventoryUI.SetActive(value);
         testHousingButton.SetActive(value);
         editModeButton.SetActive(value);
@@ -130,8 +130,8 @@ public class BtnControl : MonoBehaviour
 
     public void PopUp_WorkshopUI(bool value)
     {
-        transparency.SetActive(value);
         ResetUI();
+        transparency.SetActive(value);
         workShopUI.SetActive(value);
     }
 
