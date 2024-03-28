@@ -93,6 +93,13 @@ public class StageClear : MonoBehaviour
         {
             starBackgrounds[1].SetActive(false);
             starBackgrounds[2].SetActive(false);
+
+            // 일일퀘스트 완료
+            if (DBManager.instance.user.dayQuestInfo[9] == 0)
+            {
+                DBManager.instance.user.dayQuestInfo[9] = 1;
+                DBManager.instance.user.questRewardCount += 1;
+            }
         }
 
         conditionText_2.text = $"별 X {ChartManager.instance.stageInfos[stageIndex].condition_2}";
@@ -111,7 +118,7 @@ public class StageClear : MonoBehaviour
         // 반복보상 추가
         DBManager.instance.user.goods["gold"] += ChartManager.instance.stageInfos[stageIndex].reward_repeat;
 
-        if (DBManager.instance.user.tokenInfo[stageIndex] == 0)
+        if (DBManager.instance.user.tokenInfo[stageIndex] == 0 && player.GetComponent<PlayerProperty>().isTokenAdd)
         {
             DBManager.instance.user.tokenInfo[stageIndex] = 1;
             DBManager.instance.user.tokens[stageIndex] += 1;

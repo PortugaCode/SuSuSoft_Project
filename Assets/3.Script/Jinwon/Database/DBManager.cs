@@ -754,6 +754,13 @@ public class DBManager : MonoBehaviour
     {
         user.activePoint -= 1;
 
+        // 일일 퀘스트 완료
+        if (user.dayQuestInfo[1] == 0)
+        {
+            user.dayQuestInfo[1] = 1;
+            user.questRewardCount += 1;
+        }
+
         for (int i = 0; i < 5; i++)
         {
             user.activePointTime[i] = DateTime.Now.AddSeconds(300 * (i + 1)).ToString("yyyy-MM-dd-HH-mm-ss");
