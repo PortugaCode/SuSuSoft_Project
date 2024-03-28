@@ -148,11 +148,13 @@ public class TouchMove : MonoBehaviour
 
     public void SetInteractionObject_true()
     {
+        if (interactionObject == null) return;
         interactionObject.SetActive(true);
     }
 
     public void SetInteractionObject_false()
     {
+        if (interactionObject == null) return;
         interactionObject.SetActive(false);
     }
 
