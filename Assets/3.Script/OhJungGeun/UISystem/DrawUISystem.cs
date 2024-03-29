@@ -46,7 +46,18 @@ public class DrawUISystem : MonoBehaviour
     [SerializeField] private ParticleSystem bangParticle_1;
     [SerializeField] private GameObject finalPaticle;
 
+    [Header("Button")]
+    [SerializeField] private Button draw_1;
+    [SerializeField] private Button draw_10;
+
     private Coroutine drawAnimation;
+
+
+    private void SetDrawButton(bool value)
+    {
+        draw_1.interactable = value;
+        draw_10.interactable = value;
+    }
 
 
 
@@ -466,6 +477,7 @@ public class DrawUISystem : MonoBehaviour
 
     private IEnumerator DrawAnimation(int value)
     {
+        SetDrawButton(false);
         chargeParticle_0.Play();
         chargeParticle_1.Play();
         yield return new WaitForSeconds(3f);
@@ -483,6 +495,7 @@ public class DrawUISystem : MonoBehaviour
         {
             resultObject_10.SetActive(true);
         }
+        SetDrawButton(true);
 
     }
 
