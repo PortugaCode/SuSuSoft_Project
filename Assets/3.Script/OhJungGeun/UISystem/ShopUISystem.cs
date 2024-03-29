@@ -290,6 +290,12 @@ public class ShopUISystem : MonoBehaviour
         //토큰 갯수 올리기 (DB)
         DBManager.instance.user.tokens[DBManager.instance.user.dailyShopInfo[nowIndex, 0]] += 1;
 
+        //퀘스트 갱신
+        if (DBManager.instance.user.dayQuestInfo[12] == 0)
+        {
+            DBManager.instance.user.dayQuestInfo[12] = 1;
+            DBManager.instance.user.questRewardCount += 1;
+        }
 
         //토큰 업데이트하기
         UpdateDailyShopItem();
@@ -315,6 +321,11 @@ public class ShopUISystem : MonoBehaviour
         //토큰 갯수 올리기 (DB)
         DBManager.instance.user.tokens[DBManager.instance.user.tokenShopInfo[nowIndex, 0]] += 1;
 
+        if (DBManager.instance.user.dayQuestInfo[12] == 0)
+        {
+            DBManager.instance.user.dayQuestInfo[12] = 1;
+            DBManager.instance.user.questRewardCount += 1;
+        }
 
         //토큰 업데이트하기
         UpdateTokenShopItem();

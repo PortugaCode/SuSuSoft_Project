@@ -71,7 +71,16 @@ public class MatchRoomTest : MonoBehaviour
 
     private void Start()
     {
-        for(int i =0; i < BackEndManager.Instance.GetMatchSystem().userNickName.Count; i++)
+        if (DBManager.instance.user.dayQuestInfo[11] == 0)
+        {
+            DBManager.instance.user.dayQuestInfo[11] = 1;
+            DBManager.instance.user.questRewardCount += 1;
+        }
+
+
+
+
+        for (int i =0; i < BackEndManager.Instance.GetMatchSystem().userNickName.Count; i++)
         {
             playerList.Add(TouchMove.Instantiate(playerPrefab, new Vector3(0f, -2f, 0f), Quaternion.identity));
         }
