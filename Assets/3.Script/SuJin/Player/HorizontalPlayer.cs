@@ -29,6 +29,7 @@ public class HorizontalPlayer : MonoBehaviour
     public Coroutine coroutine;
 
 
+
     [Header("PlyerSpeed")]
     [SerializeField] float currentSpeed;
     public float maxSpeed;
@@ -63,6 +64,7 @@ public class HorizontalPlayer : MonoBehaviour
 
     [Header("Animator")]
     [SerializeField] private Animator animator;
+    //[SerializeField] private Image StartSpeech;
 
     private void Awake()
     {
@@ -76,6 +78,7 @@ public class HorizontalPlayer : MonoBehaviour
         playerLight.pointLightOuterRadius = maxSightRange;
 
         graphicRay = canvas.GetComponent<GraphicRaycaster>();
+        animator.SetTrigger("StartOn");
     }
 
     private void Update()
@@ -102,7 +105,6 @@ public class HorizontalPlayer : MonoBehaviour
             Touch touch = Input.GetTouch(0);
             if (touch.phase == TouchPhase.Began)
             {
-                
                 StartCoroutine(StartCorutine_Co());
             }
         }
@@ -228,6 +230,13 @@ public class HorizontalPlayer : MonoBehaviour
 
         if(playerProperty.isCanSkill)
         {
+            //DB
+            if (DBManager.instance.user.dayQuestInfo[10] == 0)
+            {
+                DBManager.instance.user.dayQuestInfo[10] = 1;
+                DBManager.instance.user.questRewardCount += 1;
+            }
+
             maxSpeed = maxSpeed * 2f;
             currentAcceleration = baseAcceleration * 10f;
             StartCoroutine(playerProperty.SpeedUpSkillDuration_Co());
@@ -309,14 +318,17 @@ public class HorizontalPlayer : MonoBehaviour
     private IEnumerator StartCorutine_Co()
     {
         float touchStart = Time.time;
-
-        while(Time.time - touchStart <= 1.5f)    //터치가 3초 이상 지속되지 않았을 때 반복
+        
+        while (Time.time - touchStart <= 1.5f)    //터치가 3초 이상 지속되지 않았을 때 반복
         {
+            
             if (Input.touchCount == 0) yield break;
 
             yield return null;
+           
         }
         gameStart = true;
+
         int index = DBManager.instance.user.currentCharacterIndex; // 0~19    0~4
         if (gameStart && (int)(index/4) > 0)
         {
