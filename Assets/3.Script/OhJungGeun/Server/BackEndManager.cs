@@ -70,7 +70,6 @@ public class BackEndManager : MonoBehaviour
     {
         if(Backend.IsInitialized)
         {
-            Debug.Log("AsyncPoll On");
             Backend.AsyncPoll();
 
             Backend.Match.Poll();

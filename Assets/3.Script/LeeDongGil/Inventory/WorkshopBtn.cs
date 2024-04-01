@@ -41,7 +41,7 @@ public class WorkshopBtn : MonoBehaviour
         sellFilterButtons[0].color = selectedColor;
         inventory.SetActive(true);
         createInventory.SetActive(true);
-        filterBTN.SetActive(true);
+        //filterBTN.SetActive(true);
     }
 
     private void OnDisable()
@@ -60,7 +60,7 @@ public class WorkshopBtn : MonoBehaviour
         sellFilterButtons[0].color = selectedColor;
         inventory.SetActive(true);
         createInventory.SetActive(true);
-        filterBTN.SetActive(true);
+        //filterBTN.SetActive(true);
     }
 
     public void OpenCreateInventory(Image image)
@@ -73,7 +73,7 @@ public class WorkshopBtn : MonoBehaviour
 
         inventory.SetActive(true);
         createInventory.SetActive(true);
-        filterBTN.SetActive(true);
+        //filterBTN.SetActive(true);
         upgradeInventory.SetActive(false);
         sellInventory.SetActive(false);
         createWindow.SetActive(false);
@@ -91,7 +91,7 @@ public class WorkshopBtn : MonoBehaviour
         inventory.SetActive(true);
         upgradeInventory.SetActive(true);
         createInventory.SetActive(false);
-        filterBTN.SetActive(false);
+        //filterBTN.SetActive(false);
         sellInventory.SetActive(false);
         createWindow.SetActive(false);
         upgradeWindow.SetActive(false);
@@ -108,7 +108,7 @@ public class WorkshopBtn : MonoBehaviour
         sellInventory.SetActive(true);
         createInventory.SetActive(false);
         upgradeInventory.SetActive(false);
-        filterBTN.SetActive(false);
+        //filterBTN.SetActive(false);
         createWindow.SetActive(false);
         upgradeWindow.SetActive(false);
     }
@@ -123,7 +123,7 @@ public class WorkshopBtn : MonoBehaviour
 
         inventory.SetActive(true);
         createInventory.SetActive(true);
-        filterBTN.SetActive(true);
+        //filterBTN.SetActive(true);
         upgradeInventory.SetActive(false);
         sellInventory.SetActive(false);
         createWindow.SetActive(false);
@@ -141,7 +141,7 @@ public class WorkshopBtn : MonoBehaviour
         inventory.SetActive(true);
         upgradeInventory.SetActive(true);
         createInventory.SetActive(false);
-        filterBTN.SetActive(false);
+        //filterBTN.SetActive(false);
         sellInventory.SetActive(false);
         createWindow.SetActive(false);
         upgradeWindow.SetActive(false);
@@ -159,7 +159,7 @@ public class WorkshopBtn : MonoBehaviour
         sellInventory.SetActive(true);
         createInventory.SetActive(false);
         upgradeInventory.SetActive(false);
-        filterBTN.SetActive(false);
+        //filterBTN.SetActive(false);
         createWindow.SetActive(false);
         upgradeWindow.SetActive(false);
     }
@@ -178,30 +178,32 @@ public class WorkshopBtn : MonoBehaviour
         {
             return;
         }
-        else if (upgradeInventory.activeSelf || upgradeWindow.activeSelf)
-        {
-            OpenCreateInven();
-        }
         else if (sellInventory.activeSelf)
         {
-            OpenUpgradeInven();
+            OpenCreateInven();
+            //OpenUpgradeInven();
         }
+        //else if (upgradeInventory.activeSelf || upgradeWindow.activeSelf)
+        //{
+        //    OpenCreateInven();
+        //}
     }
 
     public void RightButton()
     {
         if (createInventory.activeSelf || createWindow.activeSelf)
         {
-            OpenUpgradeInven();
-        }
-        else if (upgradeInventory.activeSelf || upgradeWindow.activeSelf)
-        {
             OpenSellInven();
+            //OpenUpgradeInven();
         }
         else if (sellInventory.activeSelf)
         {
             return;
         }
+        //else if (upgradeInventory.activeSelf || upgradeWindow.activeSelf)
+        //{
+        //    OpenSellInven();
+        //}
     }
 
     public void SelectedBTN(Image image)

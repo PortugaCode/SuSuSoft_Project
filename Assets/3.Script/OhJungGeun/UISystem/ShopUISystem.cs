@@ -70,14 +70,47 @@ public class ShopUISystem : MonoBehaviour
 
     [Header("Shop Time Text")]
     [SerializeField] private TextMeshProUGUI dayTimeText;
+
+
+    [Header("Button")]
+    [SerializeField] private Button[] dailyButtons;
+    [SerializeField] private Button[] tokenButtons;
+
+
+
     private void OnEnable()
     {
         // 이벤트 구독
         DBManager.instance.TimerEvent += TimeChage;
         DBManager.instance.OnResetDay += SetAllShopItem;
 
+        DBManager.instance.AllResetCheck();
+       
+
         SetDailyShopItem();
         SetTokenShopItem();
+        SetButtons();
+    }
+
+    private void SetButtons()
+    {
+        for(int i = 0; i < 3; i++)
+        {
+            dailyButtons[i].interactable = true;
+            if (DBManager.instance.user.dailyShopInfo[i, 1] <= 0)
+            {
+                dailyButtons[i].interactable = false;
+            }
+        }
+
+        for(int i = 0; i < 6; i++)
+        {
+            tokenButtons[i].interactable = true;
+            if (DBManager.instance.user.tokenShopInfo[i, 1] <= 0)
+            {
+                tokenButtons[i].interactable = false;
+            }
+        }
     }
 
     private void SetAllShopItem(object sender, System.EventArgs e)
@@ -211,7 +244,7 @@ public class ShopUISystem : MonoBehaviour
 
     public void ShuffleDailyData()
     {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 3; i++)
         {
             int rand = Random.Range(0, tokenImage.Length);
             dailyItemData[i, 0] = rand;
@@ -234,6 +267,7 @@ public class ShopUISystem : MonoBehaviour
 
         //세팅
         SetTokenShopItem();
+        SetButtons();
     }
 
     
@@ -256,9 +290,16 @@ public class ShopUISystem : MonoBehaviour
         //토큰 갯수 올리기 (DB)
         DBManager.instance.user.tokens[DBManager.instance.user.dailyShopInfo[nowIndex, 0]] += 1;
 
+        //퀘스트 갱신
+        if (DBManager.instance.user.dayQuestInfo[12] == 0)
+        {
+            DBManager.instance.user.dayQuestInfo[12] = 1;
+            DBManager.instance.user.questRewardCount += 1;
+        }
 
         //토큰 업데이트하기
         UpdateDailyShopItem();
+        SetButtons();
         CloseUpdatePopUp();
     }
 
@@ -280,9 +321,15 @@ public class ShopUISystem : MonoBehaviour
         //토큰 갯수 올리기 (DB)
         DBManager.instance.user.tokens[DBManager.instance.user.tokenShopInfo[nowIndex, 0]] += 1;
 
+        if (DBManager.instance.user.dayQuestInfo[12] == 0)
+        {
+            DBManager.instance.user.dayQuestInfo[12] = 1;
+            DBManager.instance.user.questRewardCount += 1;
+        }
 
         //토큰 업데이트하기
         UpdateTokenShopItem();
+        SetButtons();
         CloseUpdatePopUp();
     }
 

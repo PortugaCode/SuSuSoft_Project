@@ -112,6 +112,13 @@ public class Magnetic : MonoBehaviour
 
         if (playerProperty.isCanSkill && isMagnetActive)
         {
+            //DB
+            if (DBManager.instance.user.dayQuestInfo[10] == 0)
+            {
+                DBManager.instance.user.dayQuestInfo[10] = 1;
+                DBManager.instance.user.questRewardCount += 1;
+            }
+
             Radius = Radius * 2;
 
             //Audio

@@ -7,6 +7,9 @@ using System;
 
 public class QuestManager : MonoBehaviour
 {
+    [Header("Upper Tab")]
+    [SerializeField] private TMP_Text tabText;
+
     [Header("Time Left Text")]
     [SerializeField] private TMP_Text timeLeftText;
 
@@ -38,6 +41,13 @@ public class QuestManager : MonoBehaviour
         dayTabButton.interactable = false;
         weekTabButton.interactable = true;
 
+        tabText.text = $"일일 퀘스트 목록";
+
+        foreach (Transform child in content)
+        {
+            Destroy(child.gameObject);
+        }
+
         DBManager.instance.AllResetCheck();
 
         ShowDayQuestList();
@@ -47,10 +57,20 @@ public class QuestManager : MonoBehaviour
     {
         dayTabButton.interactable = true;
         weekTabButton.interactable = false;
+
+        tabText.text = $"업적 퀘스트 목록";
+
+        foreach (Transform child in content)
+        {
+            Destroy(child.gameObject);
+        }
+
+        DBManager.instance.AllResetCheck();
     }
 
     public void ShowDayQuestList()
     {
+        // 일일 퀘스트 완료 횟수 체크 및 보상 지급
         for (int i = 0; i < 5; i++)
         {
             if (DBManager.instance.user.questRewardCount >= rewardsQuantity[i])
@@ -67,7 +87,12 @@ public class QuestManager : MonoBehaviour
                 }
                 else
                 {
-                    // 랜덤 토큰 획득 메서드 구현 필요
+                    // 랜덤 토큰 획득 메서드
+                    if (DBManager.instance.user.questRewardInfo[i] == 0)
+                    {
+                        DBManager.instance.user.questRewardInfo[i] = 1;
+                        DBManager.instance.user.tokens[UnityEngine.Random.Range(0, DBManager.instance.user.tokens.Length)] += 1;
+                    }
                 }
             }
             else
@@ -107,6 +132,117 @@ public class QuestManager : MonoBehaviour
                         DBManager.instance.user.dayQuestInfo[i] = 1;
                         DBManager.instance.user.questRewardCount += 1;
                     }
+                    break;
+
+                case 1:
+                    // 스타 소모 시 체크
+                    break;
+
+                case 2:
+                    // 스테이지 클리어! (1회)
+                    if (DBManager.instance.user.dayQuestInfo[i] == 0)
+                    {
+                        for (int j = 0; j < DBManager.instance.user.clearInfo.Length; j++)
+                        {
+                            if (DBManager.instance.user.clearInfo[j, 0] == 1)
+                            {
+                                DBManager.instance.user.dayQuestInfo[i] = 1;
+                                DBManager.instance.user.questRewardCount += 1;
+                                break;
+                            }
+                        }
+                    }
+                    break;
+
+                case 3:
+                    // 스테이지 클리어하기! (3회)
+                    if (DBManager.instance.user.dayQuestInfo[i] == 0)
+                    {
+                        int sum = 0;
+
+                        for (int j = 0; j < DBManager.instance.user.clearInfo.Length; j++)
+                        {
+                            if (DBManager.instance.user.clearInfo[j, 0] == 1)
+                            {
+                                sum += 1;
+                            }
+                        }
+
+                        if (sum >= 3)
+                        {
+                            DBManager.instance.user.dayQuestInfo[i] = 1;
+                            DBManager.instance.user.questRewardCount += 1;
+                        }
+                    }
+                    break;
+
+                case 4:
+                    // 3별 획득하기! (1회)
+                    if (DBManager.instance.user.dayQuestInfo[i] == 0)
+                    {
+                        for (int j = 0; j < DBManager.instance.user.clearInfo.Length; j++)
+                        {
+                            if (DBManager.instance.user.clearInfo[j, 2] == 1)
+                            {
+                                DBManager.instance.user.dayQuestInfo[i] = 1;
+                                DBManager.instance.user.questRewardCount += 1;
+                                break;
+                            }
+                        }
+                    }
+                    break;
+
+                case 5:
+                    // 3별 획득하기! (3회)
+                    if (DBManager.instance.user.dayQuestInfo[i] == 0)
+                    {
+                        int sum = 0;
+
+                        for (int j = 0; j < DBManager.instance.user.clearInfo.Length; j++)
+                        {
+                            if (DBManager.instance.user.clearInfo[j, 2] == 1)
+                            {
+                                sum += 1;
+                            }
+                        }
+
+                        if (sum >= 3)
+                        {
+                            DBManager.instance.user.dayQuestInfo[i] = 1;
+                            DBManager.instance.user.questRewardCount += 1;
+                        }
+                    }
+                    break;
+
+                case 6:
+                    // 방해물 부술 때 체크
+                    break;
+
+                case 7:
+                    // 별 획득시 체크
+                    break;
+
+                case 8:
+                    // 하트 획득시 체크
+                    break;
+
+                case 9:
+                    // 특수 스테이지 클리어시 체크
+                    break;
+
+                case 10:
+                    // 캐릭터 스킬 사용시 체크
+                    break;
+
+                case 11:
+                    // 다른 친구 행성 방문시 체크
+                    break;
+
+                case 12:
+                    // 하우징 토큰 구매시 체크
+                    break;
+
+                default:
                     break;
             }
         }

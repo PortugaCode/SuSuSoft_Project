@@ -152,6 +152,14 @@ public class PlayerProperty : MonoBehaviour
         //장애물
         if (collision.gameObject.CompareTag("Obstacles") && isCanHit)
         {
+
+            //DB
+            if (DBManager.instance.user.dayQuestInfo[6] == 0)
+            {
+                DBManager.instance.user.dayQuestInfo[6] = 1;
+                DBManager.instance.user.questRewardCount += 1;
+            }
+
             //Audio
             AudioManager.Instance.PlaySFX(SFX_Name.Crash1);
 
@@ -175,6 +183,14 @@ public class PlayerProperty : MonoBehaviour
 
         else if (collision.gameObject.CompareTag("Breaking"))
         {
+
+            //DB
+            if (DBManager.instance.user.dayQuestInfo[6] == 0)
+            {
+                DBManager.instance.user.dayQuestInfo[6] = 1;
+                DBManager.instance.user.questRewardCount += 1;
+            }
+
             animator.SetTrigger("Hit");
 
             //Audio
@@ -184,6 +200,13 @@ public class PlayerProperty : MonoBehaviour
         //HP
         else if (collision.gameObject.CompareTag("HPItem"))
         {
+            //DB
+            if (DBManager.instance.user.dayQuestInfo[8] == 0)
+            {
+                DBManager.instance.user.dayQuestInfo[8] = 1;
+                DBManager.instance.user.questRewardCount += 1;
+            }
+
             //Audio
             AudioManager.Instance.PlaySFX(SFX_Name.GetHeart);
 
@@ -198,6 +221,13 @@ public class PlayerProperty : MonoBehaviour
 
         else if(collision.gameObject.CompareTag("BigHp"))
         {
+            //DB
+            if (DBManager.instance.user.dayQuestInfo[8] == 0)
+            {
+                DBManager.instance.user.dayQuestInfo[8] = 1;
+                DBManager.instance.user.questRewardCount += 1;
+            }
+
             //Audio
             AudioManager.Instance.PlaySFX(SFX_Name.GetHeart);
 
@@ -213,6 +243,13 @@ public class PlayerProperty : MonoBehaviour
         //별
         else if (collision.gameObject.CompareTag("Star"))
         {
+            //DB
+            if (DBManager.instance.user.dayQuestInfo[7] == 0)
+            {
+                DBManager.instance.user.dayQuestInfo[7] = 1;
+                DBManager.instance.user.questRewardCount += 1;
+            }
+
             //Audio
             AudioManager.Instance.PlaySFX(SFX_Name.GetStar);
 
@@ -225,6 +262,13 @@ public class PlayerProperty : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("BigStar"))
         {
+            //DB
+            if (DBManager.instance.user.dayQuestInfo[7] == 0)
+            {
+                DBManager.instance.user.dayQuestInfo[7] = 1;
+                DBManager.instance.user.questRewardCount += 1;
+            }
+
             //Audio
             AudioManager.Instance.PlaySFX(SFX_Name.GetStar);
 
@@ -476,6 +520,13 @@ public class PlayerProperty : MonoBehaviour
 
         if(isCanSkill)
         {
+            //DB
+            if (DBManager.instance.user.dayQuestInfo[10] == 0)
+            {
+                DBManager.instance.user.dayQuestInfo[10] = 1;
+                DBManager.instance.user.questRewardCount += 1;
+            }
+
             StartCoroutine(shieldSkillDuration_Co());
         }
     }
@@ -486,6 +537,13 @@ public class PlayerProperty : MonoBehaviour
 
         if (isCanSkill)
         {
+            //DB
+            if (DBManager.instance.user.dayQuestInfo[10] == 0)
+            {
+                DBManager.instance.user.dayQuestInfo[10] = 1;
+                DBManager.instance.user.questRewardCount += 1;
+            }
+
             currentHealth += 10;
             Debug.Log($"HP: {currentHealth}");
             if (currentHealth >= maxHealth)
@@ -597,8 +655,6 @@ public class PlayerProperty : MonoBehaviour
      public IEnumerator magneticSkillDuration_Co()
      {
         yield return new WaitForSeconds(skillDuration);
-
-
 
         isCanSkill = false;
         MagneticOn.SetActive(false);

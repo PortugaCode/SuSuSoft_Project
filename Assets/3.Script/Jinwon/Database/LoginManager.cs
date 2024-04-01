@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine.UI;
 using BackEnd;
 using System.Linq;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
 
 public class LoginManager : MonoBehaviour
 {
@@ -35,12 +37,6 @@ public class LoginManager : MonoBehaviour
     [SerializeField] private TMP_InputField inputFieldUserName;
     [SerializeField] private TMP_Text userNameErrorText;
 
-    private void Start()
-    {
-        //inputFieldSignUpID.text = BackEndManager.Instance.googleHashKey;
-        //signUpErrorText.text = BackEndManager.Instance.googleHashKey;
-    }
-
     private void Update()
     {
         if (Backend.IsInitialized)
@@ -49,22 +45,102 @@ public class LoginManager : MonoBehaviour
         }
     }
 
-    public void StartGoogleLogin()
+    public void ProcessAuthentication(SignInStatus status)
     {
-        TheBackend.ToolKit.GoogleLogin.Android.GoogleLogin(GoogleLoginCallback);
+        if (status == SignInStatus.Success)
+        {
+            GetAccessCode();
+            // Continue with Play Games Services
+        }
+        else
+        {
+            // Disable your integration with Play Games Services or show a login button
+            // to ask users to sign-in. Clicking it should call
+            // PlayGamesPlatform.Instance.ManuallyAuthenticate(ProcessAuthentication).
+        }
     }
 
-    private void GoogleLoginCallback(bool isSuccess, string errorMessage, string token)
+    public void GetAccessCode()
     {
-        if (isSuccess == false)
-        {
-            Debug.LogError(errorMessage);
-            return;
-        }
+        PlayGamesPlatform.Instance.RequestServerSideAccess(
+          /* forceRefreshToken= */ false,
+          code => {
+              Debug.Log("구글 인증 코드 : " + code);
 
-        Debug.Log("구글 토큰 : " + token);
-        var bro = Backend.BMember.AuthorizeFederation(token, FederationType.Google);
-        Debug.Log("페데레이션 로그인 결과 : " + bro);
+              Backend.BMember.GetGPGS2AccessToken(code, googleCallback =>
+              {
+                  Debug.Log("GetGPGS2AccessToken 함수 호출 결과 " + googleCallback);
+
+                  string accessToken = "";
+
+                  if (googleCallback.IsSuccess())
+                  {
+                      Debug.Log($"googleCallback 성공");
+
+                      accessToken = googleCallback.GetReturnValuetoJSON()["access_token"].ToString();
+
+                      Backend.BMember.AuthorizeFederation(accessToken, FederationType.GPGS2, "Google로 가입함", (callback) =>
+                      {
+                          Debug.Log($"{callback.GetMessage()}");
+                          // 페더레이션 인증 이후 처리
+                          if (int.Parse(callback.GetStatusCode()) == 201) // 신규 회원 가입의 경우
+                          {
+                              Debug.Log("회원가입 시작");
+                              Backend.BMember.CustomSignUp(Social.localUser.id, "");
+                              Backend.BMember.CustomLogin(Social.localUser.id, "");
+                              DBManager.instance.user.isLogin = true;
+
+                              ChartManager.instance.GetChartData();
+                              Backend.BMember.CreateNickname(Social.localUser.userName);
+
+                              var bro = Backend.GameData.Get("User", new Where());
+                              Param param = new Param();
+                              param.Add("UserName", Social.localUser.userName);
+                              Backend.PlayerData.UpdateMyLatestData("User", param);
+
+                              DBManager.instance.DB_Add(Social.localUser.id, "", Social.localUser.userName);
+
+                              BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
+                              BackEndManager.Instance.GetChatManager().GetChatStatus();
+                              Debug.Log("회원가입 완료");
+                          }
+                          else if (int.Parse(callback.GetStatusCode()) == 200) // 기존 회원 로그인 성공의 경우
+                          {
+                              Debug.Log("로그인 시작");
+                              Backend.BMember.CustomLogin(Social.localUser.id, "");
+                              DBManager.instance.user.isLogin = true;
+
+                              ChartManager.instance.GetChartData();
+                              DBManager.instance.DB_Load(Social.localUser.id, "");
+
+                              BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
+                              BackEndManager.Instance.GetChatManager().GetChatStatus();
+                              Debug.Log("로그인 완료");
+                          }
+                      });
+                  }
+              });
+          });
+    }
+
+    public void GPGS_GoogleLogin()
+    {
+        PlayGamesPlatform.Activate();
+
+        Social.localUser.Authenticate((bool success) =>
+        {
+            if (success) //로그인에 성공하면
+            {
+                Debug.Log(Social.localUser.userName + "님 환영합니다");
+                Debug.Log("당신의 ID는 " + Social.localUser.id + "입니다");
+
+                PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
+            }
+            else //로그인에 실패하면
+            {
+                Debug.Log("로그인에 실패했습니다");
+            }
+        });
     }
 
     public void Login()
