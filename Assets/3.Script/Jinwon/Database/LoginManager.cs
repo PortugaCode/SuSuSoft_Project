@@ -37,11 +37,6 @@ public class LoginManager : MonoBehaviour
     [SerializeField] private TMP_InputField inputFieldUserName;
     [SerializeField] private TMP_Text userNameErrorText;
 
-    private void Start()
-    {
-        PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
-    }
-
     private void Update()
     {
         if (Backend.IsInitialized)
@@ -72,7 +67,7 @@ public class LoginManager : MonoBehaviour
           code => {
               Debug.Log("구글 인증 코드 : " + code);
 
-              /*Backend.BMember.GetGPGS2AccessToken(code, googleCallback =>
+              Backend.BMember.GetGPGS2AccessToken(code, googleCallback =>
               {
                   Debug.Log("GetGPGS2AccessToken 함수 호출 결과 " + googleCallback);
 
@@ -81,8 +76,10 @@ public class LoginManager : MonoBehaviour
                   if (googleCallback.IsSuccess())
                   {
                       accessToken = googleCallback.GetReturnValuetoJSON()["access_token"].ToString();
+
+                      Backend.BMember.AuthorizeFederation(accessToken, FederationType.GPGS2, "GPGS로 가입함");
                   }
-              });*/
+              });
           });
     }
 
@@ -96,6 +93,8 @@ public class LoginManager : MonoBehaviour
             {
                 Debug.Log(Social.localUser.userName + "님 환영합니다");
                 Debug.Log("당신의 ID는 " + Social.localUser.id + "입니다");
+
+                PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
             }
             else //로그인에 실패하면
             {
