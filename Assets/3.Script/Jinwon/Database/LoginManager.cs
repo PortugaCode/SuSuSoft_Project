@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using BackEnd;
 using System.Linq;
 using GooglePlayGames;
+using GooglePlayGames.BasicApi;
 
 public class LoginManager : MonoBehaviour
 {
@@ -36,6 +37,11 @@ public class LoginManager : MonoBehaviour
     [SerializeField] private TMP_InputField inputFieldUserName;
     [SerializeField] private TMP_Text userNameErrorText;
 
+    private void Start()
+    {
+        PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
+    }
+
     private void Update()
     {
         if (Backend.IsInitialized)
@@ -44,14 +50,46 @@ public class LoginManager : MonoBehaviour
         }
     }
 
-    public void Backend_GoogleLogin()
+    public void ProcessAuthentication(SignInStatus status)
     {
-        TheBackend.ToolKit.GoogleLogin.Android.GoogleLogin(GoogleLoginCallback);
+        if (status == SignInStatus.Success)
+        {
+            GetAccessCode();
+            // Continue with Play Games Services
+        }
+        else
+        {
+            // Disable your integration with Play Games Services or show a login button
+            // to ask users to sign-in. Clicking it should call
+            // PlayGamesPlatform.Instance.ManuallyAuthenticate(ProcessAuthentication).
+        }
+    }
+
+    public void GetAccessCode()
+    {
+        PlayGamesPlatform.Instance.RequestServerSideAccess(
+          /* forceRefreshToken= */ false,
+          code => {
+              Debug.Log("구글 인증 코드 : " + code);
+
+              /*Backend.BMember.GetGPGS2AccessToken(code, googleCallback =>
+              {
+                  Debug.Log("GetGPGS2AccessToken 함수 호출 결과 " + googleCallback);
+
+                  string accessToken = "";
+
+                  if (googleCallback.IsSuccess())
+                  {
+                      accessToken = googleCallback.GetReturnValuetoJSON()["access_token"].ToString();
+                  }
+              });*/
+          });
     }
 
     public void GPGS_GoogleLogin()
     {
         PlayGamesPlatform.Activate();
+
         Social.localUser.Authenticate((bool success) =>
         {
             if (success) //로그인에 성공하면
@@ -64,19 +102,6 @@ public class LoginManager : MonoBehaviour
                 Debug.Log("로그인에 실패했습니다");
             }
         });
-    }
-
-    private void GoogleLoginCallback(bool isSuccess, string errorMessage, string token)
-    {
-        if (isSuccess == false)
-        {
-            Debug.LogError(errorMessage);
-            return;
-        }
-
-        Debug.Log("구글 토큰 : " + token);
-        var bro = Backend.BMember.AuthorizeFederation(token, FederationType.Google);
-        Debug.Log("페데레이션 로그인 결과 : " + bro);
     }
 
     public void Login()
