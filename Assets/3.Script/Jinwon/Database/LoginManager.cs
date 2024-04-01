@@ -77,7 +77,35 @@ public class LoginManager : MonoBehaviour
                   {
                       accessToken = googleCallback.GetReturnValuetoJSON()["access_token"].ToString();
 
-                      Backend.BMember.AuthorizeFederation(accessToken, FederationType.GPGS2, "GPGS로 가입함");
+                      Backend.BMember.AuthorizeFederation(accessToken, FederationType.GPGS2, "GPGS로 가입함", (callback) =>
+                      {
+                          // 페더레이션 인증 이후 처리
+                          if (int.Parse(callback.GetStatusCode()) == 201) // 신규 회원 가입의 경우
+                          {
+                              Backend.BMember.CustomSignUp(Social.localUser.id, "");
+                              Backend.BMember.CustomLogin(Social.localUser.id, "");
+                              DBManager.instance.user.isLogin = true;
+
+                              ChartManager.instance.GetChartData();
+                              DBManager.instance.DB_Add(id, pw, Social.localUser.userName);
+
+                              BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
+                              BackEndManager.Instance.GetChatManager().GetChatStatus();
+                              Debug.Log("회원가입 완료");
+                          }
+                          else if (int.Parse(callback.GetStatusCode()) == 200) // 기존 회원 로그인 성공의 경우
+                          {
+                              Backend.BMember.CustomLogin(Social.localUser.id, "");
+                              DBManager.instance.user.isLogin = true;
+
+                              ChartManager.instance.GetChartData();
+                              DBManager.instance.DB_Load(Social.localUser.id, "");
+
+                              BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
+                              BackEndManager.Instance.GetChatManager().GetChatStatus();
+                              Debug.Log("로그인 완료");
+                          }
+                      });
                   }
               });
           });
