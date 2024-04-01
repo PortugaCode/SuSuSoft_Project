@@ -87,6 +87,7 @@ public class ChatManager
     //채널에 입장 요청
     public void JoinChannel()
     {
+        ReceiveJoin();
         ChatGroup joinGroupData = publicGroupsList[0];
 
         for (int i = 0; i < publicGroupsList.Count; i++)
@@ -102,9 +103,6 @@ public class ChatManager
         ErrorInfo errorInfo;
         //입장 요청
         Backend.Chat.JoinChannel(ChannelType.Public, joinGroupData.serverAddress, joinGroupData.serverPort, joinGroupData.groupName, joinGroupData.inDate, out errorInfo);
-
-        ReceiveJoin();
-
     }
 
     //입장되었는지 이벤트 확인
