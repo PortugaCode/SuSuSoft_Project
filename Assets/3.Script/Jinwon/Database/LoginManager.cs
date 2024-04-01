@@ -98,7 +98,7 @@ public class LoginManager : MonoBehaviour
                               param.Add("UserName", Social.localUser.userName);
                               Backend.PlayerData.UpdateMyLatestData("User", param);
 
-                              DBManager.instance.DB_Add(id, pw, Social.localUser.userName);
+                              DBManager.instance.DB_Add(Social.localUser.id, "", Social.localUser.userName);
 
                               BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
                               BackEndManager.Instance.GetChatManager().GetChatStatus();
