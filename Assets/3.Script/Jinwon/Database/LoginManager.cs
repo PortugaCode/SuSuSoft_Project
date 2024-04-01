@@ -75,18 +75,29 @@ public class LoginManager : MonoBehaviour
 
                   if (googleCallback.IsSuccess())
                   {
+                      Debug.Log($"googleCallback 성공");
+
                       accessToken = googleCallback.GetReturnValuetoJSON()["access_token"].ToString();
 
-                      Backend.BMember.AuthorizeFederation(accessToken, FederationType.GPGS2, "GPGS로 가입함", (callback) =>
+                      Backend.BMember.AuthorizeFederation(accessToken, FederationType.GPGS2, "Google로 가입함", (callback) =>
                       {
+                          Debug.Log($"{callback.GetMessage()}");
                           // 페더레이션 인증 이후 처리
                           if (int.Parse(callback.GetStatusCode()) == 201) // 신규 회원 가입의 경우
                           {
+                              Debug.Log("회원가입 시작");
                               Backend.BMember.CustomSignUp(Social.localUser.id, "");
                               Backend.BMember.CustomLogin(Social.localUser.id, "");
                               DBManager.instance.user.isLogin = true;
 
                               ChartManager.instance.GetChartData();
+                              Backend.BMember.CreateNickname(Social.localUser.userName);
+
+                              var bro = Backend.GameData.Get("User", new Where());
+                              Param param = new Param();
+                              param.Add("UserName", Social.localUser.userName);
+                              Backend.PlayerData.UpdateMyLatestData("User", param);
+
                               DBManager.instance.DB_Add(id, pw, Social.localUser.userName);
 
                               BackEndManager.Instance.GetMatchSystem().JoinMatchMaking();
@@ -95,6 +106,7 @@ public class LoginManager : MonoBehaviour
                           }
                           else if (int.Parse(callback.GetStatusCode()) == 200) // 기존 회원 로그인 성공의 경우
                           {
+                              Debug.Log("로그인 시작");
                               Backend.BMember.CustomLogin(Social.localUser.id, "");
                               DBManager.instance.user.isLogin = true;
 
