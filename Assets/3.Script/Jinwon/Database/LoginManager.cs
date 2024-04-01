@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using BackEnd;
 using System.Linq;
+using GooglePlayGames;
 
 public class LoginManager : MonoBehaviour
 {
@@ -35,12 +36,6 @@ public class LoginManager : MonoBehaviour
     [SerializeField] private TMP_InputField inputFieldUserName;
     [SerializeField] private TMP_Text userNameErrorText;
 
-    private void Start()
-    {
-        //inputFieldSignUpID.text = BackEndManager.Instance.googleHashKey;
-        //signUpErrorText.text = BackEndManager.Instance.googleHashKey;
-    }
-
     private void Update()
     {
         if (Backend.IsInitialized)
@@ -49,9 +44,25 @@ public class LoginManager : MonoBehaviour
         }
     }
 
-    public void StartGoogleLogin()
+    public void Backend_GoogleLogin()
     {
         TheBackend.ToolKit.GoogleLogin.Android.GoogleLogin(GoogleLoginCallback);
+    }
+
+    public void GPGS_GoogleLogin()
+    {
+        Social.localUser.Authenticate((bool success) =>
+        {
+            if (success) //로그인에 성공하면
+            {
+                Debug.Log(Social.localUser.userName + "님 환영합니다");
+                Debug.Log("당신의 ID는 " + Social.localUser.id + "입니다");
+            }
+            else //로그인에 실패하면
+            {
+                Debug.Log("로그인에 실패했습니다");
+            }
+        });
     }
 
     private void GoogleLoginCallback(bool isSuccess, string errorMessage, string token)
