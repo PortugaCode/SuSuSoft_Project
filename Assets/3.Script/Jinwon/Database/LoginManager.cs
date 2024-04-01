@@ -51,6 +51,7 @@ public class LoginManager : MonoBehaviour
 
     public void GPGS_GoogleLogin()
     {
+        PlayGamesPlatform.Activate();
         Social.localUser.Authenticate((bool success) =>
         {
             if (success) //로그인에 성공하면
