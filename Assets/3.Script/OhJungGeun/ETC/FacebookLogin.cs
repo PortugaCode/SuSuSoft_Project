@@ -5,11 +5,11 @@ using System;
 using System.Net;
 using BackEnd;
 using BackEnd.Tcp;
-//using Facebook.Unity;
+using Facebook.Unity;
 
 public class FacebookLogin : MonoBehaviour
 {
-/*
+
     private void Awake()
     {
         if (!FB.IsInitialized)
@@ -117,5 +117,5 @@ public class FacebookLogin : MonoBehaviour
         }
         return rtstr;
     }
-*/
+
 }
