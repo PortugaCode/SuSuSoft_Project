@@ -341,7 +341,7 @@ public class TouchMove : MonoBehaviour
                             PlayerAnimationMessage ani_msg = new PlayerAnimationMessage(Backend.Match.GetMySessionId(), 0);
                             BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerAnimationMessage>(ani_msg);
                         }
-                        
+                        AudioManager.Instance.PlaySFX(SFX_Name.BasketBall);
                         break;
 
                     case 8:
@@ -360,6 +360,7 @@ public class TouchMove : MonoBehaviour
                             PlayerAnimationMessage ani_msg = new PlayerAnimationMessage(Backend.Match.GetMySessionId(), 1);
                             BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerAnimationMessage>(ani_msg);
                         }
+                        AudioManager.Instance.PlaySFX(SFX_Name.TennisBall);
                         break;
 
                     case 9:
@@ -378,6 +379,7 @@ public class TouchMove : MonoBehaviour
                             PlayerAnimationMessage ani_msg = new PlayerAnimationMessage(Backend.Match.GetMySessionId(), 2);
                             BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerAnimationMessage>(ani_msg);
                         }
+                        AudioManager.Instance.PlaySFX(SFX_Name.Golf);
                         break;
 
                     case 10:
@@ -396,6 +398,7 @@ public class TouchMove : MonoBehaviour
                             PlayerAnimationMessage ani_msg = new PlayerAnimationMessage(Backend.Match.GetMySessionId(), 3);
                             BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerAnimationMessage>(ani_msg);
                         }
+                        AudioManager.Instance.PlaySFX(SFX_Name.SoccerBall);
                         break;
 
                     case 11:
@@ -414,9 +417,8 @@ public class TouchMove : MonoBehaviour
                             PlayerAnimationMessage ani_msg = new PlayerAnimationMessage(Backend.Match.GetMySessionId(), 4);
                             BackEndManager.Instance.GetMatchSystem().SendDataToInGame<PlayerAnimationMessage>(ani_msg);
                         }
-
+                        AudioManager.Instance.PlaySFX(SFX_Name.Trophy);
                         AudioManager.Instance.PlaySFX(SFX_Name.Trophy02);
-
                         break;
 
                     default:
