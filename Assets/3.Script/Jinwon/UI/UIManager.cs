@@ -576,7 +576,7 @@ public class UIManager : MonoBehaviour
 
             if (DateTime.Compare(dt_apTime, DateTime.Now) == 1)
             {
-                Debug.Log($"새 AP : {dt_apTime}");
+                //Debug.Log($"새 AP : {dt_apTime}");
                 return dt_apTime;
             }
         }

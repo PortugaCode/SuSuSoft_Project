@@ -37,8 +37,8 @@ public class FriendManager : MonoBehaviour
     [SerializeField] Sprite[] characterBodyImages; // 캐릭터 Body 이미지 배열
     [SerializeField] Sprite[] characterFaceImages; // 캐릭터 Face 이미지 배열
 
-    private List<Friend> friends = new List<Friend>();
-    private List<Friend> requests = new List<Friend>();
+    private List<Friend> friends = new List<Friend>(); // 보유한 친구 리스트
+    private List<Friend> requests = new List<Friend>(); // 보유한 요청 리스트
 
     private void OnEnable()
     {
@@ -59,6 +59,7 @@ public class FriendManager : MonoBehaviour
 
     public void GetFriendsData() // 친구 목록 조회
     {
+        // 초기화
         friends.Clear();
 
         // 전체 친구 리스트 조회
@@ -81,13 +82,13 @@ public class FriendManager : MonoBehaviour
             currentFriend.lastLogin = json[i]["lastLogin"].ToString();
             currentFriend.createdAt = json[i]["createdAt"].ToString();
 
-            //user.friend.Add(currentFriend);
             friends.Add(currentFriend);
         }
     }
 
-    public void ShowFriendsList()
+    public void ShowFriendsList() // 보유한 친구 리스트 출력
     {
+        // content 클리어
         for (int i = 0; i < content_friendList.childCount; i++)
         {
             Destroy(content_friendList.GetChild(0).gameObject);
@@ -297,14 +298,14 @@ public class FriendManager : MonoBehaviour
 
     public void OpenWhisperTab(int index, string inDate)
     {
-        // 해당 유저와 귓속말 탭 구현 필요
+        // 해당 유저와 귓속말 탭 열기 -> 구현 X
     }
 
     public void SendStar(int index, string inDate)
     {
-        // 해당 유저에게 별 전송하기 구현 필요
+        // 해당 유저에게 별 전송하기 -> 구현 X
 
-        content_friendList.GetChild(index).GetChild(4).GetChild(1).GetComponent<TMP_Text>().text = $"전송 아직 미구현";
+        content_friendList.GetChild(index).GetChild(4).GetChild(1).GetComponent<TMP_Text>().text = $"전송";
     }
 
     public void DeleteFriend(int index, string inDate) // 해당 친구 삭제
@@ -364,7 +365,7 @@ public class FriendManager : MonoBehaviour
 
     public void SendAddRequest()
     {
-        if (Backend.UserNickName == searchUserName)
+        if (Backend.UserNickName == searchUserName) // 자신에게 요청하는 경우
         {
             errorText.GetComponent<TMP_Text>().text = $"자신에게는 보낼 수 없습니다";
             errorText.SetActive(true);

@@ -71,32 +71,25 @@ public struct Mail
 {
     public string content; // 우편 내용
     public string expirationDate; // 만료 날짜
-    //public string receiverIndate; // 받은 유저의 inDate
     public Goods goods; // 보낸 재화 정보
-    //public Dictionary<string, string> itemLocation // 해당 아이템이 위치해있던 테이블 정보
-    //public string receiverNickname; // 받을 유저 닉네임
-    //public string receivedDate; // 수령한 날짜 (수령한 경우에만 보임)
-    //public string sender; // 보낸 유저의 uuid
     public string inDate; // 우편의 inDate
-    //public string senderNickname; // 보낸 유저의 닉네임
-    //public string senderIndate; // 보낸 유저의 inDate
     public string sentDate; // 보낸 날짜
     public string title; // 우편 제목
 }
 
 public struct Goods
 {
-    public int index;
-    public int imageIndex;
-    public string name;
-    public int quantity;
+    public int index; // 인덱스
+    public int imageIndex; // 스프라이트 인덱스
+    public string name; // 이름
+    public int quantity; // 수량
 }
 
 public struct StageInfo
 {
-    public int index;
-    public string name_e;
-    public string name_k;
+    public int index; // 인덱스
+    public string name_e; // 이름(영문)
+    public string name_k; // 이름(한글)
     public int condition_1; // 1별 획득 조건
     public int condition_2; // 2별 획득 조건
     public int condition_3; // 3별 획득 조건
@@ -173,6 +166,7 @@ public class DBManager : MonoBehaviour
 
     public User user = new User();
 
+    // 타이머 체크용 코루틴
     private Coroutine timerCoroutine = null;
 
     public event EventHandler TimerEvent;
@@ -180,6 +174,7 @@ public class DBManager : MonoBehaviour
 
     private void Awake()
     {
+        // 싱글톤
         if (instance == null)
         {
             instance = this;
@@ -193,11 +188,13 @@ public class DBManager : MonoBehaviour
 
     private void OnEnable()
     {
+        // 타이머 코루틴 시작
         timerCoroutine = StartCoroutine(UpdateTimeLeftText_co());
     }
 
     private void OnDisable()
     {
+        // 타이머 코루틴 종료
         StopCoroutine(timerCoroutine);
     }
 
@@ -379,6 +376,7 @@ public class DBManager : MonoBehaviour
             }
         }
 
+        // 게임 입장에 필요한 재화(스타) 확인
         CheckActivePoint();
 
         Debug.Log("기존 유저 데이터 불러오기 완료");
@@ -402,6 +400,7 @@ public class DBManager : MonoBehaviour
         param.Add("Tokens", user.tokens);
         param.Add("HousingObject", user.housingObject);
 
+        // 기본 캐릭터 (옐로우 벨라) 추가
         AddCharacter(101);
 
         param.Add("Tail", user.tail);
@@ -436,7 +435,7 @@ public class DBManager : MonoBehaviour
 
         param.Add("ActivePointTime", user.activePointTime);
 
-        // Prototype - 30개 모두 해금
+        // Prototype - 꼬리 30개 모두 해금
         for (int i = 0; i < 30; i++)
         {
             AddTail(i);
@@ -519,6 +518,7 @@ public class DBManager : MonoBehaviour
     {
         for (int i = 0; i < user.myHousingObject.Count; i++)
         {
+            // 해당 위치에 있던 오브젝트 제거
             if (user.myHousingObject[i].index == index && user.myHousingObject[i].x == x && user.myHousingObject[i].y == y)
             {
                 user.myHousingObject.RemoveAt(i);
@@ -527,12 +527,12 @@ public class DBManager : MonoBehaviour
         }
     }
 
-    public void AddTail(int index)
+    public void AddTail(int index) // 꼬리 획득하는 메서드
     {
         user.tail[index] = 1;
     }
 
-    public int CharacterIndexMatching(int index)
+    public int CharacterIndexMatching(int index) // 인덱스를 0부터 시작하는 인덱스로 변환하는 메서드
     {
         int returnIndex = -1;
 
@@ -625,7 +625,7 @@ public class DBManager : MonoBehaviour
         return returnIndex;
     }
 
-    public bool DailyReset() // 6시 기준으로 지났는가 안지났는가
+    public bool DailyReset() // 6시 기준으로 지났는가 안지났는가 체크
     {
         DateTime dt_last = DateTime.ParseExact(user.lastCheckTime, "yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
 
@@ -653,7 +653,7 @@ public class DBManager : MonoBehaviour
         }
     }
 
-    public bool WeeklyReset() // 월요일 6시 기준으로 지났는가 안지났는가
+    public bool WeeklyReset() // 월요일 6시 기준으로 지났는가 안지났는가 체크
     {
         DateTime dt_last = DateTime.ParseExact(user.lastCheckTime, "yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
 
@@ -761,6 +761,7 @@ public class DBManager : MonoBehaviour
             user.questRewardCount += 1;
         }
 
+        // 다음 재화 획득 시간 5분 간격으로 설정
         for (int i = 0; i < 5; i++)
         {
             user.activePointTime[i] = DateTime.Now.AddSeconds(300 * (i + 1)).ToString("yyyy-MM-dd-HH-mm-ss");
@@ -769,6 +770,8 @@ public class DBManager : MonoBehaviour
 
     public void CheckActivePoint()
     {
+        // 게임 입장에 필요한 재화(스타) 확인
+
         for (int i = 0; i < user.activePointTime.Length; i++)
         {
             if (user.activePointTime[i] == null)

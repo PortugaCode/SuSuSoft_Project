@@ -16,17 +16,21 @@ public class MailManager : MonoBehaviour
 
     private List<Mail> mails = new List<Mail>();
 
+    // 타이머용 코루틴
     Coroutine timerCoroutine = null;
 
     private void OnEnable()
     {
         GetMailData();
         ShowMailData();
+
+        // 타이머 코루틴 시작
         timerCoroutine = StartCoroutine(UpdateExpDate_co());
     }
 
     private void OnDestroy()
     {
+        // 타이머 코루틴 제거
         StopCoroutine(timerCoroutine);
     }
 
@@ -85,7 +89,7 @@ public class MailManager : MonoBehaviour
         mailCountText.text = $"{mails.Count} / 100";
     }
 
-    public IEnumerator UpdateExpDate_co()
+    public IEnumerator UpdateExpDate_co() // 남은 시간 갱신
     {
         TimeSpan dateDiff;
 
@@ -113,7 +117,7 @@ public class MailManager : MonoBehaviour
         if (bro.IsSuccess())
         {
             DBManager.instance.user.goods[mails[index].goods.name] += mails[index].goods.quantity;
-            Debug.Log($"{mails[index].goods.name}를 {mails[index].goods.quantity}만큼 획득");
+            //Debug.Log($"{mails[index].goods.name}를 {mails[index].goods.quantity}만큼 획득");
 
             Destroy(content.GetChild(index).gameObject);
         }
