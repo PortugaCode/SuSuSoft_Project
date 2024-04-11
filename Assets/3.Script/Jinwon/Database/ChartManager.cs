@@ -9,18 +9,22 @@ public class ChartManager : MonoBehaviour
     public static ChartManager instance;
 
     // 차트로 관리할 데이터 목록
-    // 1. Character (캐릭터 정보)
-    // 2. Housing Object (하우징 오브젝트 정보)
-    // 3. Stage Info (스테이지 보상 획득 여부)
-    // 4. Quest (퀘스트 정보)
 
+    // 1. Character (캐릭터 정보)
     public List<Character> characterDatas = new List<Character>();
+
+    // 2. Housing Object (하우징 오브젝트 정보)
     public List<HousingObject> housingObjectDatas = new List<HousingObject>();
+
+    // 3. Stage Info (스테이지 보상 획득 여부)
     public List<StageInfo> stageInfos = new List<StageInfo>();
+
+    // 4. Quest (퀘스트 정보)
     public List<Quest> quests = new List<Quest>();
 
     private void Awake()
     {
+        // 싱글톤
         if (instance == null)
         {
             instance = this;
@@ -163,7 +167,7 @@ public class ChartManager : MonoBehaviour
         }
     }
 
-    public string GetHousingObjectName(int index)
+    public string GetHousingObjectName(int index) // 하우징 오브젝트 인덱스를 받아 이름 문자열 반환하는 메서드
     {
         for (int i = 0; i < housingObjectDatas.Count; i++)
         {

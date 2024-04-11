@@ -40,12 +40,12 @@ public class StageSelectControl : MonoBehaviour
             }
             else
             {
-                Debug.Log($"현재 {i}단계 까지 클리어했습니다");
+                //Debug.Log($"현재 {i}단계 까지 클리어했습니다");
                 break;
             }
         }
 
-        for (int i = 0; i < 5; i++) // i < 스테이지 개수 로 변경 필요
+        for (int i = 0; i < 5; i++) // i = 스테이지 개수
         {
             for (int j = 0; j < 3; j++)
             {

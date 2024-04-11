@@ -41,6 +41,7 @@ public class StageClear : MonoBehaviour
 
     private void OnEnable()
     {
+        // 플레이어 오브젝트 할당
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
@@ -51,8 +52,10 @@ public class StageClear : MonoBehaviour
             player = GameObject.FindGameObjectWithTag("Player");
         }
 
+        // 클리어 시 재화 소모
         DBManager.instance.UseActivePoint();
 
+        // 스테이지 인덱스 할당
         stageIndex = Utils.Instance.stageIndex;
 
         int chapter = 1;

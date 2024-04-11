@@ -7,35 +7,31 @@ using BackEnd;
 using System.Linq;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
+using System.Text.RegularExpressions;
 
 public class LoginManager : MonoBehaviour
 {
-    [Header("Menu")]
-    [SerializeField] private GameObject popUp_Menu;
-
-    [Header("LogIn")]
-    [SerializeField] private GameObject popUp_LogIn;
-    [SerializeField] private TMP_InputField inputFieldID;
-    [SerializeField] private TMP_InputField inputFieldPW;
-    [SerializeField] private Button btnLogin;
-    [SerializeField] private Button btnGoToSignUp;
+    [Header("Main Popup")]
+    [SerializeField] private GameObject popUp_Main;
+    [SerializeField] private TMP_InputField inputField_ID;
+    [SerializeField] private TMP_InputField inputField_PW;
     [SerializeField] private TMP_Text logInErrorText;
 
-    [Header("SignUp")]
+    [Header("SignUp Popup")]
     [SerializeField] private GameObject popUp_SignUp;
-    [SerializeField] private TMP_InputField inputFieldSignUpID;
-    [SerializeField] private TMP_InputField inputFieldSignUpPW_1;
-    [SerializeField] private TMP_InputField inputFieldSignUpPW_2;
-    [SerializeField] private Button btnSignUp;
-    [SerializeField] private Button btnGoToLogIn;
-    [SerializeField] private TMP_Text signUpErrorText;
+    [SerializeField] private TMP_InputField inputField_SignUpID;
+    [SerializeField] private TMP_InputField inputField_SignUpPW_1;
+    [SerializeField] private TMP_InputField inputField_SignUpPW_2;
+    [SerializeField] private TMP_Text idErrorText;
+    [SerializeField] private TMP_Text pw1ErrorText;
+    [SerializeField] private TMP_Text pw2ErrorText;
     private string id;
     private string pw;
 
-    [Header("UserName")]
-    [SerializeField] private GameObject popUp_UserName;
-    [SerializeField] private TMP_InputField inputFieldUserName;
-    [SerializeField] private TMP_Text userNameErrorText;
+    [Header("UserName Popup")]
+    [SerializeField] private GameObject popUp_Nickname;
+    [SerializeField] private TMP_InputField inputField_Nickname;
+    [SerializeField] private TMP_Text nicknameErrorText;
 
     private void Update()
     {
@@ -146,8 +142,8 @@ public class LoginManager : MonoBehaviour
     public void Login()
     {
         // 캐싱
-        string idText = inputFieldID.text;
-        string pwText = inputFieldPW.text;
+        string idText = inputField_ID.text;
+        string pwText = inputField_PW.text;
 
         id = idText;
         pw = pwText;
@@ -155,15 +151,12 @@ public class LoginManager : MonoBehaviour
         if (idText.Trim().Equals("") || pwText.Trim().Equals(""))
         {
             // InputField가 비워져 있을 때
-            inputFieldID.text = "";
-            inputFieldPW.text = "";
+            inputField_ID.text = "";
+            inputField_PW.text = "";
             logInErrorText.text = $"정보를 입력해주세요.";
             logInErrorText.gameObject.SetActive(true);
-            btnLogin.interactable = true;
             return;
         }
-
-        btnLogin.interactable = false;
 
         Backend.BMember.CustomLogin(idText, pwText, callback =>
         {
@@ -179,8 +172,7 @@ public class LoginManager : MonoBehaviour
                 if (bro.IsSuccess() && (bro.GetReturnValuetoJSON()["rows"].Count == 0 || (bro.GetReturnValuetoJSON()["rows"].Count > 0) && bro.GetReturnValuetoJSON()["rows"][0]["UserName"][0].ToString().Equals(string.Empty)))
                 {
                     Debug.Log("닉네임 재설정 필요");
-                    btnLogin.interactable = true;
-                    GoToSetUserName();
+                    GoToSetNickname();
                 }
                 else
                 {
@@ -194,9 +186,8 @@ public class LoginManager : MonoBehaviour
             }
             else
             {
-                inputFieldID.text = "";
-                inputFieldPW.text = "";
-                btnLogin.interactable = true;
+                inputField_ID.text = "";
+                inputField_PW.text = "";
 
                 string message = string.Empty;
 
@@ -225,45 +216,105 @@ public class LoginManager : MonoBehaviour
     public void SignUp()
     {
         // 캐싱
-        string idText = inputFieldSignUpID.text;
-        string pwText_1 = inputFieldSignUpPW_1.text;
-        string pwText_2 = inputFieldSignUpPW_2.text;
+        string idText = inputField_SignUpID.text;
+        string pwText_1 = inputField_SignUpPW_1.text;
+        string pwText_2 = inputField_SignUpPW_2.text;
+
+        string idChecker = Regex.Replace(inputField_SignUpID.text, @"[^a-zA-Z0-9가-힣]", "", RegexOptions.Singleline);
+        idChecker = Regex.Replace(inputField_SignUpID.text, @"[^\w\.@-]", "", RegexOptions.Singleline);
+
+        string pwChecker = Regex.Replace(inputField_SignUpPW_1.text, @"[^a-zA-Z0-9가-힣]", "", RegexOptions.Singleline);
+        pwChecker = Regex.Replace(inputField_SignUpPW_1.text, @"[^\w\.@-]", "", RegexOptions.Singleline);
 
         if (idText.Trim().Equals("") || pwText_1.Trim().Equals("") || pwText_2.Trim().Equals(""))
         {
             // InputField가 비워져있을 때
-            inputFieldSignUpID.text = "";
-            inputFieldSignUpPW_1.text = "";
-            inputFieldSignUpPW_2.text = "";
-            signUpErrorText.text = "정보를 입력해주세요.";
-            signUpErrorText.gameObject.SetActive(true);
-            btnSignUp.interactable = true;
+            inputField_SignUpID.text = "";
+            inputField_SignUpPW_1.text = "";
+            inputField_SignUpPW_2.text = "";
+            if (idText.Trim().Equals(""))
+            {
+                idErrorText.text = "정보를 입력해주세요.";
+                idErrorText.gameObject.SetActive(true);
+                pw1ErrorText.gameObject.SetActive(false);
+                pw2ErrorText.gameObject.SetActive(false);
+            }
+            else if (pwText_1.Trim().Equals(""))
+            {
+                pw1ErrorText.text = "정보를 입력해주세요.";
+                idErrorText.gameObject.SetActive(false);
+                pw1ErrorText.gameObject.SetActive(true);
+                pw2ErrorText.gameObject.SetActive(false);
+            }
+            else if (pwText_2.Trim().Equals(""))
+            {
+                pw2ErrorText.text = "정보를 입력해주세요.";
+                idErrorText.gameObject.SetActive(false);
+                pw1ErrorText.gameObject.SetActive(false);
+                pw2ErrorText.gameObject.SetActive(true);
+            }
+            return;
+        }
+        else if(inputField_SignUpID.text.Equals(idChecker) == false)
+        {
+            // ID에 특수문자가 포함되어 있을 때
+            inputField_SignUpID.text = "";
+            idErrorText.text = "아이디는 특수문자나 공백을 포함할 수 없습니다.";
+            idErrorText.gameObject.SetActive(true);
+            pw1ErrorText.gameObject.SetActive(false);
+            pw2ErrorText.gameObject.SetActive(false);
+            return;
+        }
+        else if (inputField_SignUpPW_1.text.Equals(idChecker) == false)
+        {
+            // PW에 특수문자가 포함되어 있을 때
+            inputField_SignUpPW_1.text = "";
+            pw1ErrorText.text = "비밀번호는 특수문자나 공백을 포함할 수 없습니다.";
+            idErrorText.gameObject.SetActive(false);
+            pw1ErrorText.gameObject.SetActive(true);
+            pw2ErrorText.gameObject.SetActive(false);
             return;
         }
         else if (pwText_1 != pwText_2)
         {
             // 패스워드가 일치하지 않을 때
-            inputFieldSignUpID.text = "";
-            inputFieldSignUpPW_1.text = "";
-            inputFieldSignUpPW_2.text = "";
-            signUpErrorText.text = "비밀번호가 일치하지 않습니다.";
-            signUpErrorText.gameObject.SetActive(true);
-            btnSignUp.interactable = true;
+            inputField_SignUpPW_2.text = "";
+            pw2ErrorText.text = "비밀번호가 일치하지 않습니다.";
+            idErrorText.gameObject.SetActive(false);
+            pw1ErrorText.gameObject.SetActive(false);
+            pw2ErrorText.gameObject.SetActive(true);
             return;
         }
-        else if (idText.Any(x => char.IsWhiteSpace(x) == true) || pwText_1.Any(x => char.IsWhiteSpace(x) == true) || pwText_2.Any(x => char.IsWhiteSpace(x) == true))
+        else if (idText.Any(x => char.IsWhiteSpace(x) == true))
         {
             // 공백이 포함되어 있을 때
-            inputFieldSignUpID.text = "";
-            inputFieldSignUpPW_1.text = "";
-            inputFieldSignUpPW_2.text = "";
-            signUpErrorText.text = "공백을 포함할 수 없습니다.";
-            signUpErrorText.gameObject.SetActive(true);
-            btnSignUp.interactable = true;
+            inputField_SignUpID.text = "";
+            idErrorText.text = "아이디는 공백을 포함할 수 없습니다.";
+            idErrorText.gameObject.SetActive(true);
+            pw1ErrorText.gameObject.SetActive(false);
+            pw2ErrorText.gameObject.SetActive(false);
             return;
         }
-
-        btnSignUp.interactable = false;
+        else if (pwText_1.Any(x => char.IsWhiteSpace(x) == true))
+        {
+            // 공백이 포함되어 있을 때
+            inputField_SignUpPW_1.text = "";
+            pw1ErrorText.text = "비밀번호는 공백을 포함할 수 없습니다.";
+            idErrorText.gameObject.SetActive(false);
+            pw1ErrorText.gameObject.SetActive(true);
+            pw2ErrorText.gameObject.SetActive(false);
+            return;
+        }
+        else if (pwText_2.Any(x => char.IsWhiteSpace(x) == true))
+        {
+            // 공백이 포함되어 있을 때
+            inputField_SignUpPW_2.text = "";
+            pw2ErrorText.text = "비밀번호는 공백을 포함할 수 없습니다.";
+            idErrorText.gameObject.SetActive(false);
+            pw1ErrorText.gameObject.SetActive(false);
+            pw2ErrorText.gameObject.SetActive(true);
+            return;
+        }
 
         Backend.BMember.CustomSignUp(idText, pwText_1, callback =>
         {
@@ -271,10 +322,9 @@ public class LoginManager : MonoBehaviour
             {
                 Debug.Log($"회원가입 성공");
 
-                inputFieldSignUpID.text = "";
-                inputFieldSignUpPW_1.text = "";
-                inputFieldSignUpPW_2.text = "";
-                btnSignUp.interactable = true;
+                inputField_SignUpID.text = "";
+                inputField_SignUpPW_1.text = "";
+                inputField_SignUpPW_2.text = "";
 
                 id = idText;
                 pw = pwText_1;
@@ -283,14 +333,13 @@ public class LoginManager : MonoBehaviour
                 ChartManager.instance.GetChartData();
                 DBManager.instance.DB_Add(id, pw, "");
 
-                GoToSetUserName();
+                GoToSetNickname();
             }
             else
             {
-                inputFieldSignUpID.text = "";
-                inputFieldSignUpPW_1.text = "";
-                inputFieldSignUpPW_2.text = "";
-                btnSignUp.interactable = true;
+                inputField_SignUpID.text = "";
+                inputField_SignUpPW_1.text = "";
+                inputField_SignUpPW_2.text = "";
 
                 string message = string.Empty;
 
@@ -310,36 +359,46 @@ public class LoginManager : MonoBehaviour
                         break;
                 }
 
-                inputFieldSignUpID.text = "";
-                inputFieldSignUpPW_1.text = "";
-                inputFieldSignUpPW_2.text = "";
-                signUpErrorText.text = $"{message}";
-                signUpErrorText.gameObject.SetActive(true);
-                btnSignUp.interactable = true;
+                inputField_SignUpID.text = "";
+                inputField_SignUpPW_1.text = "";
+                inputField_SignUpPW_2.text = "";
+                pw2ErrorText.text = $"{message}";
+                pw2ErrorText.gameObject.SetActive(true);
             }
         });
     }
 
-    public void SetUserName()
+    public void SetUserName() // 유저 닉네임 설정
     {
         var bro = Backend.GameData.Get("User", new Where());
 
-        string userNameText = inputFieldUserName.text;
+        string userNameText = inputField_Nickname.text;
+
+        string nicknameChecker = Regex.Replace(inputField_Nickname.text, @"[^a-zA-Z0-9가-힣]", "", RegexOptions.Singleline);
+        nicknameChecker = Regex.Replace(inputField_Nickname.text, @"[^\w\.@-]", "", RegexOptions.Singleline);
 
         if (userNameText.Trim().Equals(""))
         {
             // InputField가 비워져있을 때
-            inputFieldUserName.text = "";
-            userNameErrorText.text = "정보를 입력해주세요.";
-            userNameErrorText.gameObject.SetActive(true);
+            inputField_Nickname.text = "";
+            nicknameErrorText.text = "정보를 입력해주세요.";
+            nicknameErrorText.gameObject.SetActive(true);
+            return;
+        }
+        else if (inputField_Nickname.text.Equals(nicknameChecker) == false)
+        {
+            // 특수문자가 포함되어 있을 때
+            inputField_Nickname.text = "";
+            nicknameErrorText.text = "닉네임은 특수문자나 공백을 포함할 수 없습니다.";
+            nicknameErrorText.gameObject.SetActive(true);
             return;
         }
         else if (userNameText.Any(x => char.IsWhiteSpace(x) == true))
         {
             // 공백이 포함되어 있을 때
-            inputFieldUserName.text = "";
-            userNameErrorText.text = "공백을 포함할 수 없습니다.";
-            userNameErrorText.gameObject.SetActive(true);
+            inputField_Nickname.text = "";
+            nicknameErrorText.text = "닉네임은 공백을 포함할 수 없습니다.";
+            nicknameErrorText.gameObject.SetActive(true);
             return;
         }
 
@@ -351,9 +410,9 @@ public class LoginManager : MonoBehaviour
             {
                 if (bro.GetReturnValuetoJSON()["rows"][i]["UserName"][0].ToString().Equals(userNameText))
                 {
-                    inputFieldUserName.text = "";
-                    userNameErrorText.text = "사용중인 닉네임입니다.";
-                    userNameErrorText.gameObject.SetActive(true);
+                    inputField_Nickname.text = "";
+                    nicknameErrorText.text = "사용중인 닉네임입니다.";
+                    nicknameErrorText.gameObject.SetActive(true);
                     return;
                 }
             }
@@ -368,38 +427,29 @@ public class LoginManager : MonoBehaviour
         // 해당 테이블 데이터 수정
         Backend.PlayerData.UpdateMyLatestData("User", param);
 
-        GoToCustomLogIn();
+        GoToMain();
     }
 
-    public void GoToCustomLogIn()
+    public void GoToSignUp() // 회원가입 팝업으로 이동
     {
-        popUp_Menu.SetActive(false);
-        popUp_LogIn.SetActive(true);
-        popUp_SignUp.SetActive(false);
-        popUp_UserName.SetActive(false);
+        popUp_Main.gameObject.SetActive(false);
+        popUp_SignUp.gameObject.SetActive(true);
+        idErrorText.gameObject.SetActive(false);
+        pw1ErrorText.gameObject.SetActive(false);
+        pw2ErrorText.gameObject.SetActive(false);
     }
 
-    public void GoToSignUp()
+    public void GoToMain() // 메인 팝업으로 이동
     {
-        popUp_Menu.SetActive(false);
-        popUp_LogIn.SetActive(false);
-        popUp_SignUp.SetActive(true);
-        popUp_UserName.SetActive(false);
+        popUp_Main.gameObject.SetActive(true);
+        popUp_SignUp.gameObject.SetActive(false);
+        logInErrorText.gameObject.SetActive(false);
     }
 
-    public void GoToMenu()
+    public void GoToSetNickname() // 닉네임 설정 팝업으로 이동
     {
-        popUp_Menu.SetActive(true);
-        popUp_LogIn.SetActive(false);
-        popUp_SignUp.SetActive(false);
-        popUp_UserName.SetActive(false);
-    }
-
-    public void GoToSetUserName()
-    {
-        popUp_Menu.SetActive(false);
-        popUp_LogIn.SetActive(false);
-        popUp_SignUp.SetActive(false);
-        popUp_UserName.SetActive(true);
+        popUp_SignUp.gameObject.SetActive(false);
+        popUp_Nickname.gameObject.SetActive(true);
+        nicknameErrorText.gameObject.SetActive(false);
     }
 }

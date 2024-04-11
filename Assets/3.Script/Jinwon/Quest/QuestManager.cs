@@ -28,11 +28,13 @@ public class QuestManager : MonoBehaviour
 
     private void OnEnable()
     {
+        // 타이머에 이벤트 연결
         DBManager.instance.TimerEvent += UpdateTimeText;
     }
 
     private void OnDisable()
     {
+        // 이벤트 연결 해제
         DBManager.instance.TimerEvent -= UpdateTimeText;
     }
 
@@ -119,7 +121,7 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    public void CheckDayQuest()
+    public void CheckDayQuest() // 퀘스트 클리어 체크
     {
         for (int i = 0; i < ChartManager.instance.quests.Count; i++)
         {
