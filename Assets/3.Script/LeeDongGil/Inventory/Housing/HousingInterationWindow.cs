@@ -72,7 +72,6 @@ public class HousingInterationWindow : MonoBehaviour
                 {
                     if (hit.collider.gameObject.CompareTag("Building"))
                     {
-                        //housingData = housingObject.GetComponent<HousingDrag>().data;
                         housingObject = hit.collider.gameObject;
                         housingDrag = housingObject.GetComponent<HousingDrag>();
                         housingObj = housingDrag.housingObject;
@@ -176,6 +175,7 @@ public class HousingInterationWindow : MonoBehaviour
         }
     }
 
+    //하우징 인벤토리에 넣기(기존에 설치된 거)
     public void InsertHousingInventory()
     {
         if (DBManager.instance.user.housingObject.ContainsKey(housingObj.name_e))
@@ -188,15 +188,15 @@ public class HousingInterationWindow : MonoBehaviour
         }
         DBManager.instance.RemoveMyHousingObject(housingObj.index, housingDrag.new_x, housingDrag.new_y);
         housingInvenSys.LoadHousingInventory();
-        //housingInvenSys.GetHousingItem(housingObj.index, 1);
         housingObject.GetComponent<HousingDrag>().isInsertInven = true;
         Destroy(housingObject);
-        //TestManager.instance.isShowUI = true;
         isFirstSet = false;
         housingToggle.openButton.interactable = true;
         window.SetActive(false);
         TestManager.instance.housingInven.SetActive(true);
     }
+
+    //하우징 배치(기존에 설치된 거)
     public void SetHousingPosition()
     {
         if (housingObject.GetComponent<HousingDrag>().isSetBuild)
@@ -216,24 +216,22 @@ public class HousingInterationWindow : MonoBehaviour
             housingToggle.openButton.interactable = true;
             window.SetActive(false);
             housingToggle.housingInventory.SetActive(true);
-            //TestManager.instance.isShowUI = true;
         }
     }
 
+    //첫번째 하우징 인벤토리에 넣기(인벤에서 꺼내고 바로 넣을 때)
     public void FirstInsertHousingInventory()
     {
         housingInvenSys.LoadHousingInventory();
-        //housingInvenSys.GetHousingItem(housingObj.index, 1);
         housingObject.GetComponent<HousingDrag>().isInsertInven = true;
         Destroy(housingObject);
-        //TestManager.instance.isShowUI = true;
         isFirstSet = false;
         housingToggle.openButton.interactable = true;
         firstWindow.SetActive(false);
         TestManager.instance.housingInven.SetActive(true);
     }
 
-
+    //첫번째 하우징 배치(인벤에서 꺼내고 배치)
     public void FirstSetHousingPosition()
     {
         housingObject.GetComponent<HousingDrag>().isSetBuild = true;
@@ -250,7 +248,6 @@ public class HousingInterationWindow : MonoBehaviour
         housingToggle.openButton.interactable = true;
         firstWindow.SetActive(false);
         housingToggle.housingInventory.SetActive(true);
-        //TestManager.instance.isShowUI = true;
     }
 
 }

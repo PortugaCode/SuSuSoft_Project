@@ -44,17 +44,18 @@ public class HousingInteraction : MonoBehaviour
                 {
                     if (hit.collider.gameObject.CompareTag("Building") || EventSystem.current.IsPointerOverGameObject(0) == false)   //게임오브젝트 or UI터치
                     {
-                        if (hit.collider.gameObject.CompareTag("Building"))             //이거 지우면 크래시 일어나는데 왜지?
+                        if (hit.collider.gameObject.CompareTag("Building"))
                         {
                             housing = hit.collider.gameObject;
                             housingObject = hit.collider.gameObject.GetComponent<HousingDrag>().housingObject;
                             drag = hit.collider.gameObject.GetComponent<HousingDrag>();
-                            if (Time.time - lastTouchTime < doubleTouchTime)
+                            if (Time.time - lastTouchTime < doubleTouchTime)        //더블 터치
                             {
                                 drag.isDoubleTouch = true;
                             }
                             lastTouchTime = Time.time;
-                            if (drag.isDoubleTouch)
+
+                            if (drag.isDoubleTouch)         //더블 터치일 때 UI 활성화
                             {
                                 drag.space.SetActive(true);
                                 drag.subCollider.enabled = true;
@@ -78,7 +79,6 @@ public class HousingInteraction : MonoBehaviour
                         }
                         else
                         {
-                            //window.GetComponent<HousingInterationWindow>().firstWindow.SetActive(false);
                             if (housing == null || !drag.isSetBuild) return;
                             else
                             {
