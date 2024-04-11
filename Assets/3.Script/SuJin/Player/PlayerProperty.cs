@@ -325,6 +325,7 @@ public class PlayerProperty : MonoBehaviour
             //Audio
             AudioManager.Instance.PlaySFX(SFX_Name.GetToken);
             isTokenAdd = true;
+            TokenAudio();
             Destroy(collision.gameObject);
         }
 
@@ -388,9 +389,32 @@ public class PlayerProperty : MonoBehaviour
                 onStarShape?.Invoke(this, EventArgs.Empty);
         }
     }
-
     #endregion
 
+    // Level별 토큰 획득 사운드 출력 메서드
+    private void TokenAudio()
+    {
+        if(Utils.Instance.currentLevel == Level.Level_1)
+        {
+            AudioManager.Instance.PlaySFX(SFX_Name.BasketBall);
+        }
+        else if(Utils.Instance.currentLevel == Level.Level_2)
+        {
+            AudioManager.Instance.PlaySFX(SFX_Name.Fence);
+        }
+        else if (Utils.Instance.currentLevel == Level.Level_3)
+        {
+            AudioManager.Instance.PlaySFX(SFX_Name.Bush);
+        }
+        else if (Utils.Instance.currentLevel == Level.Level_4)
+        {
+            AudioManager.Instance.PlaySFX(SFX_Name.SoccerBall);
+        }
+        else if (Utils.Instance.currentLevel == Level.Level_5)
+        {
+            AudioManager.Instance.PlaySFX(SFX_Name.Trophy);
+        }
+    }
 
     #region [Player SkillActive & PlayerColor]
     public void SkillActive()

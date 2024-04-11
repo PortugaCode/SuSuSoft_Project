@@ -93,7 +93,31 @@ public enum SFX_Name
     //피격,타격음
     Crash1,
     Crash2,
-    Crash3
+    Crash3,
+
+    //공방 제작, 토큰 획득, 상호작용 시
+    TwinTree,
+    Tree,
+    AppleTree,
+    Fence,
+    Bush,
+    BasketBall,
+    TennisBall,
+    Golf,
+    SoccerBall,
+    Trophy,
+
+    //공방 제작 후 사운드
+    TwinTree_Sentence,
+    Tree_Sentence,
+    AppleTree_Sentence,
+    Fence_Sentence,
+    Bush_Sentence,
+    BasketBall_Sentence,
+    TennisBall_Sentence,
+    Golf_Sentence,
+    SoccerBall_Sentence,
+    Trophy_Sentence,
 }
 
 public enum BGM_Name
@@ -217,6 +241,29 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip Crash2_Clip;
     [SerializeField] private AudioClip Crash3_Clip;
 
+    [Header("토큰 획득, 제작, 상호작용")]
+    [SerializeField] private AudioClip TwinTree_Clip;
+    [SerializeField] private AudioClip Tree_Clip;
+    [SerializeField] private AudioClip AppleTree_Clip;
+    [SerializeField] private AudioClip Fence_Clip;
+    [SerializeField] private AudioClip Bush_Clip;
+    [SerializeField] private AudioClip BasketBall_Clip;
+    [SerializeField] private AudioClip TennisBall_Clip;
+    [SerializeField] private AudioClip Golf_Clip;
+    [SerializeField] private AudioClip SoccerBall_Clip;
+    [SerializeField] private AudioClip Trophy_Clip;
+
+    [Header("토큰 제작 후 사운드")]
+    [SerializeField] private AudioClip TwinTreeSentence_Clip;
+    [SerializeField] private AudioClip TreeSentence_Clip;
+    [SerializeField] private AudioClip AppleTreeSentence_Clip;
+    [SerializeField] private AudioClip FenceSentence_Clip;
+    [SerializeField] private AudioClip BushSentence_Clip;
+    [SerializeField] private AudioClip BasketBallSentence_Clip;
+    [SerializeField] private AudioClip TennisBallSentence_Clip;
+    [SerializeField] private AudioClip GolfSentence_Clip;
+    [SerializeField] private AudioClip SoccerBallSentence_Clip;
+    [SerializeField] private AudioClip TrophySentence_Clip;
 
     private void Awake()
     {
@@ -452,6 +499,71 @@ public class AudioManager : MonoBehaviour
                 break;
             case SFX_Name.Crash3:
                 sfx_AudioSource.PlayOneShot(Crash3_Clip);
+                break;
+
+            //
+            case SFX_Name.TwinTree:
+                sfx_AudioSource.PlayOneShot(TwinTree_Clip);
+                break;
+            case SFX_Name.Tree:
+                sfx_AudioSource.PlayOneShot(Tree_Clip);
+                break;
+            case SFX_Name.AppleTree:
+                sfx_AudioSource.PlayOneShot(AppleTree_Clip);
+                break;
+            case SFX_Name.Fence:
+                sfx_AudioSource.PlayOneShot(Fence_Clip);
+                break;
+            case SFX_Name.Bush:
+                sfx_AudioSource.PlayOneShot(Bush_Clip);
+                break;
+            case SFX_Name.BasketBall:
+                sfx_AudioSource.PlayOneShot(BasketBall_Clip);
+                break;
+            case SFX_Name.TennisBall:
+                sfx_AudioSource.PlayOneShot(TennisBall_Clip);
+                break;
+            case SFX_Name.Golf:
+                sfx_AudioSource.PlayOneShot(Golf_Clip);
+                break;
+            case SFX_Name.SoccerBall:
+                sfx_AudioSource.PlayOneShot(SoccerBall_Clip);
+                break;
+            case SFX_Name.Trophy:
+                sfx_AudioSource.PlayOneShot(Trophy_Clip);
+                break;
+
+
+            //
+            case SFX_Name.TwinTree_Sentence:
+                sfx_AudioSource.PlayOneShot(TwinTreeSentence_Clip);
+                break;
+            case SFX_Name.Tree_Sentence:
+                sfx_AudioSource.PlayOneShot(TreeSentence_Clip);
+                break;
+            case SFX_Name.AppleTree_Sentence:
+                sfx_AudioSource.PlayOneShot(AppleTreeSentence_Clip);
+                break;
+            case SFX_Name.Fence_Sentence:
+                sfx_AudioSource.PlayOneShot(FenceSentence_Clip);
+                break;
+            case SFX_Name.Bush_Sentence:
+                sfx_AudioSource.PlayOneShot(BushSentence_Clip);
+                break;
+            case SFX_Name.BasketBall_Sentence:
+                sfx_AudioSource.PlayOneShot(BasketBallSentence_Clip);
+                break;
+            case SFX_Name.TennisBall_Sentence:
+                sfx_AudioSource.PlayOneShot(TennisBallSentence_Clip);
+                break;
+            case SFX_Name.Golf_Sentence:
+                sfx_AudioSource.PlayOneShot(GolfSentence_Clip);
+                break;
+            case SFX_Name.SoccerBall_Sentence:
+                sfx_AudioSource.PlayOneShot(SoccerBallSentence_Clip);
+                break;
+            case SFX_Name.Trophy_Sentence:
+                sfx_AudioSource.PlayOneShot(TrophySentence_Clip);
                 break;
 
 
