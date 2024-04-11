@@ -22,7 +22,7 @@ public class CreateHousing : MonoBehaviour
     public TextMeshProUGUI price;
     public Image resultSlot;
 
-    [Header("Check PopUP")]
+    [Header("Check PopUP")]                 //제작 시도 시 확인하는 팝업
     public GameObject checkPopUp;
     public Image checkImage;
     public TextMeshProUGUI checkEN_KRName;
@@ -66,7 +66,6 @@ public class CreateHousing : MonoBehaviour
     {
         require = 5;
         priceInt = 500;
-        Debug.Log($"{housingObject.name_e} : 팝업");
         enName.text = string.Format("{0}", housingObject.name_e);
         price.text = string.Format("{0:#,###}", priceInt);
         if (DBManager.instance.user.tokens[tokenID] < require)
@@ -197,6 +196,7 @@ public class CreateHousing : MonoBehaviour
 
     private void PopUpSuccess()
     {
+        StartCoroutine(PlaySentence(housingObject.index));
         successPopUp.SetActive(true);
         checkPopUp.SetActive(false);
         if (DBManager.instance.user.housingObject.ContainsKey(housingObject.name_e))
@@ -231,12 +231,78 @@ public class CreateHousing : MonoBehaviour
 
     private void OnDisable()
     {
+        //팝업 끌 시 재료 이미지와 결과 이미지
         for (int i = 0; i < stuff.Count; i++)
         {
             stuff[i].sprite = null;
             stuff[i].color = new Color32(255, 255, 255, 0);
         }
         resultSlot.color = new Color32(255, 255, 255, 0);
+    }
+
+    private IEnumerator PlaySentence(int housingIndex)
+    {
+        SFX_Name sfx_word = SFX_Name.HousingSound01;
+        SFX_Name sfx_sentence = SFX_Name.HousingSound02;
+
+        #region Switch SFX
+        switch (housingIndex)
+        {
+            case 0:         //쌍둥이나무
+                sfx_word = SFX_Name.Trophy01;
+                sfx_sentence = SFX_Name.Trophy02;
+                break;
+            case 1:         //나무
+                sfx_word = SFX_Name.Crash1;
+                sfx_sentence = SFX_Name.Crash2;
+                break;
+            case 2:         //뽑기 건물
+                sfx_word = SFX_Name.Trophy01;
+                sfx_sentence = SFX_Name.Trophy02;
+                break;
+            case 3:         //공방 건물
+                sfx_word = SFX_Name.Trophy01;
+                sfx_sentence = SFX_Name.Trophy02;
+                break;
+            case 4:         //과일나무
+                sfx_word = SFX_Name.Trophy01;
+                sfx_sentence = SFX_Name.Trophy02;
+                break;
+            case 5:         //울타리
+                sfx_word = SFX_Name.Trophy01;
+                sfx_sentence = SFX_Name.Trophy02;
+                break;
+            case 6:         //수풀
+                sfx_word = SFX_Name.Trophy01;
+                sfx_sentence = SFX_Name.Trophy02;
+                break;
+            case 7:         //농구공
+                sfx_word = SFX_Name.Trophy01;
+                sfx_sentence = SFX_Name.Trophy02;
+                break;
+            case 8:         //테니스공
+                sfx_word = SFX_Name.Trophy01;
+                sfx_sentence = SFX_Name.Trophy02;
+                break;
+            case 9:         //골프채
+                sfx_word = SFX_Name.Trophy01;
+                sfx_sentence = SFX_Name.Trophy02;
+                break;
+            case 10:        //축구공
+                sfx_word = SFX_Name.Trophy01;
+                sfx_sentence = SFX_Name.Trophy02;
+                break;
+            case 11:        //트로피
+                sfx_word = SFX_Name.Trophy01;
+                sfx_sentence = SFX_Name.Trophy02;
+                break;
+        }
+        #endregion
+        
+        AudioManager.Instance.PlaySFX(sfx_word);       //단어
+        WaitForSeconds wfs = new WaitForSeconds(2.0f);
+        yield return wfs;
+        AudioManager.Instance.PlaySFX(sfx_sentence);       //문장
     }
 
     public void SaveButton()
