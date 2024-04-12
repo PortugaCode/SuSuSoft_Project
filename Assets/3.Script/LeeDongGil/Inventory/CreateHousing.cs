@@ -240,6 +240,7 @@ public class CreateHousing : MonoBehaviour
         resultSlot.color = new Color32(255, 255, 255, 0);
     }
 
+    //단어 문장 읽기
     private IEnumerator PlaySentence(int housingIndex)
     {
         SFX_Name sfx_word = SFX_Name.HousingSound01;

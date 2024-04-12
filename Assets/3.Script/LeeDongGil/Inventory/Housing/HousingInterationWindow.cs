@@ -57,7 +57,7 @@ public class HousingInterationWindow : MonoBehaviour
         }
     }
 
-    public void CheckHousingObjectToTouch()
+    public void CheckHousingObjectToTouch()     //하우징 터치 시 정보 가져오기
     {
         // 중근아 여기도 봐
         if (Input.touchCount > 0)
@@ -149,7 +149,7 @@ public class HousingInterationWindow : MonoBehaviour
         }
     }
 
-    public string HousingSetNameToKR()
+    public string HousingSetNameToKR()      //세트이름
     {
         switch (housingObjWindow.setType)
         {

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class HousingGrid : MonoBehaviour
 {
-    [Header("Bound")]
+    [Header("Bound")]           //꼭짓점
     public Vector2 boundRT;
     public Vector2 boundLT;
     public Vector2 boundLB;

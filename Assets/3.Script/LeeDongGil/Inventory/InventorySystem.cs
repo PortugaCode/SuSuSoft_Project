@@ -47,7 +47,7 @@ public class InventorySystem : MonoBehaviour
         LoadHousingInventory();
     }
 
-
+    //인벤토리 초기화
     public void ClearHousingInventory()
     {
         HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
@@ -61,7 +61,7 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
-
+    //인벤토리 로드
     public void LoadHousingInventory()
     {
         ClearHousingInventory();
@@ -98,6 +98,7 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
+    //판매 인벤토리 로드
     public void LoadHousingInventory_Sell()
     {
         ClearHousingInventory();
@@ -140,6 +141,8 @@ public class InventorySystem : MonoBehaviour
             }
         }
     }
+
+    #region 테스트용
 
     //공방 인벤토리
     public void GetItem(ItemData itemData, int getCount)
@@ -329,6 +332,8 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
+    #endregion
+    
     private void OnDestroy()
     {
         TestManager.instance.isHousingInventoryLoad = false;
