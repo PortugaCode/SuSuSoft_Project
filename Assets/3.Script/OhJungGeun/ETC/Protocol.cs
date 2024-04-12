@@ -24,6 +24,7 @@ namespace Protocol
         }
     }
 
+    // 이동 관련 패킷
     public class PlayerMoveMessage : Message
     {
         public SessionId playerSession;
@@ -45,6 +46,7 @@ namespace Protocol
         }
     }
 
+    // 채팅 관련 패킷
     public class PlayerChatMessage : Message
     {
         public SessionId playerSession;
@@ -57,6 +59,7 @@ namespace Protocol
         }
     }
 
+    // 상호작용 관련 패킷
     public class PlayerAnimationMessage : Message
     {
         public SessionId playerSession;

@@ -7,6 +7,8 @@ public class SkyStarCloneMove : MonoBehaviour
     [SerializeField] private Transform targetPlayer;
     [SerializeField] private bool isRightClone;
 
+
+    // 매칭 서버 별자리 이동 메서드
     private void CloneMove()
     {
         if (isRightClone)
