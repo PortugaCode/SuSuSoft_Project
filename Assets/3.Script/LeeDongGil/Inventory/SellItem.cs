@@ -23,6 +23,8 @@ public class SellItem : MonoBehaviour
         TestManager.instance.filterLayer = -1;
         sellHousingInven.LoadHousingInventory_Sell();
         //sellTokenInven.LoadHousingInventory();
+
+        //캐릭터의 몸 스프라이트에 따라 팝업 캐릭터의 몸 스프라이트 변경
         bodyCharater.sprite = characterBodyImages[DBManager.instance.user.currentCharacterIndex];
         switch(DBManager.instance.user.currentCharacterIndex)
         {
@@ -65,7 +67,7 @@ public class SellItem : MonoBehaviour
     {
         if(isSellItem)
         {
-            StartCoroutine(SmithTalk());
+            StartCoroutine(SmithTalk());        //판매시 대화창 표시(1.5초)
             isSellItem = false;
         }
     }

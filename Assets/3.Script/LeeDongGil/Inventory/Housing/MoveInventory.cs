@@ -18,12 +18,6 @@ public class MoveInventory : MonoBehaviour
 
     public void GotoWindow()
     {
-        //HousingSlot[] slots = inventoryScroll.GetComponentsInChildren<HousingSlot>();
-        //foreach (HousingSlot slot in slots)
-        //{
-        //    slot.transform.SetParent(inventoryWindow);
-        //    slot.isWindow = true;
-        //}
         windowBG.SetActive(true);
         transparency.SetActive(true);
         scroll.SetActive(false);
@@ -33,12 +27,6 @@ public class MoveInventory : MonoBehaviour
 
     public void GotoScroll()
     {
-        //HousingSlot[] slots = inventoryWindow.GetComponentsInChildren<HousingSlot>();
-        //foreach (HousingSlot slot in slots)
-        //{
-        //    slot.transform.SetParent(inventoryScroll);
-        //    slot.isWindow = false;
-        //}
         scroll.SetActive(true);
         editBtn.SetActive(true);
         testBtn.SetActive(true);

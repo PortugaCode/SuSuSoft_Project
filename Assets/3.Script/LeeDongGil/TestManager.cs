@@ -6,6 +6,7 @@ public class TestManager : MonoBehaviour
 {
     public static TestManager instance = null;
 
+    //테스트
     public ItemData testData;
     public ItemData testData1;
     public List<HousingItemData> testHousing = new List<HousingItemData>();
@@ -71,6 +72,7 @@ public class TestManager : MonoBehaviour
         #endregion
     }
 
+    //메인UI 보이기 및 숨기기
     public void SetUI(bool value)
     {
         if (value)
@@ -85,6 +87,7 @@ public class TestManager : MonoBehaviour
         }
     }
 
+    //상호작용 UI 보이기 및 숨기기
     public void SetUI_win(bool value)
     {
         if (value)
@@ -99,6 +102,7 @@ public class TestManager : MonoBehaviour
         }
     }
 
+    //필터링
     private void SetFilterLayer()
     {
         if (isAll)
@@ -145,7 +149,7 @@ public class TestManager : MonoBehaviour
 
     private void Start()
     {
-
+        //프레임
 #if UNITY_ANDROID
         Application.targetFrameRate = 60;
 #else
@@ -195,16 +199,6 @@ public class TestManager : MonoBehaviour
             }
         }
     }
-
-    public void LoadHousingChart()
-    {
-        int listIndex = GetIndex(5002);
-        Debug.Log($"{ChartManager.instance.housingObjectDatas[1].index} + {ChartManager.instance.housingObjectDatas[1].name_k}");
-        Debug.Log($"index ID 1004의 List Index = {ChartManager.instance.housingObjectDatas.FindIndex(listIndex => listIndex.index == 1004)}");
-        Debug.Log($"index ID 3002의 List Index = {ChartManager.instance.housingObjectDatas.FindIndex(listIndex => listIndex.index == 3002)}");
-        Debug.Log($"index ID 5002의 List Index = {listIndex}");
-    }
-
 
     public int GetIndex(int indexNum)
     {

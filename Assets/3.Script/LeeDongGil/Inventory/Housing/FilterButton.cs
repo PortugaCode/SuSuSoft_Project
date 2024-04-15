@@ -237,25 +237,6 @@ public class FilterButton : MonoBehaviour
         }
         TestManager.instance.filterLayer = value;
         invenSystem.LoadHousingInventory();
-        /* HousingSlot[] slots = GetComponentsInChildren<HousingSlot>();
-         //int setindex = 0;
-         foreach (HousingSlot slot in slots)
-         {
-             if (slot.housingObject.layer == value)
-             {
-                 slot.transform.SetAsFirstSibling();
-                 slot.housingInven.image.color = Color.white;
-                 slot.housingInven.countObject.SetActive(true);
-                 slot.housingInven.button.interactable = true;
-             }
-             else
-             {
-                 slot.housingInven.image.color = new Color(1, 1, 1, 0.5f);
-                 slot.housingInven.countObject.SetActive(false);
-                 slot.housingInven.button.interactable = false;
-             }
-
-         }*/
     }
 
 

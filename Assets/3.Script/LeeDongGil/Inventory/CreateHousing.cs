@@ -231,7 +231,7 @@ public class CreateHousing : MonoBehaviour
 
     private void OnDisable()
     {
-        //팝업 끌 시 재료 이미지와 결과 이미지
+        //팝업 끌 시 재료 이미지와 결과 이미지 투명화
         for (int i = 0; i < stuff.Count; i++)
         {
             stuff[i].sprite = null;
@@ -240,6 +240,7 @@ public class CreateHousing : MonoBehaviour
         resultSlot.color = new Color32(255, 255, 255, 0);
     }
 
+    //단어 문장 읽기
     private IEnumerator PlaySentence(int housingIndex)
     {
         SFX_Name sfx_word = SFX_Name.HousingSound01;
@@ -249,52 +250,44 @@ public class CreateHousing : MonoBehaviour
         switch (housingIndex)
         {
             case 0:         //쌍둥이나무
-                sfx_word = SFX_Name.Trophy01;
-                sfx_sentence = SFX_Name.Trophy02;
+                sfx_word = SFX_Name.TwinTree;
+                sfx_sentence = SFX_Name.TwinTree_Sentence;
                 break;
             case 1:         //나무
-                sfx_word = SFX_Name.Crash1;
-                sfx_sentence = SFX_Name.Crash2;
-                break;
-            case 2:         //뽑기 건물
-                sfx_word = SFX_Name.Trophy01;
-                sfx_sentence = SFX_Name.Trophy02;
-                break;
-            case 3:         //공방 건물
-                sfx_word = SFX_Name.Trophy01;
-                sfx_sentence = SFX_Name.Trophy02;
+                sfx_word = SFX_Name.Tree;
+                sfx_sentence = SFX_Name.Tree_Sentence;
                 break;
             case 4:         //과일나무
-                sfx_word = SFX_Name.Trophy01;
-                sfx_sentence = SFX_Name.Trophy02;
+                sfx_word = SFX_Name.AppleTree;
+                sfx_sentence = SFX_Name.AppleTree_Sentence;
                 break;
             case 5:         //울타리
-                sfx_word = SFX_Name.Trophy01;
-                sfx_sentence = SFX_Name.Trophy02;
+                sfx_word = SFX_Name.Fence;
+                sfx_sentence = SFX_Name.Fence_Sentence;
                 break;
             case 6:         //수풀
-                sfx_word = SFX_Name.Trophy01;
-                sfx_sentence = SFX_Name.Trophy02;
+                sfx_word = SFX_Name.Bush;
+                sfx_sentence = SFX_Name.Bush_Sentence;
                 break;
             case 7:         //농구공
-                sfx_word = SFX_Name.Trophy01;
-                sfx_sentence = SFX_Name.Trophy02;
+                sfx_word = SFX_Name.BasketBall;
+                sfx_sentence = SFX_Name.BasketBall_Sentence;
                 break;
             case 8:         //테니스공
-                sfx_word = SFX_Name.Trophy01;
-                sfx_sentence = SFX_Name.Trophy02;
+                sfx_word = SFX_Name.TennisBall;
+                sfx_sentence = SFX_Name.TennisBall_Sentence;
                 break;
             case 9:         //골프채
-                sfx_word = SFX_Name.Trophy01;
-                sfx_sentence = SFX_Name.Trophy02;
+                sfx_word = SFX_Name.Golf;
+                sfx_sentence = SFX_Name.Golf_Sentence;
                 break;
             case 10:        //축구공
-                sfx_word = SFX_Name.Trophy01;
-                sfx_sentence = SFX_Name.Trophy02;
+                sfx_word = SFX_Name.SoccerBall;
+                sfx_sentence = SFX_Name.SoccerBall_Sentence;
                 break;
             case 11:        //트로피
-                sfx_word = SFX_Name.Trophy01;
-                sfx_sentence = SFX_Name.Trophy02;
+                sfx_word = SFX_Name.Trophy;
+                sfx_sentence = SFX_Name.Trophy_Sentence;
                 break;
         }
         #endregion

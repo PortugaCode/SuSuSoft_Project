@@ -40,6 +40,7 @@ public class CameraDragMove : MonoBehaviour
 
     private void MoveCamera()
     {
+        //각 카메라의 꼭짓점이 월드좌표로 변환
         Vector3 cam_RT = mainCam.ViewportToWorldPoint(new Vector3(1, 1, mainCam.nearClipPlane));
         Vector3 cam_LT = mainCam.ViewportToWorldPoint(new Vector3(0, 1, mainCam.nearClipPlane));
         Vector3 cam_LB = mainCam.ViewportToWorldPoint(new Vector3(0, 0, mainCam.nearClipPlane));
@@ -47,10 +48,6 @@ public class CameraDragMove : MonoBehaviour
 
         float camX = cam_RT.x - cam_LT.x;
         float camY = cam_RT.y - cam_RB.y;
-        //Debug.Log("RT : " + cam_RT);
-        //Debug.Log("LT : " + cam_LT);
-        //Debug.Log("LB : " + cam_LB);
-        //Debug.Log("RB : " + cam_RB);
 
         float cameraX;
         float cameraY;
@@ -66,6 +63,7 @@ public class CameraDragMove : MonoBehaviour
             Ray cameraRay = mainCam.ScreenPointToRay(touch.position);
             RaycastHit hit;
 
+            //UI 이외의 아래 태그를 터치 드래그 시 카메라 움직임
             if (Physics.Raycast(cameraRay, out hit) && EventSystem.current.IsPointerOverGameObject(0) == false)
             {
                 if(

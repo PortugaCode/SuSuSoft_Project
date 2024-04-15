@@ -6,16 +6,14 @@ using UnityEngine.EventSystems;
 public class HousingDrag : MonoBehaviour
 {
     [Header("Housing Object Status")]
-    public bool isDragging = false;
-    public bool isCanBuild = true;
-    public bool isSetBuild = true;
-    public bool isInsertInven = false;
-    public bool isAdd = false;
-    public bool isRemove = false;
-    public bool isDoubleTouch = false;
-    public Transform previousParent;
-    [HideInInspector] public bool isTouch = false;
-    [HideInInspector] public Vector3 offset;
+    public bool isDragging = false;                          //드래그 중인가
+    public bool isCanBuild = true;                           //건물을 배치할 수 있는가
+    public bool isSetBuild = true;                           //건물을 배치했는가
+    public bool isInsertInven = false;                       //인벤토리에 넣었는가
+    public bool isDoubleTouch = false;                       //더블 터치 했나
+    public Transform previousParent;                         //이전 부모 오브젝트(배치 중)
+    [HideInInspector] public bool isTouch = false;           //터치 상태인가
+    [HideInInspector] public Vector3 offset;                 //현재 건물 위치 - 터치 위치
     [HideInInspector] public CanvasGroup group;
     [HideInInspector] public float touchTime = 0;
     [SerializeField] private bool isClone = false;
@@ -25,31 +23,31 @@ public class HousingDrag : MonoBehaviour
     public int currentLayer_;
 
     [Header("Build Setting")]
-    private Transform buildSpaceParent;
-    public HousingObject housingObject;
-    public SpriteRenderer buildSprite;
+    private Transform buildSpaceParent;             //배치 후 부모 오브젝트
+    public HousingObject housingObject;             //하우징 데이터(구조체)
+    public SpriteRenderer buildSprite;              //하우징 스프라이트
     public GameObject space;                        //설치 할 공간
-    public float original_x = 0;
-    public float original_y = 0;
-    public float new_x = 0;
-    public float new_y = 0;
+    public float original_x = 0;                    //현재 배치된 x값
+    public float original_y = 0;                    //현재 배치된 y값
+    public float new_x = 0;                         //옮겨진 후 x값
+    public float new_y = 0;                         //옮겨진 후 y값
 
     [SerializeField] private GameObject player;
 
-    [Header("HousingObject Data")]
-    [HideInInspector] public float spaceX;
-    [HideInInspector] public float spaceY;
+    [Header("HousingObject Data")]                  //LoadHousing에서 사용
+    [HideInInspector] public float spaceX;          //하우징 오브젝트 x길이
+    [HideInInspector] public float spaceY;          //하우징 오브젝트 y길이
     public int id;
-    public int primaryIndex;
 
-    private int checkMinusY = 1;
-    private int checkMinusX = 1;
+    private int checkMinusX = 1;                    //그리드에 배치 시 x값이 음수인지 양수인지 체크하는 변수
+    private int checkMinusY = 1;                    //그리드에 배치 시 y값이 음수인지 양수인지 체크하는 변수
     [HideInInspector] public HousingGrid grid;
 
-    private SpriteRenderer check;
+    private SpriteRenderer check;                  //하우징 배치 가능여부 스프라이트(가능 : 초록, 불가능 : 빨강)
     public BoxCollider boxCollider;                //자기 자신 오브젝트
     public BoxCollider subCollider;                //다른 오브젝트 터치 안되게 하는 투명 오브젝트
 
+    //
     [HideInInspector] public float moveX;
     [HideInInspector] public float moveY;
     [HideInInspector] public float clampX;
@@ -99,6 +97,7 @@ public class HousingDrag : MonoBehaviour
         //하우징 오브젝트 레이어 설정
         SetZ(gameObject.layer);
 
+        //하우징 오브젝트 레이어(int) 설정
         currentLayer_ = gameObject.layer;
 
         isInsertInven = false;
@@ -113,53 +112,23 @@ public class HousingDrag : MonoBehaviour
             gameObject.name = "Clone Building";
         }
 
+        //하우징 첫 배치 위치
         InitBuildingPos();
-
+        
+        //클론 생성
         CloneMade();
 
+        //하우징 세팅 적용
         InitBuildingSetting();
 
-        #region Scriptable Object(연동 전)
-        /*
-                switch (data.housingType)       //수정 1
-                {
-                    case HousingType.front:
-                        int layer_Front = LayerMask.NameToLayer("Front");
-                        gameObject.layer = layer_Front;
-                        break;
-                    case HousingType.back:
-                        int layer_Back = LayerMask.NameToLayer("Back");
-                        gameObject.layer = layer_Back;
-                        break;
-                    case HousingType.building:
-                        int layer_Building = LayerMask.NameToLayer("Building");
-                        gameObject.layer = layer_Building;
-                        break;
-                    case HousingType.constellation:
-                        int layer_Constellation = LayerMask.NameToLayer("Constellation");
-                        gameObject.layer = layer_Constellation;
-                        break;
-                    case HousingType.special:
-                        int layer_Special = LayerMask.NameToLayer("Special");
-                        gameObject.layer = layer_Special;
-                        break;
-                    case HousingType.interactionable:
-                        int layer_Interactionable = LayerMask.NameToLayer("Interactionable");
-                        gameObject.layer = layer_Interactionable;
-                        break;
-                    default:
-                        break;
-                }
-        */
-        #endregion
     }
 
     private void Update()
     {
-        if (isClone) return;
+        if (isClone) return;                            //클론이면 실행 안함
 
 
-        if (TestManager.instance.isEditMode)            //편집모드 일때
+        if (TestManager.instance.isEditMode)            //편집모드 일때 드래그 및 하우징 검사 활성화
         {
             DragObject();
             CheckToBuild();
@@ -170,9 +139,9 @@ public class HousingDrag : MonoBehaviour
             subCollider.enabled = false;
         }
 
-        if (isSetBuild)
+        if (isSetBuild)                                 //하우징이 배치 되었을 때
         {
-            if (!isCanBuild)
+            if (!isCanBuild)                            //불가능 하면 계속 표시
             {
                 check.gameObject.SetActive(true);
                 subCollider.enabled = true;
@@ -181,9 +150,9 @@ public class HousingDrag : MonoBehaviour
         }
 
 
-        ClonePosition();
+        ClonePosition();                                //클론 하우징은 양 끝에 있을 때 활성화 및 배치됨
 
-        if (isTouch)
+        if (isTouch)                                    //터치 시간이 0.5초 이상일 시 드래그 활성화
         {
             touchTime += Time.deltaTime;
             if (touchTime > 0.5f)
@@ -214,12 +183,6 @@ public class HousingDrag : MonoBehaviour
                         isTouch = true;
                         Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
                         offset = transform.position - ray.GetPoint(hit.distance);
-                        if (!isAdd)
-                        {
-                            //DBManager.instance.AddMyHousingObject(housingObject.index, transform.position.x, transform.position.y);
-                            isAdd = true;
-                            isRemove = false;
-                        }
                     }
                     #region Gizmos
                     /*
@@ -245,12 +208,6 @@ public class HousingDrag : MonoBehaviour
                 if (!isCanBuild)
                 {
                     transform.position = new Vector3(transform.position.x, transform.position.y, -0.9f);
-                    if (!isRemove)
-                    {
-                        //DBManager.instance.RemoveMyHousingObject(id, new_x, new_y);
-                        isRemove = true;
-                        isAdd = false;
-                    }
                 }
 
 
@@ -278,6 +235,7 @@ public class HousingDrag : MonoBehaviour
                 subCollider.enabled = true;
                 Vector3 newPosition = ray.GetPoint(offset.z);
 
+                //하우징 드래그 시작 시 다른 하우징 반투명
                 sprender = FindObjectOfType<DrawingGrid>().GetComponentsInChildren<SpriteRenderer>();
                 foreach (SpriteRenderer sp in sprender)
                 {
@@ -316,22 +274,19 @@ public class HousingDrag : MonoBehaviour
                 cameraY = Mathf.Clamp(mainCam.transform.position.y, -(grid.boundY / 2) + ((cam_RT.y - cam_RB.y) / 2) + grid.posY, (grid.boundY / 2) - ((cam_RT.y - cam_RB.y) / 2) + grid.posY);
 
 
-
+                //하우징을 테두리에 터치할 시 카메라 움직이기
                 if (newPosition.x > cam_RT.x - cameraMoveStartPos)
                 {
                     if (newPosition.y > cam_LT.y - cameraMoveStartPos)
                     {
-                        Debug.Log("오른쪽 대각선 위쪽 이동");
                         mainCam.transform.position = new Vector3(cameraX + camSpeed, cameraY + camSpeed, mainCamPos.z);
                     }
                     else if (newPosition.y < cam_RB.y + cameraMoveStartPos)
                     {
-                        Debug.Log("오른쪽 대각선 아래쪽 이동");
                         mainCam.transform.position = new Vector3(cameraX + camSpeed, cameraY - camSpeed, mainCamPos.z);
                     }
                     else
                     {
-                        Debug.Log("오른쪽 이동");
                         mainCam.transform.position = new Vector3(cameraX + camSpeed, cameraY, mainCamPos.z);
                     }
                 }
@@ -340,17 +295,14 @@ public class HousingDrag : MonoBehaviour
                 {
                     if (newPosition.y > cam_LT.y - cameraMoveStartPos)
                     {
-                        Debug.Log("왼쪽 대각선 위쪽 이동");
                         mainCam.transform.position = new Vector3(cameraX - camSpeed, cameraY + camSpeed, mainCamPos.z);
                     }
                     else if (newPosition.y < cam_RB.y + cameraMoveStartPos)
                     {
-                        Debug.Log("왼쪽 대각선 아래쪽 이동");
                         mainCam.transform.position = new Vector3(cameraX - camSpeed, cameraY - camSpeed, mainCamPos.z);
                     }
                     else
                     {
-                        Debug.Log("왼쪽 이동");
                         mainCam.transform.position = new Vector3(cameraX - camSpeed, cameraY, mainCamPos.z);
                     }
                 }
@@ -359,17 +311,14 @@ public class HousingDrag : MonoBehaviour
                 {
                     if (newPosition.x > cam_RT.x - cameraMoveStartPos)
                     {
-                        Debug.Log("위쪽 대각선 오른쪽 이동");
                         mainCam.transform.position = new Vector3(cameraX + camSpeed, cameraY + camSpeed, mainCamPos.z);
                     }
                     else if (newPosition.x < cam_LB.x + cameraMoveStartPos)
                     {
-                        Debug.Log("위쪽 대각선 왼쪽 이동");
                         mainCam.transform.position = new Vector3(cameraX - camSpeed, cameraY + camSpeed, mainCamPos.z);
                     }
                     else
                     {
-                        Debug.Log("위쪽 이동");
                         mainCam.transform.position = new Vector3(cameraX, cameraY + camSpeed, mainCamPos.z);
                     }
                 }
@@ -378,17 +327,14 @@ public class HousingDrag : MonoBehaviour
                 {
                     if (newPosition.x > cam_RT.x - cameraMoveStartPos)
                     {
-                        Debug.Log("아래쪽 대각선 오른쪽 이동");
                         mainCam.transform.position = new Vector3(cameraX + camSpeed, cameraY - camSpeed, mainCamPos.z);
                     }
                     else if (newPosition.x < cam_LB.x + cameraMoveStartPos)
                     {
-                        Debug.Log("아래쪽 대각선 왼쪽 이동");
                         mainCam.transform.position = new Vector3(cameraX - camSpeed, cameraY - camSpeed, mainCamPos.z);
                     }
                     else
                     {
-                        Debug.Log("아래쪽 이동");
                         mainCam.transform.position = new Vector3(cameraX, cameraY - camSpeed, mainCamPos.z);
                     }
                 }
@@ -399,6 +345,7 @@ public class HousingDrag : MonoBehaviour
             }
             else
             {
+                //드래그 종료 시 다른 하우징 투명도 복구
                 sprender = FindObjectOfType<DrawingGrid>().GetComponentsInChildren<SpriteRenderer>();
                 foreach (SpriteRenderer sp in sprender)
                 {
@@ -459,46 +406,12 @@ public class HousingDrag : MonoBehaviour
         #endregion
 
 
-        #region Draw Ray
-        Color color = new Color();
-        switch (currentLayer)
-        {
-            case 23:                //back
-                color = Color.blue;
-                break;
-            case 24:                //front
-                color = Color.red;
-                break;
-            case 25:                //building
-                color = Color.white;
-                break;
-            case 26:                //constrellation
-                color = Color.green;
-                break;
-            case 27:
-                color = Color.cyan;
-                break;
-            default:
-                break;
-        }
-        Debug.DrawRay(point_RT, Vector3.forward * distance_RT, color);
-        Debug.DrawRay(point_LT, Vector3.forward * distance_LT, color);
-        Debug.DrawRay(point_LB, Vector3.forward * distance_LB, color);
-        Debug.DrawRay(point_RB, Vector3.forward * distance_RB, color);
-        Debug.DrawRay(transform.position, Vector3.forward * distance_Center, color);
-
-        //Debug.Log("RT : " + distance_RT);
-        //Debug.Log("LT : " + distance_LT);
-        //Debug.Log("LB : " + distance_LB);
-        //Debug.Log("RB : " + distance_RB);
-        #endregion
-
         if (hit_RT.collider.gameObject.layer != currentLayer &&
              hit_LT.collider.gameObject.layer != currentLayer &&
              hit_LB.collider.gameObject.layer != currentLayer &&
              hit_RB.collider.gameObject.layer != currentLayer &&
              hit_Center.collider.gameObject.layer != currentLayer &&
-             hit_Box.collider.gameObject.layer != currentLayer)                         //Ray의 어느것이라도 
+             hit_Box.collider.gameObject.layer != currentLayer)                         //Ray의 어느것이라도 자신과 똑같은 레이어 하우징이 검출되지 않을 시
         {
             #region 건물을 바닥에만 설치할 수 있게 하려면 아래 region의 코드를 주석처리 후 이 조건문을 활성화 하세요.
 
@@ -516,7 +429,7 @@ public class HousingDrag : MonoBehaviour
                hit_LB.collider.gameObject.CompareTag("NotBuild") ||
                hit_RB.collider.gameObject.CompareTag("NotBuild") ||
                hit_Center.collider.gameObject.CompareTag("NotBuild") ||
-               hit_Box.collider.gameObject.CompareTag("NotBuild"))
+               hit_Box.collider.gameObject.CompareTag("NotBuild"))              //설치 불가 구역에 하우징 배치시도 시
             {
                 check.color = new Color32(255, 0, 0, 100);
                 check.gameObject.SetActive(true);
@@ -558,7 +471,7 @@ public class HousingDrag : MonoBehaviour
     //클론의 포지션
     private void ClonePosition()
     {
-
+        //하우징이 배치 특정 위치까지 갈 시 클론 오브젝트 활성화
         if (transform.position.x >= -(grid.boundX / 2) && transform.position.x <= -(grid.boundX / 2) + 10)
         {
             if (!TestManager.instance.isEditMode)
@@ -585,7 +498,7 @@ public class HousingDrag : MonoBehaviour
             Vector3 clonePosition_RL = new Vector3(transform.position.x - (grid.boundX - 10), transform.position.y, transform.position.z);
             cloneObject.transform.position = clonePosition_RL;
         }
-        else
+        else        //그 외는 비활성화 후 저 멀리
         {
             cloneObject.transform.position = new Vector3(-50, -50, -1);
             cloneObject.SetActive(false);
@@ -680,7 +593,6 @@ public class HousingDrag : MonoBehaviour
         else
         {
             isSetBuild = true;
-            isAdd = true;
         }
     }
 

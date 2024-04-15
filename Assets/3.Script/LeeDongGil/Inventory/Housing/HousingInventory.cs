@@ -110,6 +110,7 @@ public class HousingInventory : MonoBehaviour
         }
     }
 
+    //인벤토리UI 슬롯 표시
     private void ShowSlot()
     {
         filter = GetComponentInParent<FilterButton>();
@@ -156,6 +157,7 @@ public class HousingInventory : MonoBehaviour
         }
     }
 
+    //판매 인벤토리UI 슬롯 표시
     private void ShowSellSlot()
     {
         if (count < 100)
@@ -190,6 +192,7 @@ public class HousingInventory : MonoBehaviour
         }
     }
 
+    //버튼 누르면 하우징 배치
     public void BuildSet()
     {
         if (!slot.isWindow)
@@ -219,6 +222,7 @@ public class HousingInventory : MonoBehaviour
         }
     }
 
+    //판매 슬롯 버튼
     public void SetSellHousing()
     {
         sellPopUPScript.isHousing = true;
