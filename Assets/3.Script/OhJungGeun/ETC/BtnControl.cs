@@ -64,9 +64,6 @@ public class BtnControl : MonoBehaviour
         me.color = selectColor;
     }
 
-
-
-
     private void ResetUI()
     {
         characterUI.SetActive(false);

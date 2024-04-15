@@ -19,6 +19,7 @@ public class SkyStarObjectControl : MonoBehaviour
         SetStar_Normal();
     }
 
+    // 플레이어 클리어 스테이지에 따른 별자리 On / Off
     private void SetStar_Normal()
     {
         for (int i = 0; i < 5; i++)
@@ -34,6 +35,7 @@ public class SkyStarObjectControl : MonoBehaviour
         }
     }
 
+    // 매칭 서버 클리어 스테이지에 따른 별자리 On/Off
     private void SetStar_Match()
     {
         var n_bro = Backend.Social.GetUserInfoByNickName(BackEndManager.Instance.GetMatchSystem().masterUser_NickName);

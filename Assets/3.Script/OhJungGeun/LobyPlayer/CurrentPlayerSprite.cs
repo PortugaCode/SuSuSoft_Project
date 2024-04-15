@@ -37,10 +37,11 @@ public class CurrentPlayerSprite : MonoBehaviour
 
     private void ChangeCurrentCharacter(object sender, EventArgs e)
     {
-        Debug.Log("현재 캐릭터 바뀜");
         SetUserCharacter();
     }
 
+
+    // 현재 플레이어가 무슨 캐릭터를 선택했는지 확인
     public void SetUserCharacter()
     {
         int index = DBManager.instance.user.currentCharacterIndex;
