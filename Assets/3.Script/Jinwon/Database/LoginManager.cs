@@ -220,12 +220,6 @@ public class LoginManager : MonoBehaviour
         string pwText_1 = inputField_SignUpPW_1.text;
         string pwText_2 = inputField_SignUpPW_2.text;
 
-        string idChecker = Regex.Replace(inputField_SignUpID.text, @"[^a-zA-Z0-9가-힣]", "", RegexOptions.Singleline);
-        idChecker = Regex.Replace(inputField_SignUpID.text, @"[^\w\.@-]", "", RegexOptions.Singleline);
-
-        string pwChecker = Regex.Replace(inputField_SignUpPW_1.text, @"[^a-zA-Z0-9가-힣]", "", RegexOptions.Singleline);
-        pwChecker = Regex.Replace(inputField_SignUpPW_1.text, @"[^\w\.@-]", "", RegexOptions.Singleline);
-
         if (idText.Trim().Equals("") || pwText_1.Trim().Equals("") || pwText_2.Trim().Equals(""))
         {
             // InputField가 비워져있을 때
@@ -255,30 +249,12 @@ public class LoginManager : MonoBehaviour
             }
             return;
         }
-        else if(inputField_SignUpID.text.Equals(idChecker) == false)
-        {
-            // ID에 특수문자가 포함되어 있을 때
-            inputField_SignUpID.text = "";
-            idErrorText.text = "아이디는 특수문자나 공백을 포함할 수 없습니다.";
-            idErrorText.gameObject.SetActive(true);
-            pw1ErrorText.gameObject.SetActive(false);
-            pw2ErrorText.gameObject.SetActive(false);
-            return;
-        }
-        else if (inputField_SignUpPW_1.text.Equals(idChecker) == false)
-        {
-            // PW에 특수문자가 포함되어 있을 때
-            inputField_SignUpPW_1.text = "";
-            pw1ErrorText.text = "비밀번호는 특수문자나 공백을 포함할 수 없습니다.";
-            idErrorText.gameObject.SetActive(false);
-            pw1ErrorText.gameObject.SetActive(true);
-            pw2ErrorText.gameObject.SetActive(false);
-            return;
-        }
         else if (pwText_1 != pwText_2)
         {
             // 패스워드가 일치하지 않을 때
             inputField_SignUpPW_2.text = "";
+            pw1ErrorText.text = "";
+            idErrorText.text = "";
             pw2ErrorText.text = "비밀번호가 일치하지 않습니다.";
             idErrorText.gameObject.SetActive(false);
             pw1ErrorText.gameObject.SetActive(false);
@@ -374,22 +350,11 @@ public class LoginManager : MonoBehaviour
 
         string userNameText = inputField_Nickname.text;
 
-        string nicknameChecker = Regex.Replace(inputField_Nickname.text, @"[^a-zA-Z0-9가-힣]", "", RegexOptions.Singleline);
-        nicknameChecker = Regex.Replace(inputField_Nickname.text, @"[^\w\.@-]", "", RegexOptions.Singleline);
-
         if (userNameText.Trim().Equals(""))
         {
             // InputField가 비워져있을 때
             inputField_Nickname.text = "";
             nicknameErrorText.text = "정보를 입력해주세요.";
-            nicknameErrorText.gameObject.SetActive(true);
-            return;
-        }
-        else if (inputField_Nickname.text.Equals(nicknameChecker) == false)
-        {
-            // 특수문자가 포함되어 있을 때
-            inputField_Nickname.text = "";
-            nicknameErrorText.text = "닉네임은 특수문자나 공백을 포함할 수 없습니다.";
             nicknameErrorText.gameObject.SetActive(true);
             return;
         }
@@ -437,13 +402,23 @@ public class LoginManager : MonoBehaviour
         idErrorText.gameObject.SetActive(false);
         pw1ErrorText.gameObject.SetActive(false);
         pw2ErrorText.gameObject.SetActive(false);
+        inputField_SignUpID.text = "";
+        inputField_SignUpPW_1.text = "";
+        inputField_SignUpPW_2.text = "";
+        idErrorText.text = "";
+        pw1ErrorText.text = "";
+        pw2ErrorText.text = "";
     }
 
     public void GoToMain() // 메인 팝업으로 이동
     {
         popUp_Main.gameObject.SetActive(true);
         popUp_SignUp.gameObject.SetActive(false);
+        popUp_Nickname.gameObject.SetActive(false);
         logInErrorText.gameObject.SetActive(false);
+        inputField_ID.text = "";
+        inputField_PW.text = "";
+        logInErrorText.text = "";
     }
 
     public void GoToSetNickname() // 닉네임 설정 팝업으로 이동
@@ -451,5 +426,7 @@ public class LoginManager : MonoBehaviour
         popUp_SignUp.gameObject.SetActive(false);
         popUp_Nickname.gameObject.SetActive(true);
         nicknameErrorText.gameObject.SetActive(false);
+        inputField_Nickname.text = "";
+        nicknameErrorText.text = "";
     }
 }
